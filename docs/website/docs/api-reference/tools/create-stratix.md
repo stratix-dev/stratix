@@ -100,7 +100,7 @@ src/
 - Avoiding big-bang rewrites
 
 **Migration Path**:
-Extract any context to microservice by copying the plugin. See [BC Migration Guide](../../examples/bc-migration.md).
+Extract any context to microservice by copying the plugin. See [BC Migration Guide](../../examples/bc-migration.md) for detailed steps.
 
 ### rest-api-complete
 
@@ -490,7 +490,6 @@ stratix generate test OrderHandler --type unit
 
 - [Stratix Documentation](https://stratix.dev/docs)
 - [GitHub Repository](https://github.com/pcarvajal/stratix)
-- [Examples](https://github.com/pcarvajal/stratix/tree/main/examples)
 - [Quick Start Guide](../../getting-started/quick-start.md)
 - [Bounded Contexts](../../core-concepts/bounded-contexts.md)
 - [BC Migration Guide](../../examples/bc-migration.md)
