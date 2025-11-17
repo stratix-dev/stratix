@@ -30,7 +30,7 @@ yarn create stratix
 Choose from 8 production-ready templates:
 
 - **Modular Monolith** - Bounded Contexts as Modules (monolith → microservices with zero rewrite)
-- **REST API Complete** - Production REST API with all Phase 1 extensions (Fastify, Zod, Auth, Errors)
+- **REST API Complete** - Production REST API with all production extensions (Fastify, Zod, Auth, Errors)
 - **REST API** - Basic REST API with authentication and CQRS pattern
 - **Microservice** - Event-driven service with message queue integration (RabbitMQ)
 - **Monolith** - Modular monolith architecture with bounded contexts
@@ -104,7 +104,7 @@ Extract any context to microservice by copying the plugin. See [BC Migration Gui
 
 ### rest-api-complete
 
-**NEW** - Production-ready REST API with all Phase 1 extensions integrated.
+**NEW** - Production-ready REST API with all production extensions integrated.
 
 ```bash
 npm create stratix@latest my-api --template rest-api-complete

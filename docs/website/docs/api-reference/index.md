@@ -48,7 +48,7 @@ Application runtime and plugin system.
 
 ## Extension Packages
 
-### Phase 1 Production Extensions
+### Production Extensions
 
 Production-ready extensions for building enterprise applications.
 
