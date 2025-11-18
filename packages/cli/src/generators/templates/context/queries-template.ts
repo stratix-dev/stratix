@@ -3,11 +3,13 @@ import type { TemplateData } from '../../../types/index.js';
 export const getByIdQueryTemplate = (data: TemplateData): string => {
   const { entityName } = data;
 
-  return `export interface Get${entityName}ByIdData {
+  return `import type { Query } from '@stratix/abstractions';
+
+export interface Get${entityName}ByIdData {
   id: string;
 }
 
-export class Get${entityName}ById {
+export class Get${entityName}ById implements Query {
   constructor(public readonly data: Get${entityName}ByIdData) {}
 }
 `;
@@ -17,22 +19,24 @@ export const getByIdQueryHandlerTemplate = (data: TemplateData): string => {
   const { entityName } = data;
 
   return `import type { QueryHandler } from '@stratix/abstractions';
-import { Result, EntityId } from '@stratix/primitives';
+import { Success, Failure, type Result, EntityId } from '@stratix/primitives';
 import { Get${entityName}ById } from './Get${entityName}ById.js';
 import type { ${entityName} } from '../../domain/entities/${entityName}.js';
 import type { ${entityName}Repository } from '../../domain/repositories/${entityName}Repository.js';
 
-export class Get${entityName}ByIdHandler implements QueryHandler<Get${entityName}ById, ${entityName} | null> {
+export class Get${entityName}ByIdHandler implements QueryHandler<Get${entityName}ById, Result<${entityName} | null, Error>> {
   constructor(private readonly repository: ${entityName}Repository) {}
 
-  async handle(query: Get${entityName}ById): Promise<Result<${entityName} | null>> {
+  async handle(query: Get${entityName}ById): Promise<Result<${entityName} | null, Error>> {
     try {
-      const id = EntityId.fromString<'${entityName}'>(query.data.id, '${entityName}');
+      const id = EntityId.from<'${entityName}'>(query.data.id);
       const entity = await this.repository.findById(id);
       
-      return Result.ok(entity);
+      return Success.create(entity);
     } catch (error) {
-      return Result.fail(error instanceof Error ? error.message : 'Failed to get ${entityName}');
+      return Failure.create(
+        error instanceof Error ? error : new Error('Failed to get ${entityName}')
+      );
     }
   }
 }
@@ -42,7 +46,9 @@ export class Get${entityName}ByIdHandler implements QueryHandler<Get${entityName
 export const listQueryTemplate = (data: TemplateData): string => {
   const { entityNamePlural } = data;
 
-  return `export class List${entityNamePlural} {
+  return `import type { Query } from '@stratix/abstractions';
+
+export class List${entityNamePlural} implements Query {
   constructor(public readonly data: Record<string, never> = {}) {}
 }
 `;
@@ -52,20 +58,22 @@ export const listQueryHandlerTemplate = (data: TemplateData): string => {
   const { entityName, entityNamePlural } = data;
 
   return `import type { QueryHandler } from '@stratix/abstractions';
-import { Result } from '@stratix/primitives';
+import { Success, Failure, type Result } from '@stratix/primitives';
 import { List${entityNamePlural} } from './List${entityNamePlural}.js';
 import type { ${entityName} } from '../../domain/entities/${entityName}.js';
 import type { ${entityName}Repository } from '../../domain/repositories/${entityName}Repository.js';
 
-export class List${entityNamePlural}Handler implements QueryHandler<List${entityNamePlural}, ${entityName}[]> {
+export class List${entityNamePlural}Handler implements QueryHandler<List${entityNamePlural}, Result<${entityName}[], Error>> {
   constructor(private readonly repository: ${entityName}Repository) {}
 
-  async handle(query: List${entityNamePlural}): Promise<Result<${entityName}[]>> {
+  async handle(query: List${entityNamePlural}): Promise<Result<${entityName}[], Error>> {
     try {
       const entities = await this.repository.findAll();
-      return Result.ok(entities);
+      return Success.create(entities);
     } catch (error) {
-      return Result.fail(error instanceof Error ? error.message : 'Failed to list ${entityNamePlural}');
+      return Failure.create(
+        error instanceof Error ? error : new Error('Failed to list ${entityNamePlural}')
+      );
     }
   }
 }
