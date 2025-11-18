@@ -22,9 +22,19 @@ export class QueryGenerator extends BaseGenerator {
     const props = ValidationUtils.parseProps(this.options.input || this.options.props);
     const structure = await this.detectProjectStructure();
 
-    const queryPath = structure.applicationPath 
-      ? path.join(structure.applicationPath, 'queries')
-      : path.join(structure.sourceRoot, 'application', 'queries');
+    let queryPath: string;
+    if (this.options.context) {
+      // Generate inside bounded context
+      const contextPath = structure.contextsPath 
+        ? path.join(structure.contextsPath, this.naming.toKebabCase(this.options.context))
+        : path.join(structure.sourceRoot, 'contexts', this.naming.toKebabCase(this.options.context));
+      queryPath = path.join(contextPath, 'application', 'queries');
+    } else {
+      // Generate in global application
+      queryPath = structure.applicationPath 
+        ? path.join(structure.applicationPath, 'queries')
+        : path.join(structure.sourceRoot, 'application', 'queries');
+    }
 
     const templateData: TemplateData = {
       entityName: this.naming.toPascalCase(this.queryName),

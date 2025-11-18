@@ -1,16 +1,19 @@
-# Modules
+# Bounded Contexts
 
-Stratix's killer feature: evolve from modular monolith to microservices without rewriting domain code.
+Bounded Contexts are self-contained modules that encapsulate complete domain logic. Stratix's killer feature: evolve from modular monolith to microservices without rewriting domain code.
 
-## What are Modules?
+## What is a Bounded Context?
 
-**Modules** are self-contained units that encapsulate domain logic. Each module contains:
+A **Bounded Context** is a central pattern in Domain-Driven Design (DDD) that defines a boundary where a particular domain model applies. In Stratix, Bounded Contexts are implemented as portable modules.
+
+Each Bounded Context contains:
 - Domain entities and value objects
-- Application commands and queries
+- Application commands and queries  
 - Event handlers
 - Repository interfaces
+- Infrastructure implementations
 
-> **Note**: In Domain-Driven Design (DDD), modules are known as **Bounded Contexts**.
+**Key principle**: Each context has its own ubiquitous language and models. The same concept may mean different things in different contexts.
 
 ## The Problem
 
@@ -28,13 +31,13 @@ Traditional migration from monolith to microservices requires:
 
 ```typescript
 const app = await ApplicationBuilder.create()
-  .useContext(new ProductsModule())
-  .useContext(new OrdersModule())
-  .useContext(new InventoryModule())
+  .usePlugin(new ProductsContextPlugin())
+  .usePlugin(new OrdersContextPlugin())
+  .usePlugin(new InventoryContextPlugin())
   .build();
 ```
 
-All three modules in one application.
+All three contexts in one application.
 
 ### Extract to Microservice
 
@@ -43,13 +46,17 @@ All three modules in one application.
 const app = await ApplicationBuilder.create()
   .usePlugin(new PostgresPlugin({ database: 'orders' }))
   .usePlugin(new RabbitMQEventBusPlugin())
-  .useContext(new OrdersModule())  // SAME CODE
+  .usePlugin(new OrdersContextPlugin())  // SAME CODE
   .build();
 ```
 
-**Zero changes** to OrdersModule, domain logic, repositories, or handlers.
+**Zero changes** to OrdersContextPlugin, domain logic, repositories, or handlers.
 
-## Creating a Module
+## Bounded Contexts as Plugins
+
+In Stratix, Bounded Contexts are implemented as Context Plugins - special plugins that encapsulate domain logic.
+
+### Creating a Bounded Context
 
 Use the CLI generator:
 
@@ -57,7 +64,7 @@ Use the CLI generator:
 stratix generate context Orders --props "customerId:string,total:number,status:string"
 ```
 
-This generates a complete module with:
+This generates a complete Bounded Context with:
 
 ### Domain Layer
 - `Order` entity (AggregateRoot)
@@ -72,20 +79,18 @@ This generates a complete module with:
 ### Infrastructure Layer
 - `InMemoryOrderRepository` implementation
 
-### Module
-- `OrdersModule` with auto-registration
+### Context Plugin
+- `OrdersContextPlugin` with auto-registration
 
-## The BaseContextModule
+## Context Plugin Implementation
 
-All modules extend `BaseContextModule`:
+All Bounded Contexts extend `BaseContextPlugin`:
 
 ```typescript
-export class OrdersModule extends BaseContextModule {
-  readonly metadata = {
-    name: 'orders-context',
-    version: '1.0.0',
-    requiredPlugins: ['postgres'],
-  };
+export class OrdersContextPlugin extends BaseContextPlugin {
+  readonly name = 'orders-context';
+  readonly version = '1.0.0';
+  readonly dependencies = ['logger', 'database'];
 
   readonly contextName = 'Orders';
 
@@ -127,7 +132,7 @@ export class OrdersModule extends BaseContextModule {
 
 ### Auto-Registration
 
-`BaseContextModule` automatically:
+`BaseContextPlugin` automatically:
 1. Registers repositories in DI container
 2. Registers commands with command bus
 3. Registers queries with query bus
@@ -161,24 +166,24 @@ cd orders-service
 npm init
 ```
 
-### Step 4: Copy Module
+### Step 4: Copy Bounded Context
 
 ```bash
 cp -r ../my-app/src/contexts/orders ./src/
 ```
 
-**Zero modifications to the module code.**
+**Zero modifications to the context code.**
 
 ### Step 5: Create Bootstrap
 
 ```typescript
 // orders-service/src/index.ts
-import { OrdersModule } from './orders/index.js';
+import { OrdersContextPlugin } from './orders/index.js';
 
 const app = await ApplicationBuilder.create()
   .usePlugin(new PostgresPlugin({ database: 'orders' }))
   .usePlugin(new RabbitMQEventBusPlugin())
-  .useContext(new OrdersModule())  // Same module
+  .usePlugin(new OrdersContextPlugin())  // Same context
   .build();
 
 await app.start();
@@ -190,9 +195,9 @@ Remove the extracted module:
 
 ```typescript
 const app = await ApplicationBuilder.create()
-  .useContext(new ProductsModule())
-  // .useContext(new OrdersModule())  <- Removed
-  .useContext(new InventoryModule())
+  .usePlugin(new ProductsContextPlugin())
+  // .usePlugin(new OrdersContextPlugin())  <- Removed
+  .usePlugin(new InventoryContextPlugin())
   .build();
 ```
 
@@ -219,12 +224,12 @@ Both services communicate via RabbitMQ events.
 - Commands and queries
 - Handlers
 
-## Example: Orders Module
+## Example: Orders Bounded Context
 
-See the complete implementation in the repository demonstrating:
-- Modular monolith with 3 modules
+See the complete implementation in the examples directory demonstrating:
+- Modular monolith with 3 bounded contexts
 - Extracted Orders microservice
-- Side-by-side comparison
+- Side-by-side comparison showing zero code changes
 
 ## Benefits
 
@@ -264,14 +269,15 @@ Domain events are the contract. Don't change event structure.
 ### 5. Database per Service
 Each microservice gets its own database. No shared databases.
 
-## Modules vs Plugins
+## Context Plugins vs Infrastructure Plugins
 
-| Aspect | Plugin | Module |
+| Aspect | Infrastructure Plugin | Context Plugin |
 |--------|--------|--------|
-| **Purpose** | Infrastructure (technical) | Domain (business logic) |
+| **Purpose** | Technical concerns | Domain (business logic) |
 | **Examples** | Postgres, Redis, HTTP | Products, Orders, Inventory |
-| **Dependencies** | Other plugins | Plugins + other modules |
+| **Dependencies** | Other infrastructure plugins | Infrastructure plugins + other contexts |
 | **Initialization** | First (low-level) | Second (high-level) |
+| **Base Class** | `Plugin` | `BaseContextPlugin` (extends `Plugin`) |
 
 ## Anti-Patterns
 
@@ -286,7 +292,7 @@ class OrderMicroservice extends Order {
 ### Do: Move As-Is
 ```typescript
 // CORRECT
-import { OrdersModule } from './orders/index.js';
+import { OrdersContextPlugin } from './orders/index.js';
 ```
 
 ### Don't: Shared Database
@@ -302,7 +308,60 @@ orders-service -> [orders_db]
 products-service -> [products_db]
 ```
 
+## Understanding Context Boundaries
+
+A key principle in DDD is maintaining clear boundaries between contexts:
+
+### Good: Clear Separation
+
+```typescript
+// Products Context
+class Product extends AggregateRoot<'Product'> {
+  readonly name: string;
+  readonly price: Money;
+  readonly stock: number;
+}
+
+// Orders Context  
+class OrderItem extends Entity<'OrderItem'> {
+  readonly productId: string;  // Reference by ID only
+  readonly quantity: number;
+  readonly priceAtPurchase: Money;  // Snapshot of price
+}
+```
+
+### Bad: Leaky Boundaries
+
+```typescript
+// Orders Context
+class OrderItem extends Entity<'OrderItem'> {
+  readonly product: Product;  // Don't embed from another context!
+}
+```
+
+### Communication Between Contexts
+
+Use domain events to communicate:
+
+```typescript
+// Products Context emits event
+class Product extends AggregateRoot<'Product'> {
+  decreaseStock(quantity: number): void {
+    this._stock -= quantity;
+    this.record(new ProductStockDecreasedEvent(this.id, quantity));
+  }
+}
+
+// Orders Context listens to event
+class ProductStockDecreasedHandler {
+  async handle(event: ProductStockDecreasedEvent): Promise<void> {
+    // Update read model or trigger other actions
+  }
+}
+```
+
 ## Next Steps
 
+- [Plugins](./plugins.md) - Learn about the plugin system
+- [Architecture](./architecture.md) - Understand the overall architecture
 - Try the [modular-monolith template](../getting-started/quick-start.md)
-- Learn about [CLI generators](../api-reference/tools/stratix CLI.md)

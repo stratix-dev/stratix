@@ -28,28 +28,28 @@ function HomepageHeader() {
             }}
           />
           <Heading as="h1" className="hero__title" style={{color: 'white'}}>
-            Enterprise TypeScript, Done Right
+            Build scalable, maintainable applications
           </Heading>
-          <p className="hero__subtitle" style={{color: 'rgba(255, 255, 255, 0.9)'}}>
-            Modern framework with Domain-Driven Design, hexagonal architecture, and CQRS.
+          <p className="hero__subtitle" style={{color: 'rgba(255, 255, 255, 0.9)', fontSize: '1.25rem'}}>
+            Domain-Driven Design, hexagonal architecture, and CQRS.
             <br/>
-            Plus native AI agent support as a first-class feature.
+            Production-ready from day one with type safety, dependency injection, AI agents as first-class citizens, and enterprise patterns.
           </p>
           <div className={styles.buttons}>
             <Link
               className="button button--secondary button--lg"
-              to="/docs/getting-started/introduction"
+              to="/docs/getting-started/installation"
               style={{marginRight: '1rem'}}>
-              Get Started →
+              Get Started
             </Link>
             <Link
               className="button button--outline button--lg"
-              to="/docs/core-concepts/architecture"
+              to="/docs/getting-started/quick-start"
               style={{
                 color: 'white',
                 borderColor: 'rgba(255, 255, 255, 0.3)',
               }}>
-              View Architecture
+              Quick Start
             </Link>
           </div>
         </div>
@@ -64,52 +64,64 @@ function HomepageFeatures(): ReactNode {
       <div className="container">
         <div className={styles.featuresGrid}>
           <div className={styles.feature}>
-            <div className={styles.featureIcon}>🏗️</div>
-            <Heading as="h3">Domain-Driven Design</Heading>
+            <Heading as="h3">Plugin Architecture</Heading>
+            <p>
+              Extensible plugin system with lifecycle management, dependency resolution, and health checks.
+              Swap implementations without changing code.
+            </p>
+            <Link to="/docs/core-concepts/plugins" className={styles.featureLink}>
+              Learn about plugins →
+            </Link>
+          </div>
+          <div className={styles.feature}>
+            <Heading as="h3">Bounded Contexts</Heading>
+            <p>
+              Portable domain modules that work in monoliths or microservices.
+              Migrate to microservices without rewriting domain code.
+            </p>
+            <Link to="/docs/core-concepts/bounded-contexts" className={styles.featureLink}>
+              Learn about bounded contexts →
+            </Link>
+          </div>
+          <div className={styles.feature}>
+            <Heading as="h3">Domain Modeling</Heading>
             <p>
               Entity, AggregateRoot, ValueObject, and Repository patterns built-in.
-              Apply tactical DDD patterns without reinventing the wheel.
+              Apply tactical DDD patterns with full type safety.
             </p>
+            <Link to="/docs/core-concepts/entities" className={styles.featureLink}>
+              Learn about entities →
+            </Link>
           </div>
           <div className={styles.feature}>
-            <div className={styles.featureIcon}>🔷</div>
-            <Heading as="h3">Hexagonal Architecture</Heading>
+            <Heading as="h3">Result Pattern</Heading>
             <p>
-              5-layer architecture with strict dependency rules.
-              Clear separation between domain, application, and infrastructure.
+              Explicit error handling without exceptions.
+              Type-safe results make errors visible at compile time.
             </p>
+            <Link to="/docs/core-concepts/result-pattern" className={styles.featureLink}>
+              Learn about Result →
+            </Link>
           </div>
           <div className={styles.feature}>
-            <div className={styles.featureIcon}>⚡</div>
-            <Heading as="h3">Type-Safe by Design</Heading>
+            <Heading as="h3">CQRS</Heading>
             <p>
-              Full TypeScript strict mode with phantom types and Result pattern.
-              Prevent runtime errors at compile time.
+              Command and Query Responsibility Segregation with dedicated buses.
+              Scale reads and writes independently.
             </p>
+            <Link to="/docs/core-concepts/cqrs" className={styles.featureLink}>
+              Learn about CQRS →
+            </Link>
           </div>
           <div className={styles.feature}>
-            <div className={styles.featureIcon}>🎯</div>
-            <Heading as="h3">CQRS Ready</Heading>
+            <Heading as="h3">AI Agents</Heading>
             <p>
-              CommandBus, QueryBus, and EventBus with handler registration.
-              Build scalable command-query applications out of the box.
+              AI agents as first-class domain entities with budget enforcement, cost tracking, and multi-LLM support.
+              Production patterns built-in.
             </p>
-          </div>
-          <div className={styles.feature}>
-            <div className={styles.featureIcon}>🤖</div>
-            <Heading as="h3">Native AI Agents</Heading>
-            <p>
-              AIAgent extends AggregateRoot. Build AI agents with the same rigor as your domain model.
-              Multi-LLM support, cost tracking, and deterministic testing.
-            </p>
-          </div>
-          <div className={styles.feature}>
-            <div className={styles.featureIcon}>🚀</div>
-            <Heading as="h3">Production Ready</Heading>
-            <p>
-              Plugin system, dependency injection, health checks, and graceful shutdown.
-              OpenTelemetry integration and observability built-in.
-            </p>
+            <Link to="/docs/core-concepts/ai-agents" className={styles.featureLink}>
+              Learn about AI agents →
+            </Link>
           </div>
         </div>
       </div>
@@ -121,8 +133,8 @@ export default function Home(): ReactNode {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`${siteConfig.title} - ${siteConfig.tagline}`}
-      description="Modern TypeScript framework with Domain-Driven Design, hexagonal architecture, CQRS, and native AI agent support.">
+      title={`${siteConfig.title}`}
+      description="Build scalable, maintainable applications with Domain-Driven Design, hexagonal architecture, and CQRS. Production-ready from day one with type safety, dependency injection, AI agents as first-class citizens, and enterprise patterns.">
       <HomepageHeader />
       <main>
         <HomepageFeatures />

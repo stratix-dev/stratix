@@ -22,9 +22,19 @@ export class EntityGenerator extends BaseGenerator {
     const props = ValidationUtils.parseProps(this.options.props);
     const structure = await this.detectProjectStructure();
 
-    const entityPath = structure.domainPath 
-      ? path.join(structure.domainPath, 'entities')
-      : path.join(structure.sourceRoot, 'domain', 'entities');
+    let entityPath: string;
+    if (this.options.context) {
+      // Generate inside bounded context
+      const contextPath = structure.contextsPath 
+        ? path.join(structure.contextsPath, this.naming.toKebabCase(this.options.context))
+        : path.join(structure.sourceRoot, 'contexts', this.naming.toKebabCase(this.options.context));
+      entityPath = path.join(contextPath, 'domain', 'entities');
+    } else {
+      // Generate in global domain
+      entityPath = structure.domainPath 
+        ? path.join(structure.domainPath, 'entities')
+        : path.join(structure.sourceRoot, 'domain', 'entities');
+    }
 
     const templateData: TemplateData = {
       entityName: this.naming.toPascalCase(this.entityName),

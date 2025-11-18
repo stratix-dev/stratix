@@ -9,6 +9,7 @@ import {
 export interface RepositoryGeneratorOptions {
   entityName: string;
   withImplementation?: boolean;
+  context?: string;
   projectRoot?: string;
 }
 
@@ -18,25 +19,42 @@ export class RepositoryGenerator extends BaseGenerator {
   }
 
   async generate(): Promise<GeneratedFile[]> {
-    const { entityName, withImplementation = true } = this.options;
+    const { entityName, withImplementation = true, context } = this.options;
     const entityPascal = this.naming.toPascalCase(entityName);
-
-    await Promise.resolve();
+    
+    const structure = await this.detectProjectStructure();
 
     const files: GeneratedFile[] = [];
 
+    let repoPath: string;
+    let implPath: string;
+
+    if (context) {
+      // Generate inside bounded context
+      const contextPath = structure.contextsPath 
+        ? path.join(structure.contextsPath, this.naming.toKebabCase(context))
+        : path.join(structure.sourceRoot, 'contexts', this.naming.toKebabCase(context));
+      repoPath = path.join(contextPath, 'domain', 'repositories');
+      implPath = path.join(contextPath, 'infrastructure', 'persistence');
+    } else {
+      // Generate in global domain/infrastructure
+      repoPath = structure.domainPath 
+        ? path.join(structure.domainPath, 'repositories')
+        : path.join(structure.sourceRoot, 'domain', 'repositories');
+      implPath = structure.infrastructurePath
+        ? path.join(structure.infrastructurePath, 'persistence')
+        : path.join(structure.sourceRoot, 'infrastructure', 'persistence');
+    }
+
     files.push({
-      path: path.join(this.projectRoot, `src/domain/repositories/${entityPascal}Repository.ts`),
+      path: path.join(repoPath, `${entityPascal}Repository.ts`),
       content: generateRepositoryInterface(entityPascal),
       action: 'create',
     });
 
     if (withImplementation) {
       files.push({
-        path: path.join(
-          this.projectRoot,
-          `src/infrastructure/persistence/InMemory${entityPascal}Repository.ts`
-        ),
+        path: path.join(implPath, `InMemory${entityPascal}Repository.ts`),
         content: generateInMemoryRepository(entityPascal),
         action: 'create',
       });

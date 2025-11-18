@@ -29,19 +29,14 @@ const sidebars: SidebarsConfig = {
       label: 'Core Concepts',
       items: [
         'core-concepts/architecture',
-        'core-concepts/modules',
-        'core-concepts/ai-agents',
+        'core-concepts/plugins',
+        'core-concepts/bounded-contexts',
         'core-concepts/entities',
         'core-concepts/value-objects',
+        'core-concepts/repository-pattern',
+        'core-concepts/result-pattern',
         'core-concepts/cqrs',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Examples',
-      items: [
-        'examples/overview',
-        'examples/bc-migration',
+        'core-concepts/ai-agents',
       ],
     },
     {
