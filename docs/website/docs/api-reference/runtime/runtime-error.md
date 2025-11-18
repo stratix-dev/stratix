@@ -78,7 +78,7 @@ throw new CircularDependencyError(['A', 'B', 'C', 'A']);
 const app = await ApplicationBuilder.create()
   .usePlugin(pluginA) // depends on: [pluginB]
   .usePlugin(pluginB) // depends on: [pluginC]
-  .usePlugin(pluginC) // depends on: [pluginA] ❌ circular!
+  .usePlugin(pluginC) // depends on: [pluginA] CIRCULAR!
   .build(); // Throws CircularDependencyError
 ```
 

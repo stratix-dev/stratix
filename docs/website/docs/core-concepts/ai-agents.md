@@ -695,7 +695,7 @@ console.log('Agent version:', execution.agentVersion);
 Start with the **AI Agent Starter** template to learn these patterns hands-on:
 
 ```bash
-npm create stratix my-learning -- --template ai-agent-starter
+stratix new my-learning -- --template ai-agent-starter
 cd my-learning
 pnpm start
 ```
@@ -714,4 +714,3 @@ Total cost: ~$0.30-0.50
 
 - [Architecture](./architecture.md) - Understand how agents fit in the architecture
 - [Testing](../advanced/testing.md) - Testing strategies for AI agents
-- [Examples](../examples/overview.md) - See complete agent examples
