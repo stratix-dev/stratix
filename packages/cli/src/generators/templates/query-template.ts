@@ -19,7 +19,7 @@ export const queryHandlerTemplate = (data: TemplateData, outputType: string): st
   const { entityName } = data;
   
   // Extract base type name without brackets or other syntax
-  const baseTypeName = outputType.replace(/[\[\]<>]/g, '');
+  const baseTypeName = outputType.replace(/[[\]<>]/g, '');
   const needsTypeDefinition = outputType !== 'any' && outputType !== 'void' && !['string', 'number', 'boolean', 'unknown'].includes(baseTypeName);
   const typeDefinition = needsTypeDefinition 
     ? `\n// TODO: Define or import ${baseTypeName} type\ntype ${baseTypeName} = unknown;\n` 

@@ -9,38 +9,42 @@ export function generatePlugin(
     try {
       // TODO: Implement health check logic
       return {
-        healthy: true,
+        status: HealthStatus.UP,
         message: '${pluginName} is healthy',
       };
     } catch (error) {
       return {
-        healthy: false,
+        status: HealthStatus.DOWN,
         message: \`${pluginName} health check failed: \${error}\`,
-        error,
+        details: { error: String(error) },
       };
     }
   }`
     : '';
 
-  return `import type { Plugin, PluginContext${
+  return `import type { Plugin, PluginContext, PluginMetadata${
     withHealthCheck ? ', HealthCheckResult' : ''
-  } } from '@stratix/abstractions';
+  } } from '@stratix/abstractions';${
+    withHealthCheck ? "\nimport { HealthStatus } from '@stratix/abstractions';" : ''
+  }
 
 export interface ${pluginName}PluginOptions {
   // Add your plugin configuration options here
 }
 
 export class ${pluginName}Plugin implements Plugin {
-  readonly name = '${pluginKebab}';
-  readonly version = '0.1.0';
-  readonly dependencies: string[] = [];
+  readonly metadata: PluginMetadata = {
+    name: '${pluginKebab}',
+    version: '0.1.0',
+    dependencies: [],
+  };
 
   constructor(private options: ${pluginName}PluginOptions = {}) {}
 
   async initialize(context: PluginContext): Promise<void> {
     const { container, logger } = context;
     
-    logger.info(\`Initializing \${this.name} plugin\`);
+    logger.info(\`Initializing \${this.metadata.name} plugin\`);
 
     // TODO: Register services with DI container
     // container.register('myService', () => new MyService(this.options));

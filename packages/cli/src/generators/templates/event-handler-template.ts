@@ -2,14 +2,17 @@ export function generateEventHandler(
   eventName: string,
   handlerName: string
 ): string {
-  return `import type { DomainEventHandler } from '@stratix/abstractions';
-import type { ${eventName} } from '../../domain/events/${eventName}.js';
+  return `import type { EventHandler } from '@stratix/abstractions';
+import type { DomainEvent } from '@stratix/primitives';
 
-export class ${handlerName} implements DomainEventHandler<${eventName}> {
+// TODO: Import or define ${eventName} type
+// import type { ${eventName} } from '../../domain/events/${eventName}.js';
+
+export class ${handlerName} implements EventHandler<DomainEvent> {
   constructor() {}
 
-  async handle(event: ${eventName}): Promise<void> {
-    console.log(\`Handling \${event.eventName} event:\`, event.payload);
+  async handle(event: DomainEvent): Promise<void> {
+    console.log(\`Handling \${event.constructor.name} event:\`, event);
     
     // TODO: Implement your business logic here
     // Examples:
@@ -17,10 +20,6 @@ export class ${handlerName} implements DomainEventHandler<${eventName}> {
     // - Update read model
     // - Trigger another process
     // - Log analytics
-  }
-
-  get eventName(): string {
-    return '${eventName}';
   }
 }
 `;
