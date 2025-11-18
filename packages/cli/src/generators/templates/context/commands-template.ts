@@ -3,11 +3,13 @@ import type { TemplateData } from '../../../types/index.js';
 export const createCommandTemplate = (data: TemplateData): string => {
   const { entityName, props } = data;
 
-  return `export interface Create${entityName}Data {
+  return `import type { Command } from '@stratix/abstractions';
+
+export interface Create${entityName}Data {
 ${props.map(p => `  ${p.name}: ${p.type};`).join('\n')}
 }
 
-export class Create${entityName} {
+export class Create${entityName} implements Command {
   constructor(public readonly data: Create${entityName}Data) {}
 }
 `;
@@ -17,22 +19,24 @@ export const createCommandHandlerTemplate = (data: TemplateData): string => {
   const { entityName, entityNameCamel } = data;
 
   return `import type { CommandHandler } from '@stratix/abstractions';
-import { Result } from '@stratix/primitives';
+import { Success, Failure, type Result } from '@stratix/primitives';
 import { Create${entityName} } from './Create${entityName}.js';
 import { ${entityName} } from '../../domain/entities/${entityName}.js';
 import type { ${entityName}Repository } from '../../domain/repositories/${entityName}Repository.js';
 
-export class Create${entityName}Handler implements CommandHandler<Create${entityName}, ${entityName}> {
+export class Create${entityName}Handler implements CommandHandler<Create${entityName}, Result<${entityName}, Error>> {
   constructor(private readonly repository: ${entityName}Repository) {}
 
-  async handle(command: Create${entityName}): Promise<Result<${entityName}>> {
+  async handle(command: Create${entityName}): Promise<Result<${entityName}, Error>> {
     try {
       const ${entityNameCamel} = ${entityName}.create(command.data);
       await this.repository.save(${entityNameCamel});
       
-      return Result.ok(${entityNameCamel});
+      return Success.create(${entityNameCamel});
     } catch (error) {
-      return Result.fail(error instanceof Error ? error.message : 'Failed to create ${entityName}');
+      return Failure.create(
+        error instanceof Error ? error : new Error('Failed to create ${entityName}')
+      );
     }
   }
 }
@@ -42,14 +46,15 @@ export class Create${entityName}Handler implements CommandHandler<Create${entity
 export const updateCommandTemplate = (data: TemplateData): string => {
   const { entityName, props } = data;
 
-  return `import { EntityId } from '@stratix/primitives';
+  return `import type { Command } from '@stratix/abstractions';
+import { EntityId } from '@stratix/primitives';
 
 export interface Update${entityName}Data {
   id: string;
 ${props.map(p => `  ${p.name}?: ${p.type};`).join('\n')}
 }
 
-export class Update${entityName} {
+export class Update${entityName} implements Command {
   constructor(public readonly data: Update${entityName}Data) {}
 }
 `;
@@ -59,30 +64,32 @@ export const updateCommandHandlerTemplate = (data: TemplateData): string => {
   const { entityName, entityNameCamel } = data;
 
   return `import type { CommandHandler } from '@stratix/abstractions';
-import { Result, EntityId } from '@stratix/primitives';
+import { Success, Failure, type Result, EntityId } from '@stratix/primitives';
 import { Update${entityName} } from './Update${entityName}.js';
 import { ${entityName} } from '../../domain/entities/${entityName}.js';
 import type { ${entityName}Repository } from '../../domain/repositories/${entityName}Repository.js';
 
-export class Update${entityName}Handler implements CommandHandler<Update${entityName}, ${entityName}> {
+export class Update${entityName}Handler implements CommandHandler<Update${entityName}, Result<${entityName}, Error>> {
   constructor(private readonly repository: ${entityName}Repository) {}
 
-  async handle(command: Update${entityName}): Promise<Result<${entityName}>> {
+  async handle(command: Update${entityName}): Promise<Result<${entityName}, Error>> {
     try {
-      const id = EntityId.fromString<'${entityName}'>(command.data.id, '${entityName}');
+      const id = EntityId.from<'${entityName}'>(command.data.id);
       const ${entityNameCamel} = await this.repository.findById(id);
       
       if (!${entityNameCamel}) {
-        return Result.fail('${entityName} not found');
+        return Failure.create(new Error('${entityName} not found'));
       }
 
       const { id: _, ...updateData } = command.data;
       ${entityNameCamel}.update(updateData);
       await this.repository.save(${entityNameCamel});
       
-      return Result.ok(${entityNameCamel});
+      return Success.create(${entityNameCamel});
     } catch (error) {
-      return Result.fail(error instanceof Error ? error.message : 'Failed to update ${entityName}');
+      return Failure.create(
+        error instanceof Error ? error : new Error('Failed to update ${entityName}')
+      );
     }
   }
 }
@@ -92,11 +99,13 @@ export class Update${entityName}Handler implements CommandHandler<Update${entity
 export const deleteCommandTemplate = (data: TemplateData): string => {
   const { entityName } = data;
 
-  return `export interface Delete${entityName}Data {
+  return `import type { Command } from '@stratix/abstractions';
+
+export interface Delete${entityName}Data {
   id: string;
 }
 
-export class Delete${entityName} {
+export class Delete${entityName} implements Command {
   constructor(public readonly data: Delete${entityName}Data) {}
 }
 `;
@@ -106,26 +115,28 @@ export const deleteCommandHandlerTemplate = (data: TemplateData): string => {
   const { entityName } = data;
 
   return `import type { CommandHandler } from '@stratix/abstractions';
-import { Result, EntityId } from '@stratix/primitives';
+import { Success, Failure, type Result, EntityId } from '@stratix/primitives';
 import { Delete${entityName} } from './Delete${entityName}.js';
 import type { ${entityName}Repository } from '../../domain/repositories/${entityName}Repository.js';
 
-export class Delete${entityName}Handler implements CommandHandler<Delete${entityName}, void> {
+export class Delete${entityName}Handler implements CommandHandler<Delete${entityName}, Result<void, Error>> {
   constructor(private readonly repository: ${entityName}Repository) {}
 
-  async handle(command: Delete${entityName}): Promise<Result<void>> {
+  async handle(command: Delete${entityName}): Promise<Result<void, Error>> {
     try {
-      const id = EntityId.fromString<'${entityName}'>(command.data.id, '${entityName}');
+      const id = EntityId.from<'${entityName}'>(command.data.id);
       const entity = await this.repository.findById(id);
       
       if (!entity) {
-        return Result.fail('${entityName} not found');
+        return Failure.create(new Error('${entityName} not found'));
       }
 
       await this.repository.delete(id);
-      return Result.ok(undefined);
+      return Success.create(undefined);
     } catch (error) {
-      return Result.fail(error instanceof Error ? error.message : 'Failed to delete ${entityName}');
+      return Failure.create(
+        error instanceof Error ? error : new Error('Failed to delete ${entityName}')
+      );
     }
   }
 }
