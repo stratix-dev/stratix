@@ -25,7 +25,7 @@ export function createNewCommand(): Command {
         options?: NewCommandOptions & { skipInstall?: boolean },
       ): Promise<void> => {
         try {
-          console.log(chalk.blue.bold('\n🚀 Create Stratix Project\n'));
+          console.log(chalk.blue.bold('\nCreate Stratix Project\n'));
 
           if (!projectName) {
             const answer = await inquirer.prompt<{ name: string }>([
@@ -45,13 +45,13 @@ export function createNewCommand(): Command {
 
         const validation = ValidationUtils.validateProjectName(projectName);
         if (!validation.valid) {
-          console.error(chalk.red(`\n✖ ${validation.error}\n`));
+          console.error(chalk.red(`\n${validation.error}\n`));
           process.exit(1);
         }
 
         const projectPath = path.join(process.cwd(), projectName);
         if (await fs.pathExists(projectPath)) {
-          console.error(chalk.red(`\n✖ Directory "${projectName}" already exists!\n`));
+          console.error(chalk.red(`\nDirectory "${projectName}" already exists!\n`));
           process.exit(1);
         }
 
@@ -118,7 +118,7 @@ export function createNewCommand(): Command {
           spinner.succeed('Dependencies installed!');
         }
 
-        console.log(chalk.green.bold('\n✓ Your Stratix project is ready!\n'));
+        console.log(chalk.green.bold('\nYour Stratix project is ready!\n'));
         console.log(chalk.cyan('Next steps:\n'));
         console.log(chalk.white(`  cd ${projectName}`));
         
@@ -129,10 +129,10 @@ export function createNewCommand(): Command {
         console.log(chalk.white(`  ${PackageManagerUtils.getRunCommand(packageManager, 'dev')}\n`));
         console.log(chalk.gray('Generate your first bounded context:\n'));
         console.log(chalk.white('  stratix generate context Products --props "name:string,price:number"\n'));
-        console.log(chalk.gray('Happy coding! 🎉\n'));
+        console.log(chalk.gray('Happy coding!\n'));
 
       } catch (error) {
-        console.error(chalk.red('\n✖ Failed to create project\n'));
+        console.error(chalk.red('\nFailed to create project\n'));
         console.error(error);
         process.exit(1);
       }

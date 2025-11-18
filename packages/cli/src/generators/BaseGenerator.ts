@@ -66,7 +66,7 @@ export abstract class BaseGenerator {
       }
 
       spinner.stop();
-      console.log(chalk.green.bold(`\n✓ Generated ${files.length} file(s)\n`));
+      console.log(chalk.green.bold(`\nGenerated ${files.length} file(s)\n`));
     } catch (error) {
       spinner.fail('Failed to generate files');
       throw error;

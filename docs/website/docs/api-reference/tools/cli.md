@@ -361,6 +361,335 @@ export class GetProductByIdHandler implements QueryHandler<GetProductById, Produ
 
 ---
 
+### stratix generate repository
+
+Generate a repository interface and in-memory implementation.
+
+```bash
+stratix generate repository <entityName> [options]
+```
+
+**Alias:** `stratix g repository`, `stratix g repo`
+
+**Options:**
+
+- `--no-implementation` - Generate only the interface
+- `--dry-run` - Preview files without writing
+- `--force` - Overwrite existing files
+
+**Examples:**
+
+```bash
+stratix g repository Product
+stratix g repo Order --no-implementation
+```
+
+**Generated Files (2 by default):**
+
+```typescript
+// src/domain/repositories/ProductRepository.ts
+import type { Repository } from '@stratix/abstractions';
+import type { Product } from '../entities/Product.js';
+import type { ProductId } from '../entities/Product.js';
+
+export interface ProductRepository extends Repository<Product, ProductId> {
+  findByName(name: string): Promise<Product | null>;
+  findAll(): Promise<Product[]>;
+}
+```
+
+```typescript
+// src/infrastructure/persistence/InMemoryProductRepository.ts
+import type { ProductRepository } from '../../domain/repositories/ProductRepository.js';
+import type { Product } from '../../domain/entities/Product.js';
+import type { ProductId } from '../../domain/entities/Product.js';
+
+export class InMemoryProductRepository implements ProductRepository {
+  private products: Map<string, Product> = new Map();
+
+  async save(product: Product): Promise<void> {
+    this.products.set(product.id.toString(), product);
+  }
+
+  async findById(id: ProductId): Promise<Product | null> {
+    return this.products.get(id.toString()) ?? null;
+  }
+
+  async findByName(name: string): Promise<Product | null> {
+    for (const product of this.products.values()) {
+      if (product.name === name) {
+        return product;
+      }
+    }
+    return null;
+  }
+
+  async findAll(): Promise<Product[]> {
+    return Array.from(this.products.values());
+  }
+
+  async delete(id: ProductId): Promise<void> {
+    this.products.delete(id.toString());
+  }
+
+  async exists(id: ProductId): Promise<boolean> {
+    return this.products.has(id.toString());
+  }
+}
+```
+
+---
+
+### stratix generate event-handler
+
+Generate a domain event handler.
+
+```bash
+stratix generate event-handler <eventName> [options]
+```
+
+**Alias:** `stratix g event-handler`, `stratix g eh`
+
+**Options:**
+
+- `--handler <name>` - Custom handler name
+- `--dry-run` - Preview files without writing
+- `--force` - Overwrite existing files
+
+**Examples:**
+
+```bash
+stratix g event-handler ProductCreated
+stratix g eh OrderPlaced --handler NotifyCustomerHandler
+```
+
+**Generated File:**
+
+```typescript
+// src/application/event-handlers/ProductCreatedHandler.ts
+import type { DomainEventHandler } from '@stratix/abstractions';
+import type { ProductCreated } from '../../domain/events/ProductCreated.js';
+
+export class ProductCreatedHandler implements DomainEventHandler<ProductCreated> {
+  constructor() {}
+
+  async handle(event: ProductCreated): Promise<void> {
+    console.log(`Handling ${event.eventName} event:`, event.payload);
+    
+    // TODO: Implement your business logic here
+    // Examples:
+    // - Send notification
+    // - Update read model
+    // - Trigger another process
+    // - Log analytics
+  }
+
+  get eventName(): string {
+    return 'ProductCreated';
+  }
+}
+```
+
+---
+
+### stratix generate plugin
+
+Generate a custom plugin for extending Stratix applications.
+
+```bash
+stratix generate plugin <name> [options]
+```
+
+**Alias:** `stratix g plugin`
+
+**Options:**
+
+- `--no-health-check` - Generate without health check method
+- `--dry-run` - Preview files without writing
+- `--force` - Overwrite existing files
+
+**Examples:**
+
+```bash
+stratix g plugin Payment
+stratix g plugin Cache --no-health-check
+```
+
+**Generated File:**
+
+```typescript
+// src/plugins/PaymentPlugin.ts
+import type { Plugin, PluginContext, HealthCheckResult } from '@stratix/abstractions';
+
+export interface PaymentPluginOptions {
+  // Add your plugin configuration options here
+}
+
+export class PaymentPlugin implements Plugin {
+  readonly name = 'payment';
+  readonly version = '0.1.0';
+  readonly dependencies: string[] = [];
+
+  constructor(private options: PaymentPluginOptions = {}) {}
+
+  async initialize(context: PluginContext): Promise<void> {
+    const { container, logger } = context;
+    
+    logger.info(`Initializing ${this.name} plugin`);
+
+    // TODO: Register services with DI container
+    // container.register('myService', () => new MyService(this.options));
+  }
+
+  async start(): Promise<void> {
+    // TODO: Start plugin services
+    // Examples:
+    // - Connect to database
+    // - Start HTTP server
+    // - Subscribe to message queue
+  }
+
+  async stop(): Promise<void> {
+    // TODO: Stop plugin services and cleanup
+    // Examples:
+    // - Close database connections
+    // - Stop HTTP server
+    // - Unsubscribe from message queue
+  }
+
+  async healthCheck(): Promise<HealthCheckResult> {
+    try {
+      // TODO: Implement health check logic
+      return {
+        healthy: true,
+        message: 'Payment is healthy',
+      };
+    } catch (error) {
+      return {
+        healthy: false,
+        message: `Payment health check failed: ${error}`,
+        error,
+      };
+    }
+  }
+}
+```
+
+---
+
+### stratix add
+
+Install Stratix extensions to your project.
+
+```bash
+stratix add <extension> [options]
+```
+
+**Options:**
+
+- `--dev` - Install as dev dependency
+
+**Examples:**
+
+```bash
+# Production extensions
+stratix add http         # Fastify HTTP server
+stratix add validation   # Zod validation
+stratix add auth         # JWT authentication and RBAC
+stratix add mappers      # Entity to DTO mappers
+stratix add errors       # Structured error handling
+stratix add migrations   # Database migrations
+
+# Data & infrastructure
+stratix add postgres     # PostgreSQL integration
+stratix add mongodb      # MongoDB integration
+stratix add redis        # Redis caching
+stratix add rabbitmq     # RabbitMQ messaging
+
+# AI providers
+stratix add ai-openai    # OpenAI LLM provider
+stratix add ai-anthropic # Anthropic Claude provider
+
+# Observability
+stratix add opentelemetry # OpenTelemetry
+stratix add secrets       # Secrets management
+```
+
+**List Available Extensions:**
+
+```bash
+stratix add list
+```
+
+Output:
+
+```
+Available Stratix Extensions
+
+Production Extensions:
+  http            - Fastify HTTP server
+  validation      - Zod-based validation
+  mappers         - Entity to DTO mapping utilities
+  auth            - JWT authentication and RBAC
+  migrations      - Database migration system
+  errors          - Structured error handling
+
+Data & Infrastructure:
+  postgres        - PostgreSQL database integration
+  mongodb         - MongoDB database integration
+  redis           - Redis caching and session store
+  rabbitmq        - RabbitMQ message broker
+  opentelemetry   - OpenTelemetry observability
+  secrets         - Secrets management
+
+AI Providers:
+  ai-openai       - OpenAI LLM provider
+  ai-anthropic    - Anthropic Claude provider
+
+Usage: stratix add <extension>
+```
+
+---
+
+### stratix info
+
+Display project information including installed Stratix packages.
+
+```bash
+stratix info
+```
+
+**Example Output:**
+
+```
+Project Information
+
+Project:
+  Name:    my-ecommerce
+  Version: 1.0.0
+
+Environment:
+  Package Manager: pnpm
+  Project Structure: DDD/Hexagonal
+  Node Version: v20.10.0
+
+Stratix Packages:
+  @stratix/primitives@0.1.3
+  @stratix/abstractions@0.1.3
+  @stratix/runtime@0.1.3
+  @stratix/impl-di-awilix@0.1.3
+  @stratix/ext-http-fastify@0.1.3
+  @stratix/ext-postgres@0.1.3
+
+Quick Commands:
+  stratix g context <name>    - Generate bounded context
+  stratix g entity <name>     - Generate entity
+  stratix add <extension>     - Install extension
+  stratix add list            - List available extensions
+```
+
+---
+
 ## Props Format
 
 All generators support a props format for defining properties:

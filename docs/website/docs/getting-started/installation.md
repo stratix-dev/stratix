@@ -40,7 +40,7 @@ This will:
 The CLI will ask you a few questions:
 
 ```bash
-🚀 Create Stratix Project
+Create Stratix Project
 
 ? Project name: my-app
 ? Package manager: pnpm
@@ -236,4 +236,4 @@ This will:
 
 Now that you have Stratix installed, let's create your first entity:
 
-👉 [Quick Start](./quick-start.md)
+[Quick Start](./quick-start.md)

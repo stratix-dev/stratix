@@ -142,4 +142,4 @@ Stratix is ideal for:
 
 Ready to get started? Let's install Stratix and create your first project:
 
-👉 [Installation](./installation.md)
+[Installation](./installation.md)
