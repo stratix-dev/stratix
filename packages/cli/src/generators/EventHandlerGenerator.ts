@@ -6,6 +6,7 @@ import { generateEventHandler } from './templates/event-handler-template.js';
 export interface EventHandlerGeneratorOptions {
   eventName: string;
   handlerName?: string;
+  context?: string;
   projectRoot?: string;
 }
 
@@ -15,20 +16,31 @@ export class EventHandlerGenerator extends BaseGenerator {
   }
 
   async generate(): Promise<GeneratedFile[]> {
-    const { eventName, handlerName } = this.options;
+    const { eventName, handlerName, context } = this.options;
     const eventPascal = this.naming.toPascalCase(eventName);
     const handlerPascal = handlerName
       ? this.naming.toPascalCase(handlerName)
       : `${eventPascal}Handler`;
 
-    await Promise.resolve();
+    const structure = await this.detectProjectStructure();
+
+    let handlerPath: string;
+    if (context) {
+      // Generate inside bounded context
+      const contextPath = structure.contextsPath 
+        ? path.join(structure.contextsPath, this.naming.toKebabCase(context))
+        : path.join(structure.sourceRoot, 'contexts', this.naming.toKebabCase(context));
+      handlerPath = path.join(contextPath, 'application', 'event-handlers');
+    } else {
+      // Generate in global application
+      handlerPath = structure.applicationPath
+        ? path.join(structure.applicationPath, 'event-handlers')
+        : path.join(structure.sourceRoot, 'application', 'event-handlers');
+    }
 
     return [
       {
-        path: path.join(
-          this.projectRoot,
-          `src/application/event-handlers/${handlerPascal}.ts`
-        ),
+        path: path.join(handlerPath, `${handlerPascal}.ts`),
         content: generateEventHandler(eventPascal, handlerPascal),
         action: 'create',
       },

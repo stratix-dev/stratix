@@ -11,6 +11,7 @@ export interface GenerateCommandOptions {
   withValidation?: boolean;
   input?: string;
   output?: string;
+  context?: string;
   dryRun?: boolean;
   force?: boolean;
 }

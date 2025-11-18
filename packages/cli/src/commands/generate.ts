@@ -51,6 +51,7 @@ export function createGenerateCommand(): Command {
     .command('entity <name>')
     .description('Generate a domain entity or aggregate root')
     .option('--props <props>', 'Properties (e.g., "name:string,age:number")')
+    .option('--context <context>', 'Generate inside a specific bounded context')
     .option('--no-aggregate', 'Generate as Entity instead of AggregateRoot')
     .option('--dry-run', 'Preview generated files without writing')
     .option('--force', 'Overwrite existing files')
@@ -61,7 +62,8 @@ export function createGenerateCommand(): Command {
         const generator = new EntityGenerator(name, options);
         await generator.generate();
         
-        console.log(chalk.gray(`\nNext: Import and use ${name} in your application\n`));
+        const contextInfo = options.context ? ` in ${options.context} context` : '';
+        console.log(chalk.gray(`\nNext: Import and use ${name}${contextInfo} in your application\n`));
       } catch (error) {
         console.error(chalk.red('\nFailed to generate entity\n'));
         console.error(error instanceof Error ? error.message : error);
@@ -74,6 +76,7 @@ export function createGenerateCommand(): Command {
     .alias('vo')
     .description('Generate a domain value object')
     .option('--props <props>', 'Properties (e.g., "street:string,city:string")')
+    .option('--context <context>', 'Generate inside a specific bounded context')
     .option('--dry-run', 'Preview generated files without writing')
     .option('--force', 'Overwrite existing files')
     .action(async (name: string, options: GenerateCommandOptions) => {
@@ -83,7 +86,8 @@ export function createGenerateCommand(): Command {
         const generator = new ValueObjectGenerator(name, options);
         await generator.generate();
         
-        console.log(chalk.gray(`\nNext: Use ${name} in your entities\n`));
+        const contextInfo = options.context ? ` in ${options.context} context` : '';
+        console.log(chalk.gray(`\nNext: Use ${name}${contextInfo} in your entities\n`));
       } catch (error) {
         console.error(chalk.red('\nFailed to generate value object\n'));
         console.error(error instanceof Error ? error.message : error);
@@ -96,6 +100,7 @@ export function createGenerateCommand(): Command {
     .description('Generate a CQRS command with handler')
     .option('--input <props>', 'Input properties (e.g., "userId:string,amount:number")')
     .option('--props <props>', 'Alias for --input')
+    .option('--context <context>', 'Generate inside a specific bounded context')
     .option('--dry-run', 'Preview generated files without writing')
     .option('--force', 'Overwrite existing files')
     .action(async (name: string, options: GenerateCommandOptions) => {
@@ -105,7 +110,8 @@ export function createGenerateCommand(): Command {
         const generator = new CommandGenerator(name, options);
         await generator.generate();
         
-        console.log(chalk.gray(`\nNext: Register ${name}Handler with your command bus\n`));
+        const contextInfo = options.context ? ` in ${options.context} context` : '';
+        console.log(chalk.gray(`\nNext: Register ${name}Handler${contextInfo} with your command bus\n`));
       } catch (error) {
         console.error(chalk.red('\nFailed to generate command\n'));
         console.error(error instanceof Error ? error.message : error);
@@ -119,6 +125,7 @@ export function createGenerateCommand(): Command {
     .option('--input <props>', 'Input properties (e.g., "id:string")')
     .option('--output <type>', 'Output type (e.g., "Product" or "Product[]")', 'any')
     .option('--props <props>', 'Alias for --input')
+    .option('--context <context>', 'Generate inside a specific bounded context')
     .option('--dry-run', 'Preview generated files without writing')
     .option('--force', 'Overwrite existing files')
     .action(async (name: string, options: GenerateCommandOptions) => {
@@ -128,7 +135,8 @@ export function createGenerateCommand(): Command {
         const generator = new QueryGenerator(name, options);
         await generator.generate();
         
-        console.log(chalk.gray(`\nNext: Register ${name}Handler with your query bus\n`));
+        const contextInfo = options.context ? ` in ${options.context} context` : '';
+        console.log(chalk.gray(`\nNext: Register ${name}Handler${contextInfo} with your query bus\n`));
       } catch (error) {
         console.error(chalk.red('\nFailed to generate query\n'));
         console.error(error instanceof Error ? error.message : error);
@@ -141,6 +149,7 @@ export function createGenerateCommand(): Command {
     .alias('repo')
     .description('Generate a repository interface and implementation')
     .option('--no-implementation', 'Generate only the interface')
+    .option('--context <context>', 'Generate inside a specific bounded context')
     .option('--dry-run', 'Preview generated files without writing')
     .option('--force', 'Overwrite existing files')
     .action(async (entityName: string, options: GenerateCommandOptions & { implementation?: boolean }) => {
@@ -150,6 +159,7 @@ export function createGenerateCommand(): Command {
         const generator = new RepositoryGenerator({
           entityName,
           withImplementation: options.implementation !== false,
+          context: options.context,
         });
         const files = await generator.generate();
         await generator['writeFiles'](files, options.dryRun);
@@ -160,7 +170,8 @@ export function createGenerateCommand(): Command {
           console.log(chalk.white('  - Repository interface'));
           console.log(chalk.white('  - InMemory implementation\n'));
         }
-        console.log(chalk.gray(`Next: Inject ${entityName}Repository in your handlers\n`));
+        const contextInfo = options.context ? ` in ${options.context} context` : '';
+        console.log(chalk.gray(`Next: Inject ${entityName}Repository${contextInfo} in your handlers\n`));
       } catch (error) {
         console.error(chalk.red('\nFailed to generate repository\n'));
         console.error(error instanceof Error ? error.message : error);
@@ -173,6 +184,7 @@ export function createGenerateCommand(): Command {
     .alias('eh')
     .description('Generate a domain event handler')
     .option('--handler <name>', 'Custom handler name')
+    .option('--context <context>', 'Generate inside a specific bounded context')
     .option('--dry-run', 'Preview generated files without writing')
     .option('--force', 'Overwrite existing files')
     .action(async (eventName: string, options: GenerateCommandOptions & { handler?: string }) => {
@@ -182,12 +194,14 @@ export function createGenerateCommand(): Command {
         const generator = new EventHandlerGenerator({
           eventName,
           handlerName: options.handler,
+          context: options.context,
         });
         const files = await generator.generate();
         await generator['writeFiles'](files, options.dryRun);
         
         console.log(chalk.green.bold('\nEvent Handler generated!\n'));
-        console.log(chalk.gray(`Next: Register handler with EventBus\n`));
+        const contextInfo = options.context ? ` in ${options.context} context` : '';
+        console.log(chalk.gray(`Next: Register handler${contextInfo} with EventBus\n`));
       } catch (error) {
         console.error(chalk.red('\nFailed to generate event handler\n'));
         console.error(error instanceof Error ? error.message : error);

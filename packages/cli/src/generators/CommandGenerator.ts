@@ -22,9 +22,19 @@ export class CommandGenerator extends BaseGenerator {
     const props = ValidationUtils.parseProps(this.options.input || this.options.props);
     const structure = await this.detectProjectStructure();
 
-    const commandPath = structure.applicationPath 
-      ? path.join(structure.applicationPath, 'commands')
-      : path.join(structure.sourceRoot, 'application', 'commands');
+    let commandPath: string;
+    if (this.options.context) {
+      // Generate inside bounded context
+      const contextPath = structure.contextsPath 
+        ? path.join(structure.contextsPath, this.naming.toKebabCase(this.options.context))
+        : path.join(structure.sourceRoot, 'contexts', this.naming.toKebabCase(this.options.context));
+      commandPath = path.join(contextPath, 'application', 'commands');
+    } else {
+      // Generate in global application
+      commandPath = structure.applicationPath 
+        ? path.join(structure.applicationPath, 'commands')
+        : path.join(structure.sourceRoot, 'application', 'commands');
+    }
 
     const templateData: TemplateData = {
       entityName: this.naming.toPascalCase(this.commandName),

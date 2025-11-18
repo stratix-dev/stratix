@@ -26,9 +26,19 @@ export class ValueObjectGenerator extends BaseGenerator {
 
     const structure = await this.detectProjectStructure();
 
-    const voPath = structure.domainPath 
-      ? path.join(structure.domainPath, 'value-objects')
-      : path.join(structure.sourceRoot, 'domain', 'value-objects');
+    let voPath: string;
+    if (this.options.context) {
+      // Generate inside bounded context
+      const contextPath = structure.contextsPath 
+        ? path.join(structure.contextsPath, this.naming.toKebabCase(this.options.context))
+        : path.join(structure.sourceRoot, 'contexts', this.naming.toKebabCase(this.options.context));
+      voPath = path.join(contextPath, 'domain', 'value-objects');
+    } else {
+      // Generate in global domain
+      voPath = structure.domainPath 
+        ? path.join(structure.domainPath, 'value-objects')
+        : path.join(structure.sourceRoot, 'domain', 'value-objects');
+    }
 
     const templateData: TemplateData = {
       entityName: this.naming.toPascalCase(this.name),
