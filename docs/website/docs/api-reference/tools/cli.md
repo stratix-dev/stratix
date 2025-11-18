@@ -971,4 +971,4 @@ stratix g entity Product --props "name:string" --force
 
 - [Quick Start Guide](../../getting-started/quick-start.md)
 - [Project Structure](../../core-concepts/project-structure.md)
-- [Bounded Contexts](../../core-concepts/modules.md)
+- [Bounded Contexts](../../core-concepts/bounded-contexts.md)

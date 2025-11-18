@@ -260,6 +260,10 @@ Different teams can work on different layers independently.
 
 ## Next Steps
 
-- [Entities & Aggregates](./entities.md) - Learn about domain modeling
+- [Plugins](./plugins.md) - Learn about the plugin system
+- [Bounded Contexts](./bounded-contexts.md) - Portable domain modules
+- [Entities & Aggregates](./entities.md) - Domain modeling
 - [Value Objects](./value-objects.md) - Immutable domain concepts
+- [Repository Pattern](./repository-pattern.md) - Data access abstraction
+- [Result Pattern](./result-pattern.md) - Explicit error handling
 - [CQRS](./cqrs.md) - Commands and queries pattern
