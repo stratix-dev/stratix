@@ -28,8 +28,8 @@
     "@stratix/primitives": "workspace:*",
     "@stratix/abstractions": "workspace:*",
     "@stratix/runtime": "workspace:*",
-    "@stratix/impl-di-awilix": "workspace:*",
-    "@stratix/impl-logger-console": "workspace:*"
+    "@stratix/di-awilix": "workspace:*",
+    "@stratix/logger-console": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

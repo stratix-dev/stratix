@@ -119,7 +119,7 @@ interface LLMProvider {
 
 ```typescript
 // OpenAI
-import { OpenAIProvider } from '@stratix/ext-ai-agents-openai';
+import { OpenAIProvider } from '@stratix/ai-openai';
 const provider = new OpenAIProvider({
   apiKey: process.env.OPENAI_API_KEY,
   organization: 'org-123',  // Optional
@@ -127,7 +127,7 @@ const provider = new OpenAIProvider({
 });
 
 // Anthropic
-import { AnthropicProvider } from '@stratix/ext-ai-agents-anthropic';
+import { AnthropicProvider } from '@stratix/ai-anthropic';
 const provider = new AnthropicProvider({
   apiKey: process.env.ANTHROPIC_API_KEY,
   baseURL: 'https://api.anthropic.com'  // Optional
@@ -147,8 +147,8 @@ mockProvider.setResponse({
 The `StratixAgentOrchestrator` manages agent lifecycle and execution:
 
 ```typescript
-import { StratixAgentOrchestrator } from '@stratix/impl-ai-agents';
-import { InMemoryAgentRepository, InMemoryExecutionAuditLog } from '@stratix/impl-ai-agents';
+import { StratixAgentOrchestrator } from '@stratix/ai-runtime';
+import { InMemoryAgentRepository, InMemoryExecutionAuditLog } from '@stratix/ai-runtime';
 
 const repository = new InMemoryAgentRepository();
 const auditLog = new InMemoryExecutionAuditLog();
@@ -460,7 +460,7 @@ See the [Testing Guide](../advanced/testing.md) for comprehensive testing strate
 Both OpenAI and Anthropic providers support streaming for real-time responses:
 
 ```typescript
-import { OpenAIProvider } from '@stratix/ext-ai-agents-openai';
+import { OpenAIProvider } from '@stratix/ai-openai';
 
 const provider = new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -483,7 +483,7 @@ for await (const chunk of provider.streamChat({
 **Anthropic Streaming**:
 
 ```typescript
-import { AnthropicProvider } from '@stratix/ext-ai-agents-anthropic';
+import { AnthropicProvider } from '@stratix/ai-anthropic';
 
 const provider = new AnthropicProvider({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -506,7 +506,7 @@ for await (const chunk of provider.streamChat({
 Generate vector embeddings for semantic search (OpenAI only):
 
 ```typescript
-import { OpenAIProvider } from '@stratix/ext-ai-agents-openai';
+import { OpenAIProvider } from '@stratix/ai-openai';
 
 const provider = new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY });
 

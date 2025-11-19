@@ -211,7 +211,7 @@ Stratix treats **AI agents as domain entities**, not service wrappers. Build int
 
 ```typescript
 import { AIAgent, AgentResult, AgentContext } from '@stratix/primitives';
-import { OpenAIProvider } from '@stratix/ext-ai-agents-openai';
+import { OpenAIProvider } from '@stratix/ai-openai';
 
 class CustomerSupportAgent extends AIAgent<SupportTicket, SupportResponse> {
   readonly name = 'Customer Support Agent';
@@ -259,7 +259,7 @@ console.log('Cost:', result.executionTrace.totalCost); // Automatic tracking
 
 **Agent orchestration:**
 ```typescript
-import { StratixAgentOrchestrator } from '@stratix/impl-ai-agents';
+import { StratixAgentOrchestrator } from '@stratix/ai-runtime';
 
 const orchestrator = new StratixAgentOrchestrator(
   agentRepository,
@@ -279,8 +279,8 @@ orchestrator.registerAgent(analysisAgent);
 
 **Multi-LLM support:**
 ```typescript
-import { OpenAIProvider } from '@stratix/ext-ai-agents-openai';
-import { AnthropicProvider } from '@stratix/ext-ai-agents-anthropic';
+import { OpenAIProvider } from '@stratix/ai-openai';
+import { AnthropicProvider } from '@stratix/ai-anthropic';
 
 // Unified interface, swap providers without changing agent code
 const openAI = new OpenAIProvider({ apiKey: process.env.OPENAI_KEY });
@@ -695,8 +695,8 @@ Update `src/index.ts`:
 
 ```typescript
 import { ApplicationBuilder } from '@stratix/runtime';
-import { AwilixContainer } from '@stratix/impl-di-awilix';
-import { ConsoleLogger, LogLevel, ServiceLifetime } from '@stratix/impl-logger-console';
+import { AwilixContainer } from '@stratix/di-awilix';
+import { ConsoleLogger, LogLevel, ServiceLifetime } from '@stratix/logger-console';
 import { CreateProductHandler } from './application/commands/CreateProduct.js';
 import { InMemoryProductRepository } from './infrastructure/persistence/InMemoryProductRepository.js';
 

@@ -112,19 +112,19 @@ Basic implementations of core abstractions.
 
 ### Dependency Injection
 
-- **@stratix/impl-di-awilix** - Awilix-based DI container
+- **@stratix/di-awilix** - Awilix-based DI container
 
 ### Logging
 
-- **@stratix/impl-logger-console** - Console logging implementation
+- **@stratix/logger-console** - Console logging implementation
 
 ### CQRS
 
-- **@stratix/impl-cqrs-inmemory** - In-memory command, query, and event buses
+- **@stratix/cqrs-inmemory** - In-memory command, query, and event buses
 
 ### AI Agents
 
-- **@stratix/impl-ai-agents** - Agent orchestrator with budget enforcement
+- **@stratix/ai-runtime** - Agent orchestrator with budget enforcement
 
 ---
 
@@ -134,29 +134,29 @@ Production-ready plugins for enterprise applications.
 
 ### Production Extensions
 
-- **@stratix/ext-http-fastify** - Fastify HTTP server integration
-- **@stratix/ext-validation-zod** - Zod-based schema validation
-- **@stratix/ext-mappers** - Entity-to-DTO mapping
-- **@stratix/ext-auth** - JWT authentication & RBAC
-- **@stratix/ext-migrations** - Database migration system
-- **@stratix/ext-errors** - Structured error handling
+- **@stratix/http-fastify** - Fastify HTTP server integration
+- **@stratix/validation-zod** - Zod-based schema validation
+- **@stratix/mappers** - Entity-to-DTO mapping
+- **@stratix/auth** - JWT authentication & RBAC
+- **@stratix/migrations** - Database migration system
+- **@stratix/errors** - Structured error handling
 
 ### Data & Infrastructure
 
-- **@stratix/ext-postgres** - PostgreSQL integration
-- **@stratix/ext-mongodb** - MongoDB integration
-- **@stratix/ext-redis** - Redis caching
-- **@stratix/ext-rabbitmq** - RabbitMQ messaging
+- **@stratix/db-postgres** - PostgreSQL integration
+- **@stratix/db-mongodb** - MongoDB integration
+- **@stratix/db-redis** - Redis caching
+- **@stratix/msg-rabbitmq** - RabbitMQ messaging
 
 ### Observability
 
-- **@stratix/ext-opentelemetry** - OpenTelemetry (traces, metrics, logs)
-- **@stratix/ext-secrets** - Secrets management
+- **@stratix/obs-opentelemetry** - OpenTelemetry (traces, metrics, logs)
+- **@stratix/secrets** - Secrets management
 
 ### AI Providers
 
-- **@stratix/ext-ai-agents-openai** - OpenAI provider with streaming
-- **@stratix/ext-ai-agents-anthropic** - Anthropic Claude provider
+- **@stratix/ai-openai** - OpenAI provider with streaming
+- **@stratix/ai-anthropic** - Anthropic Claude provider
 
 ---
 

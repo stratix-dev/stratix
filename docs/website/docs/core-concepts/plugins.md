@@ -68,30 +68,30 @@ await app.stop();
 Stratix provides production-ready plugins for common needs:
 
 **Core Implementations:**
-- `@stratix/impl-di-awilix` - Dependency injection (Awilix)
-- `@stratix/impl-logger-console` - Console logging
-- `@stratix/impl-cqrs-inmemory` - In-memory CQRS buses
-- `@stratix/impl-ai-agents` - AI Agent orchestrator
+- `@stratix/di-awilix` - Dependency injection (Awilix)
+- `@stratix/logger-console` - Console logging
+- `@stratix/cqrs-inmemory` - In-memory CQRS buses
+- `@stratix/ai-runtime` - AI Agent orchestrator
 
 **Production Extensions:**
-- `@stratix/ext-http-fastify` - Fastify HTTP server
-- `@stratix/ext-validation-zod` - Zod schema validation
-- `@stratix/ext-mappers` - Entity-to-DTO mapping
-- `@stratix/ext-auth` - JWT + RBAC authentication
-- `@stratix/ext-migrations` - Database migrations
-- `@stratix/ext-errors` - Structured error handling
+- `@stratix/http-fastify` - Fastify HTTP server
+- `@stratix/validation-zod` - Zod schema validation
+- `@stratix/mappers` - Entity-to-DTO mapping
+- `@stratix/auth` - JWT + RBAC authentication
+- `@stratix/migrations` - Database migrations
+- `@stratix/errors` - Structured error handling
 
 **Data and Infrastructure:**
-- `@stratix/ext-postgres` - PostgreSQL integration
-- `@stratix/ext-mongodb` - MongoDB integration
-- `@stratix/ext-redis` - Redis caching
-- `@stratix/ext-rabbitmq` - RabbitMQ messaging
-- `@stratix/ext-opentelemetry` - Observability (traces, metrics, logs)
-- `@stratix/ext-secrets` - Secrets management
+- `@stratix/db-postgres` - PostgreSQL integration
+- `@stratix/db-mongodb` - MongoDB integration
+- `@stratix/db-redis` - Redis caching
+- `@stratix/msg-rabbitmq` - RabbitMQ messaging
+- `@stratix/obs-opentelemetry` - Observability (traces, metrics, logs)
+- `@stratix/secrets` - Secrets management
 
 **AI Providers:**
-- `@stratix/ext-ai-agents-openai` - OpenAI LLM provider
-- `@stratix/ext-ai-agents-anthropic` - Anthropic Claude provider
+- `@stratix/ai-openai` - OpenAI LLM provider
+- `@stratix/ai-anthropic` - Anthropic Claude provider
 
 ### Custom Plugins
 

@@ -224,7 +224,7 @@ Environment:
 Stratix Packages:
   @stratix/primitives@0.1.3
   @stratix/runtime@0.1.3
-  @stratix/ext-http-fastify@0.1.3
+  @stratix/http-fastify@0.1.3
 
 Quick Commands:
   stratix g context <name>    - Generate bounded context

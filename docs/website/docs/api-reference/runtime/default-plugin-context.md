@@ -115,8 +115,8 @@ class MyPlugin implements Plugin {
 
 ```typescript
 import { DefaultPluginContext } from '@stratix/runtime';
-import { AwilixContainer } from '@stratix/impl-di-awilix';
-import { ConsoleLogger } from '@stratix/impl-logger-console';
+import { AwilixContainer } from '@stratix/di-awilix';
+import { ConsoleLogger } from '@stratix/logger-console';
 
 const container = new AwilixContainer();
 const logger = new ConsoleLogger();

@@ -52,7 +52,7 @@ interface RegisterOptions {
 ### Basic Registration and Resolution
 
 ```typescript
-import { Container } from '@stratix/impl-di-awilix';
+import { Container } from '@stratix/di-awilix';
 
 const container = new AwilixContainer();
 

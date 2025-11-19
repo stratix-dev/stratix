@@ -206,7 +206,7 @@ git push origin v0.1.0
 # Check published versions
 npm view @stratix/primitives versions
 npm view @stratix/abstractions versions
-npm view @stratix/impl-ai-agents versions
+npm view @stratix/ai-runtime versions
 
 # Test installation
 mkdir /tmp/test-stratix
@@ -231,7 +231,7 @@ cd test-project
 npm init -y
 
 # Install packages
-npm install @stratix/primitives @stratix/abstractions @stratix/impl-ai-agents
+npm install @stratix/primitives @stratix/abstractions @stratix/ai-runtime
 
 # Test imports
 node -e "const { AIAgent } = require('@stratix/primitives'); console.log('Success!');"

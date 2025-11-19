@@ -26,8 +26,8 @@ Fluent API for configuring and building Stratix applications:
 
 ```typescript
 import { ApplicationBuilder } from '@stratix/runtime';
-import { AwilixContainer } from '@stratix/impl-di-awilix';
-import { ConsoleLogger } from '@stratix/impl-logger-console';
+import { AwilixContainer } from '@stratix/di-awilix';
+import { ConsoleLogger } from '@stratix/logger-console';
 
 const app = await ApplicationBuilder.create()
   .useContainer(new AwilixContainer())
@@ -191,8 +191,8 @@ Lifecycle phases enum:
 
 ```typescript
 import { ApplicationBuilder } from '@stratix/runtime';
-import { AwilixContainer } from '@stratix/impl-di-awilix';
-import { ConsoleLogger } from '@stratix/impl-logger-console';
+import { AwilixContainer } from '@stratix/di-awilix';
+import { ConsoleLogger } from '@stratix/logger-console';
 
 // Build application
 const app = await ApplicationBuilder.create()

@@ -108,7 +108,7 @@ Stratix exists to help development teams build production-ready applications wit
 
 ```typescript
 import { AIAgent, AgentResult, AgentContext } from '@stratix/primitives';
-import { OpenAIProvider } from '@stratix/ext-ai-agents-openai';
+import { OpenAIProvider } from '@stratix/ai-openai';
 
 // AI Agent = Domain Entity (not a service or utility)
 class CustomerSupportAgent extends AIAgent<SupportTicket, SupportResponse> {
@@ -155,7 +155,7 @@ class CustomerSupportAgent extends AIAgent<SupportTicket, SupportResponse> {
 **Agent Orchestration:**
 
 ```typescript
-import { StratixAgentOrchestrator } from '@stratix/impl-ai-agents';
+import { StratixAgentOrchestrator } from '@stratix/ai-runtime';
 
 const orchestrator = new StratixAgentOrchestrator(
   agentRepository,
@@ -445,7 +445,7 @@ Stratix treats AI agents with the same rigor as traditional domain entities:
 
 ```typescript
 import { AIAgent } from '@stratix/primitives';
-import { OpenAIProvider } from '@stratix/ext-ai-agents-openai';
+import { OpenAIProvider } from '@stratix/ai-openai';
 
 // AI Agent = Domain Entity
 const supportAgent = AIAgent.create({

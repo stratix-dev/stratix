@@ -679,9 +679,9 @@ Stratix Packages:
   @stratix/primitives@0.1.3
   @stratix/abstractions@0.1.3
   @stratix/runtime@0.1.3
-  @stratix/impl-di-awilix@0.1.3
-  @stratix/ext-http-fastify@0.1.3
-  @stratix/ext-postgres@0.1.3
+  @stratix/di-awilix@0.1.3
+  @stratix/http-fastify@0.1.3
+  @stratix/db-postgres@0.1.3
 
 Quick Commands:
   stratix g context <name>    - Generate bounded context

@@ -216,7 +216,7 @@ class ProductController {
 ### Registering Handlers
 
 ```typescript
-import { InMemoryCommandBus } from '@stratix/impl-cqrs-inmemory';
+import { InMemoryCommandBus } from '@stratix/cqrs-inmemory';
 
 const commandBus = new InMemoryCommandBus();
 
@@ -272,7 +272,7 @@ class ProductController {
 ### Registering Query Handlers
 
 ```typescript
-import { InMemoryQueryBus } from '@stratix/impl-cqrs-inmemory';
+import { InMemoryQueryBus } from '@stratix/cqrs-inmemory';
 
 const queryBus = new InMemoryQueryBus();
 

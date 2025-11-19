@@ -389,13 +389,13 @@ You need at least one implementation for each abstraction:
 
 ```bash
 # Dependency Injection (required)
-npm install @stratix/impl-di-awilix
+npm install @stratix/di-awilix
 
 # Logger (required)
-npm install @stratix/impl-logger-console
+npm install @stratix/logger-console
 
 # CQRS buses (recommended)
-npm install @stratix/impl-cqrs-inmemory
+npm install @stratix/cqrs-inmemory
 ```
 
 ### 3. Install Production Extensions (Optional)
@@ -404,25 +404,25 @@ Choose based on your needs:
 
 ```bash
 # Production Extensions (most common)
-npm install @stratix/ext-http-fastify       # HTTP server
-npm install @stratix/ext-validation-zod     # Validation
-npm install @stratix/ext-auth               # JWT + RBAC
-npm install @stratix/ext-mappers            # Entity-to-DTO
-npm install @stratix/ext-migrations         # DB migrations
-npm install @stratix/ext-errors             # Error handling
+npm install @stratix/http-fastify       # HTTP server
+npm install @stratix/validation-zod     # Validation
+npm install @stratix/auth               # JWT + RBAC
+npm install @stratix/mappers            # Entity-to-DTO
+npm install @stratix/migrations         # DB migrations
+npm install @stratix/errors             # Error handling
 
 # Data & Infrastructure
-npm install @stratix/ext-postgres           # PostgreSQL
-npm install @stratix/ext-mongodb            # MongoDB
-npm install @stratix/ext-redis              # Redis
-npm install @stratix/ext-rabbitmq           # RabbitMQ
-npm install @stratix/ext-opentelemetry      # Observability
-npm install @stratix/ext-secrets            # Secrets management
+npm install @stratix/db-postgres           # PostgreSQL
+npm install @stratix/db-mongodb            # MongoDB
+npm install @stratix/db-redis              # Redis
+npm install @stratix/msg-rabbitmq           # RabbitMQ
+npm install @stratix/obs-opentelemetry      # Observability
+npm install @stratix/secrets            # Secrets management
 
 # AI Providers
-npm install @stratix/ext-ai-agents-openai      # OpenAI
-npm install @stratix/ext-ai-agents-anthropic   # Anthropic
-npm install @stratix/impl-ai-agents            # AI Orchestrator
+npm install @stratix/ai-openai      # OpenAI
+npm install @stratix/ai-anthropic   # Anthropic
+npm install @stratix/ai-runtime            # AI Orchestrator
 ```
 
 ### 4. Create Project Structure
@@ -563,8 +563,8 @@ Create `src/index.ts`:
 
 ```typescript
 import { ApplicationBuilder } from '@stratix/runtime';
-import { AwilixContainer } from '@stratix/impl-di-awilix';
-import { ConsoleLogger, LogLevel } from '@stratix/impl-logger-console';
+import { AwilixContainer } from '@stratix/di-awilix';
+import { ConsoleLogger, LogLevel } from '@stratix/logger-console';
 
 async function bootstrap() {
   const container = new AwilixContainer();
@@ -707,9 +707,9 @@ All packages should use **same version** for compatibility:
 | `@stratix/primitives` | Core classes (Entity, AggregateRoot, ValueObject) |
 | `@stratix/abstractions` | Interfaces (zero runtime code) |
 | `@stratix/runtime` | ApplicationBuilder, Plugin system |
-| `@stratix/impl-di-awilix` | Dependency injection |
-| `@stratix/impl-logger-console` | Console logger |
-| `@stratix/impl-cqrs-inmemory` | In-memory CQRS buses |
+| `@stratix/di-awilix` | Dependency injection |
+| `@stratix/logger-console` | Console logger |
+| `@stratix/cqrs-inmemory` | In-memory CQRS buses |
 | `@stratix/cli` | Code generators |
 | `@stratix/testing` | Testing utilities |
 
@@ -971,7 +971,7 @@ ANTHROPIC_API_KEY=${SECRET_ANTHROPIC_KEY}
 ```
 
 :::tip Use Secrets Management
-For production, use `@stratix/ext-secrets` for AWS Secrets Manager, Azure Key Vault, or HashiCorp Vault integration.
+For production, use `@stratix/secrets` for AWS Secrets Manager, Azure Key Vault, or HashiCorp Vault integration.
 :::
 
 ---

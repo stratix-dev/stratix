@@ -50,8 +50,8 @@ class ApplicationBuilder {
 
 ```typescript
 import { ApplicationBuilder } from '@stratix/runtime';
-import { AwilixContainer } from '@stratix/impl-di-awilix';
-import { ConsoleLogger } from '@stratix/impl-logger-console';
+import { AwilixContainer } from '@stratix/di-awilix';
+import { ConsoleLogger } from '@stratix/logger-console';
 
 const app = await ApplicationBuilder.create()
   .useContainer(new AwilixContainer())

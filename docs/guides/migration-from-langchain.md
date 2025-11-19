@@ -33,12 +33,12 @@ This guide helps you migrate your LangChain applications to Stratix AI Agent Fra
 
 | LangChain                  | Stratix                                  |
 | -------------------------- | ---------------------------------------- |
-| `langchain/llms/openai`    | `@stratix/ext-ai-agents-openai`          |
-| `langchain/llms/anthropic` | `@stratix/ext-ai-agents-anthropic`       |
+| `langchain/llms/openai`    | `@stratix/ai-openai`          |
+| `langchain/llms/anthropic` | `@stratix/ai-anthropic`       |
 | `langchain/chains`         | `@stratix/primitives` (AIAgent)          |
 | `langchain/tools`          | `@stratix/abstractions` (AgentTool)      |
-| `langchain/memory`         | `@stratix/primitives` (AgentMemory interface), `@stratix/impl-ai-agents` (InMemoryAgentMemory) |
-| `langchain/agents`         | `@stratix/impl-ai-agents` (Orchestrator) |
+| `langchain/memory`         | `@stratix/primitives` (AgentMemory interface), `@stratix/ai-runtime` (InMemoryAgentMemory) |
+| `langchain/agents`         | `@stratix/ai-runtime` (Orchestrator) |
 
 ## Migration Examples
 
@@ -61,7 +61,7 @@ console.log(result);
 **Stratix:**
 
 ```typescript
-import { OpenAIProvider } from '@stratix/ext-ai-agents-openai';
+import { OpenAIProvider } from '@stratix/ai-openai';
 
 const provider = new OpenAIProvider({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -111,7 +111,7 @@ console.log(result.text);
 
 ```typescript
 import { AIAgent, AgentResult } from '@stratix/primitives';
-import { OpenAIProvider } from '@stratix/ext-ai-agents-openai';
+import { OpenAIProvider } from '@stratix/ai-openai';
 
 interface CompanyNameInput {
   product: string;
@@ -205,7 +205,7 @@ console.log(result.output);
 ```typescript
 import { AIAgent, AgentResult } from '@stratix/primitives';
 import { AgentTool } from '@stratix/abstractions';
-import { OpenAIProvider } from '@stratix/ext-ai-agents-openai';
+import { OpenAIProvider } from '@stratix/ai-openai';
 
 // Define calculator tool
 interface CalculatorInput {
@@ -344,7 +344,7 @@ console.log(result2.response); // Should remember "John"
 
 ```typescript
 import { AIAgent, AgentResult, AgentContext } from '@stratix/primitives';
-import { OpenAIProvider } from '@stratix/ext-ai-agents-openai';
+import { OpenAIProvider } from '@stratix/ai-openai';
 
 class ConversationAgent extends AIAgent<{ input: string }, { response: string }> {
   constructor(private provider: OpenAIProvider) {
@@ -480,8 +480,8 @@ import {
   StratixAgentOrchestrator,
   InMemoryAgentRepository,
   InMemoryExecutionAuditLog,
-} from '@stratix/impl-ai-agents';
-import { OpenAIProvider } from '@stratix/ext-ai-agents-openai';
+} from '@stratix/ai-runtime';
+import { OpenAIProvider } from '@stratix/ai-openai';
 
 class SynopsisAgent extends AIAgent<{ title: string }, { synopsis: string }> {
   constructor(private provider: OpenAIProvider) {
@@ -584,12 +584,12 @@ if (synopsisResult.isSuccess()) {
 npm uninstall langchain
 
 # Install Stratix core packages
-npm install @stratix/primitives @stratix/abstractions @stratix/impl-ai-agents
+npm install @stratix/primitives @stratix/abstractions @stratix/ai-runtime
 
 # Install provider
-npm install @stratix/ext-ai-agents-openai
+npm install @stratix/ai-openai
 # or
-npm install @stratix/ext-ai-agents-anthropic
+npm install @stratix/ai-anthropic
 
 # Install testing (dev)
 npm install -D @stratix/testing
@@ -609,8 +609,8 @@ import { PromptTemplate } from 'langchain/prompts';
 
 ```typescript
 import { AIAgent, AgentResult, AgentContext } from '@stratix/primitives';
-import { OpenAIProvider } from '@stratix/ext-ai-agents-openai';
-import { StratixAgentOrchestrator } from '@stratix/impl-ai-agents';
+import { OpenAIProvider } from '@stratix/ai-openai';
+import { StratixAgentOrchestrator } from '@stratix/ai-runtime';
 ```
 
 ### Step 3: Convert Chains to Agents

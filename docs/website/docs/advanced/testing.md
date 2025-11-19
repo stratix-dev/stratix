@@ -166,7 +166,7 @@ Use cases should be tested with in-memory implementations for speed.
 import { describe, it, expect, beforeEach } from 'vitest';
 import { CreateProductHandler } from '../application/commands/CreateProduct';
 import { InMemoryProductRepository } from '../infrastructure/persistence/InMemoryProductRepository';
-import { InMemoryEventBus } from '@stratix/impl-cqrs-inmemory';
+import { InMemoryEventBus } from '@stratix/cqrs-inmemory';
 
 describe('CreateProductHandler', () => {
   let handler: CreateProductHandler;
@@ -773,7 +773,7 @@ Test with real database and message queue.
 ```typescript
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { ApplicationBuilder } from '@stratix/runtime';
-import { PostgresPlugin } from '@stratix/ext-postgres';
+import { PostgresPlugin } from '@stratix/db-postgres';
 
 describe('Product Repository Integration', () => {
   let app: Application;
@@ -817,7 +817,7 @@ describe('Product Repository Integration', () => {
 ```typescript
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { ApplicationBuilder } from '@stratix/runtime';
-import { RabbitMQPlugin } from '@stratix/ext-rabbitmq';
+import { RabbitMQPlugin } from '@stratix/msg-rabbitmq';
 
 describe('Event Publishing Integration', () => {
   let app: Application;
