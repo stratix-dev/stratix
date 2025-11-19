@@ -2,7 +2,25 @@ import { AggregateRoot } from '../core/AggregateRoot.js';
 import type { AgentId, AgentVersion, AgentCapability, ModelConfig } from './types.js';
 import type { AgentResult } from './AgentResult.js';
 import type { AgentContext } from './AgentContext.js';
+import { AgentError, AgentTimeoutError } from './errors.js';
 import type { AgentMemory } from './AgentMemory.js';
+
+/**
+ * Configuration for retry logic
+ */
+export interface RetryConfig {
+  /** Maximum number of retry attempts */
+  maxRetries: number;
+  /** Initial delay in milliseconds */
+  initialDelayMs: number;
+  /** Maximum delay in milliseconds */
+  maxDelayMs: number;
+  /** Backoff multiplier for exponential backoff */
+  backoffMultiplier: number;
+  /** Error codes that should trigger a retry */
+  retryableErrors?: string[];
+}
+
 import type {
   AgentExecutionStarted,
   AgentExecutionCompleted,
@@ -70,12 +88,10 @@ export abstract class AIAgent<TInput, TOutput> extends AggregateRoot<'AIAgent'> 
   /**
    * Current execution context
    */
-  protected currentContext?: AgentContext;
-
-  /**
-   * Agent memory for storing and retrieving information
-   */
-  protected memory?: AgentMemory;
+  protected _context?: AgentContext;
+  protected _memory?: AgentMemory;
+  protected retryConfig?: RetryConfig;
+  protected timeoutMs?: number;
 
   /**
    * Main execution method for the agent.
@@ -104,7 +120,7 @@ export abstract class AIAgent<TInput, TOutput> extends AggregateRoot<'AIAgent'> 
    */
   async executeWithEvents(input: TInput): Promise<AgentResult<TOutput>> {
     const startTime = Date.now();
-    const contextId = this.currentContext?.sessionId;
+    const contextId = this._context?.sessionId;
 
     // Record execution started event
     this.recordExecutionStarted(input, contextId);
@@ -115,8 +131,11 @@ export abstract class AIAgent<TInput, TOutput> extends AggregateRoot<'AIAgent'> 
         await this.beforeExecute(input);
       }
 
-      // Execute the agent
-      const result = await this.execute(input);
+      // Execute the agent with timeout if configured
+      const resultPromise = this.execute(input);
+      const result = this.timeoutMs
+        ? await this.withTimeout(resultPromise, this.timeoutMs)
+        : await resultPromise;
 
       // Calculate metrics
       const durationMs = Date.now() - startTime;
@@ -147,6 +166,19 @@ export abstract class AIAgent<TInput, TOutput> extends AggregateRoot<'AIAgent'> 
   }
 
   /**
+   * Wraps a promise with a timeout
+   * @private
+   */
+  private async withTimeout<T>(promise: Promise<T>, timeoutMs: number): Promise<T> {
+    return Promise.race([
+      promise,
+      new Promise<T>((_, reject) =>
+        setTimeout(() => reject(new AgentTimeoutError(timeoutMs)), timeoutMs)
+      ),
+    ]);
+  }
+
+  /**
    * Optional hook called before execution
    *
    * @param input - The input that will be executed
@@ -173,7 +205,7 @@ export abstract class AIAgent<TInput, TOutput> extends AggregateRoot<'AIAgent'> 
    * @param context - The execution context
    */
   setContext(context: AgentContext): void {
-    this.currentContext = context;
+    this._context = context;
     this.recordContextUpdated(context.sessionId, context.getMessages().length);
   }
 
@@ -183,10 +215,91 @@ export abstract class AIAgent<TInput, TOutput> extends AggregateRoot<'AIAgent'> 
    * @param memory - The memory implementation
    */
   setMemory(memory: AgentMemory): void {
-    this.memory = memory;
+    this._memory = memory;
   }
 
   /**
+   * Sets the retry configuration for this agent
+   *
+   * @param config - The retry configuration
+   */
+  setRetryConfig(config: RetryConfig): void {
+    this.retryConfig = config;
+  }
+
+  /**
+   * Sets the execution timeout for this agent
+   *
+   * @param ms - Timeout in milliseconds
+   */
+  setTimeout(ms: number): void {
+    if (ms <= 0) {
+      throw new Error('Timeout must be positive');
+    }
+    this.timeoutMs = ms;
+  }
+
+  /**
+   * Executes the agent with automatic retry logic
+   *
+   * @param input - The input data for the agent
+   * @returns A promise resolving to the agent result
+   */
+  async executeWithRetry(input: TInput): Promise<AgentResult<TOutput>> {
+    if (!this.retryConfig) {
+      return this.executeWithEvents(input);
+    }
+
+    let lastError: Error | undefined;
+    let delay = this.retryConfig.initialDelayMs;
+
+    for (let attempt = 0; attempt <= this.retryConfig.maxRetries; attempt++) {
+      try {
+        return await this.executeWithEvents(input);
+      } catch (error) {
+        lastError = error as Error;
+
+        // Check if error is retryable
+        if (!this.isRetryableError(error as Error)) {
+          throw error;
+        }
+
+        if (attempt < this.retryConfig.maxRetries) {
+          await this.sleep(delay);
+          delay = Math.min(
+            delay * this.retryConfig.backoffMultiplier,
+            this.retryConfig.maxDelayMs
+          );
+        }
+      }
+    }
+
+    throw lastError;
+  }
+
+  /**
+   * Checks if an error is retryable based on configuration
+   * @private
+   */
+  private isRetryableError(error: Error): boolean {
+    if (!this.retryConfig?.retryableErrors) {
+      return true; // Retry all by default
+    }
+
+    const errorCode = (error as AgentError).code ?? 'UNKNOWN';
+    return this.retryConfig.retryableErrors.includes(errorCode);
+  }
+
+  /**
+   * Sleep helper for retry delays
+   * @private
+   */
+  private sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  /**
+
    * Stores a value in agent memory
    *
    * @param key - The key to store under
@@ -198,10 +311,10 @@ export abstract class AIAgent<TInput, TOutput> extends AggregateRoot<'AIAgent'> 
     value: unknown,
     type: 'short' | 'long' = 'short'
   ): Promise<void> {
-    if (!this.memory) {
+    if (!this._memory) {
       throw new Error('Memory not configured for this agent');
     }
-    await this.memory.store(key, value, type);
+    await this._memory.store(key, value, type);
     this.recordMemoryStored(key, type);
   }
 
@@ -212,10 +325,10 @@ export abstract class AIAgent<TInput, TOutput> extends AggregateRoot<'AIAgent'> 
    * @returns The stored value, or null if not found
    */
   protected async recall(key: string): Promise<unknown> {
-    if (!this.memory) {
+    if (!this._memory) {
       throw new Error('Memory not configured for this agent');
     }
-    return await this.memory.retrieve(key);
+    return await this._memory.retrieve(key);
   }
 
   /**
@@ -226,10 +339,10 @@ export abstract class AIAgent<TInput, TOutput> extends AggregateRoot<'AIAgent'> 
    * @returns Array of relevant values
    */
   protected async searchMemory(query: string, limit: number = 5): Promise<unknown[]> {
-    if (!this.memory) {
+    if (!this._memory) {
       throw new Error('Memory not configured for this agent');
     }
-    return await this.memory.search(query, limit);
+    return await this._memory.search(query, limit);
   }
 
   /**
@@ -238,10 +351,10 @@ export abstract class AIAgent<TInput, TOutput> extends AggregateRoot<'AIAgent'> 
    * @param type - Type of memory to clear
    */
   protected async forget(type: 'short' | 'long' | 'all' = 'short'): Promise<void> {
-    if (!this.memory) {
+    if (!this._memory) {
       throw new Error('Memory not configured for this agent');
     }
-    await this.memory.clear(type);
+    await this._memory.clear(type);
   }
 
   /**
@@ -363,7 +476,7 @@ export abstract class AIAgent<TInput, TOutput> extends AggregateRoot<'AIAgent'> 
       toolName,
       toolArguments,
       toolResult,
-      contextId: this.currentContext?.sessionId,
+      contextId: this._context?.sessionId,
     };
     this.record(event);
   }

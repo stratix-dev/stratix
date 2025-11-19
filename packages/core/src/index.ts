@@ -119,3 +119,15 @@ export { ExecutionTrace } from './ai-agents/ExecutionTrace.js';
 export type { StreamableAgent } from './ai-agents/StreamableAgent.js';
 export type { AgentMemory } from './ai-agents/AgentMemory.js';
 export type * as AgentEvents from './ai-agents/events.js';
+
+// AI Agent Errors
+export {
+  AgentError,
+  AgentExecutionError,
+  AgentBudgetExceededError,
+  AgentTimeoutError,
+  AgentToolError,
+  AgentValidationError,
+  AgentConfigurationError,
+  LLMProviderError,
+} from './ai-agents/errors.js';

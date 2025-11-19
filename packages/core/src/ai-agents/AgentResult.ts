@@ -27,18 +27,41 @@ export class AgentResult<T> {
     public readonly data: T | undefined,
     public readonly error: Error | undefined,
     public readonly metadata: AgentExecutionMetadata,
+    public readonly warnings: string[] = [],
+    public readonly partial: boolean = false,
     public trace?: ExecutionTrace
-  ) {}
+  ) { }
 
   /**
    * Creates a successful agent result
    *
    * @param data - The successful result data
    * @param metadata - Execution metadata (model, cost, tokens, etc.)
+   * @param warnings - Optional warnings to include
    * @returns A successful AgentResult
    */
-  static success<T>(data: T, metadata: AgentExecutionMetadata): AgentResult<T> {
-    return new AgentResult(true, data, undefined, metadata);
+  static success<T>(
+    data: T,
+    metadata: AgentExecutionMetadata,
+    warnings: string[] = []
+  ): AgentResult<T> {
+    return new AgentResult(true, data, undefined, metadata, warnings, false);
+  }
+
+  /**
+   * Creates a partial result (successful but incomplete)
+   *
+   * @param data - The partial result data
+   * @param metadata - Execution metadata
+   * @param warnings - Warnings explaining why result is partial
+   * @returns A partial AgentResult
+   */
+  static partial<T>(
+    data: T,
+    metadata: AgentExecutionMetadata,
+    warnings: string[]
+  ): AgentResult<T> {
+    return new AgentResult(true, data, undefined, metadata, warnings, true);
   }
 
   /**
@@ -46,10 +69,22 @@ export class AgentResult<T> {
    *
    * @param error - The error that occurred
    * @param metadata - Execution metadata
+   * @param partialData - Optional partial data if some work was completed
    * @returns A failed AgentResult
    */
-  static failure<T>(error: Error, metadata: AgentExecutionMetadata): AgentResult<T> {
-    return new AgentResult<T>(false, undefined, error, metadata);
+  static failure<T>(
+    error: Error,
+    metadata: AgentExecutionMetadata,
+    partialData?: T
+  ): AgentResult<T> {
+    return new AgentResult<T>(
+      false,
+      partialData,
+      error,
+      metadata,
+      [],
+      partialData !== undefined
+    );
   }
 
   /**
@@ -64,6 +99,20 @@ export class AgentResult<T> {
    */
   isFailure(): this is AgentResult<T> & { error: Error } {
     return !this.success;
+  }
+
+  /**
+   * Checks if the result has warnings
+   */
+  hasWarnings(): boolean {
+    return this.warnings.length > 0;
+  }
+
+  /**
+   * Checks if the result is partial
+   */
+  isPartial(): boolean {
+    return this.partial;
   }
 
   /**

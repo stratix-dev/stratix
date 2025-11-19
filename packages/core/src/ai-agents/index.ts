@@ -30,3 +30,15 @@ export type { ToolDefinition as AgentToolDefinition } from './AgentTool.js';
 
 // Types and Constants
 export { AgentCapabilities, AgentVersionFactory } from './types.js';
+
+// Errors
+export {
+  AgentError,
+  AgentExecutionError,
+  AgentBudgetExceededError,
+  AgentTimeoutError,
+  AgentToolError,
+  AgentValidationError,
+  AgentConfigurationError,
+  LLMProviderError,
+} from './errors.js';
