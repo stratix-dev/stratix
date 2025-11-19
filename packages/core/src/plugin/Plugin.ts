@@ -12,7 +12,6 @@ import { HealthCheckResult } from '../infrastructure/HealthCheck.js';
  * class DatabasePlugin implements Plugin {
  *   readonly metadata: PluginMetadata = {
  *     name: 'database',
- *     version: '1.0.0',
  *     description: 'PostgreSQL database plugin',
  *     dependencies: ['logger']
  *   };
@@ -44,7 +43,7 @@ import { HealthCheckResult } from '../infrastructure/HealthCheck.js';
  */
 export interface Plugin {
   /**
-   * Plugin metadata (name, version, dependencies).
+   * Plugin metadata (name, dependencies).
    */
   readonly metadata: PluginMetadata;
 

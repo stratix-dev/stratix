@@ -29,7 +29,6 @@ import { HealthCheckResult } from '../infrastructure/HealthCheck.js';
  * class ProductsModule extends BaseContextModule {
  *   readonly metadata: ModuleMetadata = {
  *     name: 'products-context',
- *     version: '1.0.0',
  *     description: 'Products Domain Module',
  *     requiredPlugins: ['postgres'],
  *     requiredModules: []
@@ -81,7 +80,7 @@ import { HealthCheckResult } from '../infrastructure/HealthCheck.js';
  */
 export interface ContextModule {
   /**
-   * Module metadata (name, version, dependencies).
+   * Module metadata (name, dependencies).
    */
   readonly metadata: ModuleMetadata;
 

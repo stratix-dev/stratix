@@ -5,7 +5,6 @@
  * ```typescript
  * {
  *   name: 'postgres',
- *   version: '1.0.0',
  *   description: 'PostgreSQL database plugin',
  *   dependencies: ['logger'],
  *   optionalDependencies: ['opentelemetry']
@@ -18,9 +17,6 @@ export interface PluginMetadata {
    */
   name: string;
 
-  /**
-   * Version of the plugin.
-   */
   version: string;
 
   /**

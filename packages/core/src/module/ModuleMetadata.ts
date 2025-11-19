@@ -5,7 +5,6 @@
  * ```typescript
  * {
  *   name: 'products-context',
- *   version: '1.0.0',
  *   description: 'Products Bounded Context',
  *   requiredPlugins: ['postgres', 'rabbitmq'],
  *   requiredModules: ['inventory-context']
@@ -19,9 +18,6 @@ export interface ModuleMetadata {
    */
   name: string;
 
-  /**
-   * Version of the module.
-   */
   version: string;
 
   /**

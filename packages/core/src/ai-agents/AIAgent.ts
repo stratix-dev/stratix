@@ -44,7 +44,6 @@ import type {
  * class CustomerSupportAgent extends AIAgent<SupportTicket, SupportResponse> {
  *   readonly name = 'Customer Support Agent';
  *   readonly description = 'Handles customer support tickets';
- *   readonly version = AgentVersionFactory.create('1.0.0');
  *   readonly capabilities = [AgentCapabilities.CUSTOMER_SUPPORT, 'ticket_routing'];
  *   readonly model = {
  *     provider: 'anthropic',
@@ -70,9 +69,6 @@ export abstract class AIAgent<TInput, TOutput> extends AggregateRoot<'AIAgent'> 
    */
   abstract readonly description: string;
 
-  /**
-   * Version of the agent
-   */
   abstract readonly version: AgentVersion;
 
   /**

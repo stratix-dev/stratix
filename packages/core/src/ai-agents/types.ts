@@ -9,9 +9,6 @@ import type { EntityId } from '../core/EntityId.js';
  */
 export type AgentId = EntityId<'AIAgent'>;
 
-/**
- * Version information for an agent
- */
 export interface AgentVersion {
   readonly major: number;
   readonly minor: number;
@@ -19,9 +16,6 @@ export interface AgentVersion {
   readonly value: string;
 }
 
-/**
- * Factory for creating agent versions
- */
 export class AgentVersionFactory {
   static create(version: string): AgentVersion {
     const parts = version.split('.');
