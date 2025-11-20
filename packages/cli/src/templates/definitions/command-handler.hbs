@@ -1,0 +1,18 @@
+import type { CommandHandler } from '@stratix/core';
+import { Success, Failure, type Result } from '@stratix/core';
+import { {{pascalCase name}} } from './{{pascalCase name}}.js';
+
+export class {{pascalCase name}}Handler implements CommandHandler<{{pascalCase name}}, Result<void, Error>> {
+    async handle(command: {{pascalCase name}}): Promise<Result<void, Error>> {
+        try {
+        // TODO: Implement command logic
+        console.log('Executing {{pascalCase name}}:', command.data);
+
+        return Success.create(undefined);
+        } catch (error) {
+        return Failure.create(
+        error instanceof Error ? error : new Error('Unknown error')
+        );
+        }
+        }
+        }
