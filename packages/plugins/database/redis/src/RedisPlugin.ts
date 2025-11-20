@@ -1,11 +1,11 @@
-import type { RedisClientType, RedisClientOptions } from 'redis';
+import type { RedisClientOptions } from 'redis';
 import type {
   Plugin,
   PluginMetadata,
   PluginContext,
   HealthCheckResult,
 } from '@stratix/core';
-import { HealthStatus, ServiceLifetime } from '@stratix/core';
+import { HealthStatus } from '@stratix/core';
 import { RedisConnection } from './RedisConnection.js';
 import { RedisCache } from './RedisCache.js';
 
@@ -106,24 +106,12 @@ export class RedisPlugin implements Plugin {
       ttl: this.config.cache?.ttl,
     });
 
-    // Register connection in container
-    context.container.register('redis:connection', () => this.connection!, {
-      lifetime: ServiceLifetime.SINGLETON,
+    // Register services in container
+    context.container.registerAll({
+      'redis:connection': this.connection!,
+      'redis:cache': this.cache!,
+      'redis:client': () => this.connection!.getClient()
     });
-
-    // Register cache in container
-    context.container.register('redis:cache', () => this.cache!, {
-      lifetime: ServiceLifetime.SINGLETON,
-    });
-
-    // Register client in container (for advanced use cases)
-    context.container.register<RedisClientType>(
-      'redis:client',
-      () => this.connection!.getClient(),
-      {
-        lifetime: ServiceLifetime.SINGLETON,
-      }
-    );
   }
 
   /**

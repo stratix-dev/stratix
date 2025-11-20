@@ -1,11 +1,11 @@
-import type { MongoClient, MongoClientOptions } from 'mongodb';
+import type { MongoClientOptions } from 'mongodb';
 import type {
   Plugin,
   PluginMetadata,
   PluginContext,
   HealthCheckResult,
 } from '@stratix/core';
-import { HealthStatus, ServiceLifetime } from '@stratix/core';
+import { HealthStatus } from '@stratix/core';
 import { MongoConnection } from './MongoConnection.js';
 
 /**
@@ -113,23 +113,11 @@ export class MongoPlugin implements Plugin {
     );
 
     // Register connection in container
-    context.container.register('mongo:connection', () => this.connection!, {
-      lifetime: ServiceLifetime.SINGLETON,
+    context.container.registerAll({
+      'mongo:connection': this.connection!,
+      'mongo:client': () => this.connection!.getClient(),
+      'mongo:createUnitOfWork': () => () => this.connection!.createUnitOfWork()
     });
-
-    // Register client in container (for advanced use cases)
-    context.container.register<MongoClient>('mongo:client', () => this.connection!.getClient(), {
-      lifetime: ServiceLifetime.SINGLETON,
-    });
-
-    // Register factory for creating UnitOfWork instances
-    context.container.register(
-      'mongo:createUnitOfWork',
-      () => () => this.connection!.createUnitOfWork(),
-      {
-        lifetime: ServiceLifetime.SINGLETON,
-      }
-    );
   }
 
   /**
