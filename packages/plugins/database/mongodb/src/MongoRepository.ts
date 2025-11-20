@@ -2,6 +2,10 @@ import type { Collection, Document, Filter, FindOptions, UpdateFilter, ObjectId 
 import type { Repository } from '@stratix/core';
 import type { MongoConnection } from './MongoConnection.js';
 import type { MongoUnitOfWork } from './MongoUnitOfWork.js';
+import type { PaginationOptions, PaginatedResult } from './pagination/types.js';
+import type { IndexDefinition } from './indexing/types.js';
+import { IndexManager } from './indexing/IndexManager.js';
+import { MongoAggregationBuilder } from './aggregation/AggregationBuilder.js';
 
 /**
  * Type representing a MongoDB document
@@ -54,12 +58,18 @@ export abstract class MongoRepository<E, ID = string> implements Repository<E, I
    */
   protected abstract collectionName: string;
 
+  /**
+   * Optional index definitions for the collection
+   * Override this in subclasses to define indexes
+   */
+  protected indexes?: IndexDefinition[];
+
   private collection?: Collection<MongoDocument>;
 
   constructor(
     protected readonly connection: MongoConnection,
     protected readonly unitOfWork?: MongoUnitOfWork
-  ) {}
+  ) { }
 
   /**
    * Get the MongoDB collection
@@ -334,5 +344,135 @@ export abstract class MongoRepository<E, ID = string> implements Repository<E, I
     const result = await collection.updateMany(filter, update, this.getSessionOptions());
 
     return result.modifiedCount;
+  }
+
+  /**
+   * Find entities with pagination
+   *
+   * @param filter - MongoDB filter object
+   * @param options - Pagination options
+   * @returns Paginated result with metadata
+   *
+   * @example
+   * ```typescript
+   * const result = await userRepo.findPaginated(
+   *   { status: 'active' },
+   *   { page: 1, pageSize: 20, sort: { createdAt: -1 } }
+   * );
+   * console.log(result.data, result.total, result.hasNext);
+   * ```
+   */
+  async findPaginated(
+    filter: Filter<MongoDocument>,
+    options: PaginationOptions
+  ): Promise<PaginatedResult<E>> {
+    const { page, pageSize, sort } = options;
+    const skip = (page - 1) * pageSize;
+
+    // Execute count and find in parallel for better performance
+    const [data, total] = await Promise.all([
+      this.findBy(filter, { skip, limit: pageSize, sort }),
+      this.countBy(filter),
+    ]);
+
+    const totalPages = Math.ceil(total / pageSize);
+
+    return {
+      data,
+      total,
+      page,
+      pageSize,
+      totalPages,
+      hasNext: skip + pageSize < total,
+      hasPrev: page > 1,
+    };
+  }
+
+  /**
+   * Create an aggregation pipeline builder
+   *
+   * @returns A new aggregation builder instance
+   *
+   * @example
+   * ```typescript
+   * const stats = await userRepo.aggregate(
+   *   userRepo.aggregation()
+   *     .match({ status: 'active' })
+   *     .group({ _id: '$country', count: { $sum: 1 } })
+   *     .sort({ count: -1 })
+   *     .build()
+   * );
+   * ```
+   */
+  protected aggregation(): MongoAggregationBuilder<MongoDocument> {
+    return new MongoAggregationBuilder<MongoDocument>();
+  }
+
+  /**
+   * Execute an aggregation pipeline
+   *
+   * @param pipeline - Aggregation pipeline stages
+   * @returns Array of aggregation results
+   *
+   * @example
+   * ```typescript
+   * const pipeline = [
+   *   { $match: { status: 'active' } },
+   *   { $group: { _id: '$country', count: { $sum: 1 } } }
+   * ];
+   * const results = await userRepo.aggregate(pipeline);
+   * ```
+   */
+  async aggregate<R = unknown>(pipeline: Document[]): Promise<R[]> {
+    const collection = this.getCollection();
+    return await collection.aggregate<R extends Document ? R : Document>(pipeline, this.getSessionOptions()).toArray() as R[];
+  }
+
+  /**
+   * Ensure indexes are created on the collection
+   *
+   * Call this method during application startup to create indexes.
+   *
+   * @example
+   * ```typescript
+   * await userRepo.ensureIndexes();
+   * ```
+   */
+  async ensureIndexes(): Promise<void> {
+    if (!this.indexes || this.indexes.length === 0) {
+      return;
+    }
+
+    const collection = this.getCollection();
+    await IndexManager.ensureIndexes(collection, this.indexes);
+  }
+
+  /**
+   * Create a single index on the collection
+   *
+   * @param keys - Index keys
+   * @param options - Index options
+   *
+   * @example
+   * ```typescript
+   * await userRepo.createIndex({ email: 1 }, { unique: true });
+   * ```
+   */
+  protected async createIndex(
+    keys: Record<string, 1 | -1 | '2dsphere' | 'text' | string>,
+    options?: IndexDefinition['options']
+  ): Promise<void> {
+    const collection = this.getCollection();
+    await IndexManager.ensureIndexes(collection, [{ keys, options }]);
+  }
+
+  /**
+   * List all indexes on the collection
+   *
+   * @returns Array of index information
+   */
+  async listIndexes(): Promise<Document[]> {
+    const collection = this.getCollection();
+    return await IndexManager.listIndexes(collection);
   }
 }
