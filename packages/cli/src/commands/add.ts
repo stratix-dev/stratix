@@ -12,68 +12,68 @@ interface ExtensionInfo {
 
 const EXTENSIONS: Record<string, ExtensionInfo> = {
   postgres: {
-    package: '@stratix/ext-postgres',
+    package: '@stratix/db-postgres',
     description: 'PostgreSQL database integration',
     dependencies: ['pg', '@types/pg'],
   },
   mongodb: {
-    package: '@stratix/ext-mongodb',
+    package: '@stratix/db-mongodb',
     description: 'MongoDB database integration',
     dependencies: ['mongodb'],
   },
   redis: {
-    package: '@stratix/ext-redis',
+    package: '@stratix/db-redis',
     description: 'Redis caching and session store',
     dependencies: ['redis'],
   },
   rabbitmq: {
-    package: '@stratix/ext-rabbitmq',
+    package: '@stratix/msg-rabbitmq',
     description: 'RabbitMQ message broker',
     dependencies: ['amqplib', '@types/amqplib'],
   },
   http: {
-    package: '@stratix/ext-http-fastify',
+    package: '@stratix/http-fastify',
     description: 'Fastify HTTP server',
     dependencies: ['fastify'],
   },
   validation: {
-    package: '@stratix/ext-validation-zod',
+    package: '@stratix/validation-zod',
     description: 'Zod-based validation',
     dependencies: ['zod'],
   },
   auth: {
-    package: '@stratix/ext-auth',
+    package: '@stratix/auth',
     description: 'JWT authentication and RBAC',
     dependencies: ['jsonwebtoken', 'bcrypt', '@types/jsonwebtoken', '@types/bcrypt'],
   },
   mappers: {
-    package: '@stratix/ext-mappers',
+    package: '@stratix/mappers',
     description: 'Entity to DTO mapping utilities',
   },
   errors: {
-    package: '@stratix/ext-errors',
+    package: '@stratix/errors',
     description: 'Structured error handling',
   },
   migrations: {
-    package: '@stratix/ext-migrations',
+    package: '@stratix/migrations',
     description: 'Database migration system',
   },
   opentelemetry: {
-    package: '@stratix/ext-opentelemetry',
+    package: '@stratix/obs-opentelemetry',
     description: 'OpenTelemetry observability',
     dependencies: ['@opentelemetry/api', '@opentelemetry/sdk-node'],
   },
   secrets: {
-    package: '@stratix/ext-secrets',
+    package: '@stratix/secrets',
     description: 'Secrets management',
   },
   'ai-openai': {
-    package: '@stratix/ext-ai-agents-openai',
+    package: '@stratix/ai-openai',
     description: 'OpenAI LLM provider',
     dependencies: ['openai'],
   },
   'ai-anthropic': {
-    package: '@stratix/ext-ai-agents-anthropic',
+    package: '@stratix/ai-anthropic',
     description: 'Anthropic Claude provider',
     dependencies: ['@anthropic-ai/sdk'],
   },

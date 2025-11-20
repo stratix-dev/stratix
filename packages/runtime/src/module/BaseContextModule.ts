@@ -9,7 +9,7 @@ import {
   HealthCheckResult,
   HealthStatus,
   ServiceLifetime,
-} from '@stratix/abstractions';
+} from '@stratix/core';
 
 /**
  * Base implementation for domain modules.
@@ -18,7 +18,7 @@ import {
  * and repositories during the initialize phase.
  *
  * Subclasses only need to:
- * 1. Define metadata (name, version, dependencies)
+ * 1. Define metadata (name, dependencies)
  * 2. Set contextName
  * 3. Implement getCommands(), getQueries(), getEventHandlers(), getRepositories()
  *
@@ -33,7 +33,6 @@ import {
  * export class ProductsContextModule extends BaseContextModule {
  *   readonly metadata: ModuleMetadata = {
  *     name: 'products-context',
- *     version: '1.0.0',
  *     description: 'Products Domain Module',
  *     requiredPlugins: ['postgres'],
  *     requiredModules: []
@@ -105,7 +104,7 @@ import {
  */
 export abstract class BaseContextModule implements ContextModule {
   /**
-   * Module metadata (name, version, dependencies).
+   * Module metadata (name, dependencies).
    * Must be implemented by subclasses.
    */
   abstract readonly metadata: ModuleMetadata;

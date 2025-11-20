@@ -1,6 +1,6 @@
 {
   "name": "@stratix/testing",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Testing utilities for Stratix AI agents",
   "type": "module",
   "main": "./dist/index.js",
@@ -25,11 +25,9 @@
     "mock"
   ],
   "dependencies": {
-    "@stratix/primitives": "workspace:*",
-    "@stratix/abstractions": "workspace:*",
     "@stratix/runtime": "workspace:*",
-    "@stratix/impl-di-awilix": "workspace:*",
-    "@stratix/impl-logger-console": "workspace:*"
+    "@stratix/di-awilix": "workspace:*",
+    "@stratix/core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",

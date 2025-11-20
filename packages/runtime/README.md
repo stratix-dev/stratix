@@ -26,8 +26,8 @@ Fluent API for configuring and building Stratix applications:
 
 ```typescript
 import { ApplicationBuilder } from '@stratix/runtime';
-import { AwilixContainer } from '@stratix/impl-di-awilix';
-import { ConsoleLogger } from '@stratix/impl-logger-console';
+import { AwilixContainer } from '@stratix/di-awilix';
+import { ConsoleLogger } from '@stratix/core';
 
 const app = await ApplicationBuilder.create()
   .useContainer(new AwilixContainer())
@@ -48,7 +48,7 @@ Plugins follow a three-phase lifecycle:
 3. **Stop** - Gracefully shutdown in reverse order
 
 ```typescript
-import type { Plugin, PluginContext } from '@stratix/abstractions';
+import type { Plugin, PluginContext } from '@stratix/core';
 
 class DatabasePlugin implements Plugin {
   readonly metadata = {
@@ -191,8 +191,8 @@ Lifecycle phases enum:
 
 ```typescript
 import { ApplicationBuilder } from '@stratix/runtime';
-import { AwilixContainer } from '@stratix/impl-di-awilix';
-import { ConsoleLogger } from '@stratix/impl-logger-console';
+import { AwilixContainer } from '@stratix/di-awilix';
+import { ConsoleLogger } from '@stratix/core';
 
 // Build application
 const app = await ApplicationBuilder.create()

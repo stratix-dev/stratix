@@ -17,12 +17,12 @@ export const packageJsonTemplate = (data: ProjectTemplateData): string => `{
     "format": "prettier --write \\"src/**/*.ts\\""
   },
   "dependencies": {
-    "@stratix/primitives": "^0.1.5",
-    "@stratix/abstractions": "^0.1.5",
+    "@stratix/core": "^0.1.5",
+    "@stratix/core": "^0.1.5",
     "@stratix/runtime": "^0.1.5",
-    "@stratix/impl-di-awilix": "^0.1.5",
-    "@stratix/impl-logger-console": "^0.1.5",
-    "@stratix/impl-cqrs-inmemory": "^0.1.5"
+    "@stratix/di-awilix": "^0.1.5",
+    "@stratix/core": "^0.1.5",
+    "@stratix/core": "^0.1.5"
   },
   "devDependencies": {
     "@stratix/cli": "^0.1.5",
@@ -67,8 +67,8 @@ export const tsconfigTemplate = (): string => `{
 `;
 
 export const indexTemplate = (data: ProjectTemplateData): string => `import { ApplicationBuilder } from '@stratix/runtime';
-import { AwilixContainer } from '@stratix/impl-di-awilix';
-import { ConsoleLogger } from '@stratix/impl-logger-console';
+import { AwilixContainer } from '@stratix/di-awilix';
+import { ConsoleLogger } from '@stratix/core';
 
 async function bootstrap() {
   const container = new AwilixContainer();
