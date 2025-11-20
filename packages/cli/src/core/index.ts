@@ -7,6 +7,7 @@ export { Generator } from './Generator.js';
 export type { Template } from './Template.js';
 export { BaseTemplate } from './Template.js';
 export { Pipeline } from './Pipeline.js';
+export { GeneratorRegistry, generatorRegistry } from './GeneratorRegistry.js';
 export type { CLIPlugin } from './Plugin.js';
 export type {
     ValidationResult,

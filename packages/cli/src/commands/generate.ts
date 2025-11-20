@@ -1,93 +1,99 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { EntityGenerator } from '../generators/EntityGenerator.js';
-import { ValueObjectGenerator } from '../generators/ValueObjectGenerator.js';
-import { CommandGenerator } from '../generators/CommandGenerator.js';
-import { QueryGenerator } from '../generators/QueryGenerator.js';
-import { ContextGenerator } from '../generators/ContextGenerator.js';
-import { RepositoryGenerator } from '../generators/RepositoryGenerator.js';
-import { EventHandlerGenerator } from '../generators/EventHandlerGenerator.js';
-import { PluginGenerator } from '../generators/PluginGenerator.js';
-import type { GenerateCommandOptions } from '../types/index.js';
+import { generatorRegistry } from '../core/GeneratorRegistry.js';
+import type { GeneratorContext } from '../core/types.js';
+import { fileWriter } from '../utils/FileWriter.js';
 
 export function createGenerateCommand(): Command {
   const command = new Command('generate');
 
   command
     .alias('g')
-    .description('Generate code artifacts');
+    .description('Generate code artifacts using v2 generators');
 
-  command
-    .command('context <name>')
-    .description('Generate a complete bounded context')
-    .option('--props <props>', 'Entity properties (e.g., "name:string,price:number")')
-    .option('--dry-run', 'Preview generated files without writing')
-    .option('--force', 'Overwrite existing files')
-    .action(async (name: string, options: GenerateCommandOptions) => {
-      try {
-        console.log(chalk.blue.bold('\nGenerate Bounded Context\n'));
-        
-        const generator = new ContextGenerator(name, options);
-        await generator.generate();
-        
-        console.log(chalk.green.bold('\nBounded Context created!\n'));
-        console.log(chalk.gray('The context includes:\n'));
-        console.log(chalk.white('  - Domain Entity (AggregateRoot)'));
-        console.log(chalk.white('  - Repository interface'));
-        console.log(chalk.white('  - Domain Events'));
-        console.log(chalk.white('  - CRUD Commands + Handlers'));
-        console.log(chalk.white('  - Queries (GetById, List) + Handlers'));
-        console.log(chalk.white('  - InMemory Repository implementation'));
-        console.log(chalk.white('  - Context Plugin (auto-wiring)\n'));
-        console.log(chalk.gray(`Next: Register ${name}ContextPlugin in your ApplicationBuilder\n`));
-      } catch (error) {
-        console.error(chalk.red('\nFailed to generate context\n'));
-        console.error(error instanceof Error ? error.message : error);
-        process.exit(1);
-      }
-    });
-
+  // Entity generator
   command
     .command('entity <name>')
     .description('Generate a domain entity or aggregate root')
-    .option('--props <props>', 'Properties (e.g., "name:string,age:number")')
-    .option('--context <context>', 'Generate inside a specific bounded context')
-    .option('--no-aggregate', 'Generate as Entity instead of AggregateRoot')
+    .option('--props <props>', 'Properties as JSON array: [{"name":"id","type":"string"}]')
+    .option('--aggregate', 'Generate as AggregateRoot (default: true)', true)
     .option('--dry-run', 'Preview generated files without writing')
     .option('--force', 'Overwrite existing files')
-    .action(async (name: string, options: GenerateCommandOptions) => {
+    .action(async (name: string, options: any) => {
       try {
-        console.log(chalk.blue.bold('\nGenerate Entity\n'));
-        
-        const generator = new EntityGenerator(name, options);
-        await generator.generate();
-        
-        const contextInfo = options.context ? ` in ${options.context} context` : '';
-        console.log(chalk.gray(`\nNext: Import and use ${name}${contextInfo} in your application\n`));
+        console.log(chalk.blue.bold('\n🔨 Generate Entity\n'));
+
+        const generator = await generatorRegistry.get('entity');
+        if (!generator) {
+          throw new Error('Entity generator not found');
+        }
+
+        const props = options.props ? JSON.parse(options.props) : [];
+
+        const context: GeneratorContext = {
+          projectRoot: process.cwd(),
+          options: {
+            name,
+            props,
+            aggregate: options.aggregate
+          }
+        };
+
+        const result = await generator.generate(context);
+
+        // Write files
+        await fileWriter.writeFiles(result.files, context.projectRoot, {
+          dryRun: options.dryRun,
+          force: options.force
+        });
+
+        if (!options.dryRun) {
+          console.log(chalk.green.bold('\n✅ Entity generated successfully!\n'));
+        }
       } catch (error) {
-        console.error(chalk.red('\nFailed to generate entity\n'));
+        console.error(chalk.red('\n❌ Failed to generate entity\n'));
         console.error(error instanceof Error ? error.message : error);
         process.exit(1);
       }
     });
 
+  // Value Object generator
   command
     .command('value-object <name>')
     .alias('vo')
     .description('Generate a domain value object')
-    .option('--props <props>', 'Properties (e.g., "street:string,city:string")')
-    .option('--context <context>', 'Generate inside a specific bounded context')
+    .option('--props <props>', 'Properties as JSON array: [{"name":"value","type":"string"}]')
     .option('--dry-run', 'Preview generated files without writing')
-    .option('--force', 'Overwrite existing files')
-    .action(async (name: string, options: GenerateCommandOptions) => {
+    .action(async (name: string, options: any) => {
       try {
         console.log(chalk.blue.bold('\nGenerate Value Object\n'));
-        
-        const generator = new ValueObjectGenerator(name, options);
-        await generator.generate();
-        
-        const contextInfo = options.context ? ` in ${options.context} context` : '';
-        console.log(chalk.gray(`\nNext: Use ${name}${contextInfo} in your entities\n`));
+
+        const generator = await generatorRegistry.get('value-object');
+        if (!generator) {
+          throw new Error('Value Object generator not found');
+        }
+
+        const props = options.props ? JSON.parse(options.props) : [];
+
+        const context: GeneratorContext = {
+          projectRoot: process.cwd(),
+          options: { name, props }
+        };
+
+        const result = await generator.generate(context);
+
+        // Write files
+        await fileWriter.writeFiles(result.files, context.projectRoot, {
+          dryRun: options.dryRun,
+          force: options.force
+        });
+
+        if (!options.dryRun) {
+          console.log(chalk.green.bold('\nValue Object generated!\n'));
+        } else {
+          console.log(chalk.yellow.bold('\nDry run - no files written\n'));
+          result.files.forEach(f => console.log(chalk.gray(`  ${f.path}`)));
+        }
       } catch (error) {
         console.error(chalk.red('\nFailed to generate value object\n'));
         console.error(error instanceof Error ? error.message : error);
@@ -95,23 +101,47 @@ export function createGenerateCommand(): Command {
       }
     });
 
+  // Command generator
   command
     .command('command <name>')
     .description('Generate a CQRS command with handler')
-    .option('--input <props>', 'Input properties (e.g., "userId:string,amount:number")')
-    .option('--props <props>', 'Alias for --input')
-    .option('--context <context>', 'Generate inside a specific bounded context')
+    .option('--props <props>', 'Properties as JSON array: [{"name":"userId","type":"string"}]')
+    .option('--no-handler', 'Skip handler generation')
     .option('--dry-run', 'Preview generated files without writing')
-    .option('--force', 'Overwrite existing files')
-    .action(async (name: string, options: GenerateCommandOptions) => {
+    .action(async (name: string, options: any) => {
       try {
         console.log(chalk.blue.bold('\nGenerate Command\n'));
-        
-        const generator = new CommandGenerator(name, options);
-        await generator.generate();
-        
-        const contextInfo = options.context ? ` in ${options.context} context` : '';
-        console.log(chalk.gray(`\nNext: Register ${name}Handler${contextInfo} with your command bus\n`));
+
+        const generator = await generatorRegistry.get('command');
+        if (!generator) {
+          throw new Error('Command generator not found');
+        }
+
+        const props = options.props ? JSON.parse(options.props) : [];
+
+        const context: GeneratorContext = {
+          projectRoot: process.cwd(),
+          options: {
+            name,
+            props,
+            generateHandler: options.handler !== false
+          }
+        };
+
+        const result = await generator.generate(context);
+
+        // Write files
+        await fileWriter.writeFiles(result.files, context.projectRoot, {
+          dryRun: options.dryRun,
+          force: options.force
+        });
+
+        if (!options.dryRun) {
+          console.log(chalk.green.bold('\nCommand generated!\n'));
+        } else {
+          console.log(chalk.yellow.bold('\nDry run - no files written\n'));
+          result.files.forEach(f => console.log(chalk.gray(`  ${f.path}`)));
+        }
       } catch (error) {
         console.error(chalk.red('\nFailed to generate command\n'));
         console.error(error instanceof Error ? error.message : error);
@@ -119,24 +149,49 @@ export function createGenerateCommand(): Command {
       }
     });
 
+  // Query generator
   command
     .command('query <name>')
     .description('Generate a CQRS query with handler')
-    .option('--input <props>', 'Input properties (e.g., "id:string")')
-    .option('--output <type>', 'Output type (e.g., "Product" or "Product[]")', 'any')
-    .option('--props <props>', 'Alias for --input')
-    .option('--context <context>', 'Generate inside a specific bounded context')
+    .option('--props <props>', 'Properties as JSON array: [{"name":"id","type":"string"}]')
+    .option('--return-type <type>', 'Return type for the query', 'any')
+    .option('--no-handler', 'Skip handler generation')
     .option('--dry-run', 'Preview generated files without writing')
-    .option('--force', 'Overwrite existing files')
-    .action(async (name: string, options: GenerateCommandOptions) => {
+    .action(async (name: string, options: any) => {
       try {
         console.log(chalk.blue.bold('\nGenerate Query\n'));
-        
-        const generator = new QueryGenerator(name, options);
-        await generator.generate();
-        
-        const contextInfo = options.context ? ` in ${options.context} context` : '';
-        console.log(chalk.gray(`\nNext: Register ${name}Handler${contextInfo} with your query bus\n`));
+
+        const generator = await generatorRegistry.get('query');
+        if (!generator) {
+          throw new Error('Query generator not found');
+        }
+
+        const props = options.props ? JSON.parse(options.props) : [];
+
+        const context: GeneratorContext = {
+          projectRoot: process.cwd(),
+          options: {
+            name,
+            props,
+            returnType: options.returnType,
+            generateHandler: options.handler !== false
+          }
+        };
+
+        const result = await generator.generate(context);
+
+        // Write files
+        await fileWriter.writeFiles(result.files, context.projectRoot, {
+          dryRun: options.dryRun,
+          force: options.force
+        });
+
+        if (!options.dryRun) {
+          console.log(chalk.green.bold('\nQuery generated!\n'));
+        } else {
+          console.log(chalk.yellow.bold('\nDry run - no files written\n'));
+          result.files.forEach(f => console.log(chalk.gray(`  ${f.path}`)));
+        }
       } catch (error) {
         console.error(chalk.red('\nFailed to generate query\n'));
         console.error(error instanceof Error ? error.message : error);
@@ -144,34 +199,44 @@ export function createGenerateCommand(): Command {
       }
     });
 
+  // Repository generator
   command
     .command('repository <entityName>')
     .alias('repo')
     .description('Generate a repository interface and implementation')
-    .option('--no-implementation', 'Generate only the interface')
-    .option('--context <context>', 'Generate inside a specific bounded context')
+    .option('--no-implementation', 'Skip implementation generation')
     .option('--dry-run', 'Preview generated files without writing')
-    .option('--force', 'Overwrite existing files')
-    .action(async (entityName: string, options: GenerateCommandOptions & { implementation?: boolean }) => {
+    .action(async (entityName: string, options: any) => {
       try {
         console.log(chalk.blue.bold('\nGenerate Repository\n'));
-        
-        const generator = new RepositoryGenerator({
-          entityName,
-          withImplementation: options.implementation !== false,
-          context: options.context,
-        });
-        const files = await generator.generate();
-        await generator['writeFiles'](files, options.dryRun);
-        
-        console.log(chalk.green.bold('\nRepository generated!\n'));
-        if (options.implementation !== false) {
-          console.log(chalk.gray('Generated:\n'));
-          console.log(chalk.white('  - Repository interface'));
-          console.log(chalk.white('  - InMemory implementation\n'));
+
+        const generator = await generatorRegistry.get('repository');
+        if (!generator) {
+          throw new Error('Repository generator not found');
         }
-        const contextInfo = options.context ? ` in ${options.context} context` : '';
-        console.log(chalk.gray(`Next: Inject ${entityName}Repository${contextInfo} in your handlers\n`));
+
+        const context: GeneratorContext = {
+          projectRoot: process.cwd(),
+          options: {
+            entityName,
+            generateImpl: options.implementation !== false
+          }
+        };
+
+        const result = await generator.generate(context);
+
+        // Write files
+        await fileWriter.writeFiles(result.files, context.projectRoot, {
+          dryRun: options.dryRun,
+          force: options.force
+        });
+
+        if (!options.dryRun) {
+          console.log(chalk.green.bold('\nRepository generated!\n'));
+        } else {
+          console.log(chalk.yellow.bold('\nDry run - no files written\n'));
+          result.files.forEach(f => console.log(chalk.gray(`  ${f.path}`)));
+        }
       } catch (error) {
         console.error(chalk.red('\nFailed to generate repository\n'));
         console.error(error instanceof Error ? error.message : error);
@@ -179,60 +244,66 @@ export function createGenerateCommand(): Command {
       }
     });
 
+  // Quality generator
   command
-    .command('event-handler <eventName>')
-    .alias('eh')
-    .description('Generate a domain event handler')
-    .option('--handler <name>', 'Custom handler name')
-    .option('--context <context>', 'Generate inside a specific bounded context')
+    .command('quality')
+    .description('Generate quality configuration files (Prettier, ESLint, EditorConfig)')
+    .option('--no-prettier', 'Skip Prettier config')
+    .option('--no-eslint', 'Skip ESLint config')
+    .option('--no-editorconfig', 'Skip EditorConfig')
+    .option('--no-gitignore', 'Skip .gitignore')
     .option('--dry-run', 'Preview generated files without writing')
-    .option('--force', 'Overwrite existing files')
-    .action(async (eventName: string, options: GenerateCommandOptions & { handler?: string }) => {
+    .action(async (options: any) => {
       try {
-        console.log(chalk.blue.bold('\nGenerate Event Handler\n'));
-        
-        const generator = new EventHandlerGenerator({
-          eventName,
-          handlerName: options.handler,
-          context: options.context,
+        console.log(chalk.blue.bold('\nGenerate Quality Configs\n'));
+
+        const generator = await generatorRegistry.get('quality');
+        if (!generator) {
+          throw new Error('Quality generator not found');
+        }
+
+        const context: GeneratorContext = {
+          projectRoot: process.cwd(),
+          options: {
+            prettier: options.prettier !== false,
+            eslint: options.eslint !== false,
+            editorconfig: options.editorconfig !== false,
+            gitignore: options.gitignore !== false
+          }
+        };
+
+        const result = await generator.generate(context);
+
+        // Write files
+        await fileWriter.writeFiles(result.files, context.projectRoot, {
+          dryRun: options.dryRun,
+          force: options.force
         });
-        const files = await generator.generate();
-        await generator['writeFiles'](files, options.dryRun);
-        
-        console.log(chalk.green.bold('\nEvent Handler generated!\n'));
-        const contextInfo = options.context ? ` in ${options.context} context` : '';
-        console.log(chalk.gray(`Next: Register handler${contextInfo} with EventBus\n`));
+
+        if (!options.dryRun) {
+          console.log(chalk.green.bold('\nQuality configs generated!\n'));
+        } else {
+          console.log(chalk.yellow.bold('\nDry run - no files written\n'));
+          result.files.forEach(f => console.log(chalk.gray(`  ${f.path}`)));
+        }
       } catch (error) {
-        console.error(chalk.red('\nFailed to generate event handler\n'));
+        console.error(chalk.red('\nFailed to generate quality configs\n'));
         console.error(error instanceof Error ? error.message : error);
         process.exit(1);
       }
     });
 
+  // List available generators
   command
-    .command('plugin <name>')
-    .description('Generate a custom plugin')
-    .option('--no-health-check', 'Generate without health check method')
-    .option('--dry-run', 'Preview generated files without writing')
-    .option('--force', 'Overwrite existing files')
-    .action(async (name: string, options: GenerateCommandOptions & { healthCheck?: boolean }) => {
-      try {
-        console.log(chalk.blue.bold('\nGenerate Plugin\n'));
-        
-        const generator = new PluginGenerator({
-          pluginName: name,
-          withHealthCheck: options.healthCheck !== false,
-        });
-        const files = await generator.generate();
-        await generator['writeFiles'](files, options.dryRun);
-        
-        console.log(chalk.green.bold('\nPlugin generated!\n'));
-        console.log(chalk.gray(`Next: Use .usePlugin(new ${name}Plugin()) in ApplicationBuilder\n`));
-      } catch (error) {
-        console.error(chalk.red('\nFailed to generate plugin\n'));
-        console.error(error instanceof Error ? error.message : error);
-        process.exit(1);
-      }
+    .command('list')
+    .description('List all available generators')
+    .action(() => {
+      console.log(chalk.blue.bold('\nAvailable Generators:\n'));
+      const generators = generatorRegistry.list();
+      generators.forEach(gen => {
+        console.log(chalk.white(`  ${gen.name.padEnd(15)} - ${gen.description}`));
+      });
+      console.log();
     });
 
   return command;

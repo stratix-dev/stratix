@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { BaseTemplate } from '../../core/Template.js';
 import { TemplateEngine } from './TemplateEngine.js';
-import type { TemplateData, ValidationResult } from '../../core/types.js';
+import type { TemplateData } from '../../core/types.js';
 import type { z } from 'zod';
 
 const __filename = fileURLToPath(import.meta.url);

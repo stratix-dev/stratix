@@ -34,6 +34,11 @@ export abstract class Generator {
     abstract readonly description?: string;
 
     /**
+     * Initialize the generator (e.g., load templates)
+     */
+    abstract initialize(): Promise<void>;
+
+    /**
      * Generate files
      */
     abstract generate(context: GeneratorContext): Promise<GeneratorResult>;

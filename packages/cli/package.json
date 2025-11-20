@@ -20,7 +20,7 @@
     "templates"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp -r src/templates/* dist/templates/",
     "dev": "tsc --watch",
     "test": "vitest run || exit 0",
     "test:watch": "vitest",

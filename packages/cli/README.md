@@ -56,70 +56,59 @@ Generate code artifacts using built-in generators.
 
 #### Available Generators
 
-##### `context <name>` - Complete Bounded Context
-Generates a complete bounded context with domain, application, and infrastructure layers.
-
-**Options:**
-- `--props <props>` - Entity properties (e.g., "name:string,price:number")
-
-**Example:**
-```bash
-stratix g context Products --props "name:string,price:number,stock:number"
-```
-
-**Generated files (13-16):**
-- Domain: Entity (AggregateRoot), Repository interface, Domain events (Created/Updated/Deleted)
-- Application: Commands (Create/Update/Delete), Queries (GetById/List), Handlers
-- Infrastructure: InMemory repository implementation
-- ContextPlugin with auto-wiring
-
 ##### `entity <name>` - Domain Entity
 Generates a domain entity or aggregate root.
 
 **Options:**
-- `--props <props>` - Entity properties
-- `--no-aggregate` - Generate as Entity instead of AggregateRoot
+- `--props <props>` - Entity properties as JSON array
+- `--aggregate` - Generate as AggregateRoot (default: true)
+- `--dry-run` - Preview generated files without writing
+- `--force` - Overwrite existing files
 
 **Example:**
 ```bash
-stratix g entity Product --props "name:string,price:number"
-stratix g entity Order --no-aggregate
+stratix g entity Product --props '[{"name":"id","type":"string"},{"name":"name","type":"string"},{"name":"price","type":"number"}]'
 ```
 
 ##### `value-object <name>` (alias: `vo`)
 Generates a domain value object.
 
 **Options:**
-- `--props <props>` - Value object properties
+- `--props <props>` - Value object properties as JSON array
+- `--dry-run` - Preview generated files without writing
 
 **Example:**
 ```bash
-stratix g value-object Email --props "value:string"
-stratix g vo Address --props "street:string,city:string,zipCode:string"
+stratix g value-object Email --props '[{"name":"value","type":"string"}]'
+stratix g vo Address --props '[{"name":"street","type":"string"},{"name":"city","type":"string"}]'
 ```
 
 ##### `command <name>` - CQRS Command
 Generates a command with its handler.
 
 **Options:**
-- `--input <props>` - Input properties (alias: `--props`)
+- `--props <props>` - Input properties as JSON array
+- `--no-handler` - Skip handler generation
+- `--dry-run` - Preview generated files without writing
 
 **Example:**
 ```bash
-stratix g command CreateProduct --input "name:string,price:number"
+stratix g command CreateProduct --props '[{"name":"name","type":"string"},{"name":"price","type":"number"}]'
 ```
 
 ##### `query <name>` - CQRS Query
 Generates a query with its handler.
 
 **Options:**
-- `--input <props>` - Input properties (alias: `--props`)
-- `--output <type>` - Output type (default: "any")
+- `--props <props>` - Input properties as JSON array
+- `--return-type <type>` - Return type for the query (default: "any")
+- `--no-handler` - Skip handler generation
+- `--dry-run` - Preview generated files without writing
 
 **Example:**
 ```bash
-stratix g query GetProductById --input "id:string" --output "Product"
-stratix g query ListProducts --output "Product[]"
+stratix g query GetProductById --props '[{"name":"id","type":"string"}]' --return-type "Product"
+stratix g query ListProducts --return-type "Product[]"
 ```
 
 ##### `repository <entityName>` (alias: `repo`)
@@ -127,6 +116,7 @@ Generates a repository interface and implementation.
 
 **Options:**
 - `--no-implementation` - Generate only the interface
+- `--dry-run` - Preview generated files without writing
 
 **Example:**
 ```bash
@@ -134,28 +124,20 @@ stratix g repository Product
 stratix g repo Order --no-implementation
 ```
 
-##### `event-handler <eventName>` (alias: `eh`)
-Generates a domain event handler.
+##### `quality` - Quality Configuration
+Generates quality configuration files (Prettier, ESLint, EditorConfig, .gitignore).
 
 **Options:**
-- `--handler <name>` - Custom handler name
+- `--no-prettier` - Skip Prettier config
+- `--no-eslint` - Skip ESLint config
+- `--no-editorconfig` - Skip EditorConfig
+- `--no-gitignore` - Skip .gitignore
+- `--dry-run` - Preview generated files without writing
 
 **Example:**
 ```bash
-stratix g event-handler ProductCreated
-stratix g eh OrderPlaced --handler SendConfirmationEmail
-```
-
-##### `plugin <name>`
-Generates a custom plugin with lifecycle methods.
-
-**Options:**
-- `--no-health-check` - Generate without health check method
-
-**Example:**
-```bash
-stratix g plugin MyCustomPlugin
-stratix g plugin EmailService --no-health-check
+stratix g quality
+stratix g quality --no-gitignore
 ```
 
 ### `stratix add <extension>`
@@ -247,20 +229,14 @@ stratix add http
 stratix add postgres
 stratix add validation
 
-# 4. Generate bounded contexts
-stratix g context Products --props "name:string,price:number,stock:number"
-stratix g context Orders --props "customerId:string,total:number,status:string"
+# 4. Generate bounded contexts and artifacts
+stratix g entity Product --props '[{"name":"id","type":"string"},{"name":"name","type":"string"},{"name":"price","type":"number"}]'
+stratix g entity Customer --props '[{"name":"email","type":"string"},{"name":"name","type":"string"}]'
+stratix g value-object Money --props '[{"name":"amount","type":"number"},{"name":"currency","type":"string"}]'
+stratix g command CreateOrder --props '[{"name":"customerId","type":"string"},{"name":"items","type":"OrderItem[]"}]'
+stratix g query GetOrdersByCustomer --props '[{"name":"customerId","type":"string"}]' --return-type "Order[]"
 
-# 5. Check project info
-stratix info
-
-# 6. Generate additional artifacts as needed
-stratix g entity Customer --props "email:string,name:string"
-stratix g value-object Money --props "amount:number,currency:string"
-stratix g command CreateOrder --input "customerId:string,items:OrderItem[]"
-stratix g query GetOrdersByCustomer --input "customerId:string" --output "Order[]"
-
-# 7. Build and run (using standard npm scripts)
+# 5. Build and run (using standard npm scripts)
 pnpm install
 pnpm build
 pnpm start
@@ -268,14 +244,14 @@ pnpm start
 
 ## Features
 
--  **Quick Project Setup** - Create production-ready projects in seconds
--  **8 Code Generators** - Generate entities, commands, queries, and complete bounded contexts
--  **Extension Manager** - Install 14 Stratix extensions with automatic dependency resolution
--  **Interactive Mode** - Smart prompts guide you through project creation
--  **Flexible Options** - CLI flags or interactive prompts, your choice
--  **Project Info** - Instant overview of your Stratix project
--  **DDD & CQRS** - Follows Domain-Driven Design and CQRS patterns
--  **Type-Safe** - Full TypeScript support with strict typing
+- ✨ **Quick Project Setup** - Create production-ready projects in seconds
+- 🔨 **6 Code Generators** - Generate entities, commands, queries, repositories, value objects, and quality configs
+- 📦 **Extension Manager** - Install 14 Stratix extensions with automatic dependency resolution
+- 🎯 **Interactive Mode** - Smart prompts guide you through project creation
+- ⚙️ **Flexible Options** - CLI flags or interactive prompts, your choice
+- 📊 **Project Info** - Instant overview of your Stratix project
+- 🏗️ **DDD & CQRS** - Follows Domain-Driven Design and CQRS patterns
+- 🔒 **Type-Safe** - Full TypeScript support with strict typing
 
 ## Requirements
 
