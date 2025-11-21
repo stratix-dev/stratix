@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Question or Discussion
-    url: https://github.com/pcarvajal/stratix/discussions
+    url: https://github.com/stratix-dev/stratix/discussions
     about: Ask questions or discuss ideas with the community
   - name: Documentation
-    url: https://pcarvajal.github.io/stratix
+    url: https://stratix-dev.github.io/stratix
     about: Check the documentation for help

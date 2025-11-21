@@ -1,6 +1,6 @@
 {
   "name": "@stratix/errors",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Error handling utilities for Stratix framework",
   "type": "module",
   "main": "./dist/index.js",
@@ -33,7 +33,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/stratix.git",
+    "url": "https://github.com/stratix-dev/stratix.git",
     "directory": "packages/plugins/utilities/errors"
   },
   "dependencies": {

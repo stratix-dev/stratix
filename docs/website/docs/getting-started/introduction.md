@@ -7,8 +7,8 @@ description: Introduction to Stratix - An AI-first, modular, scalable, and enter
 # What is Stratix?
 
 > [!WARNING]
-> **⚠️ PRE-RELEASE - ACTIVE DEVELOPMENT**
-> 
+> **PRE-RELEASE - ACTIVE DEVELOPMENT**
+>
 > Stratix is currently in **active development** and **NOT ready for production use**. The API is unstable and may change significantly without notice. Use at your own risk for experimental projects only.
 
 **Stratix** is a modern TypeScript framework designed for building **scalable, maintainable, and production-ready applications** with **AI agents as first-class citizens**.
@@ -18,26 +18,26 @@ description: Introduction to Stratix - An AI-first, modular, scalable, and enter
 
 Stratix combines proven enterprise patterns with cutting-edge AI capabilities to help you build applications that are:
 
-### 🤖 AI-First
+### AI-First
 - **AI Agents as Domain Entities** - Treat AI agents like any other domain object
 - **Production-Ready AI Patterns** - Built-in orchestration, memory management, and execution tracing
 - **Multiple LLM Providers** - OpenAI, Anthropic, and custom providers out of the box
 - **Agent Testing** - Comprehensive testing utilities for AI agents
 
-### 🏗️ Modular & Scalable
+### Modular & Scalable
 - **Bounded Contexts** - Portable domain modules that work in monoliths or microservices
 - **Plugin Architecture** - Extensible system with lifecycle management and health checks
 - **Dependency Injection** - Clean, testable code with automatic dependency resolution
 - **CQRS Pattern** - Command Query Responsibility Segregation for scalable architectures
 
-### 🚀 Enterprise-Ready
+### Enterprise-Ready
 - **Domain-Driven Design** - Entity, AggregateRoot, ValueObject, and Repository patterns
 - **Hexagonal Architecture** - Clean separation of concerns with ports and adapters
 - **Result Pattern** - Explicit error handling without exceptions
 - **Type Safety** - Full TypeScript strict mode with phantom types
 - **Production Extensions** - HTTP, validation, authentication, observability
 
-### 💎 Developer Experience
+### Developer Experience
 - **Powerful CLI** - Scaffold projects and generate code in seconds
 - **13 Official Plugins** - Database, messaging, HTTP, AI, and utility plugins
 - **Comprehensive Testing** - Built-in testing utilities and mocks
@@ -192,10 +192,10 @@ Ready to get started? Here's what to do next:
 
 ## Community & Support
 
-- **GitHub**: [github.com/pcarvajal/stratix](https://github.com/pcarvajal/stratix)
-- **Issues**: [Report bugs or request features](https://github.com/pcarvajal/stratix/issues)
-- **Discussions**: [Ask questions and share ideas](https://github.com/pcarvajal/stratix/discussions)
+- **GitHub**: [github.com/stratix-dev/stratix](https://github.com/stratix-dev/stratix)
+- **Issues**: [Report bugs or request features](https://github.com/stratix-dev/stratix/issues)
+- **Discussions**: [Ask questions and share ideas](https://github.com/stratix-dev/stratix/discussions)
 
 ## License
 
-Stratix is [MIT licensed](https://github.com/pcarvajal/stratix/blob/main/LICENSE).
+Stratix is [MIT licensed](https://github.com/stratix-dev/stratix/blob/main/LICENSE).

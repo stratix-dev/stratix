@@ -259,47 +259,6 @@ Displays knowledge base version and statistics.
 
 ---
 
-## Action Buttons
-
-After code generation, Stratix Copilot shows action buttons in chat:
-
-### 📄 Create Entity File
-
-- Saves entity to `domain/entities/`
-- Opens file in editor
-- Follows project structure
-
-### 📄 Create Command File
-
-- Saves command to `application/commands/`
-- Creates handler file
-- Proper CQRS structure
-
-### 📄 Create Query File
-
-- Saves query to `application/queries/`
-- Creates handler file
-- Follows conventions
-
-### 📄 Create Value Object File
-
-- Saves to `domain/value-objects/`
-- Proper naming
-- Opens in editor
-
-### 📄 Create Repository File
-
-- Saves interface to `domain/repositories/`
-- Optional implementation in `infrastructure/`
-
-### 📄 Create Bounded Context
-
-- Creates complete folder structure
-- Multiple files
-- Shows summary of created files
-
----
-
 ## General Chat
 
 You can also ask general questions without slash commands:

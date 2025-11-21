@@ -261,7 +261,7 @@ pnpm start
 
 - [Stratix Documentation](https://stratix.dev/docs)
 - [CLI Reference](https://stratix.dev/docs/cli/overview)
-- [GitHub Repository](https://github.com/pcarvajal/stratix)
+- [GitHub Repository](https://github.com/stratix-dev/stratix)
 
 ## Contributing
 

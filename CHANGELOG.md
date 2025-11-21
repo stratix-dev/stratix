@@ -7,6 +7,78 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2025-01-21
+
+### Changed
+
+#### Documentation
+- **Repository Migration**: Moved repository from `github.com/pcarvajal/stratix` to `github.com/stratix-dev/stratix`
+- **Documentation Site**: Updated GitHub Pages URL from `pcarvajal.github.io/stratix` to `stratix-dev.github.io/stratix`
+- **Package URLs**: Updated all package.json repository URLs to new organization
+- **Docusaurus Config**: Updated organization name to `stratix-dev`
+- **Issue Templates**: Updated all GitHub links to new repository location
+
+#### Docusaurus Theme
+- **Light Theme**: Updated color palette to match official Stratix logo
+  - Primary: #2958FC (Stratix Blue)
+  - Secondary: #2895FD (Sky Blue)
+  - Accent: #14E4E8 (Neon Ice)
+  - Warning: #E035B6 (Magenta)
+  - Background: #FDFDFD (Almost White)
+- **Dark Theme**: Enhanced dark mode with improved contrast
+  - Primary: #14E4E8 (Neon Ice) for better visibility
+  - Updated code blocks, tables, admonitions, and interactive elements
+  - Improved Mermaid diagram colors
+- **Footer**: Fixed footer styling in both light and dark themes
+- **Default Mode**: Changed to light mode with system preference respect
+
+#### Stratix Copilot Documentation
+- **Removed**: References to "Action Buttons" feature (eliminated from extension)
+- **Removed**: "One-Click File Creation" mentions
+- **Updated**: Workflow documentation to reflect manual copy/paste process
+- **Updated**: Mermaid diagrams to show "Copy & Use" instead of "Click Button"
+- **Added**: "RAG-Enhanced" as key feature replacing one-click functionality
+- **Files Updated**:
+  - `docs/website/docs/stratix-copilot/overview.md`
+  - `docs/website/docs/stratix-copilot/usage.md`
+  - `docs/website/docs/stratix-copilot/commands.md`
+  - `packages/copilot-rag/README.md`
+
+#### Content Cleanup
+- **Removed Emojis**: Cleaned all emojis from documentation and README files
+- **Files Cleaned**:
+  - All Docusaurus documentation files
+  - `packages/copilot-rag/README.md`
+  - Core documentation files
+
+### Added
+
+#### npm Package Management Scripts
+- **`scripts/unpublish-old-packages.sh`**: Deprecate old packages on npm
+- **`scripts/delete-old-packages.sh`**: Permanently delete deprecated packages with safety features
+  - Dry-run mode by default
+  - Requires `--execute` flag for actual deletions
+  - Double confirmation prompts
+  - Handles npm 72-hour restriction
+  - Individual version deletion fallback
+- **`scripts/README-npm-cleanup.md`**: Complete documentation for package cleanup process
+
+#### GitHub Actions
+- **Enhanced Publish Workflow**: Updated to handle new nested plugin structure
+  - Dependency-ordered publishing (Core → Runtime → Plugins → Tools)
+  - Verification step for all package types
+  - Organized summary output by category
+  - Skip already-published versions
+
+#### Development Tools
+- **Version Bump Script**: Now accepts version as command-line argument
+  - Usage: `node scripts/bump-versions.mjs 0.4.0`
+  - Previously hardcoded version
+
+### Fixed
+- **CHANGELOG.md**: Updated version comparison links to use new repository URL
+- **GitHub Issue Templates**: Updated discussion and documentation URLs
+
 ## [0.3.0] - 2025-01-21
 
 ### Breaking Changes
@@ -157,9 +229,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Recommended for early adopters and testing only
 - See [Versioning Policy](./docs/website/docs/getting-started/versioning.md) for details
 
-[Unreleased]: https://github.com/pcarvajal/stratix/compare/v0.3.0...HEAD
-[0.3.0]: https://github.com/pcarvajal/stratix/compare/v0.1.3...v0.3.0
-[0.1.3]: https://github.com/pcarvajal/stratix/compare/v0.1.2...v0.1.3
-[0.1.2]: https://github.com/pcarvajal/stratix/compare/v0.1.1...v0.1.2
-[0.1.1]: https://github.com/pcarvajal/stratix/compare/v0.1.0...v0.1.1
-[0.1.0]: https://github.com/pcarvajal/stratix/releases/tag/v0.1.0
+[Unreleased]: https://github.com/stratix-dev/stratix/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/stratix-dev/stratix/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/stratix-dev/stratix/compare/v0.1.3...v0.3.0
+[0.1.3]: https://github.com/stratix-dev/stratix/compare/v0.1.2...v0.1.3
+[0.1.2]: https://github.com/stratix-dev/stratix/compare/v0.1.1...v0.1.2
+[0.1.1]: https://github.com/stratix-dev/stratix/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/stratix-dev/stratix/releases/tag/v0.1.0

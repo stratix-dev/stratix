@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/logo-light.png" alt="Stratix Logo" width="200"/>
+  <img src="public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
 
 # Stratix
 
@@ -10,13 +10,21 @@ Production-ready from day one with type safety, dependency injection, AI agents 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3+-blue.svg)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
-[![Version](https://img.shields.io/badge/version-0.2.x-orange.svg)](https://github.com/pcarvajal/stratix)
+[![Version](https://img.shields.io/badge/version-0.4.0-orange.svg)](https://github.com/stratix-dev/stratix)
 
-[Documentation](https://pcarvajal.github.io/stratix/) | [Getting Started](https://pcarvajal.github.io/stratix)
+[Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix)
 
 </div>
 
 > **Pre-release Notice**: Stratix is in active development. The API may change until version 1.0.0.
+
+## What's New in 0.4.0
+
+- **Repository Migration**: Now available at `github.com/stratix-dev/stratix`
+- **Enhanced Documentation**: Updated theme with official brand colors for better readability
+- **Stratix Copilot**: Improved documentation with accurate workflow descriptions
+
+See the [CHANGELOG](./CHANGELOG.md) for complete release notes.
 
 ## Features
 
@@ -57,9 +65,44 @@ npm run dev
 - Type-safe entity IDs and Result pattern
 - Production-ready project structure
 
+## Available Packages
+
+### Core Packages
+- **@stratix/core** - Domain primitives, abstractions, and default implementations (zero dependencies)
+- **@stratix/runtime** - Application builder, plugin registry, and lifecycle management
+
+### Database Plugins
+- **@stratix/db-postgres** - PostgreSQL integration with repository patterns
+- **@stratix/db-mongodb** - MongoDB integration with aggregations and pagination
+- **@stratix/db-redis** - Redis caching, rate limiting, and distributed locks
+
+### AI Plugins
+- **@stratix/ai-openai** - OpenAI LLM provider for AI agents
+- **@stratix/ai-anthropic** - Anthropic Claude provider for AI agents
+
+### Infrastructure Plugins
+- **@stratix/http-fastify** - Fastify HTTP server integration
+- **@stratix/msg-rabbitmq** - RabbitMQ message broker with RPC and priority queues
+- **@stratix/di-awilix** - Awilix dependency injection container
+- **@stratix/obs-opentelemetry** - OpenTelemetry observability integration
+
+### Utility Plugins
+- **@stratix/auth** - JWT authentication and RBAC authorization
+- **@stratix/validation-zod** - Zod-based schema validation
+- **@stratix/mappers** - Entity-to-DTO mapping utilities
+- **@stratix/errors** - Structured error handling
+- **@stratix/secrets** - Secrets management
+
+### Development Tools
+- **@stratix/cli** - Code generation and project scaffolding
+- **@stratix/testing** - Testing utilities and mocks
+
+### VS Code Extension
+- **@stratix/copilot-rag** - GitHub Copilot extension with Stratix framework knowledge
+
 ## Documentation
 
-Complete documentation is available at [pcarvajal.github.io/stratix](https://pcarvajal.github.io/stratix/)
+Complete documentation is available at [stratix-dev.github.io/stratix](https://stratix-dev.github.io/stratix/)
 
 ## Contributing
 

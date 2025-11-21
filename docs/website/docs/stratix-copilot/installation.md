@@ -10,9 +10,9 @@ Install Stratix Copilot to enhance your Stratix development experience with AI-p
 
 Before installing Stratix Copilot, ensure you have:
 
-- ✅ **VS Code** 1.85.0 or higher
-- ✅ **GitHub Copilot** subscription and extension installed
-- ✅ **Stratix project** (or create one with `npx @stratix/cli new`)
+- **VS Code** 1.85.0 or higher
+- **GitHub Copilot** subscription and extension installed
+- **Stratix project** (or create one with `npx @stratix/cli new`)
 
 ## Installation Methods
 
@@ -32,7 +32,7 @@ For development or early access:
 
 ```bash
 # Clone the Stratix repository
-git clone https://github.com/pcarvajal/stratix.git
+git clone https://github.com/stratix-dev/stratix.git
 cd stratix
 
 # Install dependencies
@@ -61,9 +61,9 @@ After installation, verify Stratix Copilot is working:
    - Select "Stratix AI Assistant" from dropdown
    - You should see:
      ```
-     🚀 Stratix AI Assistant activating...
-     ✅ Knowledge base initialized with 36 documents
-     📦 KB Version: 0.1.3
+     Stratix AI Assistant activating...
+     Knowledge base initialized with 36 documents
+     KB Version: 0.1.3
      🎉 Stratix AI Assistant activated successfully!
      ```
 

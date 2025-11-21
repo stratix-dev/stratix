@@ -306,5 +306,5 @@ Now that you have Stratix installed:
 
 If you encounter issues:
 
-- Check the [GitHub Issues](https://github.com/pcarvajal/stratix/issues)
-- Ask in [GitHub Discussions](https://github.com/pcarvajal/stratix/discussions)
+- Check the [GitHub Issues](https://github.com/stratix-dev/stratix/issues)
+- Ask in [GitHub Discussions](https://github.com/stratix-dev/stratix/discussions)

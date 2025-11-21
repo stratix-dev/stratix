@@ -12,11 +12,11 @@ Stratix Copilot is a VS Code extension that enhances GitHub Copilot with deep kn
 
 Stratix Copilot is an intelligent VS Code extension that integrates with GitHub Copilot Chat to provide:
 
-- 🤖 **Context-Aware AI** - Understands your project structure (DDD/Modular)
-- 📚 **Framework Knowledge** - Trained on complete Stratix documentation
-- 🎯 **Smart Code Generation** - Generates entities, commands, queries, value objects
-- 🔄 **Auto-Updates** - Knowledge base stays synchronized with framework updates
-- 📁 **One-Click File Creation** - Generate and save files directly from chat
+- **Context-Aware AI** - Understands your project structure (DDD/Modular)
+- **Framework Knowledge** - Trained on complete Stratix documentation
+- **Smart Code Generation** - Generates entities, commands, queries, value objects
+- **Auto-Updates** - Knowledge base stays synchronized with framework updates
+- **RAG-Enhanced** - Retrieves relevant documentation for accurate responses
 
 ## Key Features
 
@@ -44,14 +44,14 @@ Quick access to common code generation tasks:
 | `/refactor` | Get refactoring suggestions for DDD patterns |
 | `/explain` | Explain Stratix concepts with examples |
 
-### Intelligent File Creation
+### Code Generation
 
-After generating code, Stratix Copilot shows action buttons to create files automatically:
+Stratix Copilot generates complete, production-ready code following DDD patterns:
 
-- **Create Entity File** - Saves to correct location in your project
-- **Create Command File** - Follows your project structure
-- **Create Query File** - Proper CQRS organization
-- And more...
+- **Entities** - With proper encapsulation and factory methods
+- **Commands & Queries** - Following CQRS patterns with handlers
+- **Value Objects** - With validation and equality methods
+- **Repositories** - Interface and implementation examples
 
 ### Automatic Knowledge Updates
 
@@ -74,8 +74,7 @@ graph LR
     F --> G[GitHub Copilot]
     G --> H[Generate Code]
     H --> I[Show in Chat]
-    I --> J[Click Button]
-    J --> K[File Created]
+    I --> J[Copy & Use]
 ```
 
 1. **You ask** in GitHub Copilot Chat with `@stratix`
@@ -83,8 +82,8 @@ graph LR
 3. **Searches** knowledge base for relevant documentation
 4. **Enriches** the prompt with Stratix patterns and examples
 5. **Generates** code using GitHub Copilot's LLM
-6. **Shows** action buttons to create files
-7. **Creates** files in the correct location when you click
+6. **Shows** generated code in chat with explanations
+7. **Copy and paste** the code into your project files
 
 ## Example Usage
 
@@ -96,8 +95,8 @@ graph LR
 
 **Result:**
 - Generates complete `Product` entity following Stratix patterns
-- Shows "Create Entity File" button
-- Click to save to `src/domain/entities/Product.ts`
+- Shows code in chat with explanations
+- Copy and save to `src/domain/entities/Product.ts`
 
 ### Generate a Command
 
@@ -109,7 +108,7 @@ graph LR
 - Generates command DTO and handler
 - Follows CQRS patterns
 - Includes proper imports and types
-- One-click file creation
+- Ready to copy into your project
 
 ### Ask Questions
 

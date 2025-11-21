@@ -51,8 +51,6 @@ Generate a domain entity with properties and methods:
 - Getters for all properties
 - Proper imports from `@stratix/core`
 
-**Action Button:** `📄 Create Entity File`
-
 ---
 
 ### `/command` - Generate Command
@@ -70,8 +68,6 @@ Generate a CQRS command with handler:
 - Repository injection
 - Error handling with Result pattern
 
-**Action Button:** `📄 Create Command File`
-
 ---
 
 ### `/query` - Generate Query
@@ -87,8 +83,6 @@ Generate a CQRS query with handler:
 - Query handler class
 - Repository usage
 - Result pattern for responses
-
-**Action Button:** `📄 Create Query File`
 
 ---
 
@@ -107,8 +101,6 @@ Generate a value object with validation:
 - Static `create()` returning `Result<Email>`
 - Equality methods
 
-**Action Button:** `📄 Create Value Object File`
-
 ---
 
 ### `/repository` - Generate Repository
@@ -123,8 +115,6 @@ Generate repository interface and implementation:
 - Repository interface
 - Method signatures (findById, save, delete)
 - Optional in-memory implementation
-
-**Action Button:** `📄 Create Repository File`
 
 ---
 
@@ -141,8 +131,6 @@ Generate a complete bounded context structure:
 - Entity, repository, commands, queries
 - Infrastructure setup
 - Index file with exports
-
-**Action Button:** `📄 Create Bounded Context`
 
 ---
 
@@ -177,18 +165,18 @@ Get detailed explanations with examples:
 - When to use it
 - Best practices
 
-## File Creation Workflow
+## Working with Generated Code
 
-After generating code, Stratix Copilot shows action buttons:
+After generating code, follow these steps:
 
 1. **Review Generated Code** in chat
-2. **Click Action Button** (e.g., "Create Entity File")
-3. **File Created** in correct location
-4. **File Opens** in editor automatically
+2. **Copy the code** from the chat response
+3. **Create file** in the correct location
+4. **Paste and save** the code
 
-### File Locations
+### Recommended File Locations
 
-Stratix Copilot detects your project structure and saves files correctly:
+Stratix Copilot provides code that follows these conventions:
 
 **DDD Structure:**
 ```

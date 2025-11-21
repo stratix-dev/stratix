@@ -45,20 +45,20 @@ const config: Config = {
       tagName: 'meta',
       attributes: {
         name: 'theme-color',
-        content: '#00D9E1',
+        content: '#2958FC',
       },
     },
   ],
 
   // Set the production url of your site here
-  url: 'https://pcarvajal.github.io',
+  url: 'https://stratix-dev.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/stratix/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'pcarvajal', // Usually your GitHub org/user name.
+  organizationName: 'stratix-dev', // Usually your GitHub org/user name.
   projectName: 'stratix', // Usually your repo name.
   deploymentBranch: 'gh-pages', // The branch where the site will be deployed.
   trailingSlash: false,
@@ -103,8 +103,8 @@ const config: Config = {
       { name: 'apple-mobile-web-app-status-bar-style', content: 'black' },
     ],
     colorMode: {
-      defaultMode: 'dark',
-      respectPrefersColorScheme: false,
+      defaultMode: 'light',
+      respectPrefersColorScheme: true,
     },
     navbar: {
       title: 'Stratix',
@@ -121,14 +121,14 @@ const config: Config = {
           label: 'Docs',
         },
         {
-          href: 'https://github.com/pcarvajal/stratix',
+          href: 'https://github.com/stratix-dev/stratix',
           label: 'GitHub',
           position: 'right',
         },
       ],
     },
     footer: {
-      style: 'dark',
+      style: 'light',
       links: [
         {
           title: 'Documentation',
@@ -169,15 +169,15 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/pcarvajal/stratix',
+              href: 'https://github.com/stratix-dev/stratix',
             },
             {
               label: 'Issues',
-              href: 'https://github.com/pcarvajal/stratix/issues',
+              href: 'https://github.com/stratix-dev/stratix/issues',
             },
             {
               label: 'Discussions',
-              href: 'https://github.com/pcarvajal/stratix/discussions',
+              href: 'https://github.com/stratix-dev/stratix/discussions',
             },
           ],
         },

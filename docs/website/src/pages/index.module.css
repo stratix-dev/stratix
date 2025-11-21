@@ -1,8 +1,11 @@
 /* ===== VARIABLES ===== */
+/* Stratix Official Brand Colors */
 :root {
-  --stratix-primary: #1e3a5f;
-  --stratix-secondary: #2d5a7b;
-  --stratix-accent: #4a90e2;
+  --stratix-primary: #2958FC;        /* Full Spectrum Blue */
+  --stratix-secondary: #2895FD;      /* Dodger Blue */
+  --stratix-accent: #14E4E8;         /* Neon Ice */
+  --stratix-pink: #E035B6;           /* Shocking Pink */
+  --stratix-white: #FDFDFD;          /* White */
   --stratix-dark: #0f1419;
   --stratix-darker: #0a0e13;
 }
@@ -10,14 +13,14 @@
 [data-theme='dark'] {
   --stratix-bg: #0a0e13;
   --stratix-surface: #1a1f26;
-  --stratix-border: rgba(74, 144, 226, 0.1);
+  --stratix-border: rgba(20, 228, 232, 0.15);
 }
 
 [data-theme='light'] {
-  --stratix-bg: #ffffff;
+  --stratix-bg: #FDFDFD;
   --stratix-surface: #f8f9fa;
-  --stratix-border: rgba(30, 58, 95, 0.1);
-  --stratix-text: #1e3a5f;
+  --stratix-border: rgba(41, 88, 252, 0.15);
+  --stratix-text: #2958FC;
 }
 
 /* ===== HERO SECTION ===== */
@@ -75,7 +78,7 @@
   height: 80px;
   border-radius: 12px;
   object-fit: cover;
-  box-shadow: 0 4px 20px rgba(74, 144, 226, 0.2);
+  box-shadow: 0 4px 20px rgba(41, 88, 252, 0.3);
 }
 
 .heroTitle {
@@ -114,28 +117,28 @@
   border: none;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+  box-shadow: 0 4px 15px rgba(41, 88, 252, 0.4);
 }
 
 .primaryButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(74, 144, 226, 0.4);
+  box-shadow: 0 6px 20px rgba(41, 88, 252, 0.5);
   background: linear-gradient(135deg, var(--stratix-secondary) 0%, var(--stratix-accent) 100%);
 }
 
 .secondaryButton {
   background: transparent;
-  border: 2px solid var(--stratix-border);
-  color: var(--ifm-font-color-base);
+  border: 2px solid var(--stratix-primary);
+  color: var(--stratix-primary);
   font-weight: 600;
   transition: all 0.3s ease;
 }
 
 .secondaryButton:hover {
-  border-color: var(--stratix-accent);
-  background: rgba(74, 144, 226, 0.05);
+  border-color: var(--stratix-secondary);
+  background: rgba(41, 88, 252, 0.1);
   transform: translateY(-2px);
-  color: var(--ifm-font-color-base);
+  color: var(--stratix-secondary);
 }
 
 .stats {
@@ -182,7 +185,7 @@
   display: flex;
   align-items: center;
   padding: 0.75rem 1rem;
-  background: rgba(74, 144, 226, 0.05);
+  background: rgba(41, 88, 252, 0.05);
   border-bottom: 1px solid var(--stratix-border);
 }
 
@@ -281,19 +284,20 @@
 
 .featureCard:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(74, 144, 226, 0.15);
-  border-color: var(--stratix-accent);
+  box-shadow: 0 12px 40px rgba(41, 88, 252, 0.2);
+  border-color: var(--stratix-primary);
 }
 
 .featureIconWrapper {
   width: 60px;
   height: 60px;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--stratix-primary) 0%, var(--stratix-accent) 100%);
+  background: linear-gradient(135deg, var(--stratix-primary) 0%, var(--stratix-secondary) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(41, 88, 252, 0.3);
 }
 
 .featureCard .featureIcon {

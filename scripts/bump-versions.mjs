@@ -3,7 +3,8 @@
 import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs';
 import { resolve, join } from 'path';
 
-const NEW_VERSION = '0.3.0';
+// Get version from command line argument, default to 0.4.0
+const NEW_VERSION = process.argv[2] || '0.4.0';
 
 // Packages to exclude from version updates
 const EXCLUDED_PACKAGES = [

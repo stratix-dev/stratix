@@ -16,7 +16,7 @@ Stratix Copilot is a VS Code extension that enhances GitHub Copilot with deep kn
 - **Framework Knowledge** - Trained on 36+ Stratix documentation sources
 - **Smart Code Generation** - Entities, commands, queries, value objects
 - **Auto-Updates** - Knowledge base stays synchronized with framework
-- **One-Click File Creation** - Generate and save files directly from chat
+- **RAG-Enhanced** - Retrieves relevant documentation for accurate responses
 - **Privacy-First** - All processing happens locally
 - **No API Keys** - Uses your existing GitHub Copilot subscription
 
@@ -72,15 +72,14 @@ graph LR
     E --> F[GitHub Copilot]
     F --> G[Generate Code]
     G --> H[Show in Chat]
-    H --> I[Click Button]
-    I --> J[File Created]
+    H --> I[Copy & Use]
 ```
 
 1. **Analyze** - Understands your project structure
 2. **Search** - Finds relevant documentation using semantic search
 3. **Enrich** - Adds Stratix patterns and examples to prompt
 4. **Generate** - GitHub Copilot creates accurate code
-5. **Create** - One-click file creation in correct location
+5. **Use** - Copy generated code into your project files
 
 ## Knowledge Base
 
@@ -173,5 +172,5 @@ MIT © [P. Andrés Carvajal](https://github.com/pcarvajal)
 ## Support
 
 - [Documentation](https://stratix.dev/docs)
-- [GitHub Discussions](https://github.com/pcarvajal/stratix/discussions)
-- [Issue Tracker](https://github.com/pcarvajal/stratix/issues)
+- [GitHub Discussions](https://github.com/stratix-dev/stratix/discussions)
+- [Issue Tracker](https://github.com/stratix-dev/stratix/issues)
