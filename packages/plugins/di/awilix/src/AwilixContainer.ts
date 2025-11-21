@@ -227,10 +227,12 @@ export class AwilixContainer implements Container {
     for (const [token, value] of Object.entries(services)) {
       // Check if it's a class (has prototype)
       if (typeof value === 'function' && value.prototype && value.prototype.constructor === value) {
-        this.registerClass(value, { token });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.registerClass(value as new (...args: any[]) => any, { token });
       } else if (typeof value === 'function') {
         // It's a factory function
-        this.singleton(token, value);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        this.singleton(token, value as any);
       } else {
         // It's a direct value
         this.singleton(token, value);
