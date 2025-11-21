@@ -120,12 +120,7 @@ jobs:
                 return
               fi
 
-              # Publish with appropriate tag
-              if [ "${{ inputs.tag }}" != "" ]; then
-                pnpm publish --access public --tag ${{ inputs.tag }} --no-git-checks
-              else
-                pnpm publish --access public --no-git-checks
-              fi
+              echo "Publishing $PKG_NAME@$PKG_VERSION..."
 
               echo "Successfully published $PKG_NAME@$PKG_VERSION"
               cd - > /dev/null
