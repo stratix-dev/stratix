@@ -48,25 +48,45 @@ jobs:
       - name: Verify package contents
         run: |
           echo "Verifying package contents..."
-          for pkg in packages/*; do
-            if [ -f "$pkg/package.json" ]; then
-              echo "=== $(basename $pkg) ==="
-              cd "$pkg"
+
+          # Function to verify a package
+          verify_package() {
+            local pkg_dir=$1
+            if [ -f "$pkg_dir/package.json" ]; then
+              echo "=== Verifying: $pkg_dir ==="
+              cd "$pkg_dir"
 
               # Check for required files
               if [ ! -f "dist/index.js" ] && [ ! -f "dist/index.d.ts" ]; then
-                echo "Warning: Missing dist files in $(basename $pkg)"
+                echo "Warning: Missing dist files in $pkg_dir"
               fi
 
               if [ ! -f "README.md" ]; then
-                echo "Warning: Missing README.md in $(basename $pkg)"
+                echo "Warning: Missing README.md in $pkg_dir"
               fi
 
               # Show package.json info
               echo "Name: $(node -p "require('./package.json').name")"
               echo "Version: $(node -p "require('./package.json').version")"
 
-              cd ../..
+              cd - > /dev/null
+            fi
+          }
+
+          # Verify core packages
+          verify_package "packages/core"
+          verify_package "packages/runtime"
+          verify_package "packages/cli"
+          verify_package "packages/testing"
+
+          # Verify plugin packages
+          for category in packages/plugins/*; do
+            if [ -d "$category" ]; then
+              for plugin in "$category"/*; do
+                if [ -d "$plugin" ]; then
+                  verify_package "$plugin"
+                fi
+              done
             fi
           done
 
@@ -75,17 +95,17 @@ jobs:
           # Configure npm authentication
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
-          # Publish each package
-          for pkg in packages/*; do
-            if [ -f "$pkg/package.json" ]; then
-              echo "Publishing $(basename $pkg)..."
-              cd "$pkg"
+          # Function to publish a package with retry logic
+          publish_package() {
+            local pkg_dir=$1
+            if [ -f "$pkg_dir/package.json" ]; then
+              cd "$pkg_dir"
 
               # Check if package is private
               if [ "$(node -p "require('./package.json').private || false")" = "true" ]; then
-                echo "Skipping private package: $(basename $pkg)"
-                cd ../..
-                continue
+                echo "Skipping private package: $pkg_dir"
+                cd - > /dev/null
+                return
               fi
 
               # Get package name and version
@@ -94,21 +114,106 @@ jobs:
 
               # Check if this version is already published
               if npm view "$PKG_NAME@$PKG_VERSION" version 2>/dev/null; then
-                echo "Version $PKG_VERSION of $PKG_NAME is already published, skipping..."
-                cd ../..
-                continue
+                echo "✓ $PKG_NAME@$PKG_VERSION is already published, skipping..."
+                cd - > /dev/null
+                return
               fi
 
-              # Publish with appropriate tag
-              if [ "${{ inputs.tag }}" != "" ]; then
-                pnpm publish --access public --tag ${{ inputs.tag }} --no-git-checks
-              else
-                pnpm publish --access public --no-git-checks
-              fi
+              echo "Publishing $PKG_NAME@$PKG_VERSION..."
 
-              cd ../..
+              # Publish with retry logic (max 3 attempts)
+              local max_attempts=3
+              local attempt=1
+              while [ $attempt -le $max_attempts ]; do
+                if [ "${{ inputs.tag }}" != "" ]; then
+                  if pnpm publish --access public --tag ${{ inputs.tag }} --no-git-checks 2>&1; then
+                    echo "✓ Successfully published $PKG_NAME@$PKG_VERSION"
+                    cd - > /dev/null
+                    # Wait 5 seconds after successful publish to let npm process it
+                    sleep 5
+                    return
+                  fi
+                else
+                  if pnpm publish --access public --no-git-checks 2>&1; then
+                    echo "✓ Successfully published $PKG_NAME@$PKG_VERSION"
+                    cd - > /dev/null
+                    # Wait 5 seconds after successful publish to let npm process it
+                    sleep 5
+                    return
+                  fi
+                fi
+
+                echo "Attempt $attempt failed, waiting 10 seconds before retry..."
+                sleep 10
+                attempt=$((attempt + 1))
+              done
+
+              echo "✗ Failed to publish $PKG_NAME after $max_attempts attempts"
+              cd - > /dev/null
             fi
-          done
+          }
+
+          # Publish in dependency order
+          echo "Publishing packages in dependency order..."
+
+          # 1. Core packages (no dependencies)
+          echo ""
+          echo "=== Publishing Core Packages ==="
+          publish_package "packages/core"
+
+          # 2. Runtime (depends on core)
+          echo ""
+          echo "=== Publishing Runtime ==="
+          publish_package "packages/runtime"
+
+          # 3. Plugins (depend on core and/or runtime)
+          echo ""
+          echo "=== Publishing Database Plugins ==="
+          publish_package "packages/plugins/database/postgres"
+          publish_package "packages/plugins/database/mongodb"
+          publish_package "packages/plugins/database/redis"
+
+          echo ""
+          echo "=== Publishing DI Plugins ==="
+          publish_package "packages/plugins/di/awilix"
+
+          echo ""
+          echo "=== Publishing HTTP Plugins ==="
+          publish_package "packages/plugins/http/fastify"
+
+          echo ""
+          echo "=== Publishing AI Plugins ==="
+          publish_package "packages/plugins/ai/openai"
+          publish_package "packages/plugins/ai/anthropic"
+
+          echo ""
+          echo "=== Publishing Messaging Plugins ==="
+          publish_package "packages/plugins/messaging/rabbitmq"
+
+          echo ""
+          echo "=== Publishing Observability Plugins ==="
+          publish_package "packages/plugins/observability/opentelemetry"
+
+          echo ""
+          echo "=== Publishing Utility Plugins ==="
+          publish_package "packages/plugins/utilities/auth"
+          publish_package "packages/plugins/utilities/validation-zod"
+          publish_package "packages/plugins/utilities/mappers"
+          publish_package "packages/plugins/utilities/errors"
+          publish_package "packages/plugins/utilities/secrets"
+
+          # 4. Testing utilities (depend on core, runtime, di)
+          echo ""
+          echo "=== Publishing Testing Utilities ==="
+          publish_package "packages/testing"
+
+          # 5. CLI tools (depend on core)
+          echo ""
+          echo "=== Publishing CLI Tools ==="
+          publish_package "packages/cli"
+
+          echo ""
+          echo "=== Publish Complete ==="
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -118,13 +223,60 @@ jobs:
         run: |
           echo "## Published Packages" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          for pkg in packages/*; do
-            if [ -f "$pkg/package.json" ]; then
-              name=$(node -p "require('./$pkg/package.json').name")
-              version=$(node -p "require('./$pkg/package.json').version")
+
+          # Function to add package to summary
+          add_to_summary() {
+            local pkg_dir=$1
+            if [ -f "$pkg_dir/package.json" ]; then
+              local name=$(node -p "require('./$pkg_dir/package.json').name")
+              local version=$(node -p "require('./$pkg_dir/package.json').version")
               echo "- \`$name@$version\`" >> $GITHUB_STEP_SUMMARY
             fi
-          done
+          }
+
+          echo "### Core" >> $GITHUB_STEP_SUMMARY
+          add_to_summary "packages/core"
+          add_to_summary "packages/runtime"
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Database Plugins" >> $GITHUB_STEP_SUMMARY
+          add_to_summary "packages/plugins/database/postgres"
+          add_to_summary "packages/plugins/database/mongodb"
+          add_to_summary "packages/plugins/database/redis"
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### DI Plugins" >> $GITHUB_STEP_SUMMARY
+          add_to_summary "packages/plugins/di/awilix"
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### HTTP Plugins" >> $GITHUB_STEP_SUMMARY
+          add_to_summary "packages/plugins/http/fastify"
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### AI Plugins" >> $GITHUB_STEP_SUMMARY
+          add_to_summary "packages/plugins/ai/openai"
+          add_to_summary "packages/plugins/ai/anthropic"
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Messaging Plugins" >> $GITHUB_STEP_SUMMARY
+          add_to_summary "packages/plugins/messaging/rabbitmq"
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Observability Plugins" >> $GITHUB_STEP_SUMMARY
+          add_to_summary "packages/plugins/observability/opentelemetry"
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Utility Plugins" >> $GITHUB_STEP_SUMMARY
+          add_to_summary "packages/plugins/utilities/auth"
+          add_to_summary "packages/plugins/utilities/validation-zod"
+          add_to_summary "packages/plugins/utilities/mappers"
+          add_to_summary "packages/plugins/utilities/errors"
+          add_to_summary "packages/plugins/utilities/secrets"
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Tools" >> $GITHUB_STEP_SUMMARY
+          add_to_summary "packages/testing"
+          add_to_summary "packages/cli"
 
       - name: Notify on failure
         if: failure()
