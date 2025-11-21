@@ -112,7 +112,6 @@ const sidebars: SidebarsConfig = {
         'database/postgres',
         'database/mongodb',
         'database/redis',
-        'database/migrations',
       ],
     },
   ],
