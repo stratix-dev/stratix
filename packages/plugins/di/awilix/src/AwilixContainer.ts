@@ -201,7 +201,7 @@ export class AwilixContainer implements Container {
    * Registers a class with auto-wiring.
    */
   registerClass<T>(
-    classType: new (...args: any[]) => T,
+    classType: new (...args: unknown[]) => T,
     options?: {
       token?: Token<T>;
       lifetime?: RegisterOptions['lifetime'];
@@ -223,7 +223,7 @@ export class AwilixContainer implements Container {
   /**
    * Registers multiple services at once.
    */
-  registerAll(services: Record<string, any | (() => any)>): void {
+  registerAll(services: Record<string, unknown>): void {
     for (const [token, value] of Object.entries(services)) {
       // Check if it's a class (has prototype)
       if (typeof value === 'function' && value.prototype && value.prototype.constructor === value) {

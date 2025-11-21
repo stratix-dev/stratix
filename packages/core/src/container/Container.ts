@@ -194,7 +194,7 @@ export interface Container {
    * ```
    */
   registerClass<T>(
-    classType: new (...args: any[]) => T,
+    classType: new (...args: unknown[]) => T,
     options?: {
       token?: Token<T>;
       lifetime?: RegisterOptions['lifetime'];
@@ -216,7 +216,7 @@ export interface Container {
    * });
    * ```
    */
-  registerAll(services: Record<string, any | (() => any)>): void;
+  registerAll(services: Record<string, unknown>): void;
 
   /**
    * Tries to resolve a service, returns undefined if not found.
