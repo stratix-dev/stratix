@@ -3,13 +3,20 @@ import { createNewCommand } from './commands/new.js';
 import { createGenerateCommand } from './commands/generate.js';
 import { createAddCommand } from './commands/add.js';
 import { createInfoCommand } from './commands/info.js';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const packageJson = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf-8'));
 
 const program = new Command();
 
 program
   .name('stratix')
   .description('Stratix CLI - Build DDD applications with ease')
-  .version('0.2.0');
+  .version(packageJson.version);
 
 program.addCommand(createNewCommand());
 program.addCommand(createGenerateCommand());

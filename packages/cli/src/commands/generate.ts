@@ -173,7 +173,7 @@ export function createGenerateCommand(): Command {
           options: {
             name,
             props,
-            returnType: options.returnType,
+            output: options.returnType,
             generateHandler: options.handler !== false
           }
         };
@@ -288,6 +288,52 @@ export function createGenerateCommand(): Command {
         }
       } catch (error) {
         console.error(chalk.red('\nFailed to generate quality configs\n'));
+        console.error(error instanceof Error ? error.message : error);
+        process.exit(1);
+      }
+    });
+
+  // Context generator
+  command
+    .command('context <name>')
+    .description('Generate a complete bounded context (modular architecture)')
+    .option('--props <props>', 'Properties as JSON array: [{"name":"name","type":"string"}]')
+    .option('--dry-run', 'Preview generated files without writing')
+    .action(async (name: string, options: any) => {
+      try {
+        console.log(chalk.blue.bold('\nGenerate Bounded Context\n'));
+
+        const generator = await generatorRegistry.get('context');
+        if (!generator) {
+          throw new Error('Context generator not found');
+        }
+
+        const props = options.props ? JSON.parse(options.props) : [];
+
+        const context: GeneratorContext = {
+          projectRoot: process.cwd(),
+          options: {
+            name,
+            props
+          }
+        };
+
+        const result = await generator.generate(context);
+
+        // Write files
+        await fileWriter.writeFiles(result.files, context.projectRoot, {
+          dryRun: options.dryRun,
+          force: options.force
+        });
+
+        if (!options.dryRun) {
+          console.log(chalk.green.bold('\nBounded context generated!\n'));
+        } else {
+          console.log(chalk.yellow.bold('\nDry run - no files written\n'));
+          result.files.forEach(f => console.log(chalk.gray(`  ${f.path}`)));
+        }
+      } catch (error) {
+        console.error(chalk.red('\nFailed to generate context\n'));
         console.error(error instanceof Error ? error.message : error);
         process.exit(1);
       }

@@ -11,11 +11,11 @@ Build a complete CRUD API with Stratix in just 5 minutes. This tutorial will gui
 ## What You'll Build
 
 A REST API for managing products with:
-- ✅ Domain entities and value objects
-- ✅ CQRS commands and queries
-- ✅ HTTP endpoints
-- ✅ In-memory repository
-- ✅ Type-safe error handling
+- Domain entities and value objects
+- CQRS commands and queries
+- HTTP endpoints
+- In-memory repository
+- Type-safe error handling
 
 ## Step 1: Create a New Project
 
@@ -197,7 +197,7 @@ async function bootstrap() {
   // Start application
   await app.start();
   
-  console.log('🚀 Server running on http://localhost:3000');
+  console.log('Server running on http://localhost:3000');
 }
 
 bootstrap().catch(console.error);
@@ -215,7 +215,7 @@ pnpm start
 
 You should see:
 ```
-🚀 Server running on http://localhost:3000
+Server running on http://localhost:3000
 ```
 
 ## Step 10: Test Your API
@@ -246,14 +246,14 @@ curl http://localhost:3000/products/{id}
 
 ## What You've Learned
 
-Congratulations! 🎉 You've just built a complete CRUD API with:
+Congratulations! You've just built a complete CRUD API with:
 
-- ✅ **Domain-Driven Design** - Entities and repositories
-- ✅ **CQRS Pattern** - Commands and queries with handlers
-- ✅ **HTTP Server** - Fastify integration
-- ✅ **Type Safety** - Full TypeScript support
-- ✅ **Result Pattern** - Explicit error handling
-- ✅ **Clean Architecture** - Separation of concerns
+- **Domain-Driven Design** - Entities and repositories
+- **CQRS Pattern** - Commands and queries with handlers
+- **HTTP Server** - Fastify integration
+- **Type Safety** - Full TypeScript support
+- **Result Pattern** - Explicit error handling
+- **Clean Architecture** - Separation of concerns
 
 ## Next Steps
 
@@ -301,10 +301,10 @@ Protect your endpoints with JWT authentication.
 
 ## Full Example
 
-The complete code for this tutorial is available in the [examples directory](https://github.com/pcarvajal/stratix/tree/main/examples/quick-start).
+The complete code for this tutorial is available in the [examples directory](https://github.com/stratix-dev/stratix/tree/main/examples/quick-start).
 
 ## Getting Help
 
 - **Documentation**: [Full documentation](../core-concepts/architecture-overview)
-- **Examples**: [More examples](https://github.com/pcarvajal/stratix/tree/main/examples)
-- **Community**: [GitHub Discussions](https://github.com/pcarvajal/stratix/discussions)
+- **Examples**: [More examples](https://github.com/stratix-dev/stratix/tree/main/examples)
+- **Community**: [GitHub Discussions](https://github.com/stratix-dev/stratix/discussions)

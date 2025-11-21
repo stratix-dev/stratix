@@ -2,25 +2,39 @@ import { ValueObject } from '@stratix/core';
 
 export interface {{pascalCase name}}Props {
 {{#each props}}
-{{name}}: {{type}};{{/each}}
+  {{name}}: {{type}};
+{{/each}}
 }
 
-export class {{pascalCase name}} extends ValueObject<{{pascalCase name}}Props> {
-    private constructor(props: {{pascalCase name}}Props) {
-    super(props);
-    }
+export class {{pascalCase name}} extends ValueObject {
+  private constructor(
+{{#each props}}
+    private readonly _{{name}}: {{type}}{{#unless @last}},{{/unless}}
+{{/each}}
+  ) {
+    super();
+  }
 
-    static create(props: {{pascalCase name}}Props): {{pascalCase name}} {
+  static create(props: {{pascalCase name}}Props): {{pascalCase name}} {
     // TODO: Add validation logic here
-    return new {{pascalCase name}}(props);
-    }
-    {{#each props}}
+    return new {{pascalCase name}}(
+{{#each props}}
+      props.{{name}}{{#unless @last}},{{/unless}}
+{{/each}}
+    );
+  }
+{{#each props}}
 
-    get {{name}}(): {{type}} {
-    return this.props.{{name}};
-    }{{/each}}
+  get {{name}}(): {{type}} {
+    return this._{{name}};
+  }
+{{/each}}
 
-    protected validateProps(props: {{pascalCase name}}Props): void {
-    // TODO: Implement validation
-    }
-    }
+  protected getEqualityComponents(): unknown[] {
+    return [
+{{#each props}}
+      this._{{name}}{{#unless @last}},{{/unless}}
+{{/each}}
+    ];
+  }
+}

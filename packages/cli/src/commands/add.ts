@@ -86,11 +86,11 @@ function getInstallCommand(pm: string, packages: string[]): string {
   const pkgList = packages.join(' ');
   switch (pm) {
     case 'pnpm':
-      return `pnpm add ${pkgList}`;
+      return `pnpm add ${pkgList} --registry https://registry.npmjs.org`;
     case 'yarn':
-      return `yarn add ${pkgList}`;
+      return `yarn add ${pkgList} --registry https://registry.npmjs.org`;
     default:
-      return `npm install ${pkgList}`;
+      return `npm install ${pkgList} --registry https://registry.npmjs.org`;
   }
 }
 
@@ -165,7 +165,7 @@ export function createAddCommand(): Command {
       console.log(chalk.blue.bold('\nAvailable Stratix Extensions\n'));
 
       console.log(chalk.yellow.bold('Production Extensions:'));
-      ['http', 'validation', 'mappers', 'auth', 'migrations', 'errors'].forEach(
+      ['http', 'validation', 'mappers', 'auth', 'errors'].forEach(
         (name) => {
           const ext = EXTENSIONS[name];
           console.log(

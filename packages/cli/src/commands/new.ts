@@ -127,8 +127,17 @@ export function createNewCommand(): Command {
         }
         
         console.log(chalk.white(`  ${PackageManagerUtils.getRunCommand(packageManager, 'dev')}\n`));
-        console.log(chalk.gray('Generate your first bounded context:\n'));
-        console.log(chalk.white('  stratix generate context Products --props "name:string,price:number"\n'));
+
+        if (structure === 'modular') {
+          console.log(chalk.gray('Generate your first bounded context:\n'));
+          console.log(chalk.white('  stratix generate context Product --props \'[{"name":"name","type":"string"},{"name":"price","type":"number"}]\'\n'));
+        } else {
+          console.log(chalk.gray('Generate your first entity:\n'));
+          console.log(chalk.white('  stratix generate entity Product --props \'[{"name":"name","type":"string"},{"name":"price","type":"number"}]\'\n'));
+        }
+
+        console.log(chalk.gray('Or explore available generators:\n'));
+        console.log(chalk.white('  stratix generate --help\n'));
         console.log(chalk.gray('Happy coding!\n'));
 
       } catch (error) {

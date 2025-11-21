@@ -1,6 +1,6 @@
 {
   "name": "@stratix/msg-rabbitmq",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "RabbitMQ extension for Stratix framework",
   "type": "module",
   "main": "./dist/index.js",
@@ -43,12 +43,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pcarvajal/stratix.git",
+    "url": "https://github.com/stratix-dev/stratix.git",
     "directory": "packages/plugins/messaging/rabbitmq"
   },
-  "homepage": "https://github.com/pcarvajal/stratix#readme",
+  "homepage": "https://github.com/stratix-dev/stratix#readme",
   "bugs": {
-    "url": "https://github.com/pcarvajal/stratix/issues"
+    "url": "https://github.com/stratix-dev/stratix/issues"
   },
   "publishConfig": {
     "access": "public"

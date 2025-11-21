@@ -1,6 +1,6 @@
 {
   "name": "@stratix/di-awilix",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Awilix dependency injection container implementation for Stratix",
   "type": "module",
   "main": "./dist/index.js",
@@ -36,12 +36,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pcarvajal/stratix.git",
+    "url": "https://github.com/stratix-dev/stratix.git",
     "directory": "packages/plugins/di/awilix"
   },
-  "homepage": "https://github.com/pcarvajal/stratix#readme",
+  "homepage": "https://github.com/stratix-dev/stratix#readme",
   "bugs": {
-    "url": "https://github.com/pcarvajal/stratix/issues"
+    "url": "https://github.com/stratix-dev/stratix/issues"
   },
   "publishConfig": {
     "access": "public"

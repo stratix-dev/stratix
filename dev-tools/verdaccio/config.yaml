@@ -16,11 +16,13 @@ packages:
     access: $all
     publish: $all
     unpublish: $all
+    proxy: npmjs
 
   'create-stratix':
     access: $all
     publish: $all
     unpublish: $all
+    proxy: npmjs
 
   '@*/*':
     access: $all

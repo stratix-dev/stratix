@@ -3,9 +3,15 @@
 import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs';
 import { resolve, join } from 'path';
 
-const NEW_VERSION = '0.3.0';
+// Get version from command line argument, default to 0.4.0
+const NEW_VERSION = process.argv[2] || '0.4.0';
 
-// Find all package.json files in packages directory (excluding templates)
+// Packages to exclude from version updates
+const EXCLUDED_PACKAGES = [
+  '@stratix/copilot-rag', // VSCode extension, has independent versioning
+];
+
+// Find all package.json files in packages directory (excluding templates and node_modules)
 // Recursively searches through subdirectories (e.g., plugins, integrations)
 function findPackageFiles(dir) {
   const packages = [];
@@ -33,7 +39,10 @@ function findPackageFiles(dir) {
 const packagesDir = resolve(process.cwd(), 'packages');
 const packageFiles = findPackageFiles(packagesDir);
 
-console.log(`Found ${packageFiles.length} packages to update\n`);
+console.log(`Found ${packageFiles.length} packages\n`);
+
+let updated = 0;
+let skipped = 0;
 
 for (const file of packageFiles) {
   try {
@@ -41,15 +50,26 @@ for (const file of packageFiles) {
     const pkg = JSON.parse(content);
     const oldVersion = pkg.version;
 
+    // Skip excluded packages
+    if (EXCLUDED_PACKAGES.includes(pkg.name)) {
+      console.log(`⊘ ${pkg.name}: ${oldVersion} (skipped - independent versioning)`);
+      skipped++;
+      continue;
+    }
+
     // Update version
     pkg.version = NEW_VERSION;
 
     // Write back
     writeFileSync(file, JSON.stringify(pkg, null, 2) + '\n', 'utf8');
     console.log(`✓ ${pkg.name}: ${oldVersion} → ${NEW_VERSION}`);
+    updated++;
   } catch (error) {
     console.error(`✗ Failed to update ${file}:`, error.message);
   }
 }
 
-console.log(`\nAll packages updated to version ${NEW_VERSION}`);
+console.log(`\nSummary:`);
+console.log(`  Updated: ${updated} packages`);
+console.log(`  Skipped: ${skipped} packages`);
+console.log(`  New version: ${NEW_VERSION}`);
