@@ -1,0 +1,183 @@
+import { z } from 'zod';
+import { Generator } from '../../core/Generator.js';
+import type { GeneratorContext, GeneratorResult, GeneratedFile } from '../../core/types.js';
+import { fileSystem } from '../../infrastructure/FileSystem.js';
+import { logger } from '../../infrastructure/Logger.js';
+import path from 'path';
+
+/**
+ * Context generator options schema
+ */
+const ContextOptionsSchema = z.object({
+    name: z.string().min(1, 'Context name is required'),
+    props: z.array(z.object({
+        name: z.string(),
+        type: z.string()
+    })).default([]),
+    outputDir: z.string().optional().default('src/contexts')
+});
+
+/**
+ * Context generator for modular monolith architecture
+ *
+ * Generates a complete bounded context with entity, repository, commands, and queries
+ */
+export class ContextGenerator extends Generator {
+    name = 'context';
+    description = 'Generate a complete bounded context (modular architecture)';
+
+    /**
+     * Initialize generator
+     */
+    async initialize(): Promise<void> {
+        // No templates to load for context generator
+        // It composes other generators
+    }
+
+    /**
+     * Generate context files
+     */
+    async generate(context: GeneratorContext): Promise<GeneratorResult> {
+        // Validate options
+        const options = ContextOptionsSchema.parse(context.options);
+
+        logger.info(`Generating bounded context: ${options.name}`);
+
+        const files: GeneratedFile[] = [];
+        const contextPath = path.join(options.outputDir, options.name.toLowerCase());
+
+        // Import generators
+        const { EntityGenerator } = await import('./EntityGenerator.js');
+        const { RepositoryGenerator } = await import('./RepositoryGenerator.js');
+        const { CommandGenerator } = await import('./CommandGenerator.js');
+        const { QueryGenerator } = await import('./QueryGenerator.js');
+
+        // 1. Generate Entity
+        const entityGenerator = new EntityGenerator();
+        await entityGenerator.initialize();
+
+        const entityResult = await entityGenerator.generate({
+            projectRoot: context.projectRoot,
+            options: {
+                name: options.name,
+                props: options.props,
+                aggregate: true,
+                outputDir: path.join(contextPath, 'domain/entities')
+            }
+        });
+        files.push(...entityResult.files);
+
+        // 2. Generate Repository
+        const repositoryGenerator = new RepositoryGenerator();
+        await repositoryGenerator.initialize();
+
+        const repoResult = await repositoryGenerator.generate({
+            projectRoot: context.projectRoot,
+            options: {
+                entityName: options.name,
+                outputDir: path.join(contextPath, 'domain/repositories'),
+                implOutputDir: path.join(contextPath, 'infrastructure/repositories'),
+                generateImpl: true
+            }
+        });
+        files.push(...repoResult.files);
+
+        // 3. Generate Create Command
+        const commandGenerator = new CommandGenerator();
+        await commandGenerator.initialize();
+
+        const createCommandResult = await commandGenerator.generate({
+            projectRoot: context.projectRoot,
+            options: {
+                name: `Create${options.name}`,
+                props: options.props,
+                outputDir: path.join(contextPath, 'application/commands'),
+                generateHandler: true
+            }
+        });
+        files.push(...createCommandResult.files);
+
+        // 4. Generate Get Query
+        const queryGenerator = new QueryGenerator();
+        await queryGenerator.initialize();
+
+        const getQueryResult = await queryGenerator.generate({
+            projectRoot: context.projectRoot,
+            options: {
+                name: `Get${options.name}ById`,
+                props: [{ name: 'id', type: 'string' }],
+                output: options.name,
+                outputDir: path.join(contextPath, 'application/queries'),
+                generateHandler: true
+            }
+        });
+        files.push(...getQueryResult.files);
+
+        // 5. Generate List Query
+        const listQueryResult = await queryGenerator.generate({
+            projectRoot: context.projectRoot,
+            options: {
+                name: `List${options.name}s`,
+                props: [],
+                output: 'any', // Use 'any' for arrays to avoid creating invalid entity
+                outputDir: path.join(contextPath, 'application/queries'),
+                generateHandler: true
+            }
+        });
+        files.push(...listQueryResult.files);
+
+        // 6. Generate index.ts for the context (barrel export)
+        const indexContent = this.generateIndexFile(options.name);
+        files.push({
+            path: path.join(contextPath, 'index.ts'),
+            content: indexContent,
+            action: 'create'
+        });
+
+        logger.info(`Bounded context ${options.name} will be created at: ${contextPath}`);
+
+        return { files };
+    }
+
+    /**
+     * Generate index.ts barrel export
+     */
+    private generateIndexFile(contextName: string): string {
+        return `// ${contextName} Context - Barrel Exports
+
+// Domain
+export * from './domain/entities/${contextName}.js';
+export * from './domain/repositories/${contextName}Repository.js';
+
+// Application - Commands
+export * from './application/commands/Create${contextName}.js';
+export * from './application/commands/Create${contextName}Handler.js';
+
+// Application - Queries
+export * from './application/queries/Get${contextName}ById.js';
+export * from './application/queries/Get${contextName}ByIdHandler.js';
+export * from './application/queries/List${contextName}s.js';
+export * from './application/queries/List${contextName}sHandler.js';
+
+// Infrastructure
+export * from './infrastructure/repositories/InMemory${contextName}Repository.js';
+`;
+    }
+
+    /**
+     * Rollback context generation
+     */
+    async rollback(context: GeneratorContext): Promise<void> {
+        const options = ContextOptionsSchema.parse(context.options);
+        const contextPath = path.join(
+            context.projectRoot,
+            options.outputDir,
+            options.name.toLowerCase()
+        );
+
+        if (await fileSystem.exists(contextPath)) {
+            await fileSystem.remove(contextPath);
+            logger.info(`Rolled back context: ${options.name}`);
+        }
+    }
+}

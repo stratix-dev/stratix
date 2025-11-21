@@ -2,9 +2,10 @@ import type { Command } from '@stratix/core';
 
 export interface {{pascalCase name}}Command {
 {{#each props}}
-{{name}}: {{type}};{{/each}}
+  {{name}}: {{type}};
+{{/each}}
 }
 
 export class {{pascalCase name}} implements Command {
-constructor(public readonly data: {{pascalCase name}}Command) {}
+  constructor(public readonly data: {{pascalCase name}}Command) {}
 }

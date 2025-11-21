@@ -66,9 +66,35 @@ export class RepositoryGenerator extends Generator {
         // Validate options
         const options = RepositoryOptionsSchema.parse(context.options);
 
-        logger.info(`Generating repository for: ${options.entityName}`);
-
         const files: GeneratedFile[] = [];
+
+        // Check if entity exists
+        const entityPath = path.join(context.projectRoot, 'src/domain/entities', `${options.entityName}.ts`);
+        const entityExists = await fileSystem.exists(entityPath);
+
+        if (!entityExists) {
+            logger.warn(`Entity ${options.entityName} does not exist. Creating it first...`);
+
+            // Load entity generator
+            const { EntityGenerator } = await import('./EntityGenerator.js');
+            const entityGenerator = new EntityGenerator();
+            await entityGenerator.initialize();
+
+            // Generate entity with basic structure
+            const entityResult = await entityGenerator.generate({
+                projectRoot: context.projectRoot,
+                options: {
+                    name: options.entityName,
+                    props: [],
+                    aggregate: true
+                }
+            });
+
+            // Add entity files to the result
+            files.push(...entityResult.files);
+        }
+
+        logger.info(`Generating repository for: ${options.entityName}`);
 
         // Generate interface
         const interfaceContent = this.interfaceTemplate!.render({

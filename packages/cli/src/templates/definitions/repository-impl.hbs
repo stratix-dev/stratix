@@ -1,28 +1,27 @@
-import type { {{pascalCase entityName}}Repository } from '../../domain/repositories/{{pascalCase
-entityName}}Repository.js';
+import type { {{pascalCase entityName}}Repository } from '../../domain/repositories/{{pascalCase entityName}}Repository.js';
 import type { {{pascalCase entityName}} } from '../../domain/entities/{{pascalCase entityName}}.js';
 import type { EntityId } from '@stratix/core';
 
 export class InMemory{{pascalCase entityName}}Repository implements {{pascalCase entityName}}Repository {
-private items = new Map<string, {{pascalCase entityName}}>();
+  private items = new Map<string, {{pascalCase entityName}}>();
 
-    async save(entity: {{pascalCase entityName}}): Promise<void> {
-        this.items.set(entity.id.value, entity);
-        }
+  async save(entity: {{pascalCase entityName}}): Promise<void> {
+    this.items.set(entity.id.value, entity);
+  }
 
-        async findById(id: EntityId<'{{pascalCase entityName}}'>): Promise<{{pascalCase entityName}} | null> {
-                return this.items.get(id.value) ?? null;
-                }
+  async findById(id: EntityId<'{{pascalCase entityName}}'>): Promise<{{pascalCase entityName}} | null> {
+    return this.items.get(id.value) ?? null;
+  }
 
-                async findAll(): Promise<{{pascalCase entityName}}[]> {
-                    return Array.from(this.items.values());
-                    }
+  async findAll(): Promise<{{pascalCase entityName}}[]> {
+    return Array.from(this.items.values());
+  }
 
-                    async delete(id: EntityId<'{{pascalCase entityName}}'>): Promise<void> {
-                            this.items.delete(id.value);
-                            }
+  async delete(id: EntityId<'{{pascalCase entityName}}'>): Promise<void> {
+    this.items.delete(id.value);
+  }
 
-                            async exists(id: EntityId<'{{pascalCase entityName}}'>): Promise<boolean> {
-                                    return this.items.has(id.value);
-                                    }
-                                    }
+  async exists(id: EntityId<'{{pascalCase entityName}}'>): Promise<boolean> {
+    return this.items.has(id.value);
+  }
+}

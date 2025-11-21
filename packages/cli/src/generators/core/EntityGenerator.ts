@@ -65,11 +65,21 @@ export class EntityGenerator extends Generator {
 
         logger.info(`Generating ${options.aggregate ? 'aggregate' : 'entity'}: ${options.name}`);
 
+        // Filter out reserved property names that conflict with Entity base class
+        const reservedProps = ['id', 'createdAt', 'updatedAt'];
+        const filteredProps = options.props.filter(prop => {
+            if (reservedProps.includes(prop.name)) {
+                logger.warn(`Skipping reserved property '${prop.name}' - this is already provided by Entity base class`);
+                return false;
+            }
+            return true;
+        });
+
         // Render template
         const content = this.template!.render({
             name: options.name,
             aggregate: options.aggregate,
-            props: options.props
+            props: filteredProps
         });
 
         // Determine output path (relative to project root)

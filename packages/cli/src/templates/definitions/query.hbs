@@ -2,9 +2,10 @@ import type { Query } from '@stratix/core';
 
 export interface {{pascalCase name}}Query {
 {{#each props}}
-{{name}}: {{type}};{{/each}}
+  {{name}}: {{type}};
+{{/each}}
 }
 
-export class {{pascalCase name}} implements Query<{{output}}> {
-    constructor(public readonly data: {{pascalCase name}}Query) {}
-    }
+export class {{pascalCase name}} implements Query {
+  constructor(public readonly data: {{pascalCase name}}Query) {}
+}

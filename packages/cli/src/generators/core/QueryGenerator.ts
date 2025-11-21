@@ -74,6 +74,34 @@ export class QueryGenerator extends Generator {
 
         const files: GeneratedFile[] = [];
 
+        // Check if entity exists (if output is not 'any')
+        if (options.output !== 'any') {
+            const entityPath = path.join(context.projectRoot, 'src/domain/entities', `${options.output}.ts`);
+            const entityExists = await fileSystem.exists(entityPath);
+
+            if (!entityExists) {
+                logger.warn(`Entity ${options.output} does not exist. Creating it first...`);
+
+                // Load entity generator
+                const { EntityGenerator } = await import('./EntityGenerator.js');
+                const entityGenerator = new EntityGenerator();
+                await entityGenerator.initialize();
+
+                // Generate entity with basic structure
+                const entityResult = await entityGenerator.generate({
+                    projectRoot: context.projectRoot,
+                    options: {
+                        name: options.output,
+                        props: [],
+                        aggregate: true
+                    }
+                });
+
+                // Add entity files to the result
+                files.push(...entityResult.files);
+            }
+        }
+
         // Generate query
         const queryContent = this.queryTemplate!.render({
             name: options.name,

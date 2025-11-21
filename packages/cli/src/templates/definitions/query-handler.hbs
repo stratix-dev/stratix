@@ -1,21 +1,24 @@
 import type { QueryHandler } from '@stratix/core';
 import { Success, Failure, type Result } from '@stratix/core';
 import { {{pascalCase name}} } from './{{pascalCase name}}.js';
+{{#unless (eq output "any")}}
+import type { {{output}} } from '../../domain/entities/{{output}}.js';
+{{/unless}}
 
 export class {{pascalCase name}}Handler implements QueryHandler<{{pascalCase name}}, Result<{{output}}, Error>> {
-    async handle(query: {{pascalCase name}}): Promise<Result<{{output}}, Error>> {
-        try {
-        // TODO: Implement query logic
-        console.log('Executing {{pascalCase name}}:', query.data);
+  async handle(query: {{pascalCase name}}): Promise<Result<{{output}}, Error>> {
+    try {
+      // TODO: Implement query logic
+      // Access query parameters: query.data
 
-        // Replace with actual implementation
-        const result: {{output}} = {} as {{output}};
+      // Replace with actual implementation
+      const result: {{output}} = {} as {{output}};
 
-        return Success.create(result);
-        } catch (error) {
-        return Failure.create(
+      return Success.create(result);
+    } catch (error) {
+      return Failure.create(
         error instanceof Error ? error : new Error('Unknown error')
-        );
-        }
-        }
-        }
+      );
+    }
+  }
+}

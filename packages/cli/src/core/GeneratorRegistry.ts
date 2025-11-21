@@ -5,6 +5,7 @@ import { QueryGenerator } from '../generators/core/QueryGenerator.js';
 import { ValueObjectGenerator } from '../generators/core/ValueObjectGenerator.js';
 import { RepositoryGenerator } from '../generators/core/RepositoryGenerator.js';
 import { QualityGenerator } from '../generators/core/QualityGenerator.js';
+import { ContextGenerator } from '../generators/core/ContextGenerator.js';
 
 /**
  * Registry for managing v2 generators
@@ -27,6 +28,7 @@ export class GeneratorRegistry {
         this.register(new ValueObjectGenerator());
         this.register(new RepositoryGenerator());
         this.register(new QualityGenerator());
+        this.register(new ContextGenerator());
     }
 
     /**
