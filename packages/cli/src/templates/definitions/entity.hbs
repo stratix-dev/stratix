@@ -1,0 +1,42 @@
+import { {{#if aggregate}}AggregateRoot{{else}}Entity{{/if}} } from '@stratix/core';
+import { EntityId } from '@stratix/core';
+
+export class {{pascalCase name}} extends {{#if aggregate}}AggregateRoot{{else}}Entity{{/if}}<'{{pascalCase name}}'> {
+  private constructor(
+    id: EntityId<'{{pascalCase name}}'>,
+    createdAt: Date,
+    updatedAt: Date,{{#if props}}
+{{#each props}}
+    private _{{name}}: {{type}},{{/each}}{{/if}}
+  ) {
+    super(id, createdAt, updatedAt);
+  }
+
+  static create({{#if props}}props: {
+{{#each props}}
+    {{name}}: {{type}};{{/each}}
+  }{{/if}}): {{pascalCase name}} {
+    const id = EntityId.create<'{{pascalCase name}}'>();
+    const now = new Date();
+    const entity = new {{pascalCase name}}(
+      id,
+      now,
+      now,{{#if props}}
+{{#each props}}
+      props.{{name}},{{/each}}{{/if}}
+    );
+    
+    return entity;
+  }
+{{#if props}}
+{{#each props}}
+
+  get {{name}}(): {{type}} {
+    return this._{{name}};
+  }
+
+  set{{pascalCase name}}({{name}}: {{type}}): void {
+    this._{{name}} = {{name}};
+    this.touch();
+  }{{/each}}{{/if}}
+}

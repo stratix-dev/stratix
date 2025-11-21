@@ -1,6 +1,6 @@
 {
   "name": "@stratix/cli",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Global CLI for Stratix framework",
   "type": "module",
   "main": "./dist/index.js",
@@ -20,7 +20,7 @@
     "templates"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp -r src/templates/* dist/templates/",
     "dev": "tsc --watch",
     "test": "vitest run || exit 0",
     "test:watch": "vitest",
@@ -40,18 +40,20 @@
   "author": "P. Andrés Carvajal <causticrez@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@stratix/core": "workspace:*",
     "chalk": "^5.3.0",
     "commander": "^12.0.0",
+    "cosmiconfig": "^9.0.0",
+    "execa": "^8.0.1",
+    "fs-extra": "^11.2.0",
+    "handlebars": "^4.7.8",
     "inquirer": "^9.2.12",
     "ora": "^8.0.1",
-    "fs-extra": "^11.2.0",
-    "execa": "^8.0.1",
-    "zod": "^3.22.4",
-    "cosmiconfig": "^9.0.0",
-    "@stratix/core": "workspace:*"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",
+    "@types/handlebars": "^4.1.0",
     "@types/inquirer": "^9.0.7",
     "@types/node": "^20.0.0",
     "typescript": "^5.7.2",
@@ -62,12 +64,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pcarvajal/stratix.git",
+    "url": "https://github.com/stratix-dev/stratix.git",
     "directory": "packages/cli"
   },
-  "homepage": "https://github.com/pcarvajal/stratix#readme",
+  "homepage": "https://github.com/stratix-dev/stratix#readme",
   "bugs": {
-    "url": "https://github.com/pcarvajal/stratix/issues"
+    "url": "https://github.com/stratix-dev/stratix/issues"
   },
   "publishConfig": {
     "access": "public"

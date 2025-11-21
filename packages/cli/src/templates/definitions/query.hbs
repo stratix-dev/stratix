@@ -1,0 +1,11 @@
+import type { Query } from '@stratix/core';
+
+export interface {{pascalCase name}}Query {
+{{#each props}}
+  {{name}}: {{type}};
+{{/each}}
+}
+
+export class {{pascalCase name}} implements Query {
+  constructor(public readonly data: {{pascalCase name}}Query) {}
+}

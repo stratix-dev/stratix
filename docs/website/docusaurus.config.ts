@@ -6,7 +6,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Stratix',
-  tagline: 'The Modern TypeScript Framework for Enterprise Applications',
+  tagline: 'AI-First TypeScript Framework for Enterprise Applications - Modular, Scalable, Production-Ready',
   favicon: 'img/favicon.png',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -45,20 +45,20 @@ const config: Config = {
       tagName: 'meta',
       attributes: {
         name: 'theme-color',
-        content: '#00D9E1',
+        content: '#2958FC',
       },
     },
   ],
 
   // Set the production url of your site here
-  url: 'https://pcarvajal.github.io',
+  url: 'https://stratix-dev.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/stratix/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'pcarvajal', // Usually your GitHub org/user name.
+  organizationName: 'stratix-dev', // Usually your GitHub org/user name.
   projectName: 'stratix', // Usually your repo name.
   deploymentBranch: 'gh-pages', // The branch where the site will be deployed.
   trailingSlash: false,
@@ -103,15 +103,15 @@ const config: Config = {
       { name: 'apple-mobile-web-app-status-bar-style', content: 'black' },
     ],
     colorMode: {
-      defaultMode: 'dark',
-      respectPrefersColorScheme: false,
+      defaultMode: 'light',
+      respectPrefersColorScheme: true,
     },
     navbar: {
       title: 'Stratix',
       logo: {
         alt: 'Stratix Logo',
-        src: 'img/logo-black.png',
-        srcDark: 'img/logo-white.png',
+        src: 'img/logo-no-bg.png',
+        srcDark: 'img/white-no-bg.png',
       },
       items: [
         {
@@ -121,37 +121,47 @@ const config: Config = {
           label: 'Docs',
         },
         {
-          href: 'https://github.com/pcarvajal/stratix',
+          href: 'https://github.com/stratix-dev/stratix',
           label: 'GitHub',
           position: 'right',
         },
       ],
     },
     footer: {
-      style: 'dark',
+      style: 'light',
       links: [
         {
           title: 'Documentation',
           items: [
             {
-              label: 'Coming Soon',
-              to: '/docs/intro',
+              label: 'Getting Started',
+              to: '/docs/getting-started/introduction',
+            },
+            {
+              label: 'Core Concepts',
+              to: '/docs/core-concepts/architecture-overview',
+            },
+            {
+              label: 'AI Agents',
+              to: '/docs/ai-agents/ai-agents-overview',
+            },
+            {
+              label: 'CLI Reference',
+              to: '/docs/cli/cli-overview',
             },
           ],
         },
         {
           title: 'Resources',
           items: [
-
-            // TODO: Add these guides
-            // {
-            //   label: 'Migration from LangChain',
-            //   to: '/docs/guides/migration-from-langchain',
-            // },
-            // {
-            //   label: 'Troubleshooting',
-            //   to: '/docs/guides/troubleshooting',
-            // },
+            {
+              label: 'Plugin System',
+              to: '/docs/plugins/plugin-architecture',
+            },
+            {
+              label: 'Database',
+              to: '/docs/database/database-overview',
+            },
           ],
         },
         {
@@ -159,15 +169,15 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/pcarvajal/stratix',
+              href: 'https://github.com/stratix-dev/stratix',
             },
             {
               label: 'Issues',
-              href: 'https://github.com/pcarvajal/stratix/issues',
+              href: 'https://github.com/stratix-dev/stratix/issues',
             },
             {
               label: 'Discussions',
-              href: 'https://github.com/pcarvajal/stratix/discussions',
+              href: 'https://github.com/stratix-dev/stratix/discussions',
             },
           ],
         },

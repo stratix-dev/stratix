@@ -217,7 +217,7 @@ console.log(id.value); // "550e8400-e29b-41d4-a716-446655440000"
 
 ## API Reference
 
-For detailed API documentation, visit [Stratix Documentation](https://github.com/pcarvajal/stratix).
+For detailed API documentation, visit [Stratix Documentation](https://github.com/stratix-dev/stratix).
 
 ## License
 
