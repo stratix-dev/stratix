@@ -1,0 +1,26 @@
+import { ValueObject } from '@stratix/core';
+
+export interface {{pascalCase name}}Props {
+{{#each props}}
+{{name}}: {{type}};{{/each}}
+}
+
+export class {{pascalCase name}} extends ValueObject<{{pascalCase name}}Props> {
+    private constructor(props: {{pascalCase name}}Props) {
+    super(props);
+    }
+
+    static create(props: {{pascalCase name}}Props): {{pascalCase name}} {
+    // TODO: Add validation logic here
+    return new {{pascalCase name}}(props);
+    }
+    {{#each props}}
+
+    get {{name}}(): {{type}} {
+    return this.props.{{name}};
+    }{{/each}}
+
+    protected validateProps(props: {{pascalCase name}}Props): void {
+    // TODO: Implement validation
+    }
+    }

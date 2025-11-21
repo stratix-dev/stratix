@@ -1,0 +1,8 @@
+import type { Repository } from '@stratix/core';
+import type { EntityId } from '@stratix/core';
+import type { {{pascalCase entityName}} } from '../entities/{{pascalCase entityName}}.js';
+
+export interface {{pascalCase entityName}}Repository extends Repository<{{pascalCase entityName}},
+    EntityId<'{{pascalCase entityName}}'>> {
+    // Add custom repository methods here
+    }
