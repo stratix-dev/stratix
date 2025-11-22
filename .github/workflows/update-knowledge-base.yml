@@ -37,7 +37,12 @@ jobs:
       
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      
+
+      - name: Install copilot-rag dependencies
+        run: |
+          cd packages/copilot-rag
+          pnpm install
+
       - name: Build knowledge base
         run: |
           cd packages/copilot-rag
