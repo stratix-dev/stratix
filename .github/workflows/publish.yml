@@ -92,82 +92,143 @@ jobs:
 
       - name: Publish packages
         run: |
+          set -e  # Exit on any error
+          
           # Configure npm authentication
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
+          # Track published packages
+          PUBLISHED_PACKAGES=()
+          FAILED_PACKAGES=()
 
           # Function to publish a package
           publish_package() {
             local pkg_dir=$1
-            if [ -f "$pkg_dir/package.json" ]; then
-              echo "Publishing $pkg_dir..."
-              cd "$pkg_dir"
+            local original_dir=$(pwd)
+            
+            if [ ! -f "$pkg_dir/package.json" ]; then
+              echo "⚠️  No package.json found in $pkg_dir, skipping..."
+              return 0
+            fi
 
-              # Check if package is private
-              if [ "$(node -p "require('./package.json').private || false")" = "true" ]; then
-                echo "Skipping private package: $pkg_dir"
-                cd - > /dev/null
-                return
-              fi
+            echo "📦 Processing $pkg_dir..."
+            cd "$pkg_dir" || {
+              echo "❌ Failed to change directory to $pkg_dir"
+              FAILED_PACKAGES+=("$pkg_dir (cd failed)")
+              cd "$original_dir"
+              return 1
+            }
 
-              # Get package name and version
-              PKG_NAME=$(node -p "require('./package.json').name")
-              PKG_VERSION=$(node -p "require('./package.json').version")
+            # Check if package is private
+            local is_private=$(node -p "require('./package.json').private || false")
+            if [ "$is_private" = "true" ]; then
+              echo "⏭️  Skipping private package: $pkg_dir"
+              cd "$original_dir"
+              return 0
+            fi
 
-              # Check if this version is already published
-              if npm view "$PKG_NAME@$PKG_VERSION" version 2>/dev/null; then
-                echo "Version $PKG_VERSION of $PKG_NAME is already published, skipping..."
-                cd - > /dev/null
-                return
-              fi
+            # Get package name and version
+            local pkg_name=$(node -p "require('./package.json').name")
+            local pkg_version=$(node -p "require('./package.json').version")
 
-              echo "Publishing $PKG_NAME@$PKG_VERSION..."
+            # Check if this version is already published
+            if npm view "$pkg_name@$pkg_version" version 2>/dev/null; then
+              echo "✓ Version $pkg_version of $pkg_name is already published, skipping..."
+              cd "$original_dir"
+              return 0
+            fi
 
-              echo "Successfully published $PKG_NAME@$PKG_VERSION"
-              cd - > /dev/null
+            echo "🚀 Publishing $pkg_name@$pkg_version..."
+
+            # Publish to npm with error handling
+            if npm publish --access public 2>&1; then
+              echo "✅ Successfully published $pkg_name@$pkg_version"
+              PUBLISHED_PACKAGES+=("$pkg_name@$pkg_version")
+              cd "$original_dir"
+              return 0
+            else
+              local exit_code=$?
+              echo "❌ Failed to publish $pkg_name@$pkg_version (exit code: $exit_code)"
+              FAILED_PACKAGES+=("$pkg_name@$pkg_version")
+              cd "$original_dir"
+              return 1
             fi
           }
 
+          echo "========================================="
+          echo "Starting package publication process"
+          echo "========================================="
+          echo ""
+
           # Publish in dependency order
           # 1. Core packages (no dependencies)
-          publish_package "packages/core"
+          publish_package "packages/core" || true
 
           # 2. Runtime (depends on core)
-          publish_package "packages/runtime"
+          publish_package "packages/runtime" || true
 
           # 3. Plugins (depend on core and/or runtime)
           # Database plugins
-          publish_package "packages/plugins/database/postgres"
-          publish_package "packages/plugins/database/mongodb"
-          publish_package "packages/plugins/database/redis"
+          publish_package "packages/plugins/database/postgres" || true
+          publish_package "packages/plugins/database/mongodb" || true
+          publish_package "packages/plugins/database/redis" || true
 
           # DI plugins
-          publish_package "packages/plugins/di/awilix"
+          publish_package "packages/plugins/di/awilix" || true
 
           # HTTP plugins
-          publish_package "packages/plugins/http/fastify"
+          publish_package "packages/plugins/http/fastify" || true
 
           # AI plugins
-          publish_package "packages/plugins/ai/openai"
-          publish_package "packages/plugins/ai/anthropic"
+          publish_package "packages/plugins/ai/openai" || true
+          publish_package "packages/plugins/ai/anthropic" || true
 
           # Messaging plugins
-          publish_package "packages/plugins/messaging/rabbitmq"
+          publish_package "packages/plugins/messaging/rabbitmq" || true
 
           # Observability plugins
-          publish_package "packages/plugins/observability/opentelemetry"
+          publish_package "packages/plugins/observability/opentelemetry" || true
 
           # Utility plugins
-          publish_package "packages/plugins/utilities/auth"
-          publish_package "packages/plugins/utilities/validation-zod"
-          publish_package "packages/plugins/utilities/mappers"
-          publish_package "packages/plugins/utilities/errors"
-          publish_package "packages/plugins/utilities/secrets"
+          publish_package "packages/plugins/utilities/auth" || true
+          publish_package "packages/plugins/utilities/validation-zod" || true
+          publish_package "packages/plugins/utilities/mappers" || true
+          publish_package "packages/plugins/utilities/errors" || true
+          publish_package "packages/plugins/utilities/secrets" || true
 
           # 4. Testing utilities (depend on core, runtime, di)
-          publish_package "packages/testing"
+          publish_package "packages/testing" || true
 
           # 5. CLI tools (depend on core)
-          publish_package "packages/cli"
+          publish_package "packages/cli" || true
+
+          echo ""
+          echo "========================================="
+          echo "Publication Summary"
+          echo "========================================="
+          echo ""
+          
+          if [ ${#PUBLISHED_PACKAGES[@]} -gt 0 ]; then
+            echo "✅ Successfully published (${#PUBLISHED_PACKAGES[@]} packages):"
+            for pkg in "${PUBLISHED_PACKAGES[@]}"; do
+              echo "  - $pkg"
+            done
+            echo ""
+          fi
+
+          if [ ${#FAILED_PACKAGES[@]} -gt 0 ]; then
+            echo "❌ Failed to publish (${#FAILED_PACKAGES[@]} packages):"
+            for pkg in "${FAILED_PACKAGES[@]}"; do
+              echo "  - $pkg"
+            done
+            echo ""
+            echo "⚠️  Some packages failed to publish. Please check the logs above."
+            exit 1
+          fi
+
+          if [ ${#PUBLISHED_PACKAGES[@]} -eq 0 ] && [ ${#FAILED_PACKAGES[@]} -eq 0 ]; then
+            echo "ℹ️  No new packages to publish (all versions already published)"
+          fi
 
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
