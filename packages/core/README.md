@@ -1,20 +1,68 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
+
 # @stratix/core
 
-Core package for Stratix framework - DDD primitives, abstractions, and interfaces.
+**Core primitives and abstractions for the Stratix framework**
 
-This package combines:
-- **Domain Primitives**: Entity, AggregateRoot, ValueObject, Result Pattern
-- **Abstractions**: Container, CQRS interfaces, Infrastructure interfaces
-- **Plugin & Module System**: Plugin and ContextModule interfaces
-- **AI Agents**: AI agent primitives and abstractions
+[![npm version](https://img.shields.io/npm/v/@stratix/core.svg)](https://www.npmjs.com/package/@stratix/core)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+[Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start) 
+
+</div>
+
+-
+
+> Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
+>
+> **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+-
+
+## About This Package
+
+`@stratix/core` is the foundational package of the Stratix framework, providing zero-dependency primitives and abstractions for Domain-Driven Design, CQRS, and AI agents.
+
+**This package includes:**
+- Domain primitives (Entity, AggregateRoot, ValueObject)
+- CQRS interfaces (Command, Query, Event buses)
+- AI Agent base classes and interfaces
+- Result pattern for error handling
+- Pre-built value objects (Money, Email, URL, etc.)
+- Plugin and module system interfaces
+
+## About Stratix
+
+Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexagonal Architecture, and CQRS. It provides production-ready patterns for building scalable, maintainable applications with AI agents as first-class citizens.
+
+**Key Resources:**
+- [Documentation](https://stratix-dev.github.io/stratix/)
+- [Quick Start](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Report Issues](https://github.com/stratix-dev/stratix/issues)
 
 ## Installation
 
+**Prerequisites:**
+- Node.js 18.0.0 or higher
+- TypeScript 5.0.0 or higher
+
+**Recommended:** Create a new Stratix project
 ```bash
-pnpm add @stratix/core
+npm install -g @stratix/cli
+stratix new my-app
 ```
 
-## What's Included
+**Manual installation:**
+```bash
+npm install @stratix/core
+# or
+pnpm add @stratix/core
+# or
+yarn add @stratix/core
+```
+
+## Features
 
 ### Core Building Blocks
 
@@ -44,10 +92,21 @@ pnpm add @stratix/core
 - **DateRange** - Date ranges with validation
 - **Percentage** - Percentage values (0-100)
 - **Address** - Physical addresses with country support
-- **CountryRegistry** - ISO 3166-1 country codes and metadata
-- **CountryCallingCodeRegistry** - International dialing codes
 
-## Quick Example
+### CQRS Interfaces
+
+- **Command** - Command interface
+- **Query** - Query interface
+- **CommandBus** - Command bus interface
+- **QueryBus** - Query bus interface
+- **EventBus** - Event bus interface
+- **InMemoryCommandBus** - Default in-memory implementation
+- **InMemoryQueryBus** - Default in-memory implementation
+- **InMemoryEventBus** - Default in-memory implementation
+
+## Quick Start
+
+### Creating Entities
 
 ```typescript
 import { Entity, EntityId } from '@stratix/core';
@@ -73,7 +132,7 @@ const userId = EntityId.create<'User'>();
 const user = new User(userId, 'user@example.com', 'John');
 ```
 
-## Result Pattern
+### Result Pattern
 
 ```typescript
 import { Result, Success, Failure } from '@stratix/core';
@@ -93,7 +152,28 @@ if (result.isSuccess) {
 }
 ```
 
-## AI Agent Base Class
+### Value Objects
+
+```typescript
+import { Money, Email, PhoneNumber } from '@stratix/core';
+
+// Money with currency
+const price = Money.USD(99.99);
+const discounted = price.multiply(0.8);
+console.log(discounted.format()); // "$79.99"
+
+// Email validation
+const email = Email.create('user@example.com');
+console.log(email.domain); // "example.com"
+
+// Phone numbers with international codes
+const phoneResult = PhoneNumber.create('+14155552671');
+if (phoneResult.isSuccess) {
+  console.log(phoneResult.value.format()); // "+1 (415) 555-2671"
+}
+```
+
+### AI Agents
 
 ```typescript
 import {
@@ -103,10 +183,10 @@ import {
   AgentVersionFactory,
   EntityId,
   type ModelConfig,
+  type LLMProvider,
 } from '@stratix/core';
-import type { LLMProvider } from '@stratix/core';
 
-class MyAgent extends AIAgent<InputType, OutputType> {
+class MyAgent extends AIAgent<string, string> {
   readonly name = 'My Agent';
   readonly description = 'Description of what this agent does';
   readonly version = AgentVersionFactory.create('1.0.0');
@@ -124,101 +204,51 @@ class MyAgent extends AIAgent<InputType, OutputType> {
     super(id, now, now);
   }
 
-  protected async execute(input: InputType): Promise<AgentResult<OutputType>> {
-    // Implementation
-    const output: OutputType = /* ... */;
-    return AgentResult.success(output, {
-      model: this.model.model,
-      totalTokens: 100,
-      cost: 0.001,
-    });
+  protected async execute(input: string): Promise<AgentResult<string>> {
+    // Implementation using llmProvider
+    const output = await this.llmProvider.chat({ /* ... */ });
+    return AgentResult.success(output.content, output.usage);
   }
 }
 ```
 
-## Value Objects
+## Related Packages
 
-### Money and Currency
+**Essential:**
+- [`@stratix/runtime`](https://www.npmjs.com/package/@stratix/runtime) - Application runtime and plugin system
+- [`@stratix/cli`](https://www.npmjs.com/package/@stratix/cli) - Code generation and scaffolding
 
-```typescript
-import { Money, Currency } from '@stratix/core';
+**AI Providers:**
+- [`@stratix/ai-openai`](https://www.npmjs.com/package/@stratix/ai-openai) - OpenAI LLM provider
+- [`@stratix/ai-anthropic`](https://www.npmjs.com/package/@stratix/ai-anthropic) - Anthropic Claude provider
 
-// Using factory methods (recommended)
-const price = Money.USD(99.99);
-const discounted = price.multiply(0.8); // $79.99
+**Plugins:**
+- [`@stratix/db-postgres`](https://www.npmjs.com/package/@stratix/db-postgres) - PostgreSQL integration
+- [`@stratix/http-fastify`](https://www.npmjs.com/package/@stratix/http-fastify) - Fastify HTTP server
+- [`@stratix/validation-zod`](https://www.npmjs.com/package/@stratix/validation-zod) - Schema validation
 
-const totalResult = price.add(discounted);
-if (totalResult.isSuccess) {
-  console.log(totalResult.value.format()); // "$179.98"
-}
+[View all plugins](https://stratix-dev.github.io/stratix/docs/plugins/official-plugins)
 
-// Or using create with Result pattern
-const priceResult = Money.create(99.99, Currency.USD);
-if (priceResult.isSuccess) {
-  console.log(priceResult.value.format()); // "$99.99"
-}
+## Documentation
 
-console.log(Currency.EUR.symbol); // "€"
-```
+- [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Core Concepts](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+- [Plugin Architecture](https://stratix-dev.github.io/stratix/docs/plugins/plugin-architecture)
+- [Complete Documentation](https://stratix-dev.github.io/stratix/)
 
-### Email and URL
+## Support
 
-```typescript
-import { Email, URL } from '@stratix/core';
-
-const email = Email.create('user@example.com');
-console.log(email.domain); // "example.com"
-
-const url = URL.create('https://example.com/path');
-console.log(url.protocol); // "https"
-```
-
-### PhoneNumber with Country Codes
-
-```typescript
-import { PhoneNumber } from '@stratix/core';
-
-const phoneResult = PhoneNumber.create('+14155552671');
-if (phoneResult.isSuccess) {
-  const phone = phoneResult.value;
-  console.log(phone.format()); // "+1 (415) 555-2671"
-  console.log(phone.countryCode); // "+1"
-}
-```
-
-### Date Ranges and Percentages
-
-```typescript
-import { DateRange, Percentage } from '@stratix/core';
-
-const rangeResult = DateRange.create(
-  new Date('2024-01-01'),
-  new Date('2024-12-31')
-);
-if (rangeResult.isSuccess) {
-  console.log(rangeResult.value.durationInDays()); // 365
-}
-
-const discountResult = Percentage.fromPercentage(15);
-if (discountResult.isSuccess) {
-  const discount = discountResult.value;
-  const finalPrice = price.multiply(1 - discount.asDecimal()); // 85% of price
-}
-```
-
-### UUID Generation
-
-```typescript
-import { UUID } from '@stratix/core';
-
-const id = UUID.generate();
-console.log(id.value); // "550e8400-e29b-41d4-a716-446655440000"
-```
-
-## API Reference
-
-For detailed API documentation, visit [Stratix Documentation](https://github.com/stratix-dev/stratix).
+- [GitHub Issues](https://github.com/stratix-dev/stratix/issues) - Report bugs and request features
+- [Documentation](https://stratix-dev.github.io/stratix/) - Comprehensive guides and tutorials
 
 ## License
 
-MIT
+MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) for details.
+
+-
+
+<div align="center">
+
+**[Stratix Framework](https://stratix-dev.github.io/stratix/)** - Build better software with proven patterns
+
+</div>

@@ -1,252 +1,86 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
+
 # @stratix/db-redis
 
-Redis plugin for Stratix applications with enterprise features.
+**Redis caching, rate limiting, and distributed locks for Stratix**
+
+[![npm version](https://img.shields.io/npm/v/@stratix/db-redis.svg)](https://www.npmjs.com/package/@stratix/db-redis)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+[Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+</div>
+
+-
+
+> Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
+>
+> **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+-
+
+## About This Package
+
+`@stratix/db-redis` is a database plugin for the Stratix framework.
+
+Redis caching, rate limiting, and distributed locks for Stratix
+
+## About Stratix
+
+Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexagonal Architecture, and CQRS. It provides production-ready patterns for building scalable, maintainable applications with AI agents as first-class citizens.
+
+**Key Resources:**
+- [Documentation](https://stratix-dev.github.io/stratix/)
+- [Quick Start](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Report Issues](https://github.com/stratix-dev/stratix/issues)
 
 ## Installation
 
+**Prerequisites:**
+- Node.js 18.0.0 or higher
+- `@stratix/core` and `@stratix/runtime` installed
+- Basic understanding of [Stratix architecture](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+
+**Recommended:** Use the Stratix CLI
 ```bash
-pnpm add @stratix/db-redis
+stratix add redis
 ```
 
-## Features
-
-- **Caching** - JSON serialization with TTL
-- **Rate Limiting** - Sliding window algorithm
-- **Distributed Locks** - Prevent race conditions
-- **Session Management** - User sessions with TTL
-- **Pub/Sub** - Real-time messaging
-- **Sorted Sets** - Leaderboards and rankings
-- **Queues** - Job processing and task queues
-- **Health checks** - Ping and reconnection
-- **Type-safe** - Full TypeScript support
-
-## Quick Start
-
-```typescript
-import { ApplicationBuilder } from '@stratix/runtime';
-import { RedisPlugin } from '@stratix/db-redis';
-
-const app = await ApplicationBuilder.create()
-  .usePlugin(new RedisPlugin(), {
-    url: 'redis://localhost:6379',
-    cache: {
-      prefix: 'myapp:',
-      ttl: 3600
-    }
-  })
-  .build();
-
-await app.start();
+**Manual installation:**
+```bash
+npm install @stratix/db-redis
 ```
 
-## Configuration
+## Related Packages
 
-```typescript
-interface RedisConfig {
-  url: string;                    // Required: Redis connection URL
-  options?: RedisClientOptions;   // Additional Redis client options
-  cache?: {
-    prefix?: string;              // Optional: Key prefix for namespacing
-    ttl?: number;                 // Optional: Default TTL in seconds
-  };
-}
-```
+**Essential:**
+- [`@stratix/core`](https://www.npmjs.com/package/@stratix/core) - Core primitives and abstractions
+- [`@stratix/runtime`](https://www.npmjs.com/package/@stratix/runtime) - Application runtime and plugin system
+- [`@stratix/cli`](https://www.npmjs.com/package/@stratix/cli) - Code generation and scaffolding
 
-## Caching
+[View all plugins](https://stratix-dev.github.io/stratix/docs/plugins/official-plugins)
 
-```typescript
-const cache = app.resolve('redis:cache');
+## Documentation
 
-// Set and get with automatic JSON serialization
-await cache.set('user:123', { name: 'John', email: 'john@example.com' }, 3600);
-const user = await cache.get<User>('user:123');
+- [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Core Concepts](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+- [Plugin Architecture](https://stratix-dev.github.io/stratix/docs/plugins/plugin-architecture)
+- [Complete Documentation](https://stratix-dev.github.io/stratix/)
 
-// Remember pattern (cache-aside)
-const user = await cache.remember('user:123', 3600, async () => {
-  return await userRepository.findById('123');
-});
+## Support
 
-// Batch operations
-await cache.setMany([['key1', value1], ['key2', value2]]);
-const values = await cache.getMany<User>(['key1', 'key2']);
-```
-
-## Rate Limiting
-
-```typescript
-import { RedisRateLimiter } from '@stratix/db-redis';
-
-const limiter = new RedisRateLimiter(connection, {
-  maxRequests: 100,
-  windowSeconds: 60,
-  keyPrefix: 'ratelimit:'
-});
-
-const result = await limiter.isAllowed('user:123');
-if (!result.allowed) {
-  throw new Error(`Rate limit exceeded. Try again at ${result.resetAt}`);
-}
-
-console.log(`Remaining: ${result.remaining}/${limiter.options.maxRequests}`);
-```
-
-## Distributed Locks
-
-```typescript
-import { RedisLock } from '@stratix/db-redis';
-
-const lock = new RedisLock(connection);
-
-// Automatic lock/unlock
-await lock.withLock('resource:123', async () => {
-  // Critical section - only one process can execute this
-  await updateResource();
-});
-
-// Manual lock/unlock
-const lockValue = await lock.acquire('resource:123', { ttl: 5000 });
-try {
-  await updateResource();
-} finally {
-  await lock.release('resource:123', lockValue);
-}
-```
-
-## Session Management
-
-```typescript
-import { RedisSessionStore } from '@stratix/db-redis';
-
-const sessions = new RedisSessionStore(connection, {
-  ttl: 3600,
-  prefix: 'session:'
-});
-
-// Create session
-await sessions.set('session-id', { userId: '123', role: 'admin' });
-
-// Get session
-const data = await sessions.get('session-id');
-
-// Update session
-await sessions.update('session-id', { lastActivity: new Date() });
-
-// Refresh TTL
-await sessions.touch('session-id');
-
-// Destroy session
-await sessions.destroy('session-id');
-```
-
-## Pub/Sub
-
-```typescript
-import { RedisPubSub } from '@stratix/db-redis';
-
-const pubsub = new RedisPubSub(publisherConn, subscriberConn);
-
-// Subscribe to channel
-await pubsub.subscribe<Notification>('notifications', (msg, channel) => {
-  console.log(`Received on ${channel}:`, msg);
-});
-
-// Publish message
-await pubsub.publish('notifications', {
-  type: 'alert',
-  text: 'New message',
-  timestamp: new Date()
-});
-
-// Unsubscribe
-await pubsub.unsubscribe('notifications');
-```
-
-## Sorted Sets (Leaderboards)
-
-```typescript
-import { RedisSortedSet } from '@stratix/db-redis';
-
-const leaderboard = new RedisSortedSet(connection);
-
-// Add scores
-await leaderboard.add('game:scores', 100, 'player1');
-await leaderboard.add('game:scores', 200, 'player2');
-
-// Get top N
-const top10 = await leaderboard.getTopN('game:scores', 10);
-// [{ member: 'player2', score: 200 }, { member: 'player1', score: 100 }]
-
-// Get rank
-const rank = await leaderboard.getRank('game:scores', 'player1');
-// 2
-
-// Increment score
-await leaderboard.incrementScore('game:scores', 'player1', 50);
-```
-
-## Queues
-
-```typescript
-import { RedisQueue } from '@stratix/db-redis';
-
-const queue = new RedisQueue<Job>(connection, 'jobs');
-
-// Producer
-await queue.push({ id: '1', task: 'process-payment', data: {...} });
-
-// Consumer (non-blocking)
-const job = await queue.pop();
-if (job) {
-  await processJob(job);
-}
-
-// Worker (blocking)
-while (true) {
-  const job = await queue.blockingPop(30); // 30 second timeout
-  if (job) {
-    await processJob(job);
-  }
-}
-
-// Queue size
-const size = await queue.size();
-```
-
-## Exports
-
-### Core
-- `RedisPlugin` - Main plugin class
-- `RedisConnection` - Connection wrapper
-- `RedisCache` - Caching layer
-
-### Rate Limiting
-- `RedisRateLimiter` - Rate limiter
-- `RateLimitOptions`, `RateLimitResult` - Types
-
-### Locks
-- `RedisLock` - Distributed lock
-- `LockOptions` - Lock configuration
-
-### Sessions
-- `RedisSessionStore` - Session store
-- `SessionData`, `SessionOptions` - Types
-
-### Pub/Sub
-- `RedisPubSub` - Pub/sub messaging
-
-### Sorted Sets
-- `RedisSortedSet` - Sorted set operations
-- `ScoredMember` - Member with score
-
-### Queues
-- `RedisQueue<T>` - Type-safe queue
-
-## Services Registered
-
-- `redis:connection` - RedisConnection instance
-- `redis:cache` - RedisCache instance
-- `redis:client` - Native Redis client
+- [GitHub Issues](https://github.com/stratix-dev/stratix/issues) - Report bugs and request features
+- [Documentation](https://stratix-dev.github.io/stratix/) - Comprehensive guides and tutorials
 
 ## License
 
-MIT
+MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) for details.
+
+-
+
+<div align="center">
+
+**[Stratix Framework](https://stratix-dev.github.io/stratix/)** - Build better software with proven patterns
+
+</div>

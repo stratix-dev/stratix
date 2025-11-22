@@ -1,163 +1,86 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
+
 # @stratix/ai-openai
 
-OpenAI LLM provider for Stratix AI agents.
+**OpenAI LLM provider for Stratix AI agents**
+
+[![npm version](https://img.shields.io/npm/v/@stratix/ai-openai.svg)](https://www.npmjs.com/package/@stratix/ai-openai)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+[Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+</div>
+
+-
+
+> Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
+>
+> **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+-
+
+## About This Package
+
+`@stratix/ai-openai` is a AI provider plugin for the Stratix framework.
+
+OpenAI LLM provider for Stratix AI agents
+
+## About Stratix
+
+Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexagonal Architecture, and CQRS. It provides production-ready patterns for building scalable, maintainable applications with AI agents as first-class citizens.
+
+**Key Resources:**
+- [Documentation](https://stratix-dev.github.io/stratix/)
+- [Quick Start](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Report Issues](https://github.com/stratix-dev/stratix/issues)
 
 ## Installation
 
+**Prerequisites:**
+- Node.js 18.0.0 or higher
+- `@stratix/core` and `@stratix/runtime` installed
+- Basic understanding of [Stratix architecture](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+
+**Recommended:** Use the Stratix CLI
 ```bash
-pnpm add @stratix/ai-openai
+stratix add openai
 ```
 
-## Features
-
-- Support for GPT-4, GPT-4 Turbo, GPT-3.5 Turbo, and GPT-4o models
-- Function/tool calling support
-- Streaming responses
-- Embeddings generation
-- Automatic cost calculation based on token usage
-- Structured output with JSON schemas
-- Response format control (JSON object, JSON schema)
-
-## Supported Models
-
-**Chat Models:**
-- `gpt-4o` - Latest GPT-4 optimized model
-- `gpt-4o-mini` - Smaller, faster GPT-4o
-- `gpt-4` - Base GPT-4 model
-- `gpt-4-turbo` - GPT-4 Turbo with improved performance
-- `gpt-4-turbo-preview` - Preview version of GPT-4 Turbo
-- `gpt-3.5-turbo` - Fast and cost-effective model
-- `gpt-3.5-turbo-16k` - Extended context version
-
-**Embedding Models:**
-- `text-embedding-3-small` - Small, efficient embeddings
-- `text-embedding-3-large` - High-quality embeddings
-- `text-embedding-ada-002` - Legacy embedding model
-
-## Quick Example
-
-```typescript
-import { OpenAIProvider } from '@stratix/ai-openai';
-
-const provider = new OpenAIProvider({
-  apiKey: process.env.OPENAI_API_KEY!,
-  organization: 'org-123',  // Optional
-});
-
-// Chat completion
-const response = await provider.chat({
-  model: 'gpt-4o',
-  messages: [
-    { role: 'system', content: 'You are a helpful assistant.', timestamp: new Date() },
-    { role: 'user', content: 'Hello!', timestamp: new Date() }
-  ],
-  temperature: 0.7,
-  maxTokens: 1000
-});
-
-console.log(response.content);
-console.log('Cost:', provider.calculateCost('gpt-4o', response.usage));
-
-// Streaming chat
-for await (const chunk of provider.streamChat({
-  model: 'gpt-4o',
-  messages: [
-    { role: 'user', content: 'Tell me a story', timestamp: new Date() }
-  ]
-})) {
-  process.stdout.write(chunk.content);
-}
-
-// Embeddings
-const embeddingsResponse = await provider.embeddings({
-  model: 'text-embedding-3-small',
-  input: ['Hello world', 'OpenAI embeddings']
-});
-
-console.log(embeddingsResponse.embeddings.length); // 2
+**Manual installation:**
+```bash
+npm install @stratix/ai-openai
 ```
 
-## Tool/Function Calling
+## Related Packages
 
-```typescript
-const response = await provider.chat({
-  model: 'gpt-4o',
-  messages: [
-    { role: 'user', content: 'What is the weather in NYC?', timestamp: new Date() }
-  ],
-  tools: [
-    {
-      name: 'get_weather',
-      description: 'Get the current weather in a location',
-      parameters: {
-        type: 'object',
-        properties: {
-          location: { type: 'string', description: 'The city name' }
-        },
-        required: ['location']
-      }
-    }
-  ]
-});
+**Essential:**
+- [`@stratix/core`](https://www.npmjs.com/package/@stratix/core) - Core primitives and abstractions
+- [`@stratix/runtime`](https://www.npmjs.com/package/@stratix/runtime) - Application runtime and plugin system
+- [`@stratix/cli`](https://www.npmjs.com/package/@stratix/cli) - Code generation and scaffolding
 
-if (response.toolCalls) {
-  console.log('Tool call:', response.toolCalls[0].name);
-  console.log('Arguments:', response.toolCalls[0].arguments);
-}
-```
+[View all plugins](https://stratix-dev.github.io/stratix/docs/plugins/official-plugins)
 
-## Structured Output
+## Documentation
 
-```typescript
-const response = await provider.chat({
-  model: 'gpt-4o',
-  messages: [
-    { role: 'user', content: 'Extract user info: John Doe, 30 years old', timestamp: new Date() }
-  ],
-  responseFormat: {
-    type: 'json_schema',
-    schema: {
-      type: 'object',
-      properties: {
-        name: { type: 'string' },
-        age: { type: 'number' }
-      },
-      required: ['name', 'age']
-    }
-  }
-});
+- [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Core Concepts](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+- [Plugin Architecture](https://stratix-dev.github.io/stratix/docs/plugins/plugin-architecture)
+- [Complete Documentation](https://stratix-dev.github.io/stratix/)
 
-const userInfo = JSON.parse(response.content);
-console.log(userInfo); // { name: 'John Doe', age: 30 }
-```
+## Support
 
-## Configuration
-
-```typescript
-interface OpenAIProviderConfig {
-  apiKey: string;           // Required: OpenAI API key
-  organization?: string;    // Optional: OpenAI organization ID
-  baseURL?: string;         // Optional: Custom API base URL
-}
-```
-
-## Cost Calculation
-
-The provider automatically tracks token usage and can calculate costs:
-
-```typescript
-const response = await provider.chat({...});
-
-const cost = provider.calculateCost('gpt-4o', response.usage);
-console.log(`Cost: $${cost.toFixed(4)}`);
-```
-
-Pricing is based on January 2025 rates and included in the provider.
-
-## Exports
-
-- `OpenAIProvider` - Main provider class implementing `LLMProvider` interface
+- [GitHub Issues](https://github.com/stratix-dev/stratix/issues) - Report bugs and request features
+- [Documentation](https://stratix-dev.github.io/stratix/) - Comprehensive guides and tutorials
 
 ## License
 
-MIT
+MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) for details.
+
+-
+
+<div align="center">
+
+**[Stratix Framework](https://stratix-dev.github.io/stratix/)** - Build better software with proven patterns
+
+</div>

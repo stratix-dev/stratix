@@ -1,100 +1,86 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
+
 # @stratix/secrets
 
-Secrets management extension for Stratix framework.
+**Secrets management utilities for Stratix applications**
+
+[![npm version](https://img.shields.io/npm/v/@stratix/secrets.svg)](https://www.npmjs.com/package/@stratix/secrets)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+[Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+</div>
+
+-
+
+> Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
+>
+> **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+-
+
+## About This Package
+
+`@stratix/secrets` is a security plugin for the Stratix framework.
+
+Secrets management utilities for Stratix applications
+
+## About Stratix
+
+Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexagonal Architecture, and CQRS. It provides production-ready patterns for building scalable, maintainable applications with AI agents as first-class citizens.
+
+**Key Resources:**
+- [Documentation](https://stratix-dev.github.io/stratix/)
+- [Quick Start](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Report Issues](https://github.com/stratix-dev/stratix/issues)
 
 ## Installation
 
+**Prerequisites:**
+- Node.js 18.0.0 or higher
+- `@stratix/core` and `@stratix/runtime` installed
+- Basic understanding of [Stratix architecture](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+
+**Recommended:** Use the Stratix CLI
 ```bash
-pnpm add @stratix/secrets
+stratix add secrets
 ```
 
-## Features
-
-- Environment variable provider
-- Secret caching with configurable TTL
-- Prefix support for namespacing
-- Required vs optional secret retrieval
-- Cache size monitoring
-- Health checks
-- Clear cache operation
-
-## Configuration
-
-```typescript
-interface SecretsConfig {
-  provider?: 'environment';     // Default: 'environment'
-  prefix?: string;              // Default: '' (no prefix)
-  cache?: boolean;              // Default: true
-  cacheTTL?: number;            // Default: 300000 (5 minutes)
-}
+**Manual installation:**
+```bash
+npm install @stratix/secrets
 ```
 
-## Quick Example
+## Related Packages
 
-```typescript
-import { ApplicationBuilder } from '@stratix/runtime';
-import { SecretsPlugin } from '@stratix/secrets';
+**Essential:**
+- [`@stratix/core`](https://www.npmjs.com/package/@stratix/core) - Core primitives and abstractions
+- [`@stratix/runtime`](https://www.npmjs.com/package/@stratix/runtime) - Application runtime and plugin system
+- [`@stratix/cli`](https://www.npmjs.com/package/@stratix/cli) - Code generation and scaffolding
 
-const app = await ApplicationBuilder.create()
-  .usePlugin(new SecretsPlugin(), {
-    provider: 'environment',
-    prefix: 'APP_',
-    cache: true,
-    cacheTTL: 300000  // 5 minutes
-  })
-  .build();
+[View all plugins](https://stratix-dev.github.io/stratix/docs/plugins/official-plugins)
 
-await app.start();
+## Documentation
 
-// Access secrets
-const secrets = app.resolve('secrets:manager');
+- [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Core Concepts](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+- [Plugin Architecture](https://stratix-dev.github.io/stratix/docs/plugins/plugin-architecture)
+- [Complete Documentation](https://stratix-dev.github.io/stratix/)
 
-// Get optional secret (returns undefined if not found)
-const dbUrl = await secrets.get('DATABASE_URL');
-// Will look for APP_DATABASE_URL in environment
+## Support
 
-// Get required secret (throws if not found)
-const apiKey = await secrets.getRequired('API_KEY');
-// Will look for APP_API_KEY in environment
-
-// Check cache size
-console.log('Cached secrets:', secrets.getCacheSize());
-```
-
-## Secrets Manager API
-
-```typescript
-class SecretsManager {
-  async get(key: string): Promise<string | undefined>;
-  async getRequired(key: string): Promise<string>;
-  getCacheSize(): number;
-  clearCache(): void;
-}
-```
-
-## Exports
-
-- `SecretsPlugin` - Main plugin class
-- `SecretsConfig` - Configuration interface
-- `SecretsManager` - Secrets manager class
-- `SecretsManagerConfig` - Manager configuration interface
-
-## Services Registered
-
-The plugin registers the following services in the DI container:
-
-- `secrets:manager` - SecretsManager instance
-
-## Future Provider Support
-
-The current implementation supports environment variables. Future versions may include:
-
-- AWS Secrets Manager
-- Azure Key Vault
-- Google Secret Manager
-- HashiCorp Vault
-- Kubernetes Secrets
+- [GitHub Issues](https://github.com/stratix-dev/stratix/issues) - Report bugs and request features
+- [Documentation](https://stratix-dev.github.io/stratix/) - Comprehensive guides and tutorials
 
 ## License
 
-MIT
+MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) for details.
+
+-
+
+<div align="center">
+
+**[Stratix Framework](https://stratix-dev.github.io/stratix/)** - Build better software with proven patterns
+
+</div>

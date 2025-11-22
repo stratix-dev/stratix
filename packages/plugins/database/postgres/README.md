@@ -1,88 +1,86 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
+
 # @stratix/db-postgres
 
-PostgreSQL plugin for Stratix applications.
+**PostgreSQL database integration with repository patterns for Stratix**
+
+[![npm version](https://img.shields.io/npm/v/@stratix/db-postgres.svg)](https://www.npmjs.com/package/@stratix/db-postgres)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+[Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+</div>
+
+-
+
+> Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
+>
+> **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+-
+
+## About This Package
+
+`@stratix/db-postgres` is a database plugin for the Stratix framework.
+
+PostgreSQL database integration with repository patterns for Stratix
+
+## About Stratix
+
+Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexagonal Architecture, and CQRS. It provides production-ready patterns for building scalable, maintainable applications with AI agents as first-class citizens.
+
+**Key Resources:**
+- [Documentation](https://stratix-dev.github.io/stratix/)
+- [Quick Start](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Report Issues](https://github.com/stratix-dev/stratix/issues)
 
 ## Installation
 
+**Prerequisites:**
+- Node.js 18.0.0 or higher
+- `@stratix/core` and `@stratix/runtime` installed
+- Basic understanding of [Stratix architecture](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+
+**Recommended:** Use the Stratix CLI
 ```bash
-pnpm add @stratix/db-postgres
+stratix add postgres
 ```
 
-## Features
-
-- Connection pooling with configurable pool size
-- Transaction support via Unit of Work pattern
-- Health checks with connection pool statistics
-- SSL connection support
-- Configurable timeouts and connection parameters
-- Repository pattern support
-- Read replica support (optional)
-
-## Configuration
-
-```typescript
-interface PostgresConfig {
-  connectionString: string;          // Required: PostgreSQL connection URL
-  poolSize?: number;                 // Default: 10
-  timeout?: number;                  // Default: 30000 (30s)
-  ssl?: boolean;                     // Default: false
-  idleTimeoutMillis?: number;        // Default: 10000 (10s)
-  readReplicaConnectionString?: string;  // Optional: Read replica URL
-}
+**Manual installation:**
+```bash
+npm install @stratix/db-postgres
 ```
 
-## Quick Example
+## Related Packages
 
-```typescript
-import { ApplicationBuilder } from '@stratix/runtime';
-import { PostgresPlugin } from '@stratix/db-postgres';
+**Essential:**
+- [`@stratix/core`](https://www.npmjs.com/package/@stratix/core) - Core primitives and abstractions
+- [`@stratix/runtime`](https://www.npmjs.com/package/@stratix/runtime) - Application runtime and plugin system
+- [`@stratix/cli`](https://www.npmjs.com/package/@stratix/cli) - Code generation and scaffolding
 
-const app = await ApplicationBuilder.create()
-  .usePlugin(new PostgresPlugin(), {
-    connectionString: 'postgres://user:pass@localhost:5432/mydb',
-    poolSize: 20,
-    ssl: true,
-    timeout: 30000
-  })
-  .build();
+[View all plugins](https://stratix-dev.github.io/stratix/docs/plugins/official-plugins)
 
-await app.start();
+## Documentation
 
-// Access the connection
-const connection = app.resolve('postgres:connection');
-const result = await connection.query('SELECT * FROM users');
+- [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Core Concepts](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+- [Plugin Architecture](https://stratix-dev.github.io/stratix/docs/plugins/plugin-architecture)
+- [Complete Documentation](https://stratix-dev.github.io/stratix/)
 
-// Create a Unit of Work for transactions
-const createUnitOfWork = app.resolve('postgres:createUnitOfWork');
-const uow = createUnitOfWork();
+## Support
 
-await uow.begin();
-try {
-  await uow.execute('INSERT INTO users (name) VALUES ($1)', ['John']);
-  await uow.commit();
-} catch (error) {
-  await uow.rollback();
-  throw error;
-}
-```
-
-## Exports
-
-- `PostgresPlugin` - Main plugin class
-- `PostgresConfig` - Configuration interface
-- `PostgresConnection` - Connection wrapper class
-- `PostgresUnitOfWork` - Transaction management
-- `PostgresRepository<T>` - Base repository class
-- `DatabaseRow` - Type for database rows
-
-## Services Registered
-
-The plugin registers the following services in the DI container:
-
-- `postgres:connection` - PostgresConnection instance
-- `postgres:pool` - Native pg.Pool instance
-- `postgres:createUnitOfWork` - Factory for creating UnitOfWork instances
+- [GitHub Issues](https://github.com/stratix-dev/stratix/issues) - Report bugs and request features
+- [Documentation](https://stratix-dev.github.io/stratix/) - Comprehensive guides and tutorials
 
 ## License
 
-MIT
+MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) for details.
+
+-
+
+<div align="center">
+
+**[Stratix Framework](https://stratix-dev.github.io/stratix/)** - Build better software with proven patterns
+
+</div>

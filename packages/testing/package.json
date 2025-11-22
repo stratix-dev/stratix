@@ -41,7 +41,7 @@
     "url": "https://github.com/stratix-dev/stratix.git",
     "directory": "packages/testing"
   },
-  "homepage": "https://github.com/stratix-dev/stratix#readme",
+  "homepage": "https://stratix-dev.github.io/stratix/",
   "bugs": {
     "url": "https://github.com/stratix-dev/stratix/issues"
   },

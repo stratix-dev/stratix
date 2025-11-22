@@ -1,188 +1,86 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
+
 # @stratix/msg-rabbitmq
 
-RabbitMQ plugin for Stratix with enterprise messaging features.
+**RabbitMQ message broker with RPC and priority queues for Stratix**
+
+[![npm version](https://img.shields.io/npm/v/@stratix/msg-rabbitmq.svg)](https://www.npmjs.com/package/@stratix/msg-rabbitmq)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+[Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+</div>
+
+-
+
+> Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
+>
+> **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+-
+
+## About This Package
+
+`@stratix/msg-rabbitmq` is a messaging plugin for the Stratix framework.
+
+RabbitMQ message broker with RPC and priority queues for Stratix
+
+## About Stratix
+
+Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexagonal Architecture, and CQRS. It provides production-ready patterns for building scalable, maintainable applications with AI agents as first-class citizens.
+
+**Key Resources:**
+- [Documentation](https://stratix-dev.github.io/stratix/)
+- [Quick Start](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Report Issues](https://github.com/stratix-dev/stratix/issues)
 
 ## Installation
 
+**Prerequisites:**
+- Node.js 18.0.0 or higher
+- `@stratix/core` and `@stratix/runtime` installed
+- Basic understanding of [Stratix architecture](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+
+**Recommended:** Use the Stratix CLI
 ```bash
-pnpm add @stratix/msg-rabbitmq
+stratix add rabbitmq
 ```
 
-## Features
-
-- **Event Bus** - Topic-based pub/sub
-- **RPC** - Request/reply pattern
-- **Priority Queues** - Priority-based processing
-- **Delayed Messages** - Scheduled delivery
-- **Advanced Routing** - Headers and custom routing
-- **Dead Letter Queues** - Failed message handling
-- **Automatic Retries** - Exponential backoff
-- **Durable Messages** - Survive broker restarts
-
-## Quick Start
-
-```typescript
-import { ApplicationBuilder } from '@stratix/runtime';
-import { RabbitMQPlugin } from '@stratix/msg-rabbitmq';
-
-const app = await ApplicationBuilder.create()
-  .usePlugin(new RabbitMQPlugin(), {
-    url: 'amqp://localhost:5672',
-    exchangeName: 'events',
-    prefetch: 10
-  })
-  .build();
-
-await app.start();
+**Manual installation:**
+```bash
+npm install @stratix/msg-rabbitmq
 ```
 
-## Configuration
+## Related Packages
 
-```typescript
-interface RabbitMQConfig {
-  url: string;                    // Required: RabbitMQ connection URL
-  exchangeName?: string;          // Default: 'events'
-  exchangeType?: 'topic' | 'direct' | 'fanout' | 'headers';
-  prefetch?: number;              // Default: 10
-  enableDLQ?: boolean;            // Default: true
-  maxRetries?: number;            // Default: 3
-}
-```
+**Essential:**
+- [`@stratix/core`](https://www.npmjs.com/package/@stratix/core) - Core primitives and abstractions
+- [`@stratix/runtime`](https://www.npmjs.com/package/@stratix/runtime) - Application runtime and plugin system
+- [`@stratix/cli`](https://www.npmjs.com/package/@stratix/cli) - Code generation and scaffolding
 
-## Event Bus
+[View all plugins](https://stratix-dev.github.io/stratix/docs/plugins/official-plugins)
 
-```typescript
-const eventBus = app.resolve('rabbitmq:eventBus');
+## Documentation
 
-// Publish events
-await eventBus.publish([{
-  aggregateId: 'user-123',
-  occurredOn: new Date(),
-  type: 'UserCreated',
-  data: { email: 'john@example.com' }
-}]);
+- [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Core Concepts](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+- [Plugin Architecture](https://stratix-dev.github.io/stratix/docs/plugins/plugin-architecture)
+- [Complete Documentation](https://stratix-dev.github.io/stratix/)
 
-// Subscribe to events
-eventBus.subscribe(UserCreatedEvent, async (event) => {
-  console.log('User created:', event);
-});
-```
+## Support
 
-## RPC (Request/Reply)
-
-```typescript
-import { RabbitMQRPC } from '@stratix/msg-rabbitmq';
-
-const channel = app.resolve('rabbitmq:channel');
-const rpc = new RabbitMQRPC(channel);
-
-// Server
-await rpc.serve<Request, Response>('user-service', async (req) => {
-  const user = await userRepository.findById(req.userId);
-  return { user };
-});
-
-// Client
-const result = await rpc.call<Request, Response>(
-  'user-service',
-  { userId: '123' },
-  { timeout: 5000 }
-);
-```
-
-## Priority Queues
-
-```typescript
-import { RabbitMQPriorityQueue } from '@stratix/msg-rabbitmq';
-
-const queue = new RabbitMQPriorityQueue<Task>(channel, 'tasks', {
-  maxPriority: 10
-});
-
-await queue.initialize();
-
-// High priority
-await queue.publish({ id: '1', action: 'urgent' }, 10);
-
-// Low priority
-await queue.publish({ id: '2', action: 'cleanup' }, 1);
-
-await queue.consume(async (task) => {
-  console.log('Processing:', task);
-});
-```
-
-## Delayed Messages
-
-```typescript
-import { RabbitMQDelayedQueue } from '@stratix/msg-rabbitmq';
-
-const delayed = new RabbitMQDelayedQueue<Notification>(channel, 'notifications');
-
-await delayed.initialize();
-
-// Delay by milliseconds
-await delayed.publishDelayed({ text: 'Hello' }, 60000); // 1 minute
-
-// Schedule for specific time
-await delayed.publishScheduled(
-  { text: 'Reminder' },
-  new Date('2024-12-25T10:00:00Z')
-);
-
-await delayed.consume(async (notification) => {
-  console.log('Sending:', notification);
-});
-```
-
-## Advanced Routing
-
-```typescript
-import { RabbitMQRouter } from '@stratix/msg-rabbitmq';
-
-const router = new RabbitMQRouter(channel);
-
-await router.initialize();
-
-// Headers-based routing
-await router.publishWithHeaders(
-  { data: 'urgent task' },
-  { type: 'urgent', region: 'US' }
-);
-
-await router.bindByHeaders(
-  'urgent-us-queue',
-  { type: 'urgent', region: 'US' },
-  true // match all headers
-);
-```
-
-## Exports
-
-### Core
-- `RabbitMQPlugin` - Main plugin
-- `RabbitMQEventBus` - Event bus
-- `RabbitMQConfig` - Configuration
-
-### RPC
-- `RabbitMQRPC` - Request/reply
-- `RPCOptions`, `RPCHandler` - Types
-
-### Priority
-- `RabbitMQPriorityQueue` - Priority queue
-
-### Delayed
-- `RabbitMQDelayedQueue` - Delayed messages
-
-### Routing
-- `RabbitMQRouter` - Advanced routing
-
-## Services Registered
-
-- `rabbitmq:eventBus` - RabbitMQEventBus instance
-- `rabbitmq:connection` - Native AMQP connection
-- `rabbitmq:channel` - Native AMQP channel
+- [GitHub Issues](https://github.com/stratix-dev/stratix/issues) - Report bugs and request features
+- [Documentation](https://stratix-dev.github.io/stratix/) - Comprehensive guides and tutorials
 
 ## License
 
-MIT
+MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) for details.
+
+-
+
+<div align="center">
+
+**[Stratix Framework](https://stratix-dev.github.io/stratix/)** - Build better software with proven patterns
+
+</div>

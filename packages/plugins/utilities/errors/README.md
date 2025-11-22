@@ -1,289 +1,86 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
+
 # @stratix/errors
 
-Structured error handling utilities for Stratix framework with built-in error types and severity levels.
+**Structured error handling utilities for Stratix applications**
+
+[![npm version](https://img.shields.io/npm/v/@stratix/errors.svg)](https://www.npmjs.com/package/@stratix/errors)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+[Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+</div>
+
+-
+
+> Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
+>
+> **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+-
+
+## About This Package
+
+`@stratix/errors` is a error handling plugin for the Stratix framework.
+
+Structured error handling utilities for Stratix applications
+
+## About Stratix
+
+Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexagonal Architecture, and CQRS. It provides production-ready patterns for building scalable, maintainable applications with AI agents as first-class citizens.
+
+**Key Resources:**
+- [Documentation](https://stratix-dev.github.io/stratix/)
+- [Quick Start](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Report Issues](https://github.com/stratix-dev/stratix/issues)
 
 ## Installation
 
+**Prerequisites:**
+- Node.js 18.0.0 or higher
+- `@stratix/core` and `@stratix/runtime` installed
+- Basic understanding of [Stratix architecture](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+
+**Recommended:** Use the Stratix CLI
 ```bash
-pnpm add @stratix/errors
+stratix add errors
 ```
 
-## Features
-
-- Pre-defined error classes for common HTTP status codes
-- Error severity classification (low, medium, high, critical)
-- Structured error codes for consistent error handling
-- JSON serialization for API responses
-- Additional context via details object
-- Stack trace capture
-
-## Built-in Error Types
-
-### Client Errors (4xx)
-
-#### BadRequestError (400)
-
-Invalid request data or parameters.
-
-```typescript
-import { BadRequestError } from '@stratix/errors';
-
-throw new BadRequestError('Invalid email format', {
-  field: 'email',
-  value: 'invalid'
-});
+**Manual installation:**
+```bash
+npm install @stratix/errors
 ```
 
-#### UnauthorizedError (401)
+## Related Packages
 
-Missing or invalid authentication.
+**Essential:**
+- [`@stratix/core`](https://www.npmjs.com/package/@stratix/core) - Core primitives and abstractions
+- [`@stratix/runtime`](https://www.npmjs.com/package/@stratix/runtime) - Application runtime and plugin system
+- [`@stratix/cli`](https://www.npmjs.com/package/@stratix/cli) - Code generation and scaffolding
 
-```typescript
-import { UnauthorizedError } from '@stratix/errors';
+[View all plugins](https://stratix-dev.github.io/stratix/docs/plugins/official-plugins)
 
-throw new UnauthorizedError('Token expired', {
-  expiredAt: new Date()
-});
-```
+## Documentation
 
-#### ForbiddenError (403)
+- [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Core Concepts](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+- [Plugin Architecture](https://stratix-dev.github.io/stratix/docs/plugins/plugin-architecture)
+- [Complete Documentation](https://stratix-dev.github.io/stratix/)
 
-Valid authentication but insufficient permissions.
+## Support
 
-```typescript
-import { ForbiddenError } from '@stratix/errors';
-
-throw new ForbiddenError('Insufficient permissions', {
-  required: 'admin',
-  actual: 'user'
-});
-```
-
-#### NotFoundError (404)
-
-Resource not found.
-
-```typescript
-import { NotFoundError } from '@stratix/errors';
-
-throw new NotFoundError('User not found', {
-  userId: '123'
-});
-```
-
-#### ConflictError (409)
-
-Resource conflict (e.g., duplicate entry).
-
-```typescript
-import { ConflictError } from '@stratix/errors';
-
-throw new ConflictError('Email already exists', {
-  email: 'user@example.com'
-});
-```
-
-#### UnprocessableEntityError (422)
-
-Validation failed.
-
-```typescript
-import { UnprocessableEntityError } from '@stratix/errors';
-
-throw new UnprocessableEntityError('Validation failed', {
-  errors: ['Price must be positive']
-});
-```
-
-### Server Errors (5xx)
-
-#### InternalServerError (500)
-
-Unexpected server error.
-
-```typescript
-import { InternalServerError } from '@stratix/errors';
-
-throw new InternalServerError('Unexpected error occurred');
-```
-
-#### DatabaseError (500)
-
-Database operation failed.
-
-```typescript
-import { DatabaseError } from '@stratix/errors';
-
-throw new DatabaseError('Failed to connect to database', {
-  host: 'localhost',
-  port: 5432
-});
-```
-
-#### ExternalServiceError (503)
-
-External service unavailable or failed.
-
-```typescript
-import { ExternalServiceError } from '@stratix/errors';
-
-throw new ExternalServiceError('Payment gateway timeout', {
-  service: 'stripe'
-});
-```
-
-## Error Codes
-
-All errors include a standardized error code:
-
-```typescript
-import { ErrorCode } from '@stratix/errors';
-
-enum ErrorCode {
-  INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
-  BAD_REQUEST = 'BAD_REQUEST',
-  UNAUTHORIZED = 'UNAUTHORIZED',
-  FORBIDDEN = 'FORBIDDEN',
-  NOT_FOUND = 'NOT_FOUND',
-  CONFLICT = 'CONFLICT',
-  UNPROCESSABLE_ENTITY = 'UNPROCESSABLE_ENTITY',
-  VALIDATION_ERROR = 'VALIDATION_ERROR',
-  DATABASE_ERROR = 'DATABASE_ERROR',
-  EXTERNAL_SERVICE_ERROR = 'EXTERNAL_SERVICE_ERROR',
-}
-```
-
-## Error Severity
-
-Errors are classified by severity for monitoring and alerting:
-
-```typescript
-import { ErrorSeverity } from '@stratix/errors';
-
-enum ErrorSeverity {
-  LOW = 'low',           // Expected errors (validation, not found)
-  MEDIUM = 'medium',     // Auth/permission issues
-  HIGH = 'high',         // Database/external service failures
-  CRITICAL = 'critical', // Internal server errors
-}
-```
-
-## Custom Errors
-
-Create custom errors by extending `AppError`:
-
-```typescript
-import { AppError, ErrorCode, ErrorSeverity } from '@stratix/errors';
-
-class PaymentError extends AppError {
-  readonly code = ErrorCode.EXTERNAL_SERVICE_ERROR;
-  readonly statusCode = 503;
-  readonly severity = ErrorSeverity.HIGH;
-}
-
-throw new PaymentError('Payment processing failed', {
-  transactionId: 'tx_123'
-});
-```
-
-## JSON Serialization
-
-All errors can be serialized to JSON for API responses:
-
-```typescript
-try {
-  // Some operation
-} catch (error) {
-  if (error instanceof AppError) {
-    const json = error.toJSON();
-    // {
-    //   error: 'NOT_FOUND',
-    //   message: 'User not found',
-    //   statusCode: 404,
-    //   severity: 'low',
-    //   details: { userId: '123' }
-    // }
-
-    return res.status(error.statusCode).json(json);
-  }
-}
-```
-
-## Error Handling Pattern
-
-Recommended error handling pattern in Stratix applications:
-
-```typescript
-import { AppError, NotFoundError, DatabaseError } from '@stratix/errors';
-
-class UserService {
-  async findById(id: string): Promise<User> {
-    try {
-      const user = await this.repository.findById(id);
-
-      if (!user) {
-        throw new NotFoundError('User not found', { userId: id });
-      }
-
-      return user;
-    } catch (error) {
-      if (error instanceof AppError) {
-        throw error; // Re-throw known errors
-      }
-
-      // Wrap unknown errors
-      throw new DatabaseError('Failed to fetch user', {
-        userId: id,
-        originalError: (error as Error).message
-      });
-    }
-  }
-}
-```
-
-## Integration with HTTP
-
-Works seamlessly with `@stratix/http-fastify`:
-
-```typescript
-import { FastifyHTTPPlugin } from '@stratix/http-fastify';
-import { NotFoundError } from '@stratix/errors';
-
-httpPlugin.get('/users/:id', async (request) => {
-  const user = await userService.findById(request.params.id);
-
-  if (!user) {
-    throw new NotFoundError('User not found', {
-      userId: request.params.id
-    });
-  }
-
-  return { body: user };
-});
-
-// Error middleware automatically handles AppError instances
-```
-
-## Exports
-
-### Error Classes
-
-- `AppError` - Base error class
-- `BadRequestError` - 400 error
-- `UnauthorizedError` - 401 error
-- `ForbiddenError` - 403 error
-- `NotFoundError` - 404 error
-- `ConflictError` - 409 error
-- `UnprocessableEntityError` - 422 error
-- `InternalServerError` - 500 error
-- `DatabaseError` - 500 error (database-specific)
-- `ExternalServiceError` - 503 error
-
-### Enums
-
-- `ErrorCode` - Standardized error codes
-- `ErrorSeverity` - Error severity levels
+- [GitHub Issues](https://github.com/stratix-dev/stratix/issues) - Report bugs and request features
+- [Documentation](https://stratix-dev.github.io/stratix/) - Comprehensive guides and tutorials
 
 ## License
 
-MIT
+MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) for details.
+
+-
+
+<div align="center">
+
+**[Stratix Framework](https://stratix-dev.github.io/stratix/)** - Build better software with proven patterns
+
+</div>
