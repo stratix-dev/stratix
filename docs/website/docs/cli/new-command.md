@@ -29,7 +29,7 @@ You'll be prompted for:
 ## Non-Interactive Mode
 
 ```bash
-stratix new my-app --template ddd --pm pnpm --skip-install
+stratix new my-app --structure ddd --pm pnpm --skip-install
 ```
 
 ## Options
@@ -49,7 +49,7 @@ stratix new my-app --template ddd --pm pnpm --skip-install
 Domain-Driven Design structure:
 
 ```bash
-stratix new my-app --template ddd
+stratix new my-app --structure ddd
 ```
 
 **Structure:**
@@ -77,7 +77,7 @@ my-app/
 Bounded contexts for microservices:
 
 ```bash
-stratix new my-app --template modular
+stratix new my-app --structure modular
 ```
 
 **Structure:**
@@ -104,7 +104,7 @@ my-app/
 Bare-bones setup:
 
 ```bash
-stratix new my-app --template minimal
+stratix new my-app --structure minimal
 ```
 
 **Structure:**
@@ -141,7 +141,7 @@ stratix new my-app --directory ./projects/my-app
 ### Create modular project
 
 ```bash
-stratix new my-microservices --template modular
+stratix new my-microservices --structure modular
 ```
 
 ## What Gets Created
@@ -198,13 +198,13 @@ npm start
 ### 1. Use DDD Template for Most Projects
 
 ```bash
-stratix new my-app --template ddd
+stratix new my-app --structure ddd
 ```
 
 ### 2. Use Modular for Microservices
 
 ```bash
-stratix new my-services --template modular
+stratix new my-services --structure modular
 ```
 
 ### 3. Choose Package Manager Wisely

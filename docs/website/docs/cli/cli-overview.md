@@ -81,7 +81,7 @@ stratix add
 Provide all arguments for CI/CD pipelines:
 
 ```bash
-stratix new my-app --template ddd --skip-install
+stratix new my-app --structure ddd --skip-install
 stratix generate entity Product --path src/domain/entities
 stratix add @stratix/http-fastify --skip-install
 ```
@@ -95,7 +95,7 @@ The CLI supports multiple project templates:
 - **Minimal** - Bare-bones setup
 
 ```bash
-stratix new my-app --template modular
+stratix new my-app --structure modular
 ```
 
 ## Code Generators
@@ -169,7 +169,7 @@ stratix new  # Learn available options
 ### 2. Use Non-Interactive for Automation
 
 ```bash
-stratix new my-app --template ddd --skip-install
+stratix new my-app --structure ddd --skip-install
 ```
 
 ### 3. Customize Generators

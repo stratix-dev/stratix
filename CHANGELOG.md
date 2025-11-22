@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [0.4.2] - 2025-11-22
+
+### Changed
+
+#### Documentation
+- **CLI Command Correction**: Fixed all examples using incorrect `--template` flag
+  - Changed from `stratix new my-app --template modular` to `stratix new my-app --structure modular`
+  - Updated in all documentation files and READMEs
+  - Affects: Main README.md, CLI documentation
+
+### Fixed
+- Corrected CLI examples in documentation to use `--structure` instead of `--template`
+
 ## [0.4.1] - 2025-11-22
 
 ### Added
@@ -291,7 +306,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Recommended for early adopters and testing only
 - See [Versioning Policy](./docs/website/docs/getting-started/versioning.md) for details
 
-[Unreleased]: https://github.com/stratix-dev/stratix/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/stratix-dev/stratix/compare/v0.4.2...HEAD
+[0.4.2]: https://github.com/stratix-dev/stratix/compare/v0.4.1...v0.4.2
+[0.4.1]: https://github.com/stratix-dev/stratix/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/stratix-dev/stratix/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/stratix-dev/stratix/compare/v0.1.3...v0.3.0
 [0.1.3]: https://github.com/stratix-dev/stratix/compare/v0.1.2...v0.1.3
