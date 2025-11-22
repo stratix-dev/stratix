@@ -1,250 +1,86 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
+
 # @stratix/db-mongodb
 
-MongoDB plugin for Stratix applications with advanced features for production use.
+**MongoDB database integration with aggregations and pagination for Stratix**
+
+[![npm version](https://img.shields.io/npm/v/@stratix/db-mongodb.svg)](https://www.npmjs.com/package/@stratix/db-mongodb)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+[Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+</div>
+
+-
+
+> Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
+>
+> **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+-
+
+## About This Package
+
+`@stratix/db-mongodb` is a database plugin for the Stratix framework.
+
+MongoDB database integration with aggregations and pagination for Stratix
+
+## About Stratix
+
+Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexagonal Architecture, and CQRS. It provides production-ready patterns for building scalable, maintainable applications with AI agents as first-class citizens.
+
+**Key Resources:**
+- [Documentation](https://stratix-dev.github.io/stratix/)
+- [Quick Start](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Report Issues](https://github.com/stratix-dev/stratix/issues)
 
 ## Installation
 
+**Prerequisites:**
+- Node.js 18.0.0 or higher
+- `@stratix/core` and `@stratix/runtime` installed
+- Basic understanding of [Stratix architecture](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+
+**Recommended:** Use the Stratix CLI
 ```bash
-pnpm add @stratix/db-mongodb
+stratix add mongodb
 ```
 
-## Features
-
-- **Connection pooling** with configurable pool size
-- **Transaction support** on replica sets
-- **Health checks** with database ping
-- **Repository pattern** with DDD support
-- **Pagination** with metadata (total, pages, hasNext/Prev)
-- **Index management** with declarative definitions
-- **Aggregation pipeline builder** with fluent API
-- **Soft deletes** pattern for logical deletion
-- **Full MongoDB driver** support
-- **Automatic reconnection**
-
-## Quick Start
-
-```typescript
-import { ApplicationBuilder } from '@stratix/runtime';
-import { MongoPlugin } from '@stratix/db-mongodb';
-
-const app = await ApplicationBuilder.create()
-  .usePlugin(new MongoPlugin(), {
-    connectionString: 'mongodb://localhost:27017',
-    database: 'mydb',
-    maxPoolSize: 20
-  })
-  .build();
-
-await app.start();
+**Manual installation:**
+```bash
+npm install @stratix/db-mongodb
 ```
 
-## Configuration
+## Related Packages
 
-```typescript
-interface MongoConfig {
-  connectionString: string;         // Required: MongoDB connection URL
-  database: string;                 // Required: Database name
-  maxPoolSize?: number;             // Default: 10
-  serverSelectionTimeoutMS?: number; // Default: 30000 (30s)
-  options?: MongoClientOptions;     // Additional MongoDB options
-}
-```
+**Essential:**
+- [`@stratix/core`](https://www.npmjs.com/package/@stratix/core) - Core primitives and abstractions
+- [`@stratix/runtime`](https://www.npmjs.com/package/@stratix/runtime) - Application runtime and plugin system
+- [`@stratix/cli`](https://www.npmjs.com/package/@stratix/cli) - Code generation and scaffolding
 
-## Repository Pattern
+[View all plugins](https://stratix-dev.github.io/stratix/docs/plugins/official-plugins)
 
-### Basic Repository
+## Documentation
 
-```typescript
-import { MongoRepository } from '@stratix/db-mongodb';
+- [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Core Concepts](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+- [Plugin Architecture](https://stratix-dev.github.io/stratix/docs/plugins/plugin-architecture)
+- [Complete Documentation](https://stratix-dev.github.io/stratix/)
 
-class UserRepository extends MongoRepository<User, string> {
-  protected collectionName = 'users';
-  
-  // Define indexes declaratively
-  protected indexes = [
-    { keys: { email: 1 }, options: { unique: true } },
-    { keys: { createdAt: -1 } }
-  ];
+## Support
 
-  protected extractId(user: User): string {
-    return user.id;
-  }
-
-  protected toDocument(user: User): MongoDocument {
-    return {
-      _id: user.id,
-      email: user.email,
-      name: user.name,
-      createdAt: user.createdAt
-    };
-  }
-
-  protected toDomain(doc: MongoDocument): User {
-    return new User(
-      doc._id as string,
-      doc.email as string,
-      doc.name as string,
-      doc.createdAt as Date
-    );
-  }
-}
-
-// Create indexes on startup
-await userRepo.ensureIndexes();
-```
-
-## Pagination
-
-```typescript
-const result = await userRepo.findPaginated(
-  { status: 'active' },
-  { 
-    page: 1, 
-    pageSize: 20, 
-    sort: { createdAt: -1 } 
-  }
-);
-
-console.log(result.data);        // Array of entities
-console.log(result.total);       // Total count
-console.log(result.totalPages);  // Total pages
-console.log(result.hasNext);     // Has next page?
-console.log(result.hasPrev);     // Has previous page?
-```
-
-## Aggregation Pipeline
-
-```typescript
-// Fluent API for building pipelines
-const stats = await userRepo.aggregate(
-  userRepo.aggregation()
-    .match({ status: 'active' })
-    .group({
-      _id: '$country',
-      count: { $sum: 1 },
-      avgAge: { $avg: '$age' }
-    })
-    .sort({ count: -1 })
-    .limit(10)
-    .build()
-);
-
-// Supports: match, group, sort, limit, skip, lookup, project, unwind, count
-```
-
-## Soft Deletes
-
-```typescript
-import { SoftDeleteMongoRepository, SoftDeletable } from '@stratix/db-mongodb';
-
-interface User extends SoftDeletable {
-  id: string;
-  email: string;
-  name: string;
-  deletedAt?: Date;
-  isDeleted?: boolean;
-}
-
-class UserRepository extends SoftDeleteMongoRepository<User, string> {
-  protected collectionName = 'users';
-  // ... implement toDocument, toDomain, extractId
-}
-
-// Soft delete (sets deletedAt and isDeleted)
-await userRepo.softDelete(userId);
-
-// Restore
-await userRepo.restore(userId);
-
-// Find only active users
-const activeUsers = await userRepo.findAllActive();
-
-// Find only deleted users
-const deletedUsers = await userRepo.findAllDeleted();
-
-// Permanent delete (bypass soft delete)
-await userRepo.permanentDelete(userId);
-```
-
-## Index Management
-
-```typescript
-// Declarative indexes in repository
-protected indexes = [
-  { 
-    keys: { email: 1 }, 
-    options: { unique: true } 
-  },
-  { 
-    keys: { 'profile.country': 1, status: 1 } 
-  },
-  {
-    keys: { location: '2dsphere' }
-  }
-];
-
-// Create indexes
-await userRepo.ensureIndexes();
-
-// Or create individual index
-await userRepo.createIndex({ email: 1 }, { unique: true });
-
-// List all indexes
-const indexes = await userRepo.listIndexes();
-```
-
-## Transactions
-
-```typescript
-const connection = app.resolve('mongo:connection');
-const uow = connection.createUnitOfWork();
-
-await uow.begin();
-try {
-  const users = uow.collection('users');
-  await users.insertOne({ name: 'Jane Doe' });
-  
-  const orders = uow.collection('orders');
-  await orders.insertOne({ userId: '123', total: 100 });
-  
-  await uow.commit();
-} catch (error) {
-  await uow.rollback();
-  throw error;
-}
-```
-
-## Exports
-
-### Core
-- `MongoPlugin` - Main plugin class
-- `MongoConnection` - Connection wrapper
-- `MongoRepository<E, ID>` - Base repository
-- `MongoUnitOfWork` - Transaction management
-- `MongoDocument` - Document type
-
-### Pagination
-- `PaginationOptions` - Pagination input
-- `PaginatedResult<T>` - Pagination output
-
-### Indexing
-- `IndexDefinition` - Index definition
-- `IndexOptions` - Index options
-- `IndexManager` - Index utilities
-
-### Aggregation
-- `MongoAggregationBuilder` - Pipeline builder
-
-### Patterns
-- `SoftDeleteMongoRepository<E, ID>` - Soft delete repository
-- `SoftDeletable` - Soft delete interface
-
-## Services Registered
-
-- `mongo:connection` - MongoConnection instance
-- `mongo:client` - Native MongoClient
-- `mongo:createUnitOfWork` - UnitOfWork factory
+- [GitHub Issues](https://github.com/stratix-dev/stratix/issues) - Report bugs and request features
+- [Documentation](https://stratix-dev.github.io/stratix/) - Comprehensive guides and tutorials
 
 ## License
 
-MIT
+MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) for details.
+
+-
+
+<div align="center">
+
+**[Stratix Framework](https://stratix-dev.github.io/stratix/)** - Build better software with proven patterns
+
+</div>

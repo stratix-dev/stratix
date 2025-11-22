@@ -20,6 +20,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+#### Package Metadata
+- **Homepage URLs**: Updated all package.json files to use documentation site as homepage
+  - Changed from `https://github.com/stratix-dev/stratix#readme` to `https://stratix-dev.github.io/stratix/`
+  - Applied to all 18 npm packages (core, runtime, testing, cli, and all plugins)
+  - Provides better landing page for npm package visitors
+
+- **README Standardization**: Completely redesigned all package READMEs with professional branding
+  - Added Stratix logo and consistent header design to all 18 packages
+  - Prominent "Part of Stratix Framework" banner with quick links
+  - "About Stratix" section providing framework context
+  - Clear prerequisites and installation instructions
+  - Recommended installation via `stratix add` CLI command
+  - "Related Packages" section for ecosystem navigation
+  - Consistent structure across all packages
+  - Corrected all documentation links to use `/docs/` path
+  - Removed non-existent links (API references, GitHub Discussions, runtime overview)
+  - Verified all links against live documentation at stratix-dev.github.io/stratix
+  - Simplified Documentation and Support sections with only working links
+  - Better npm marketplace presence and user onboarding
+
 #### Documentation
 - **Marketplace Links**: Added VS Code Marketplace links throughout documentation
   - Updated `README.md` with npm package links and VS Code extension link
@@ -41,6 +61,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added icon (Stratix logo, 128x128px)
   - Updated repository URLs to `stratix-dev` organization
   - Version bumped to 0.1.2
+
+#### Development Tools
+- **Version Bump Script**: Enhanced `scripts/bump-versions.mjs`
+  - Now requires version argument (no default value)
+  - Automatically updates version badge in main README.md
+  - Better error messages and usage instructions
+  - Usage: `node scripts/bump-versions.mjs <version>`
 
 ## [0.4.0] - 2025-11-21
 

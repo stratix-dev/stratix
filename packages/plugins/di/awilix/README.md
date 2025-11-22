@@ -1,245 +1,86 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
+
 # @stratix/di-awilix
 
-Powerful dependency injection container for Stratix using Awilix.
+**Awilix dependency injection container for Stratix**
+
+[![npm version](https://img.shields.io/npm/v/@stratix/di-awilix.svg)](https://www.npmjs.com/package/@stratix/di-awilix)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+[Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+</div>
+
+-
+
+> Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
+>
+> **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+-
+
+## About This Package
+
+`@stratix/di-awilix` is a dependency injection plugin for the Stratix framework.
+
+Awilix dependency injection container for Stratix
+
+## About Stratix
+
+Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexagonal Architecture, and CQRS. It provides production-ready patterns for building scalable, maintainable applications with AI agents as first-class citizens.
+
+**Key Resources:**
+- [Documentation](https://stratix-dev.github.io/stratix/)
+- [Quick Start](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Report Issues](https://github.com/stratix-dev/stratix/issues)
 
 ## Installation
 
+**Prerequisites:**
+- Node.js 18.0.0 or higher
+- `@stratix/core` and `@stratix/runtime` installed
+- Basic understanding of [Stratix architecture](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+
+**Recommended:** Use the Stratix CLI
 ```bash
-pnpm add @stratix/di-awilix
+stratix add di
 ```
 
-## Features
-
-- Three service lifetimes: singleton, scoped, and transient
-- Factory functions and class registration
-- Scoped containers for request/session isolation
-- Automatic disposal of resources
-- Type-safe service resolution
-- Convenience API for common scenarios
-- Direct Awilix API access for advanced use cases
-
-## Quick Example
-
-```typescript
-import { AwilixContainer } from '@stratix/di-awilix';
-import { ServiceLifetime } from '@stratix/core';
-
-const container = new AwilixContainer();
-
-// Register a singleton service
-container.register('logger', () => new ConsoleLogger(), {
-  lifetime: ServiceLifetime.SINGLETON
-});
-
-// Resolve services
-const logger = container.resolve('logger');
+**Manual installation:**
+```bash
+npm install @stratix/di-awilix
 ```
 
-## Service Lifetimes
+## Related Packages
 
-### Singleton
+**Essential:**
+- [`@stratix/core`](https://www.npmjs.com/package/@stratix/core) - Core primitives and abstractions
+- [`@stratix/runtime`](https://www.npmjs.com/package/@stratix/runtime) - Application runtime and plugin system
+- [`@stratix/cli`](https://www.npmjs.com/package/@stratix/cli) - Code generation and scaffolding
 
-Created once and shared across all resolutions.
+[View all plugins](https://stratix-dev.github.io/stratix/docs/plugins/official-plugins)
 
-```typescript
-container.register('config', () => new AppConfig(), {
-  lifetime: ServiceLifetime.SINGLETON
-});
+## Documentation
 
-// Or using convenience method
-container.singleton('config', new AppConfig());
-```
+- [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Core Concepts](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+- [Plugin Architecture](https://stratix-dev.github.io/stratix/docs/plugins/plugin-architecture)
+- [Complete Documentation](https://stratix-dev.github.io/stratix/)
 
-### Scoped
+## Support
 
-Created once per scope (e.g., per HTTP request).
-
-```typescript
-container.register('requestId', () => crypto.randomUUID(), {
-  lifetime: ServiceLifetime.SCOPED
-});
-
-// Or using convenience method
-container.scoped('requestId', () => crypto.randomUUID());
-```
-
-### Transient
-
-Created every time it's resolved.
-
-```typescript
-container.register('timestamp', () => new Date(), {
-  lifetime: ServiceLifetime.TRANSIENT
-});
-
-// Or using convenience method
-container.transient('timestamp', () => new Date());
-```
-
-## Convenience API
-
-### Singleton Registration
-
-```typescript
-// Register a value
-container.singleton('apiKey', process.env.API_KEY);
-
-// Register a factory
-container.singleton('database', () => new Database());
-```
-
-### Class Registration
-
-```typescript
-class UserService {
-  constructor(private database: Database) {}
-}
-
-// Auto-wire constructor dependencies
-container.registerClass(UserService, {
-  token: 'userService',
-  lifetime: ServiceLifetime.SINGLETON
-});
-```
-
-### Batch Registration
-
-```typescript
-container.registerAll({
-  logger: ConsoleLogger,
-  database: () => new Database(),
-  config: appConfig,
-});
-```
-
-### Safe Resolution
-
-```typescript
-// Returns undefined if not found
-const service = container.tryResolve('optionalService');
-
-if (service) {
-  // Use service
-}
-```
-
-## Scoped Containers
-
-Create isolated scopes for request-specific services:
-
-```typescript
-// Register a scoped service
-container.scoped('userId', () => extractUserId());
-
-// Create a scope per request
-app.use(async (req, res, next) => {
-  const scope = container.createScope();
-
-  try {
-    const userId = scope.resolve('userId');
-    // Process request
-  } finally {
-    await scope.dispose();
-  }
-});
-```
-
-## Dependency Injection
-
-```typescript
-class OrderService {
-  constructor(
-    private database: Database,
-    private logger: Logger,
-    private eventBus: EventBus
-  ) {}
-}
-
-// Register dependencies
-container.singleton('database', () => new Database());
-container.singleton('logger', () => new ConsoleLogger());
-container.singleton('eventBus', () => new InMemoryEventBus());
-
-// Register service with factory that resolves dependencies
-container.registerClass(OrderService, {
-  token: 'orderService'
-});
-
-// Resolve fully wired service
-const orderService = container.resolve<OrderService>('orderService');
-```
-
-## Advanced Usage
-
-### Direct Awilix API
-
-For advanced scenarios, access Awilix directly:
-
-```typescript
-import * as awilix from 'awilix';
-
-container.registerAwilix({
-  userService: awilix.asClass(UserService)
-    .singleton()
-    .inject(() => ({ customDep: 'value' }))
-});
-```
-
-### Resource Disposal
-
-Services with a `dispose()` method are automatically cleaned up:
-
-```typescript
-class DatabaseConnection {
-  async dispose() {
-    await this.client.close();
-  }
-}
-
-container.singleton('db', () => new DatabaseConnection());
-
-// Later
-await container.dispose(); // Calls dispose() on all services
-```
-
-## Integration with Stratix
-
-The AwilixContainer implements the `Container` interface from `@stratix/core`:
-
-```typescript
-import { ApplicationBuilder } from '@stratix/runtime';
-import { AwilixContainer } from '@stratix/di-awilix';
-
-const app = await ApplicationBuilder.create()
-  .useContainer(new AwilixContainer())
-  .useLogger(logger)
-  .build();
-```
-
-## API Reference
-
-### Container Methods
-
-- `register<T>(token, factory, options?)` - Register a service
-- `resolve<T>(token)` - Resolve a service
-- `has<T>(token)` - Check if service is registered
-- `createScope()` - Create a new scoped container
-- `dispose()` - Dispose container and all services
-
-### Convenience Methods
-
-- `singleton<T>(token, value | factory)` - Register singleton
-- `scoped<T>(token, factory)` - Register scoped service
-- `transient<T>(token, factory)` - Register transient service
-- `registerClass<T>(classType, options?)` - Register class with auto-wiring
-- `registerAll(services)` - Register multiple services
-- `tryResolve<T>(token)` - Safely resolve service
-
-### Advanced Methods
-
-- `registerAwilix(registrations)` - Use native Awilix API
-- `getAwilixContainer()` - Access internal Awilix container
+- [GitHub Issues](https://github.com/stratix-dev/stratix/issues) - Report bugs and request features
+- [Documentation](https://stratix-dev.github.io/stratix/) - Comprehensive guides and tutorials
 
 ## License
 
-MIT
+MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) for details.
+
+-
+
+<div align="center">
+
+**[Stratix Framework](https://stratix-dev.github.io/stratix/)** - Build better software with proven patterns
+
+</div>

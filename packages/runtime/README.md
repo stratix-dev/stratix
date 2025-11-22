@@ -1,234 +1,119 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
+
 # @stratix/runtime
 
-Plugin system and application builder for Stratix.
+**Application runtime and plugin lifecycle management for Stratix**
+
+[![npm version](https://img.shields.io/npm/v/@stratix/runtime.svg)](https://www.npmjs.com/package/@stratix/runtime)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+[Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start) 
+
+</div>
+
+-
+
+> Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
+>
+> **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+-
+
+## About This Package
+
+`@stratix/runtime` provides the application runtime and plugin lifecycle management system for Stratix applications. It includes the ApplicationBuilder, plugin registry, and lifecycle management utilities.
+
+**This package includes:**
+- ApplicationBuilder for fluent app configuration
+- Plugin lifecycle management (initialize, start, stop)
+- Dependency graph for automatic plugin ordering
+- Health check system
+- Application lifecycle hooks
+
+## About Stratix
+
+Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexagonal Architecture, and CQRS. It provides production-ready patterns for building scalable, maintainable applications with AI agents as first-class citizens.
+
+**Key Resources:**
+- [Documentation](https://stratix-dev.github.io/stratix/)
+- [Quick Start](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Report Issues](https://github.com/stratix-dev/stratix/issues)
 
 ## Installation
 
+**Prerequisites:**
+- Node.js 18.0.0 or higher
+- `@stratix/core` installed
+
+**Recommended:** Create a new Stratix project
 ```bash
-pnpm add @stratix/runtime
+npm install -g @stratix/cli
+stratix new my-app
 ```
 
-## What's Included
+**Manual installation:**
+```bash
+npm install @stratix/core @stratix/runtime
+```
 
-- **ApplicationBuilder** - Fluent API to configure your application
-- **Application** - Main application class with lifecycle management
-- **PluginRegistry** - Plugin registration and dependency resolution
-- **LifecycleManager** - Plugin lifecycle management (initialize, start, stop)
-- **DependencyGraph** - Automatic plugin ordering based on dependencies
-- **DefaultPluginContext** - Context passed to plugins during initialization
-- **Error Types** - Specialized errors for runtime operations
-
-## Core Features
-
-### Application Builder
-
-Fluent API for configuring and building Stratix applications:
+## Quick Start
 
 ```typescript
 import { ApplicationBuilder } from '@stratix/runtime';
-import { AwilixContainer } from '@stratix/di-awilix';
 import { ConsoleLogger } from '@stratix/core';
+import { PostgresPlugin } from '@stratix/db-postgres';
+import { FastifyHTTPPlugin } from '@stratix/http-fastify';
 
 const app = await ApplicationBuilder.create()
-  .useContainer(new AwilixContainer())
   .useLogger(new ConsoleLogger())
-  .usePlugin(new DatabasePlugin())
-  .usePlugin(new CachePlugin(), { ttl: 3600 })
+  .usePlugin(new PostgresPlugin({ /* config */ }))
+  .usePlugin(new FastifyHTTPPlugin({ port: 3000 }))
   .build();
 
 await app.start();
-```
-
-### Plugin Lifecycle
-
-Plugins follow a three-phase lifecycle:
-
-1. **Initialize** - Configure and register services
-2. **Start** - Connect to external resources
-3. **Stop** - Gracefully shutdown in reverse order
-
-```typescript
-import type { Plugin, PluginContext } from '@stratix/core';
-
-class DatabasePlugin implements Plugin {
-  readonly metadata = {
-    name: 'database',
-    version: '1.0.0',
-    dependencies: ['logger']
-  };
-
-  async initialize(context: PluginContext): Promise<void> {
-    const config = context.getConfig();
-    context.container.register('database', () => new Database(config));
-  }
-
-  async start(): Promise<void> {
-    // Connect to database
-  }
-
-  async stop(): Promise<void> {
-    // Disconnect from database
-  }
-
-  async healthCheck(): Promise<HealthCheckResult> {
-    // Check database connection
-  }
-}
-```
-
-### Dependency Resolution
-
-Plugins are automatically initialized in dependency order:
-
-```typescript
-// Even though registered out of order, plugins initialize correctly
-const app = await ApplicationBuilder.create()
-  .useContainer(container)
-  .useLogger(logger)
-  .usePlugin(apiPlugin)        // depends on database
-  .usePlugin(databasePlugin)   // depends on logger
-  .usePlugin(loggerPlugin)     // no dependencies
-  .build();
-
-// Initialization order: logger → database → api
-```
-
-### Health Checks
-
-Built-in health monitoring for all plugins:
-
-```typescript
-const app = await ApplicationBuilder.create()
-  .useContainer(container)
-  .useLogger(logger)
-  .usePlugin(new DatabasePlugin())
-  .usePlugin(new CachePlugin())
-  .build();
-
-await app.start();
-
-// Check overall application health
-const health = await app.healthCheck();
-console.log(health.status);  // HealthStatus.UP, HealthStatus.DEGRADED, or HealthStatus.DOWN
-console.log(health.details); // Individual plugin health status
-```
-
-### Plugin Configuration
-
-Configure plugins before or after registration:
-
-```typescript
-const app = await ApplicationBuilder.create()
-  .useContainer(container)
-  .useLogger(logger)
-  .usePlugin(databasePlugin, { host: 'localhost', port: 5432 })
-  .configurePlugin('cache', { ttl: 3600 })
-  .build();
-```
-
-### Multiple Plugin Registration
-
-Register multiple plugins at once:
-
-```typescript
-const app = await ApplicationBuilder.create()
-  .useContainer(container)
-  .useLogger(logger)
-  .usePlugins([
-    new LoggerPlugin(),
-    new DatabasePlugin(),
-    new CachePlugin(),
-    new ApiPlugin()
-  ])
-  .build();
-```
-
-## API Reference
-
-### ApplicationBuilder
-
-- `create()` - Creates a new ApplicationBuilder instance
-- `useContainer(container)` - Sets the DI container (required)
-- `useLogger(logger)` - Sets the logger (required)
-- `usePlugin(plugin, config?)` - Registers a plugin with optional configuration
-- `usePlugins(plugins)` - Registers multiple plugins
-- `configurePlugin(name, config)` - Sets configuration for a plugin
-- `build()` - Builds and initializes the application
-- `pluginCount` - Returns the number of registered plugins
-
-### Application
-
-- `start()` - Starts all plugins in dependency order
-- `stop()` - Stops all plugins in reverse dependency order
-- `resolve<T>(token)` - Resolves a service from the DI container
-- `getContainer()` - Gets the DI container
-- `getPlugins()` - Gets all registered plugins
-- `getPlugin(name)` - Gets a plugin by name
-- `getLifecyclePhase()` - Gets the current lifecycle phase
-- `healthCheck()` - Performs health checks on all plugins
-
-### LifecyclePhase
-
-Lifecycle phases enum:
-
-- `UNINITIALIZED` - Before initialization
-- `INITIALIZING` - During initialization
-- `INITIALIZED` - After initialization, before start
-- `STARTING` - During start
-- `STARTED` - Running
-- `STOPPING` - During shutdown
-- `STOPPED` - After shutdown
-
-### Error Types
-
-- `RuntimeError` - Base error class
-- `CircularDependencyError` - Circular dependency detected
-- `MissingDependencyError` - Plugin dependency not found
-- `DuplicatePluginError` - Plugin name already registered
-- `PluginLifecycleError` - Plugin lifecycle method failed
-
-## Example: Complete Application
-
-```typescript
-import { ApplicationBuilder } from '@stratix/runtime';
-import { AwilixContainer } from '@stratix/di-awilix';
-import { ConsoleLogger } from '@stratix/core';
-
-// Build application
-const app = await ApplicationBuilder.create()
-  .useContainer(new AwilixContainer())
-  .useLogger(new ConsoleLogger())
-  .usePlugin(new PostgresPlugin(), {
-    host: 'localhost',
-    port: 5432,
-    database: 'myapp'
-  })
-  .usePlugin(new RedisPlugin(), {
-    host: 'localhost',
-    port: 6379
-  })
-  .build();
-
-// Start application
-await app.start();
-
-// Application is running
-console.log('Phase:', app.getLifecyclePhase()); // STARTED
-
-// Check health
-const health = await app.healthCheck();
-console.log('Health:', health.status);
-
-// Access services via DI container
-const database = app.resolve('database');
+console.log('Application started!');
 
 // Graceful shutdown
-process.on('SIGTERM', async () => {
+process.on('SIGINT', async () => {
   await app.stop();
   process.exit(0);
 });
 ```
 
+## Related Packages
+
+**Essential:**
+- [`@stratix/core`](https://www.npmjs.com/package/@stratix/core) - Core primitives and abstractions
+- [`@stratix/cli`](https://www.npmjs.com/package/@stratix/cli) - Code generation and scaffolding
+
+**Plugins:**
+- [`@stratix/db-postgres`](https://www.npmjs.com/package/@stratix/db-postgres) - PostgreSQL integration
+- [`@stratix/http-fastify`](https://www.npmjs.com/package/@stratix/http-fastify) - Fastify HTTP server
+- [`@stratix/di-awilix`](https://www.npmjs.com/package/@stratix/di-awilix) - Dependency injection
+
+[View all plugins](https://stratix-dev.github.io/stratix/docs/plugins/official-plugins)
+
+## Documentation
+
+- [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Core Concepts](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+- [Plugin Architecture](https://stratix-dev.github.io/stratix/docs/plugins/plugin-architecture)
+- [Complete Documentation](https://stratix-dev.github.io/stratix/)
+
+## Support
+
+- [GitHub Issues](https://github.com/stratix-dev/stratix/issues) - Report bugs and request features
+- [Documentation](https://stratix-dev.github.io/stratix/) - Comprehensive guides and tutorials
+
 ## License
 
-MIT
+MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) for details.
+
+-
+
+<div align="center">
+
+**[Stratix Framework](https://stratix-dev.github.io/stratix/)** - Build better software with proven patterns
+
+</div>

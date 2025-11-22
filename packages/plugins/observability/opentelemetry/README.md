@@ -1,99 +1,86 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
+
 # @stratix/obs-opentelemetry
 
-OpenTelemetry extension for Stratix framework providing distributed tracing and metrics.
+**OpenTelemetry observability integration for Stratix applications**
+
+[![npm version](https://img.shields.io/npm/v/@stratix/obs-opentelemetry.svg)](https://www.npmjs.com/package/@stratix/obs-opentelemetry)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+[Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+</div>
+
+-
+
+> Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
+>
+> **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+-
+
+## About This Package
+
+`@stratix/obs-opentelemetry` is a observability plugin for the Stratix framework.
+
+OpenTelemetry observability integration for Stratix applications
+
+## About Stratix
+
+Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexagonal Architecture, and CQRS. It provides production-ready patterns for building scalable, maintainable applications with AI agents as first-class citizens.
+
+**Key Resources:**
+- [Documentation](https://stratix-dev.github.io/stratix/)
+- [Quick Start](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Report Issues](https://github.com/stratix-dev/stratix/issues)
 
 ## Installation
 
+**Prerequisites:**
+- Node.js 18.0.0 or higher
+- `@stratix/core` and `@stratix/runtime` installed
+- Basic understanding of [Stratix architecture](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+
+**Recommended:** Use the Stratix CLI
 ```bash
-pnpm add @stratix/obs-opentelemetry
+stratix add opentelemetry
 ```
 
-## Features
-
-- Distributed tracing with OTLP export
-- Metrics collection and export
-- Auto-instrumentation for common Node.js libraries
-- Custom service naming and environment tagging
-- Periodic metric export
-- Health checks
-- Resource attributes for service identification
-
-## Configuration
-
-```typescript
-interface OpenTelemetryConfig {
-  serviceName: string;              // Required: Service name for telemetry
-  traceEndpoint?: string;           // Default: 'http://localhost:4318/v1/traces'
-  metricsEndpoint?: string;         // Default: 'http://localhost:4318/v1/metrics'
-  autoInstrumentation?: boolean;    // Default: true
-  metricInterval?: number;          // Default: 60000 (60s)
-  environment?: string;             // Optional: Environment name
-}
+**Manual installation:**
+```bash
+npm install @stratix/obs-opentelemetry
 ```
 
-## Quick Example
+## Related Packages
 
-```typescript
-import { ApplicationBuilder } from '@stratix/runtime';
-import { OpenTelemetryPlugin } from '@stratix/obs-opentelemetry';
+**Essential:**
+- [`@stratix/core`](https://www.npmjs.com/package/@stratix/core) - Core primitives and abstractions
+- [`@stratix/runtime`](https://www.npmjs.com/package/@stratix/runtime) - Application runtime and plugin system
+- [`@stratix/cli`](https://www.npmjs.com/package/@stratix/cli) - Code generation and scaffolding
 
-const app = await ApplicationBuilder.create()
-  .usePlugin(new OpenTelemetryPlugin(), {
-    serviceName: 'my-service',
-    environment: 'production',
-    traceEndpoint: 'http://localhost:4318/v1/traces',
-    metricsEndpoint: 'http://localhost:4318/v1/metrics',
-    autoInstrumentation: true,
-    metricInterval: 60000
-  })
-  .build();
+[View all plugins](https://stratix-dev.github.io/stratix/docs/plugins/official-plugins)
 
-await app.start();
+## Documentation
 
-// OpenTelemetry SDK will automatically instrument your application
-// Traces and metrics will be exported to the configured endpoints
+- [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Core Concepts](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+- [Plugin Architecture](https://stratix-dev.github.io/stratix/docs/plugins/plugin-architecture)
+- [Complete Documentation](https://stratix-dev.github.io/stratix/)
 
-// Access the SDK for custom instrumentation
-const sdk = app.resolve('opentelemetry:sdk');
-```
+## Support
 
-## Auto-Instrumentation
-
-When `autoInstrumentation` is enabled (default), the plugin automatically instruments:
-
-- HTTP/HTTPS (incoming and outgoing requests)
-- Express.js
-- Fastify
-- PostgreSQL (via `pg`)
-- MongoDB
-- Redis
-- MySQL
-- And many more Node.js libraries
-
-## Exports
-
-- `OpenTelemetryPlugin` - Main plugin class
-- `OpenTelemetryConfig` - Configuration interface
-
-## Services Registered
-
-The plugin registers the following services in the DI container:
-
-- `opentelemetry:sdk` - OpenTelemetry NodeSDK instance
-
-## Integration with Collectors
-
-This plugin exports traces and metrics in OTLP format over HTTP. You can configure it to work with:
-
-- OpenTelemetry Collector
-- Jaeger (with OTLP receiver)
-- Prometheus (with OTLP receiver)
-- Grafana Tempo
-- Honeycomb
-- New Relic
-- Datadog
-- And other OTLP-compatible backends
+- [GitHub Issues](https://github.com/stratix-dev/stratix/issues) - Report bugs and request features
+- [Documentation](https://stratix-dev.github.io/stratix/) - Comprehensive guides and tutorials
 
 ## License
 
-MIT
+MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) for details.
+
+-
+
+<div align="center">
+
+**[Stratix Framework](https://stratix-dev.github.io/stratix/)** - Build better software with proven patterns
+
+</div>

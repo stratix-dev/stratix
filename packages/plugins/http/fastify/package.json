@@ -39,6 +39,7 @@
     "url": "https://github.com/stratix-dev/stratix.git",
     "directory": "packages/plugins/http/fastify"
   },
+  "homepage": "https://stratix-dev.github.io/stratix/",
   "dependencies": {
     "@stratix/runtime": "workspace:*",
     "fastify": "^5.2.0",

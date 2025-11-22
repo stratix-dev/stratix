@@ -3,8 +3,15 @@
 import { readFileSync, writeFileSync, readdirSync, statSync } from 'fs';
 import { resolve, join } from 'path';
 
-// Get version from command line argument, default to 0.4.0
-const NEW_VERSION = process.argv[2] || '0.4.1';
+// Get version from command line argument
+const NEW_VERSION = process.argv[2];
+
+if (!NEW_VERSION) {
+  console.error('Error: Version argument required');
+  console.error('Usage: node scripts/bump-versions.mjs <version>');
+  console.error('Example: node scripts/bump-versions.mjs 0.4.1');
+  process.exit(1);
+}
 
 // Packages to exclude from version updates
 const EXCLUDED_PACKAGES = [
@@ -67,6 +74,26 @@ for (const file of packageFiles) {
   } catch (error) {
     console.error(`✗ Failed to update ${file}:`, error.message);
   }
+}
+
+// Update version badge in main README.md
+try {
+  const readmePath = resolve(process.cwd(), 'README.md');
+  let readmeContent = readFileSync(readmePath, 'utf8');
+
+  // Update version badge
+  const versionBadgeRegex = /\[!\[Version\]\(https:\/\/img\.shields\.io\/badge\/version-[\d.]+-(orange|blue)\.svg\)\]/;
+  const newVersionBadge = `[![Version](https://img.shields.io/badge/version-${NEW_VERSION}-orange.svg)]`;
+
+  if (versionBadgeRegex.test(readmeContent)) {
+    readmeContent = readmeContent.replace(versionBadgeRegex, newVersionBadge);
+    writeFileSync(readmePath, readmeContent, 'utf8');
+    console.log(`\n✓ Updated version badge in README.md to ${NEW_VERSION}`);
+  } else {
+    console.log(`\n⚠ Version badge not found in README.md`);
+  }
+} catch (error) {
+  console.error(`\n✗ Failed to update README.md:`, error.message);
 }
 
 console.log(`\nSummary:`);

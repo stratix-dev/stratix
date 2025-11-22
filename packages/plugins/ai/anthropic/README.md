@@ -1,151 +1,86 @@
+<div align="center">
+  <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
+
 # @stratix/ai-anthropic
 
-Anthropic Claude LLM provider for Stratix AI agents.
+**Anthropic Claude LLM provider for Stratix AI agents**
+
+[![npm version](https://img.shields.io/npm/v/@stratix/ai-anthropic.svg)](https://www.npmjs.com/package/@stratix/ai-anthropic)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+[Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+</div>
+
+-
+
+> Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
+>
+> **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+
+-
+
+## About This Package
+
+`@stratix/ai-anthropic` is a AI provider plugin for the Stratix framework.
+
+Anthropic Claude LLM provider for Stratix AI agents
+
+## About Stratix
+
+Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexagonal Architecture, and CQRS. It provides production-ready patterns for building scalable, maintainable applications with AI agents as first-class citizens.
+
+**Key Resources:**
+- [Documentation](https://stratix-dev.github.io/stratix/)
+- [Quick Start](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Report Issues](https://github.com/stratix-dev/stratix/issues)
 
 ## Installation
 
+**Prerequisites:**
+- Node.js 18.0.0 or higher
+- `@stratix/core` and `@stratix/runtime` installed
+- Basic understanding of [Stratix architecture](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+
+**Recommended:** Use the Stratix CLI
 ```bash
-pnpm add @stratix/ai-anthropic
+stratix add anthropic
 ```
 
-## Features
-
-- Support for Claude 3 Opus, Sonnet, Haiku, and Claude 3.5 Sonnet
-- Tool use (function calling) support
-- Streaming responses
-- Automatic cost calculation based on token usage
-- System message support
-- Proper message role handling (system messages separated from conversation)
-
-## Supported Models
-
-- `claude-3-5-sonnet-20241022` - Latest Claude 3.5 Sonnet (most capable)
-- `claude-3-opus-20240229` - Claude 3 Opus (highest intelligence)
-- `claude-3-sonnet-20240229` - Claude 3 Sonnet (balanced performance)
-- `claude-3-haiku-20240307` - Claude 3 Haiku (fastest and most cost-effective)
-
-## Quick Example
-
-```typescript
-import { AnthropicProvider } from '@stratix/ai-anthropic';
-
-const provider = new AnthropicProvider({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
-  baseURL: 'https://api.anthropic.com',  // Optional
-});
-
-// Chat completion
-const response = await provider.chat({
-  model: 'claude-3-5-sonnet-20241022',
-  messages: [
-    { role: 'system', content: 'You are a helpful assistant.', timestamp: new Date() },
-    { role: 'user', content: 'Hello!', timestamp: new Date() }
-  ],
-  temperature: 0.7,
-  maxTokens: 1024
-});
-
-console.log(response.content);
-console.log('Cost:', provider.calculateCost('claude-3-5-sonnet-20241022', response.usage));
-
-// Streaming chat
-for await (const chunk of provider.streamChat({
-  model: 'claude-3-5-sonnet-20241022',
-  messages: [
-    { role: 'user', content: 'Tell me a story', timestamp: new Date() }
-  ]
-})) {
-  process.stdout.write(chunk.content);
-  if (chunk.isComplete) {
-    console.log('\nStream completed');
-  }
-}
+**Manual installation:**
+```bash
+npm install @stratix/ai-anthropic
 ```
 
-## Tool Use (Function Calling)
+## Related Packages
 
-```typescript
-const response = await provider.chat({
-  model: 'claude-3-5-sonnet-20241022',
-  messages: [
-    { role: 'user', content: 'What is the weather in NYC?', timestamp: new Date() }
-  ],
-  tools: [
-    {
-      name: 'get_weather',
-      description: 'Get the current weather in a location',
-      parameters: {
-        type: 'object',
-        properties: {
-          location: { type: 'string', description: 'The city name' }
-        },
-        required: ['location']
-      }
-    }
-  ]
-});
+**Essential:**
+- [`@stratix/core`](https://www.npmjs.com/package/@stratix/core) - Core primitives and abstractions
+- [`@stratix/runtime`](https://www.npmjs.com/package/@stratix/runtime) - Application runtime and plugin system
+- [`@stratix/cli`](https://www.npmjs.com/package/@stratix/cli) - Code generation and scaffolding
 
-if (response.toolCalls) {
-  console.log('Tool call:', response.toolCalls[0].name);
-  console.log('Arguments:', response.toolCalls[0].arguments);
-}
-```
+[View all plugins](https://stratix-dev.github.io/stratix/docs/plugins/official-plugins)
 
-## System Messages
+## Documentation
 
-The provider automatically handles system messages correctly:
+- [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
+- [Core Concepts](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
+- [Plugin Architecture](https://stratix-dev.github.io/stratix/docs/plugins/plugin-architecture)
+- [Complete Documentation](https://stratix-dev.github.io/stratix/)
 
-```typescript
-const response = await provider.chat({
-  model: 'claude-3-5-sonnet-20241022',
-  messages: [
-    { role: 'system', content: 'You are an expert in TypeScript.', timestamp: new Date() },
-    { role: 'system', content: 'Always provide code examples.', timestamp: new Date() },
-    { role: 'user', content: 'How do I create a class?', timestamp: new Date() }
-  ]
-});
+## Support
 
-// System messages are automatically combined and sent as the system parameter
-```
-
-## Configuration
-
-```typescript
-interface AnthropicProviderConfig {
-  apiKey: string;        // Required: Anthropic API key
-  baseURL?: string;      // Optional: Custom API base URL
-}
-```
-
-## Cost Calculation
-
-The provider automatically tracks token usage and can calculate costs:
-
-```typescript
-const response = await provider.chat({...});
-
-const cost = provider.calculateCost('claude-3-5-sonnet-20241022', response.usage);
-console.log(`Cost: $${cost.toFixed(4)}`);
-```
-
-Pricing is based on 2025 rates and included in the provider.
-
-## Embeddings
-
-Note: Anthropic does not provide embedding models. The `embeddings()` method will throw an error. Use OpenAI or another provider for embeddings:
-
-```typescript
-try {
-  await provider.embeddings({...});
-} catch (error) {
-  console.error('Anthropic does not support embeddings');
-}
-```
-
-## Exports
-
-- `AnthropicProvider` - Main provider class implementing `LLMProvider` interface
+- [GitHub Issues](https://github.com/stratix-dev/stratix/issues) - Report bugs and request features
+- [Documentation](https://stratix-dev.github.io/stratix/) - Comprehensive guides and tutorials
 
 ## License
 
-MIT
+MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) for details.
+
+-
+
+<div align="center">
+
+**[Stratix Framework](https://stratix-dev.github.io/stratix/)** - Build better software with proven patterns
+
+</div>
