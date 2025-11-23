@@ -2,7 +2,7 @@
   "name": "stratix-copilot-rag",
   "displayName": "Stratix Copilot",
   "description": "AI-powered coding assistant for Stratix framework with intelligent code generation",
-  "version": "0.4.2",
+  "version": "0.6.1",
   "publisher": "stratix",
   "icon": "icon.png",
   "engines": {
@@ -93,26 +93,30 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile && npm run build:knowledge",
-    "compile": "tsc -p ./ && npm run copy:json",
+    "vscode:prepublish": "npm run package",
+    "compile": "node build.mjs",
+    "watch": "node build.mjs --watch",
+    "package": "node build.mjs --production",
+    "check-types": "tsc --noEmit",
     "copy:json": "mkdir -p dist/rag && cp src/rag/initial-knowledge.json dist/rag/ 2>/dev/null || true",
-    "watch": "tsc -watch -p ./",
     "build:knowledge": "tsx knowledge-base/build-knowledge.ts",
     "test": "vitest",
-    "package": "vsce package"
+    "vsce:package": "vsce package"
   },
   "extensionDependencies": [
     "github.copilot-chat"
   ],
   "dependencies": {
-    "@xenova/transformers": "^2.17.0",
-    "chromadb": "^1.8.1",
+    "@tensorflow-models/universal-sentence-encoder": "^1.3.3",
+    "@tensorflow/tfjs": "^3.21.0",
     "gray-matter": "^4.0.3"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
     "@types/vscode": "^1.85.0",
     "@vscode/vsce": "^3.7.0",
+    "esbuild": "^0.19.0",
+    "npm-run-all": "^4.1.5",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3",
     "vitest": "^1.2.0"

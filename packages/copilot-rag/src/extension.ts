@@ -55,7 +55,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     outputChannel.appendLine('✅ Chat participant created');
 
-    chatParticipant.iconPath = vscode.Uri.joinPath(context.extensionUri, 'media', 'icon.png');
+    chatParticipant.iconPath = vscode.Uri.joinPath(context.extensionUri, 'dist', 'media', 'icon.png');
 
     context.subscriptions.push(chatParticipant);
     outputChannel.appendLine('✅ Chat participant registered');
