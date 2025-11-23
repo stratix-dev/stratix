@@ -8,7 +8,8 @@ vsc-extension-quickstart.md
 **/.eslintrc.json
 **/*.map
 **/*.ts
-!dist/**/*.js
 node_modules/**
-knowledge-base/**/*.ts
-!knowledge-base/stratix-knowledge.db
+knowledge-base/**
+esbuild.js
+package-lock.json
+!dist/**

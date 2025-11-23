@@ -1,7 +1,8 @@
-import { pipeline } from '@xenova/transformers';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import * as fs from 'fs/promises';
+import * as use from '@tensorflow-models/universal-sentence-encoder';
+import '@tensorflow/tfjs';
 
 export interface Document {
   id: string;
@@ -40,7 +41,7 @@ export interface KnowledgeBaseMetadata {
 
 export class StratixKnowledgeBase {
   private documents: DocumentWithEmbedding[] = [];
-  private embedder: any = null;
+  private model: use.UniversalSentenceEncoder | null = null;
   private initialized = false;
   private metadata: KnowledgeBaseMetadata | null = null;
   private storagePath: string;
@@ -57,14 +58,11 @@ export class StratixKnowledgeBase {
 
     try {
       console.log('Initializing Stratix Knowledge Base...');
+      console.log('Loading Universal Sentence Encoder (TensorFlow.js)...');
 
-      // Initialize embedding model
-      console.log('Loading embedding model (Xenova/all-MiniLM-L6-v2)...');
-      this.embedder = await pipeline(
-        'feature-extraction',
-        'Xenova/all-MiniLM-L6-v2'
-      );
-      console.log('✅ Embedding model loaded');
+      // Load the Universal Sentence Encoder model
+      this.model = await use.load();
+      console.log('✅ Model loaded');
 
       // Try to load from storage
       const loaded = await this.loadFromStorage();
@@ -85,12 +83,12 @@ export class StratixKnowledgeBase {
   }
 
   async search(query: string, topK: number = 5): Promise<SearchResult> {
-    if (!this.initialized || !this.embedder) {
+    if (!this.initialized || !this.model) {
       throw new Error('Knowledge base not initialized');
     }
 
     try {
-      // Generate embedding for query
+      // Generate embedding for query using TensorFlow.js
       const queryEmbedding = await this.generateEmbedding(query);
 
       // Calculate cosine similarity with all documents
@@ -150,16 +148,18 @@ export class StratixKnowledgeBase {
 
 
   private async generateEmbedding(text: string): Promise<number[]> {
-    if (!this.embedder) {
-      throw new Error('Embedder not initialized');
+    if (!this.model) {
+      throw new Error('Model not initialized');
     }
 
-    const output = await this.embedder(text, {
-      pooling: 'mean',
-      normalize: true
-    });
+    // TensorFlow.js Universal Sentence Encoder returns a 2D tensor
+    const embeddings = await this.model.embed([text]);
 
-    return Array.from(output.data as Float32Array);
+    // Convert tensor to array and get the first (and only) embedding
+    const embeddingArray = await embeddings.array();
+    embeddings.dispose(); // Clean up tensor memory
+
+    return embeddingArray[0];
   }
 
   private cosineSimilarity(a: number[], b: number[]): number {
@@ -209,10 +209,18 @@ export class StratixKnowledgeBase {
 
 
 
+
+
   private async loadInitialKnowledge(): Promise<void> {
     try {
       // Try to load from generated knowledge base file
-      const knowledgeFilePath = path.join(__dirname, 'initial-knowledge.json');
+      // After bundling, the file is at dist/rag/initial-knowledge.json relative to extension root
+      const knowledgeFilePath = path.join(
+        this.context.extensionPath,
+        'dist',
+        'rag',
+        'initial-knowledge.json'
+      );
 
       try {
         const data = await fs.readFile(knowledgeFilePath, 'utf-8');
