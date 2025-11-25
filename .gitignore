@@ -37,7 +37,7 @@ coverage/
 *.tmp
 
 # Dev tools
-dev-tools/verdaccio/storage/
+tools/verdaccio/storage/
 
 # AI
 .ai

@@ -20,7 +20,7 @@ Verdaccio configurado como registry privado para paquetes `@stratix/*` y proxy d
 ### 1. Start Verdaccio
 
 ```bash
-cd dev-tools/verdaccio
+cd tools/verdaccio
 docker-compose up -d
 ```
 
@@ -37,10 +37,11 @@ pnpm build
 ### 3. Publish All Packages
 
 ```bash
-./dev-tools/verdaccio/scripts/publish-all.sh
+./tools/verdaccio/scripts/publish-all.sh
 ```
 
 This script:
+
 - Verifies that Verdaccio is running
 - Configures npm to use the local registry
 - Publishes all packages in dependency order
@@ -86,11 +87,11 @@ packages:
 
   '@*/*':
     access: $all
-    proxy: npmjs  # ← Proxy a npm público
+    proxy: npmjs # ← Proxy a npm público
 
   '**':
     access: $all
-    proxy: npmjs  # ← Proxy a npm público
+    proxy: npmjs # ← Proxy a npm público
 ```
 
 ### Flujo de instalación:
@@ -123,7 +124,7 @@ packages:
 
 ```bash
 # Opción 1: Usar script
-./dev-tools/verdaccio/scripts/use-local-registry.sh
+./tools/verdaccio/scripts/use-local-registry.sh
 
 # Opción 2: Manual
 npm config set registry http://localhost:4873/
@@ -138,10 +139,10 @@ When you make changes to the packages:
 pnpm build
 
 # 2. Limpiar paquetes @stratix del storage
-rm -rf dev-tools/verdaccio/storage/@stratix
+rm -rf tools/verdaccio/storage/@stratix
 
 # 3. Publish again
-./dev-tools/verdaccio/scripts/publish-all.sh
+./tools/verdaccio/scripts/publish-all.sh
 ```
 
 This way you don't need to constantly change versions in package.json during development.
@@ -150,7 +151,7 @@ This way you don't need to constantly change versions in package.json during dev
 
 ```bash
 # Opción 1: Usar script
-./dev-tools/verdaccio/scripts/use-public-registry.sh
+./tools/verdaccio/scripts/use-public-registry.sh
 
 # Opción 2: Manual
 npm config set registry https://registry.npmjs.org/
@@ -164,7 +165,7 @@ If you need to start from scratch:
 docker-compose down
 rm -rf storage
 docker-compose up -d
-./dev-tools/verdaccio/scripts/publish-all.sh
+./tools/verdaccio/scripts/publish-all.sh
 ```
 
 This completely removes the storage and restarts Verdaccio clean.
@@ -176,11 +177,13 @@ This completely removes the storage and restarts Verdaccio clean.
 Publishes all Stratix packages to Verdaccio in the correct dependency order.
 
 **Usage:**
+
 ```bash
-./dev-tools/verdaccio/scripts/publish-all.sh
+./tools/verdaccio/scripts/publish-all.sh
 ```
 
 **What it does:**
+
 - Verifies that Verdaccio is running
 - Builds packages if they are not built
 - Configures npm to use the local registry
@@ -191,11 +194,13 @@ Publishes all Stratix packages to Verdaccio in the correct dependency order.
 Unpublishes all Stratix packages from Verdaccio.
 
 **Usage:**
+
 ```bash
-./dev-tools/verdaccio/scripts/unpublish-all.sh
+./tools/verdaccio/scripts/unpublish-all.sh
 ```
 
 **What it does:**
+
 - Reads the version of each package from package.json
 - Unpublishes each version from the local registry
 - Allows republishing without version conflicts
@@ -205,11 +210,13 @@ Unpublishes all Stratix packages from Verdaccio.
 Completely resets Verdaccio by removing all storage.
 
 **Usage:**
+
 ```bash
-./dev-tools/verdaccio/scripts/reset.sh
+./tools/verdaccio/scripts/reset.sh
 ```
 
 **What it does:**
+
 - Stops the Docker container
 - Removes the storage/ folder
 - Restarts Verdaccio clean
@@ -277,6 +284,7 @@ docker-compose down
 ### Cannot publish
 
 Verify that:
+
 1. Verdaccio is running: `curl http://localhost:4873/`
 2. Packages are built: `ls packages/*/dist`
 3. npm is configured to use Verdaccio: `npm config get registry`
@@ -301,11 +309,11 @@ You can use Verdaccio in CI pipelines to test package installation before publis
 # Example GitHub Actions
 - name: Start Verdaccio
   run: |
-    cd dev-tools/verdaccio
+    cd tools/verdaccio
     docker-compose up -d
 
 - name: Publish to Verdaccio
-  run: ./dev-tools/verdaccio/scripts/publish-all.sh
+  run: ./tools/verdaccio/scripts/publish-all.sh
 
 - name: Test Installation
   run: |
