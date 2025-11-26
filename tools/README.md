@@ -11,9 +11,10 @@ Private npm registry for testing packages locally without publishing to the publ
 **Location:** `verdaccio/`
 
 **Quick usage:**
+
 ```bash
 # Start Verdaccio
-cd dev-tools/verdaccio
+cd tools/verdaccio
 docker-compose up -d
 
 # Publish all packages
@@ -29,7 +30,7 @@ See [verdaccio/README.md](./verdaccio/README.md) for complete documentation.
 
 If you create new development tools:
 
-1. Create a folder with a descriptive name in `dev-tools/`
+1. Create a folder with a descriptive name in `tools/`
 2. Include a README.md with clear instructions
 3. Document necessary scripts and configurations
 4. Update this README with the new tool

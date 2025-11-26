@@ -7,17 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.3] - 2025-11-25
+
+### Removed
+
+#### VS Code Extension
+
+- **Stratix Copilot Extraction**: Extracted `packages/copilot-rag` to standalone repository
+  - Removed all copilot-rag package files and dependencies
+  - Extension now maintained in separate repository for better isolation
+  - Documentation references remain in main repository
+  - Reduces main repository size and complexity
+
+### Changed
+
+#### Development Tools
+
+- **Directory Reorganization**: Renamed `dev-tools/` to `tools/`
+  - Updated all references and scripts
+  - Improved naming consistency
+  - Affects: Verdaccio configuration and scripts
+
+#### Version Management
+
+- **Version Bump**: Updated all package versions to 0.4.3
+  - Applied to all 18 npm packages (core, runtime, testing, cli, and all plugins)
+  - Updated version badge in main README.md
+
 ## [0.4.2] - 2025-11-22
 
 ### Changed
 
 #### Documentation
+
 - **CLI Command Correction**: Fixed all examples using incorrect `--template` flag
   - Changed from `stratix new my-app --template modular` to `stratix new my-app --structure modular`
   - Updated in all documentation files and READMEs
   - Affects: Main README.md, CLI documentation
 
 ### Fixed
+
 - Corrected CLI examples in documentation to use `--structure` instead of `--template`
 
 ## [0.4.1] - 2025-11-22
@@ -25,6 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 #### VS Code Extension
+
 - **Stratix Copilot**: Published to VS Code Marketplace
   - Extension ID: `stratix.stratix-copilot-rag`
   - Marketplace URL: https://marketplace.visualstudio.com/items?itemName=stratix.stratix-copilot-rag
@@ -36,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 #### Package Metadata
+
 - **Homepage URLs**: Updated all package.json files to use documentation site as homepage
   - Changed from `https://github.com/stratix-dev/stratix#readme` to `https://stratix-dev.github.io/stratix/`
   - Applied to all 18 npm packages (core, runtime, testing, cli, and all plugins)
@@ -56,6 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Better npm marketplace presence and user onboarding
 
 #### Documentation
+
 - **Marketplace Links**: Added VS Code Marketplace links throughout documentation
   - Updated `README.md` with npm package links and VS Code extension link
   - Added marketplace links to Docusaurus documentation:
@@ -67,17 +99,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `docs/website/docs/cli/cli-overview.md`
 
 #### CI/CD
+
 - **Knowledge Base Workflow**: Fixed `tsx` dependency installation
   - Added step to install copilot-rag dependencies before building knowledge base
   - Resolves `tsx: not found` error in GitHub Actions
 
 #### VS Code Extension
+
 - **Package Metadata**: Updated extension configuration
   - Added icon (Stratix logo, 128x128px)
   - Updated repository URLs to `stratix-dev` organization
   - Version bumped to 0.1.2
 
 #### Development Tools
+
 - **Version Bump Script**: Enhanced `scripts/bump-versions.mjs`
   - Now requires version argument (no default value)
   - Automatically updates version badge in main README.md
@@ -89,6 +124,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 #### Documentation
+
 - **Repository Migration**: Moved repository from `github.com/pcarvajal/stratix` to `github.com/stratix-dev/stratix`
 - **Documentation Site**: Updated GitHub Pages URL from `pcarvajal.github.io/stratix` to `stratix-dev.github.io/stratix`
 - **Package URLs**: Updated all package.json repository URLs to new organization
@@ -96,6 +132,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Issue Templates**: Updated all GitHub links to new repository location
 
 #### Docusaurus Theme
+
 - **Light Theme**: Updated color palette to match official Stratix logo
   - Primary: #2958FC (Stratix Blue)
   - Secondary: #2895FD (Sky Blue)
@@ -110,6 +147,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Default Mode**: Changed to light mode with system preference respect
 
 #### Stratix Copilot Documentation
+
 - **Removed**: References to "Action Buttons" feature (eliminated from extension)
 - **Removed**: "One-Click File Creation" mentions
 - **Updated**: Workflow documentation to reflect manual copy/paste process
@@ -122,6 +160,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `packages/copilot-rag/README.md`
 
 #### Content Cleanup
+
 - **Removed Emojis**: Cleaned all emojis from documentation and README files
 - **Files Cleaned**:
   - All Docusaurus documentation files
@@ -131,6 +170,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 #### npm Package Management Scripts
+
 - **`scripts/unpublish-old-packages.sh`**: Deprecate old packages on npm
 - **`scripts/delete-old-packages.sh`**: Permanently delete deprecated packages with safety features
   - Dry-run mode by default
@@ -141,6 +181,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`scripts/README-npm-cleanup.md`**: Complete documentation for package cleanup process
 
 #### GitHub Actions
+
 - **Enhanced Publish Workflow**: Updated to handle new nested plugin structure
   - Dependency-ordered publishing (Core → Runtime → Plugins → Tools)
   - Verification step for all package types
@@ -148,17 +189,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Skip already-published versions
 
 #### Development Tools
+
 - **Version Bump Script**: Now accepts version as command-line argument
   - Usage: `node scripts/bump-versions.mjs 0.4.0`
   - Previously hardcoded version
 
 ### Fixed
+
 - **CHANGELOG.md**: Updated version comparison links to use new repository URL
 - **GitHub Issue Templates**: Updated discussion and documentation URLs
 
 ## [0.3.0] - 2025-11-21
 
 ### Breaking Changes
+
 - Consolidated package structure: merged `@stratix/primitives` and `@stratix/abstractions` into `@stratix/core`
 - Moved default implementations (InMemoryCommandBus, InMemoryQueryBus, InMemoryEventBus, ConsoleLogger) into `@stratix/core`
 - Reorganized packages into domain-based folders: `plugins/` with subfolders (ai, database, di, http, messaging, observability, utilities)
@@ -177,6 +221,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed version comments in classes for simplicity
 
 ### Added
+
 - **@stratix/core**: Now includes domain primitives, abstractions, and default implementations in a single zero-dependency package
 - **@stratix/db-mongodb**:
   - Pagination support with cursor and offset-based methods
@@ -216,6 +261,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Lint support across all packages
 
 ### Changed
+
 - Simplified dependency graph: `Plugins → Runtime → Core`
 - All packages now depend only on `@stratix/core` (except runtime which core depends on)
 - Updated documentation to reflect new package names and structure
@@ -224,6 +270,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced project scaffolding to support both DDD and modular architectures
 
 ### Fixed
+
 - Build process for all packages
 - Lint and test errors after package reorganization
 - CLI generator templates for new package structure
@@ -231,12 +278,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Type checking issues
 
 ### Removed
+
 - Redundant package name prefixes in old structure
 - `@stratix/primitives` (merged into core)
 - `@stratix/abstractions` (merged into core)
 - Separate implementation packages for default buses (now in core)
 
 ### Documentation
+
 - Updated API reference documentation
 - Added comprehensive DI documentation with benchmarks
 - Updated MongoDB README with new features
@@ -245,6 +294,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.3] - 2025-11-18
 
 ### Added
+
 - **@stratix/cli**: Complete code generation CLI tool with 8 generators
   - `stratix new` - Project scaffolding with DDD/Modular structures
   - `stratix generate context` - Generate complete bounded contexts (16 files: entity, repository, commands, queries, handlers, plugin)
@@ -266,26 +316,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Package manager detection (npm, pnpm, yarn)
 
 ### Changed
+
 - Replaced `create-stratix` with `@stratix/cli` for better developer experience
 - Updated documentation to reflect new CLI tool and commands
 
 ### Removed
+
 - `create-stratix` package (replaced by `@stratix/cli`)
 
 ## [0.1.2] - 2025-11-15
 
 ### Added
+
 - Versioning policy documentation
 - Pre-release status badges and notices
 
 ## [0.1.1] - 2025-11-11
 
 ### Fixed
+
 - Documentation updates and synchronization
 
 ## [0.1.0] - 2025-11-11
 
 ### Added
+
 - Initial public release
 - Core primitives: Entity, AggregateRoot, ValueObject, Result pattern
 - AI Agent base classes and orchestrator
@@ -301,12 +356,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 11 built-in value objects: Money, Email, UUID, and more
 
 ### Notes
+
 - This is a pre-release version (0.x)
 - API is subject to change without prior notice
 - Recommended for early adopters and testing only
 - See [Versioning Policy](./docs/website/docs/getting-started/versioning.md) for details
 
-[Unreleased]: https://github.com/stratix-dev/stratix/compare/v0.4.2...HEAD
+[Unreleased]: https://github.com/stratix-dev/stratix/compare/v0.4.3...HEAD
+[0.4.3]: https://github.com/stratix-dev/stratix/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/stratix-dev/stratix/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/stratix-dev/stratix/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/stratix-dev/stratix/compare/v0.3.0...v0.4.0

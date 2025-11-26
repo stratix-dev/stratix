@@ -12,7 +12,7 @@ echo -e "${BLUE}Despublicando todos los paquetes de Stratix de Verdaccio local..
 # Verificar que Verdaccio este corriendo
 if ! curl -s http://localhost:4873/ > /dev/null; then
     echo -e "${RED}Error: Verdaccio no esta corriendo en http://localhost:4873/${NC}"
-    echo -e "${BLUE}Ejecuta: cd dev-tools/verdaccio && docker-compose up -d${NC}"
+    echo -e "${BLUE}Ejecuta: cd tools/verdaccio && docker-compose up -d${NC}"
     exit 1
 fi
 
@@ -60,4 +60,4 @@ done
 
 echo ""
 echo -e "${GREEN}Todos los paquetes han sido despublicados!${NC}"
-echo -e "${BLUE}Ahora puedes publicar nuevamente con: ./dev-tools/verdaccio/scripts/publish-all.sh${NC}"
+echo -e "${BLUE}Ahora puedes publicar nuevamente con: ./tools/verdaccio/scripts/publish-all.sh${NC}"

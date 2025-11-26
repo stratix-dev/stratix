@@ -14,9 +14,7 @@ if (!NEW_VERSION) {
 }
 
 // Packages to exclude from version updates
-const EXCLUDED_PACKAGES = [
-  '@stratix/copilot-rag', // VSCode extension, has independent versioning
-];
+const EXCLUDED_PACKAGES = [];
 
 // Find all package.json files in packages directory (excluding templates and node_modules)
 // Recursively searches through subdirectories (e.g., plugins, integrations)
