@@ -16,6 +16,7 @@ import * as awilix from 'awilix';
  * const container = new AwilixContainer();
  *
  * // Register a singleton service
+ * import { ConsoleLogger } from '@stratix/runtime';
  * container.register('logger', () => new ConsoleLogger(), {
  *   lifetime: ServiceLifetime.SINGLETON
  * });

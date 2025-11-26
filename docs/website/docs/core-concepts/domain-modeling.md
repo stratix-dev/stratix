@@ -92,16 +92,16 @@ export class User extends Entity<'User'> {
   }
 }
 
-// Usage
-const userId = EntityId.create<'User'>();
-const user = new User(
-  userId,
-  'john@example.com',
-  'John Doe',
-  true,
-  new Date(),
-  new Date()
-);
+// Usage - with EntityBuilder for cleaner creation
+import { EntityBuilder } from '@stratix/core';
+
+const user = EntityBuilder.create<'User', UserProps>()
+  .withProps({
+    email: 'john@example.com',
+    name: 'John Doe',
+    isActive: true
+  })
+  .build(User);
 
 user.changeName('John Smith');
 console.log(user.Name); // "John Smith"
@@ -264,37 +264,27 @@ A **Value Object** is an immutable object defined by its attributes, not its ide
 ### Example
 
 ```typescript
-import { ValueObject, Result, Success, Failure } from '@stratix/core';
+import { ValueObject, ValueObjectFactory, Validators, Result } from '@stratix/core';
 
-interface EmailProps {
-  value: string;
-}
-
-export class Email extends ValueObject<EmailProps> {
-  private constructor(props: EmailProps) {
-    super(props);
+export class Email extends ValueObject {
+  constructor(readonly value: string) {
+    super();
   }
 
   static create(email: string): Result<Email> {
-    // Validation
-    if (!email || email.trim().length === 0) {
-      return Failure.create(new Error('Email cannot be empty'));
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return Failure.create(new Error('Invalid email format'));
-    }
-
-    return Success.create(new Email({ value: email.toLowerCase() }));
-  }
-
-  get value(): string {
-    return this.props.value;
+    // Use ValueObjectFactory with Validators for cleaner validation
+    return ValueObjectFactory.createString(email, Email, [
+      (v) => Validators.notEmpty(v, 'Email'),
+      (v) => Validators.email(v)
+    ]);
   }
 
   get domain(): string {
-    return this.props.value.split('@')[1];
+    return this.value.split('@')[1];
+  }
+
+  protected getEqualityComponents() {
+    return [this.value];
   }
 }
 
@@ -518,13 +508,23 @@ export class Money {
 ### 3. Validate in Constructors
 
 ```typescript
-// ✅ Good: Validation in factory method
-export class Email {
+// ✅ Good: Validation with ValueObjectFactory and Validators
+import { ValueObjectFactory, Validators } from '@stratix/core';
+
+export class Email extends ValueObject {
+  constructor(readonly value: string) {
+    super();
+  }
+
   static create(value: string): Result<Email> {
-    if (!this.isValid(value)) {
-      return Failure.create(new Error('Invalid email'));
-    }
-    return Success.create(new Email({ value }));
+    return ValueObjectFactory.createString(value, Email, [
+      (v) => Validators.notEmpty(v, 'Email'),
+      (v) => Validators.email(v)
+    ]);
+  }
+
+  protected getEqualityComponents() {
+    return [this.value];
   }
 }
 

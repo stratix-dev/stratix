@@ -67,31 +67,33 @@ export class CreateProductCommand implements Command {
 ### Command Handler
 
 ```typescript
-import { CommandHandler, Result, Success, Failure } from '@stratix/core';
+import { BaseCommandHandler, EntityBuilder, Result, Success, Failure } from '@stratix/core';
 
-export class CreateProductHandler 
-  implements CommandHandler<CreateProductCommand, Product> {
+export class CreateProductHandler extends BaseCommandHandler<CreateProductCommand, Product> {
   
   constructor(
     private productRepository: IProductRepository,
     private eventBus: EventBus
-  ) {}
+  ) {
+    super();
+  }
 
-  async handle(command: CreateProductCommand): Promise<Result<Product>> {
-    // Validation
+  protected validate(command: CreateProductCommand): Result<void> {
     if (command.price <= 0) {
       return Failure.create(new Error('Price must be positive'));
     }
+    return Success.create(undefined);
+  }
 
-    // Create entity
-    const product = new Product(
-      EntityId.create<'Product'>(),
-      command.name,
-      Money.USD(command.price),
-      command.stock,
-      new Date(),
-      new Date()
-    );
+  protected async execute(command: CreateProductCommand): Promise<Result<Product>> {
+    // Create entity using EntityBuilder
+    const product = EntityBuilder.create<'Product', ProductProps>()
+      .withProps({
+        name: command.name,
+        price: Money.USD(command.price),
+        stock: command.stock
+      })
+      .build(Product);
 
     // Persist
     await this.productRepository.save(product);
@@ -156,14 +158,20 @@ export class ListProductsQuery implements Query<Product[]> {
 ### Query Handler
 
 ```typescript
-import { QueryHandler, Result, Success, Failure } from '@stratix/core';
+import { BaseQueryHandler, Result, Success, Failure } from '@stratix/core';
 
-export class GetProductByIdHandler 
-  implements QueryHandler<GetProductByIdQuery, Product> {
+export class GetProductByIdHandler extends BaseQueryHandler<GetProductByIdQuery, Product> {
   
-  constructor(private productRepository: IProductRepository) {}
+  constructor(private productRepository: IProductRepository) {
+    super();
+  }
 
-  async handle(query: GetProductByIdQuery): Promise<Result<Product>> {
+  protected validate(query: GetProductByIdQuery): Result<void> {
+    // Optional: Add query validation if needed
+    return Success.create(undefined);
+  }
+
+  protected async execute(query: GetProductByIdQuery): Promise<Result<Product>> {
     const product = await this.productRepository.findById(query.productId);
 
     if (!product) {
@@ -174,12 +182,17 @@ export class GetProductByIdHandler
   }
 }
 
-export class ListProductsHandler 
-  implements QueryHandler<ListProductsQuery, Product[]> {
+export class ListProductsHandler extends BaseQueryHandler<ListProductsQuery, Product[]> {
   
-  constructor(private productRepository: IProductRepository) {}
+  constructor(private productRepository: IProductRepository) {
+    super();
+  }
 
-  async handle(query: ListProductsQuery): Promise<Result<Product[]>> {
+  protected validate(query: ListProductsQuery): Result<void> {
+    return Success.create(undefined);
+  }
+
+  protected async execute(query: ListProductsQuery): Promise<Result<Product[]>> {
     const products = await this.productRepository.findAll({
       page: query.page,
       limit: query.limit,
@@ -419,32 +432,30 @@ export class ListProductsHandler
 ### Command Validation
 
 ```typescript
-export class CreateProductHandler {
-  async handle(command: CreateProductCommand): Promise<Result<Product>> {
-    // Validate command
-    const validation = this.validate(command);
-    if (validation.isFailure) {
-      return validation;
-    }
+import { Validators, Results } from '@stratix/core';
 
-    // Process command
-    // ...
+export class CreateProductHandler extends BaseCommandHandler<CreateProductCommand, Product> {
+  protected validate(command: CreateProductCommand): Result<void> {
+    // Use Validators helper for cleaner validation
+    return Results.combine(
+      Validators.notEmpty(command.name, 'Product name'),
+      Validators.range(command.price, { min: 0.01, fieldName: 'Price' }),
+      Validators.range(command.stock, { min: 0, fieldName: 'Stock' })
+    ).map(() => undefined);
   }
 
-  private validate(command: CreateProductCommand): Result<void> {
-    if (!command.name || command.name.trim().length === 0) {
-      return Failure.create(new Error('Name is required'));
-    }
+  protected async execute(command: CreateProductCommand): Promise<Result<Product>> {
+    // Create entity using EntityBuilder
+    const product = EntityBuilder.create<'Product', ProductProps>()
+      .withProps({
+        name: command.name,
+        price: Money.USD(command.price),
+        stock: command.stock
+      })
+      .build(Product);
 
-    if (command.price <= 0) {
-      return Failure.create(new Error('Price must be positive'));
-    }
-
-    if (command.stock < 0) {
-      return Failure.create(new Error('Stock cannot be negative'));
-    }
-
-    return Success.create(undefined);
+    await this.productRepository.save(product);
+    return Success.create(product);
   }
 }
 ```

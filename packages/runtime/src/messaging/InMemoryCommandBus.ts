@@ -110,3 +110,4 @@ export class InMemoryCommandBus implements CommandBus {
     this.handlers.clear();
   }
 }
+

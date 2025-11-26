@@ -65,7 +65,7 @@ export const tsconfigTemplate = (): string => `{
 
 export const indexTemplate = (data: ProjectTemplateData): string => `import { ApplicationBuilder } from '@stratix/runtime';
 import { AwilixContainer } from '@stratix/di-awilix';
-import { ConsoleLogger } from '@stratix/core';
+import { ConsoleLogger } from '@stratix/runtime';
 
 async function bootstrap() {
   const container = new AwilixContainer();

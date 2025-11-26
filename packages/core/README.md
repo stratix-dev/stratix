@@ -104,6 +104,17 @@ yarn add @stratix/core
 - **InMemoryQueryBus** - Default in-memory implementation
 - **InMemoryEventBus** - Default in-memory implementation
 
+### DX Helpers (New!)
+
+Productivity helpers that reduce boilerplate by 40-90%:
+
+- **Results** - Combine, sequence, and parallelize Result operations
+- **AsyncResults** - Work with async operations and Results seamlessly
+- **Validators** - Reusable validators (email, URL, length, range, etc.)
+- **EntityBuilder** - Fluent API for creating entities with less code
+- **BaseCommandHandler** / **BaseQueryHandler** - Base classes with automatic validation
+- **ValueObjectFactory** - Create Value Objects with validation helpers
+
 ## Quick Start
 
 ### Creating Entities
@@ -170,6 +181,75 @@ console.log(email.domain); // "example.com"
 const phoneResult = PhoneNumber.create('+14155552671');
 if (phoneResult.isSuccess) {
   console.log(phoneResult.value.format()); // "+1 (415) 555-2671"
+}
+```
+
+### DX Helpers
+
+**Result Helpers** - Combine and transform Results:
+
+```typescript
+import { Results } from '@stratix/core';
+
+// Combine multiple Results
+const nameResult = ProductName.create('Laptop');
+const priceResult = Money.USD(999);
+
+const combined = Results.combine(nameResult, priceResult)
+  .map(([name, price]) => new Product(name, price));
+
+// Sequence async operations
+const results = await Results.sequence([
+  () => saveUser(user1),
+  () => saveUser(user2),
+  () => saveUser(user3)
+]);
+```
+
+**Validators** - Reusable validation:
+
+```typescript
+import { Validators, ValueObjectFactory } from '@stratix/core';
+
+class Email extends ValueObject {
+  constructor(readonly value: string) { super(); }
+
+  static create(value: string) {
+    return ValueObjectFactory.createString(value, Email, [
+      (v) => Validators.notEmpty(v, 'Email'),
+      (v) => Validators.email(v)
+    ]);
+  }
+
+  protected getEqualityComponents() { return [this.value]; }
+}
+```
+
+**Entity Builder** - Fluent entity creation:
+
+```typescript
+import { EntityBuilder } from '@stratix/core';
+
+const product = EntityBuilder.create<'Product', ProductProps>()
+  .withProps({ name: 'Laptop', price: 999 })
+  .build(Product);
+```
+
+**Async Results** - Handle async operations:
+
+```typescript
+import { AsyncResults } from '@stratix/core';
+
+async function getUser(id: string) {
+  return AsyncResults.flatMap(
+    AsyncResults.fromPromise(
+      repository.findById(id),
+      (error) => new DomainError('DB_ERROR', String(error))
+    ),
+    (user) => user
+      ? Success.create(user)
+      : Failure.create(new DomainError('NOT_FOUND', 'User not found'))
+  );
 }
 ```
 

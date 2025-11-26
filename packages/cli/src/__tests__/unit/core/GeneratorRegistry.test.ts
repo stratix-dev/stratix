@@ -40,7 +40,7 @@ describe('GeneratorRegistry', () => {
     it('should list all generators with descriptions', () => {
         const list = registry.list();
 
-        expect(list).toHaveLength(6);
+        expect(list).toHaveLength(7);
         expect(list[0]).toHaveProperty('name');
         expect(list[0]).toHaveProperty('description');
     });
