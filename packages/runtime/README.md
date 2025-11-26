@@ -57,11 +57,30 @@ stratix new my-app
 npm install @stratix/core @stratix/runtime
 ```
 
+## Features
+
+### Core Runtime
+
+- **ApplicationBuilder** - Fluent API for application configuration
+- **Plugin System** - Lifecycle management (initialize, start, stop)
+- **Dependency Graph** - Automatic plugin ordering
+- **Health Checks** - Built-in health monitoring
+- **Module System** - Organize code by bounded contexts
+
+### DX Helpers (New!)
+
+Productivity helpers that reduce boilerplate by 60-90%:
+
+- **ApplicationBuilderHelpers** - Quick setup with sensible defaults
+- **InMemoryRepository** - Base class for in-memory repositories
+- **TestHelpers** - Utilities for testing (entity creation, event capture, etc.)
+- **ModuleHelpers** - Create modules with minimal boilerplate
+- **ContainerHelpers** - Simplify DI container operations
+
 ## Quick Start
 
 ```typescript
-import { ApplicationBuilder } from '@stratix/runtime';
-import { ConsoleLogger } from '@stratix/core';
+import { ApplicationBuilder, ConsoleLogger } from '@stratix/runtime';
 import { PostgresPlugin } from '@stratix/db-postgres';
 import { FastifyHTTPPlugin } from '@stratix/http-fastify';
 
@@ -79,6 +98,92 @@ process.on('SIGINT', async () => {
   await app.stop();
   process.exit(0);
 });
+```
+
+### DX Helpers
+
+**ApplicationBuilder Helpers** - Quick setup:
+
+```typescript
+import { ApplicationBuilderHelpers } from '@stratix/runtime';
+import { AwilixContainer } from '@stratix/di-awilix';
+
+// Before (verbose)
+const container = new AwilixContainer();
+container.register('commandBus', () => new InMemoryCommandBus(), { lifetime: 'SINGLETON' });
+container.register('queryBus', () => new InMemoryQueryBus(), { lifetime: 'SINGLETON' });
+// ... more setup
+
+// After (clean)
+const app = await ApplicationBuilderHelpers.createWithDefaults(container)
+  .usePlugin(new MyPlugin())
+  .build();
+```
+
+**Test Helpers** - Simplify testing:
+
+```typescript
+import { TestHelpers } from '@stratix/runtime';
+
+describe('Product Service', () => {
+  it('should publish event when creating product', async () => {
+    const { bus, events } = TestHelpers.createEventBusCapture();
+    const service = new ProductService(repository, bus);
+    
+    await service.createProduct({ name: 'Test', price: 100 });
+    
+    expect(events).toHaveLength(1);
+    expect(events[0]).toBeInstanceOf(ProductCreatedEvent);
+  });
+});
+```
+
+**Module Helpers** - Create modules inline:
+
+```typescript
+import { ModuleHelpers } from '@stratix/runtime';
+
+const productsModule = ModuleHelpers.createSimpleModule('Products', {
+  commands: [
+    { name: 'CreateProduct', commandType: CreateProductCommand, handler }
+  ],
+  queries: [
+    { name: 'GetProduct', queryType: GetProductQuery, handler }
+  ],
+  repositories: [
+    { token: 'productRepository', instance: new ProductRepository() }
+  ]
+});
+```
+
+**Container Helpers** - Bulk registration:
+
+```typescript
+import { ContainerHelpers } from '@stratix/runtime';
+
+// Register multiple commands at once
+ContainerHelpers.registerCommands(container, commandBus, [
+  { commandType: CreateProductCommand, handler: new CreateProductHandler(repo) },
+  { commandType: UpdateProductCommand, handler: new UpdateProductHandler(repo) }
+]);
+
+// Register multiple repositories
+ContainerHelpers.registerRepositories(container, {
+  productRepository: new InMemoryProductRepository(),
+  userRepository: new InMemoryUserRepository()
+});
+```
+
+**InMemory Repository** - Testing made easy:
+
+```typescript
+import { InMemoryRepository } from '@stratix/runtime';
+
+class ProductRepository extends InMemoryRepository<Product> {
+  async findByCategory(category: string): Promise<Product[]> {
+    return this.findMany(p => p.category === category);
+  }
+}
 ```
 
 ## Related Packages

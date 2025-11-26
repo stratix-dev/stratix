@@ -109,3 +109,4 @@ export class InMemoryQueryBus implements QueryBus {
     this.handlers.clear();
   }
 }
+

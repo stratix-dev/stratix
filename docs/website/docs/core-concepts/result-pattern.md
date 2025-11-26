@@ -107,29 +107,23 @@ if (result.isSuccess) {
 ### Value Object Creation
 
 ```typescript
-import { ValueObject, Result, Success, Failure } from '@stratix/core';
+import { ValueObject, ValueObjectFactory, Validators, Result } from '@stratix/core';
 
-export class Email extends ValueObject<{ value: string }> {
-  private constructor(props: { value: string }) {
-    super(props);
+export class Email extends ValueObject {
+  constructor(readonly value: string) {
+    super();
   }
 
   static create(email: string): Result<Email> {
-    // Validation
-    if (!email || email.trim().length === 0) {
-      return Failure.create(new Error('Email cannot be empty'));
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return Failure.create(new Error('Invalid email format'));
-    }
-
-    return Success.create(new Email({ value: email.toLowerCase() }));
+    // Use ValueObjectFactory with Validators for cleaner validation
+    return ValueObjectFactory.createString(email, Email, [
+      (v) => Validators.notEmpty(v, 'Email'),
+      (v) => Validators.email(v)
+    ]);
   }
 
-  get value(): string {
-    return this.props.value;
+  protected getEqualityComponents() {
+    return [this.value];
   }
 }
 
@@ -147,45 +141,49 @@ if (emailResult.isSuccess) {
 ### Command Handlers
 
 ```typescript
-import { CommandHandler, Result, Success, Failure } from '@stratix/core';
+import { BaseCommandHandler, EntityBuilder, Results, Result, Success, Failure } from '@stratix/core';
 
-export class CreateUserHandler 
-  implements CommandHandler<CreateUserCommand, User> {
+export class CreateUserHandler extends BaseCommandHandler<CreateUserCommand, User> {
   
   constructor(
     private userRepository: IUserRepository,
     private emailService: EmailService
-  ) {}
+  ) {
+    super();
+  }
 
-  async handle(command: CreateUserCommand): Promise<Result<User>> {
-    // Validate email
+  protected validate(command: CreateUserCommand): Result<void> {
+    // Use Validators for validation
     const emailResult = Email.create(command.email);
     if (emailResult.isFailure) {
       return Failure.create(emailResult.error);
     }
+    return Success.create(undefined);
+  }
 
+  protected async execute(command: CreateUserCommand): Promise<Result<User>> {
+    const emailResult = Email.create(command.email);
+    
     // Check if user exists
-    const existingUser = await this.userRepository.findByEmail(emailResult.value);
+    const existingUser = await this.userRepository.findByEmail(emailResult.value!);
     if (existingUser) {
       return Failure.create(new Error('User already exists'));
     }
 
-    // Create user
-    const user = new User(
-      EntityId.create<'User'>(),
-      emailResult.value,
-      command.name,
-      new Date(),
-      new Date()
-    );
+    // Create user using EntityBuilder
+    const user = EntityBuilder.create<'User', UserProps>()
+      .withProps({
+        email: emailResult.value!,
+        name: command.name
+      })
+      .build(User);
 
     // Save user
     await this.userRepository.save(user);
 
-    // Send welcome email
+    // Send welcome email (non-blocking)
     const emailSent = await this.emailService.sendWelcomeEmail(user.email);
     if (emailSent.isFailure) {
-      // Log error but don't fail the command
       console.error('Failed to send welcome email:', emailSent.error);
     }
 
@@ -197,12 +195,19 @@ export class CreateUserHandler
 ### Query Handlers
 
 ```typescript
-export class GetUserByIdHandler 
-  implements QueryHandler<GetUserByIdQuery, User> {
-  
-  constructor(private userRepository: IUserRepository) {}
+import { BaseQueryHandler, Result, Success, Failure } from '@stratix/core';
 
-  async handle(query: GetUserByIdQuery): Promise<Result<User>> {
+export class GetUserByIdHandler extends BaseQueryHandler<GetUserByIdQuery, User> {
+  
+  constructor(private userRepository: IUserRepository) {
+    super();
+  }
+
+  protected validate(query: GetUserByIdQuery): Result<void> {
+    return Success.create(undefined);
+  }
+
+  protected async execute(query: GetUserByIdQuery): Promise<Result<User>> {
     const user = await this.userRepository.findById(query.userId);
 
     if (!user) {
@@ -293,7 +298,7 @@ if (result.isSuccess) {
 }
 ```
 
-## ResultUtils
+## Result Helpers
 
 Utility functions for working with multiple Results:
 
@@ -302,20 +307,58 @@ Utility functions for working with multiple Results:
 Combine multiple Results into one:
 
 ```typescript
-import { ResultUtils } from '@stratix/core';
+import { Results } from '@stratix/core';
 
 const emailResult = Email.create('john@example.com');
 const ageResult = Age.create(25);
 const nameResult = Name.create('John Doe');
 
-const combined = ResultUtils.combine([emailResult, ageResult, nameResult]);
+// Combine all validations
+const combined = Results.combine(emailResult, ageResult, nameResult);
 
 if (combined.isSuccess) {
   const [email, age, name] = combined.value;
-  // All validations passed
+  // All validations passed - create user
+  const user = EntityBuilder.create<'User', UserProps>()
+    .withProps({ email, age, name })
+    .build(User);
 } else {
   // At least one validation failed
   console.error(combined.error);
+}
+```
+
+### Sequence
+
+Execute async operations sequentially:
+
+```typescript
+import { Results } from '@stratix/core';
+
+const results = await Results.sequence([
+  () => saveUser(user1),
+  () => saveUser(user2),
+  () => saveUser(user3)
+]);
+
+if (results.isSuccess) {
+  console.log('All users saved');
+}
+```
+
+### Parallel
+
+Execute async operations in parallel:
+
+```typescript
+const results = await Results.parallel([
+  () => fetchUser(id1),
+  () => fetchUser(id2),
+  () => fetchUser(id3)
+]);
+
+if (results.isSuccess) {
+  const [user1, user2, user3] = results.value;
 }
 ```
 
@@ -436,13 +479,13 @@ return Failure.create(new Error('Error'));
 
 ## Comparison with Exceptions
 
-| Feature | Result Pattern | Exceptions |
-|---------|---------------|------------|
-| **Explicit** | ✅ Visible in signature | ❌ Hidden |
-| **Type Safety** | ✅ Compile-time checks | ❌ Runtime only |
-| **Performance** | ✅ No stack unwinding | ❌ Expensive |
-| **Control Flow** | ✅ Explicit | ❌ Hidden |
-| **Forced Handling** | ✅ Compiler enforces | ❌ Easy to forget |
+| Feature             | Result Pattern         | Exceptions       |
+| ------------------- | ---------------------- | ---------------- |
+| **Explicit**        | ✅ Visible in signature | ❌ Hidden         |
+| **Type Safety**     | ✅ Compile-time checks  | ❌ Runtime only   |
+| **Performance**     | ✅ No stack unwinding   | ❌ Expensive      |
+| **Control Flow**    | ✅ Explicit             | ❌ Hidden         |
+| **Forced Handling** | ✅ Compiler enforces    | ❌ Easy to forget |
 
 ## When to Use Exceptions
 

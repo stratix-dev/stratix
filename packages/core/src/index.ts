@@ -6,6 +6,7 @@
 export { ValueObject } from './core/ValueObject.js';
 export { Entity } from './core/Entity.js';
 export { EntityId } from './core/EntityId.js';
+export { EntityBuilder } from './core/EntityBuilder.js';
 export { AggregateRoot } from './core/AggregateRoot.js';
 export type { DomainEvent } from './core/DomainEvent.js';
 export { DomainService } from './core/DomainService.js';
@@ -14,6 +15,12 @@ export type { DomainServiceMethod, AsyncDomainServiceMethod } from './core/Domai
 // Result Pattern
 export type { Result } from './result/Result.js';
 export { Success, Failure, ResultUtils } from './result/Result.js';
+export { Results } from './result/helpers.js';
+export { AsyncResults } from './result/AsyncResults.js';
+
+// Validation
+export { Validators } from './validation/Validators.js';
+export { ValueObjectFactory } from './value-objects/ValueObjectFactory.js';
 
 // Errors
 export { DomainError } from './errors/DomainError.js';
@@ -60,16 +67,11 @@ export type { EventHandler } from './messaging/EventHandler.js';
 export type { CommandBus } from './messaging/CommandBus.js';
 export type { QueryBus } from './messaging/QueryBus.js';
 export type { EventBus } from './messaging/EventBus.js';
-
-// Default CQRS Implementations
-export { InMemoryCommandBus } from './messaging/InMemoryCommandBus.js';
-export { InMemoryQueryBus } from './messaging/InMemoryQueryBus.js';
-export { InMemoryEventBus } from './messaging/InMemoryEventBus.js';
+export { BaseCommandHandler, BaseQueryHandler } from './messaging/BaseHandlers.js';
 
 // Infrastructure
 export { LogLevel } from './infrastructure/LogLevel.js';
 export type { Logger } from './infrastructure/Logger.js';
-export { ConsoleLogger } from './infrastructure/ConsoleLogger.js';
 export type { Repository } from './infrastructure/Repository.js';
 export type { UnitOfWork } from './infrastructure/UnitOfWork.js';
 export { HealthStatus } from './infrastructure/HealthCheck.js';

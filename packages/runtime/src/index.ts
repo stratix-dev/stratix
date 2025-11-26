@@ -1,6 +1,7 @@
 // Builder
 export { ApplicationBuilder } from './builder/ApplicationBuilder.js';
 export type { ApplicationBuilderOptions } from './builder/ApplicationBuilder.js';
+export { ApplicationBuilderHelpers } from './builder/ApplicationBuilderHelpers.js';
 export { Application } from './builder/Application.js';
 export { DefaultPluginContext } from './builder/DefaultPluginContext.js';
 
@@ -32,3 +33,24 @@ export { StratixAgentOrchestrator } from './ai/StratixAgentOrchestrator.js';
 export { InMemoryAgentRepository } from './ai/InMemoryAgentRepository.js';
 export { InMemoryAgentMemory } from './ai/InMemoryAgentMemory.js';
 export { InMemoryExecutionAuditLog } from './ai/InMemoryExecutionAuditLog.js';
+
+// CQRS Implementations
+export { InMemoryCommandBus } from './messaging/InMemoryCommandBus.js';
+export { InMemoryQueryBus } from './messaging/InMemoryQueryBus.js';
+export { InMemoryEventBus } from './messaging/InMemoryEventBus.js';
+
+// Infrastructure Implementations
+export { ConsoleLogger } from './infrastructure/ConsoleLogger.js';
+export type { ConsoleLoggerOptions } from './infrastructure/ConsoleLogger.js';
+export { InMemoryRepository } from './infrastructure/InMemoryRepository.js';
+
+// Testing Utilities
+export { TestHelpers } from './testing/TestHelpers.js';
+
+// Module Utilities
+export { ModuleHelpers } from './module/ModuleHelpers.js';
+export type { SimpleModuleOptions } from './module/ModuleHelpers.js';
+
+// Container Utilities
+export { ContainerHelpers } from './container/ContainerHelpers.js';
+export type { CommandRegistration, QueryRegistration } from './container/ContainerHelpers.js';

@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { RepositoryGenerator } from '../../../generators/core/RepositoryGenerator.js';
 import type { GeneratorContext } from '../../../core/types.js';
+import { fileSystem } from '../../../infrastructure/FileSystem.js';
 
 describe('RepositoryGenerator', () => {
     let generator: RepositoryGenerator;
@@ -17,6 +18,13 @@ describe('RepositoryGenerator', () => {
                 generateImpl: true
             }
         };
+
+        // Mock fileSystem.exists to return true (entity exists)
+        vi.spyOn(fileSystem, 'exists').mockResolvedValue(true);
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
     });
 
     it('should have correct name', () => {

@@ -63,6 +63,7 @@ const sidebars: SidebarsConfig = {
         'core-concepts/cqrs',
         'core-concepts/bounded-contexts',
         'core-concepts/dependency-injection',
+        'core-concepts/dx-helpers',
       ],
     },
 
