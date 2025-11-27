@@ -1,6 +1,6 @@
-import type { Container, Logger, Plugin, ContextModule } from '@stratix/core';
+import type { Container, Logger, Plugin, Context } from '@stratix/core';
 import { PluginRegistry } from '../registry/PluginRegistry.js';
-import { ModuleRegistry } from '../module/ModuleRegistry.js';
+import { ContextRegistry } from '../context/ContextRegistry.js';
 import { LifecycleManager } from '../lifecycle/LifecycleManager.js';
 import { DefaultPluginContext } from './DefaultPluginContext.js';
 import { Application } from './Application.js';
@@ -39,8 +39,8 @@ export interface ApplicationBuilderOptions {
  *   .useLogger(logger)
  *   .usePlugin(new PostgresPlugin())
  *   .usePlugin(new RabbitMQPlugin())
- *   .useContext(new OrdersContextModule())
- *   .useContext(new ProductsContextModule())
+ *   .useContext(new OrdersContext())
+ *   .useContext(new ProductsContext())
  *   .build();
  *
  * await app.start();
@@ -50,9 +50,9 @@ export class ApplicationBuilder {
   private container?: Container;
   private logger?: Logger;
   private pluginRegistry = new PluginRegistry();
-  private moduleRegistry = new ModuleRegistry();
+  private contextRegistry = new ContextRegistry();
   private pluginConfigs = new Map<string, unknown>();
-  private moduleConfigs = new Map<string, unknown>();
+  private contextConfigs = new Map<string, unknown>();
 
   private constructor() {}
 
@@ -145,49 +145,49 @@ export class ApplicationBuilder {
   }
 
   /**
-   * Registers a domain module.
+   * Registers a context.
    *
-   * Context modules are domain/business logic modules that encapsulate
+   * Contexts are domain/business logic units that encapsulate
    * a complete domain (domain layer, application layer, infrastructure).
    *
-   * @param contextModule - The context module to register
-   * @param config - Optional configuration for the module
+   * @param context - The context to register
+   * @param config - Optional configuration for the context
    * @returns This builder for chaining
    *
    * @example
    * ```typescript
-   * builder.useContext(new OrdersContextModule());
-   * builder.useContext(new ProductsContextModule());
+   * builder.useContext(new OrdersContext());
+   * builder.useContext(new ProductsContext());
    * ```
    */
-  useContext(contextModule: ContextModule, config?: unknown): this {
-    this.moduleRegistry.register(contextModule);
+  useContext(context: Context, config?: unknown): this {
+    this.contextRegistry.register(context);
 
     if (config) {
-      this.moduleConfigs.set(contextModule.metadata.name, config);
+      this.contextConfigs.set(context.metadata.name, config);
     }
 
     return this;
   }
 
   /**
-   * Registers multiple domain modules.
+   * Registers multiple contexts.
    *
-   * @param contextModules - The context modules to register
+   * @param contexts - The contexts to register
    * @returns This builder for chaining
    *
    * @example
    * ```typescript
    * builder.useContexts([
-   *   new OrdersContextModule(),
-   *   new ProductsContextModule(),
-   *   new InventoryContextModule()
+   *   new OrdersContext(),
+   *   new ProductsContext(),
+   *   new InventoryContext()
    * ]);
    * ```
    */
-  useContexts(contextModules: ContextModule[]): this {
-    for (const contextModule of contextModules) {
-      this.moduleRegistry.register(contextModule);
+  useContexts(contexts: Context[]): this {
+    for (const context of contexts) {
+      this.contextRegistry.register(context);
     }
     return this;
   }
@@ -235,18 +235,18 @@ export class ApplicationBuilder {
       throw new Error('Logger must be set before building');
     }
 
-    const lifecycleManager = new LifecycleManager(this.pluginRegistry, this.moduleRegistry);
+    const lifecycleManager = new LifecycleManager(this.pluginRegistry, this.contextRegistry);
     const pluginContext = new DefaultPluginContext(this.container, this.logger, this.pluginConfigs);
 
     // Initialize plugins first
     await lifecycleManager.initializePlugins(pluginContext);
 
-    // Initialize modules after plugins (if any)
-    if (this.moduleRegistry.size > 0) {
-      await lifecycleManager.initializeModules(this.container, this.logger, this.moduleConfigs);
+    // Initialize contexts after plugins (if any)
+    if (this.contextRegistry.size > 0) {
+      await lifecycleManager.initializeContexts(this.container, this.logger, this.contextConfigs);
     }
 
-    return new Application(this.container, this.pluginRegistry, this.moduleRegistry, lifecycleManager);
+    return new Application(this.container, this.pluginRegistry, this.contextRegistry, lifecycleManager);
   }
 
   /**
@@ -257,9 +257,9 @@ export class ApplicationBuilder {
   }
 
   /**
-   * Gets the number of registered modules.
+   * Gets the number of registered contexts.
    */
-  get moduleCount(): number {
-    return this.moduleRegistry.size;
+  get contextCount(): number {
+    return this.contextRegistry.size;
   }
 }

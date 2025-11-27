@@ -29,7 +29,7 @@ See the [CHANGELOG](./CHANGELOG.md) for complete release notes.
 ## Features
 
 - **Plugin Architecture** - Extensible plugin system with lifecycle management and health checks
-- **Bounded Contexts** - Portable domain modules that work in monoliths or microservices
+- **Context System** - Portable domain contexts that work in monoliths or microservices
 - **Domain Modeling** - Entity, AggregateRoot, ValueObject, and Repository patterns built-in
 - **Result Pattern** - Explicit error handling without exceptions
 - **CQRS** - Command and Query Responsibility Segregation with dedicated buses
@@ -44,10 +44,10 @@ See the [CHANGELOG](./CHANGELOG.md) for complete release notes.
 # Install CLI
 npm install -g @stratix/cli
 
-# Create project with modular structure
-stratix new my-app --structure modular
+# Create new project
+stratix new my-app
 
-# Generate bounded context
+# Generate context
 cd my-app
 stratix generate context Products --props "name:string,price:number,stock:number"
 

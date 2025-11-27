@@ -12,13 +12,11 @@
 
 </div>
 
--
 
 > Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
 >
 > **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
 
--
 
 ## About This Package
 
@@ -76,8 +74,6 @@ npm install @stratix/ai-anthropic
 ## License
 
 MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) for details.
-
--
 
 <div align="center">
 

@@ -42,7 +42,7 @@ Quick access to common code generation tasks:
 | `/query` | Generate a CQRS query with handler |
 | `/vo` | Generate a value object with validation |
 | `/repository` | Generate repository interface |
-| `/context` | Generate complete bounded context |
+| `/context` | Generate complete context |
 | `/refactor` | Get refactoring suggestions for DDD patterns |
 | `/explain` | Explain Stratix concepts with examples |
 

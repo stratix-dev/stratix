@@ -118,9 +118,9 @@ Generate repository interface and implementation:
 
 ---
 
-### `/context` - Generate Bounded Context
+### `/context` - Generate Context
 
-Generate a complete bounded context structure:
+Generate a complete context structure:
 
 ```
 @stratix /context Orders

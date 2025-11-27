@@ -411,42 +411,42 @@ describe('Product Service', () => {
 
 ---
 
-### Module Helpers
+### Context Helpers
 
-Create modules with minimal boilerplate.
+Create contexts with minimal boilerplate.
 
 ```typescript
-import { ModuleHelpers } from '@stratix/runtime';
+import { ContextHelpers } from '@stratix/runtime';
 
 // Before (verbose - full class)
-class ProductsModule extends BaseContextModule {
+class ProductsContext extends BaseContext {
   readonly metadata = {
     name: 'products-context',
-    description: 'Products bounded context',
+    description: 'Products context',
     version: '1.0.0',
     requiredPlugins: [],
-    requiredModules: []
+    requiredContexts: []
   };
-  readonly contextName = 'Products';
-  
+  readonly name = 'Products';
+
   getCommands() {
     return [
       { name: 'CreateProduct', commandType: CreateProductCommand, handler }
     ];
   }
-  
+
   getQueries() {
     return [
       { name: 'GetProduct', queryType: GetProductQuery, handler }
     ];
   }
-  
+
   // ... more boilerplate
 }
 
 // After (inline)
-const productsModule = ModuleHelpers.createSimpleModule('Products', {
-  description: 'Products bounded context',
+const productsContext = ContextHelpers.createSimpleContext('Products', {
+  description: 'Products context',
   commands: [
     { name: 'CreateProduct', commandType: CreateProductCommand, handler }
   ],
@@ -458,14 +458,14 @@ const productsModule = ModuleHelpers.createSimpleModule('Products', {
   ]
 });
 
-// Repository-only module
-const repoModule = ModuleHelpers.createRepositoryModule('Data', {
+// Repository-only context
+const repoContext = ContextHelpers.createRepositoryContext('Data', {
   productRepository: new ProductRepository(),
   userRepository: new UserRepository()
 });
 
-// Read-only module (queries only)
-const readModule = ModuleHelpers.createReadOnlyModule('Reporting', {
+// Read-only context (queries only)
+const readContext = ContextHelpers.createReadOnlyContext('Reporting', {
   queries: [
     { name: 'GetSalesReport', queryType: GetSalesReportQuery, handler }
   ]

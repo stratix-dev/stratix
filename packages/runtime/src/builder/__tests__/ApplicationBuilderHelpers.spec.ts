@@ -44,7 +44,7 @@ describe('ApplicationBuilderHelpers', () => {
 
             expect(builder).toBeDefined();
             expect(builder.pluginCount).toBe(0);
-            expect(builder.moduleCount).toBe(0);
+            expect(builder.contextCount).toBe(0);
         });
 
         it('should register commandBus in container', () => {
@@ -104,7 +104,7 @@ describe('ApplicationBuilderHelpers', () => {
 
             expect(builder).toBeDefined();
             expect(builder.pluginCount).toBe(0);
-            expect(builder.moduleCount).toBe(0);
+            expect(builder.contextCount).toBe(0);
         });
 
         it('should register commandBus in container', () => {

@@ -1,14 +1,14 @@
-import type { Container, Logger, ModuleContext } from '@stratix/core';
+import type { Container, Logger, ContextConfig } from '@stratix/core';
 
 /**
- * Default implementation of ModuleContext.
+ * Default implementation of ContextConfig.
  */
-export class DefaultModuleContext implements ModuleContext {
+export class DefaultContextConfig implements ContextConfig {
   constructor(
     private readonly _container: Container,
     private readonly _logger: Logger,
     private readonly configs: Map<string, unknown>,
-    private readonly moduleName: string
+    private readonly contextName: string
   ) {}
 
   get container(): Container {
@@ -20,6 +20,6 @@ export class DefaultModuleContext implements ModuleContext {
   }
 
   getConfig<T = unknown>(): T | undefined {
-    return this.configs.get(this.moduleName) as T | undefined;
+    return this.configs.get(this.contextName) as T | undefined;
   }
 }

@@ -6,52 +6,78 @@ description: Understanding Stratix project organization and directory structure
 
 # Project Structure
 
-Stratix supports two project structures: **DDD (Domain-Driven Design)** and **Modular**. Both follow clean architecture principles with clear separation of concerns.
+Stratix organizes code using **Contexts** - self-contained domain units with three mandatory layers: **domain**, **application**, and **infrastructure**. This structure works seamlessly in both monolithic and microservices architectures.
 
-## DDD Structure (Recommended)
+## Single Context Structure
 
-The DDD structure organizes code by architectural layers following hexagonal architecture:
+For small applications or single-domain projects:
 
 ```
 my-app/
 ├── src/
 │   ├── domain/                    # Domain Layer (Business Logic)
-│   │   ├── entities/              # Domain entities and aggregates
-│   │   ├── value-objects/         # Immutable value objects
-│   │   ├── repositories/          # Repository interfaces
-│   │   ├── services/              # Domain services
-│   │   └── events/                # Domain events
-│   │
 │   ├── application/               # Application Layer (Use Cases)
-│   │   ├── commands/              # CQRS commands
-│   │   ├── queries/               # CQRS queries
-│   │   ├── handlers/              # Command/query handlers
-│   │   └── services/              # Application services
-│   │
 │   ├── infrastructure/            # Infrastructure Layer (Technical Details)
-│   │   ├── repositories/          # Repository implementations
-│   │   ├── http/                  # HTTP controllers and routes
-│   │   ├── database/              # Database configurations
-│   │   ├── messaging/             # Message broker integrations
-│   │   └── plugins/               # Custom plugins
-│   │
 │   └── index.ts                   # Application entry point
 │
-├── tests/                         # Test files (mirrors src structure)
-│   ├── unit/
-│   ├── integration/
-│   └── e2e/
-│
+├── tests/
 ├── package.json
 ├── tsconfig.json
-├── .eslintrc.json
-├── .prettierrc
 └── README.md
 ```
 
-### Layer Responsibilities
+---
 
-#### Domain Layer (`src/domain/`)
+## Multi-Context Structure
+
+For larger applications with multiple domains:
+
+```
+my-app/
+├── src/
+│   ├── contexts/
+│   │   ├── products/
+│   │   │   ├── domain/
+│   │   │   ├── application/
+│   │   │   ├── infrastructure/
+│   │   │   └── ProductsContext.ts
+│   │   │
+│   │   ├── orders/
+│   │   │   ├── domain/
+│   │   │   ├── application/
+│   │   │   ├── infrastructure/
+│   │   │   └── OrdersContext.ts
+│   │   │
+│   │   └── customers/
+│   │       ├── domain/
+│   │       ├── application/
+│   │       ├── infrastructure/
+│   │       └── CustomersContext.ts
+│   │
+│   ├── shared/
+│   └── index.ts
+│
+├── tests/
+├── package.json
+└── tsconfig.json
+```
+
+### When to Use Multi-Context Structure
+
+Use multi-context structure when:
+- Building applications with multiple distinct domains
+- Need clear boundaries between different business capabilities
+- Team-based development (one team per context)
+- Planning to potentially extract contexts to separate services later
+- Building microservices architecture
+
+---
+
+## The Three Layers
+
+Every context MUST have these three layers:
+
+### Domain Layer (`domain/`)
 
 The **core business logic** layer. Contains:
 
@@ -62,10 +88,10 @@ The **core business logic** layer. Contains:
 - **Domain Events** - Events that represent business occurrences
 
 **Rules:**
-- ❌ No dependencies on other layers
-- ❌ No framework-specific code
-- ✅ Pure business logic
-- ✅ Framework-agnostic
+- No dependencies on other layers
+- No framework-specific code
+- Pure business logic
+- Framework-agnostic
 
 **Example:**
 ```typescript
@@ -93,7 +119,9 @@ export class Product extends AggregateRoot<'Product'> {
 }
 ```
 
-#### Application Layer (`src/application/`)
+---
+
+### Application Layer (`application/`)
 
 The **use case** layer. Contains:
 
@@ -103,10 +131,10 @@ The **use case** layer. Contains:
 - **Application Services** - Orchestration logic
 
 **Rules:**
-- ✅ Depends on Domain layer
-- ❌ No dependencies on Infrastructure layer
-- ✅ Orchestrates domain objects
-- ✅ Implements use cases
+- Depends on Domain layer
+- No dependencies on Infrastructure layer
+- Orchestrates domain objects
+- Implements use cases
 
 **Example:**
 ```typescript
@@ -141,7 +169,9 @@ export class CreateProductHandler implements CommandHandler<CreateProductCommand
 }
 ```
 
-#### Infrastructure Layer (`src/infrastructure/`)
+---
+
+### Infrastructure Layer (`infrastructure/`)
 
 The **technical implementation** layer. Contains:
 
@@ -152,10 +182,10 @@ The **technical implementation** layer. Contains:
 - **Plugins** - Custom plugins
 
 **Rules:**
-- ✅ Depends on Domain and Application layers
-- ✅ Framework-specific code
-- ✅ External service integrations
-- ✅ Technical implementations
+- Depends on Domain and Application layers
+- Framework-specific code allowed
+- External service integrations
+- Technical implementations
 
 **Example:**
 ```typescript
@@ -181,53 +211,6 @@ export class PostgresProductRepository implements IProductRepository {
   }
 }
 ```
-
----
-
-## Modular Structure
-
-The modular structure organizes code by feature/bounded context:
-
-```
-my-app/
-├── src/
-│   ├── modules/
-│   │   ├── products/              # Products bounded context
-│   │   │   ├── domain/
-│   │   │   ├── application/
-│   │   │   ├── infrastructure/
-│   │   │   └── index.ts
-│   │   │
-│   │   ├── orders/                # Orders bounded context
-│   │   │   ├── domain/
-│   │   │   ├── application/
-│   │   │   ├── infrastructure/
-│   │   │   └── index.ts
-│   │   │
-│   │   └── customers/             # Customers bounded context
-│   │       ├── domain/
-│   │       ├── application/
-│   │       ├── infrastructure/
-│   │       └── index.ts
-│   │
-│   ├── shared/                    # Shared kernel
-│   │   ├── value-objects/
-│   │   └── utils/
-│   │
-│   └── index.ts
-│
-├── tests/
-├── package.json
-└── tsconfig.json
-```
-
-### When to Use Modular Structure
-
-Use modular structure when:
-- ✅ Building microservices
-- ✅ Multiple bounded contexts
-- ✅ Team-based development (one team per module)
-- ✅ Need to extract modules to separate services later
 
 ---
 
@@ -365,7 +348,7 @@ Prettier configuration for code formatting:
 ### 1. Keep Layers Separate
 
 ```typescript
-// ❌ Bad: Domain depends on infrastructure
+// Bad: Domain depends on infrastructure
 import { Database } from '@infrastructure/database';
 
 export class Product {
@@ -374,7 +357,7 @@ export class Product {
   }
 }
 
-// ✅ Good: Use repository interface
+// Good: Use repository interface
 export class Product {
   // Domain logic only
 }
@@ -390,21 +373,21 @@ export class PostgresProductRepository implements IProductRepository {
 ### 2. Use Dependency Injection
 
 ```typescript
-// ❌ Bad: Hard-coded dependencies
+// Bad: Hard-coded dependencies
 export class CreateProductHandler {
   private repository = new PostgresProductRepository();
 }
 
-// ✅ Good: Inject dependencies
+// Good: Inject dependencies
 export class CreateProductHandler {
   constructor(private repository: IProductRepository) {}
 }
 ```
 
-### 3. Organize by Feature, Not by Type
+### 3. Organize by Feature
 
 ```typescript
-// ❌ Bad: Organized by type
+// Bad: Organized by type
 src/
   controllers/
     ProductController.ts
@@ -413,15 +396,17 @@ src/
     ProductService.ts
     OrderService.ts
 
-// ✅ Good: Organized by feature
+// Good: Organized by context
 src/
-  modules/
+  contexts/
     products/
-      ProductController.ts
-      ProductService.ts
+      domain/
+      application/
+      infrastructure/
     orders/
-      OrderController.ts
-      OrderService.ts
+      domain/
+      application/
+      infrastructure/
 ```
 
 ---
@@ -430,4 +415,4 @@ src/
 
 - **[Core Concepts](../core-concepts/architecture-overview)** - Learn about hexagonal architecture
 - **[CLI Reference](../cli/cli-overview)** - Generate code with the CLI
-- **[Bounded Contexts](../core-concepts/bounded-contexts)** - Understand modular architecture
+- **[Contexts](../core-concepts/contexts)** - Understand context architecture

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { ModuleHelpers } from '../ModuleHelpers.js';
+import { ContextHelpers } from '../ContextHelpers.js';
 import type { Command, Query, Event, CommandHandler, QueryHandler, EventHandler } from '@stratix/core';
 
 // Test fixtures
@@ -19,110 +19,110 @@ const testEventHandler: EventHandler<TestEvent> = {
     handle: async () => { },
 };
 
-describe('ModuleHelpers', () => {
-    describe('createSimpleModule', () => {
-        it('should create module with basic metadata', () => {
-            const module = ModuleHelpers.createSimpleModule('Products');
+describe('ContextHelpers', () => {
+    describe('createSimpleContext', () => {
+        it('should create context with basic metadata', () => {
+            const context = ContextHelpers.createSimpleContext('Products');
 
-            expect(module.metadata.name).toBe('products-context');
-            expect(module.metadata.description).toBe('Products domain module');
-            expect(module.contextName).toBe('Products');
+            expect(context.metadata.name).toBe('products-context');
+            expect(context.metadata.description).toBe('Products domain context');
+            expect(context.name).toBe('Products');
         });
 
-        it('should create module with custom description', () => {
-            const module = ModuleHelpers.createSimpleModule('Orders', {
-                description: 'Custom orders module',
+        it('should create context with custom description', () => {
+            const context = ContextHelpers.createSimpleContext('Orders', {
+                description: 'Custom orders context',
             });
 
-            expect(module.metadata.description).toBe('Custom orders module');
+            expect(context.metadata.description).toBe('Custom orders context');
         });
 
-        it('should create module with required plugins', () => {
-            const module = ModuleHelpers.createSimpleModule('Products', {
+        it('should create context with required plugins', () => {
+            const context = ContextHelpers.createSimpleContext('Products', {
                 requiredPlugins: ['postgres', 'redis'],
             });
 
-            expect(module.metadata.requiredPlugins).toEqual(['postgres', 'redis']);
+            expect(context.metadata.requiredPlugins).toEqual(['postgres', 'redis']);
         });
 
-        it('should create module with required modules', () => {
-            const module = ModuleHelpers.createSimpleModule('Orders', {
-                requiredModules: ['products-context', 'users-context'],
+        it('should create context with required contexts', () => {
+            const context = ContextHelpers.createSimpleContext('Orders', {
+                requiredContexts: ['products-context', 'users-context'],
             });
 
-            expect(module.metadata.requiredModules).toEqual([
+            expect(context.metadata.requiredContexts).toEqual([
                 'products-context',
                 'users-context',
             ]);
         });
 
-        it('should create module with commands', () => {
+        it('should create context with commands', () => {
             const commandDef = {
                 name: 'TestCommand',
                 commandType: TestCommand,
                 handler: testCommandHandler,
             };
 
-            const module = ModuleHelpers.createSimpleModule('Products', {
+            const context = ContextHelpers.createSimpleContext('Products', {
                 commands: [commandDef],
             });
 
-            const commands = module.getCommands();
+            const commands = context.getCommands();
             expect(commands).toHaveLength(1);
             expect(commands[0]).toBe(commandDef);
         });
 
-        it('should create module with queries', () => {
+        it('should create context with queries', () => {
             const queryDef = {
                 name: 'TestQuery',
                 queryType: TestQuery,
                 handler: testQueryHandler,
             };
 
-            const module = ModuleHelpers.createSimpleModule('Products', {
+            const context = ContextHelpers.createSimpleContext('Products', {
                 queries: [queryDef],
             });
 
-            const queries = module.getQueries();
+            const queries = context.getQueries();
             expect(queries).toHaveLength(1);
             expect(queries[0]).toBe(queryDef);
         });
 
-        it('should create module with event handlers', () => {
+        it('should create context with event handlers', () => {
             const eventDef = {
                 eventName: 'TestEvent',
                 eventType: TestEvent,
                 handler: testEventHandler,
             };
 
-            const module = ModuleHelpers.createSimpleModule('Products', {
+            const context = ContextHelpers.createSimpleContext('Products', {
                 eventHandlers: [eventDef],
             });
 
-            const handlers = module.getEventHandlers();
+            const handlers = context.getEventHandlers();
             expect(handlers).toHaveLength(1);
             expect(handlers[0]).toBe(eventDef);
         });
 
-        it('should create module with repositories', () => {
+        it('should create context with repositories', () => {
             const repoDef = {
                 token: 'productRepository',
                 instance: { save: async () => { } },
                 singleton: true,
             };
 
-            const module = ModuleHelpers.createSimpleModule('Products', {
+            const context = ContextHelpers.createSimpleContext('Products', {
                 repositories: [repoDef],
             });
 
-            const repos = module.getRepositories();
+            const repos = context.getRepositories();
             expect(repos).toHaveLength(1);
             expect(repos[0]).toBe(repoDef);
         });
 
-        it('should create module with all definitions', () => {
-            const module = ModuleHelpers.createSimpleModule('Products', {
-                description: 'Full products module',
+        it('should create context with all definitions', () => {
+            const context = ContextHelpers.createSimpleContext('Products', {
+                description: 'Full products context',
                 requiredPlugins: ['postgres'],
                 commands: [
                     {
@@ -154,25 +154,25 @@ describe('ModuleHelpers', () => {
                 ],
             });
 
-            expect(module.metadata.description).toBe('Full products module');
-            expect(module.getCommands()).toHaveLength(1);
-            expect(module.getQueries()).toHaveLength(1);
-            expect(module.getEventHandlers()).toHaveLength(1);
-            expect(module.getRepositories()).toHaveLength(1);
+            expect(context.metadata.description).toBe('Full products context');
+            expect(context.getCommands()).toHaveLength(1);
+            expect(context.getQueries()).toHaveLength(1);
+            expect(context.getEventHandlers()).toHaveLength(1);
+            expect(context.getRepositories()).toHaveLength(1);
         });
 
         it('should return empty arrays for undefined options', () => {
-            const module = ModuleHelpers.createSimpleModule('Minimal');
+            const context = ContextHelpers.createSimpleContext('Minimal');
 
-            expect(module.getCommands()).toEqual([]);
-            expect(module.getQueries()).toEqual([]);
-            expect(module.getEventHandlers()).toEqual([]);
-            expect(module.getRepositories()).toEqual([]);
+            expect(context.getCommands()).toEqual([]);
+            expect(context.getQueries()).toEqual([]);
+            expect(context.getEventHandlers()).toEqual([]);
+            expect(context.getRepositories()).toEqual([]);
         });
     });
 
-    describe('createRepositoryModule', () => {
-        it('should create module with only repositories', () => {
+    describe('createRepositoryContext', () => {
+        it('should create context with only repositories', () => {
             const repos = [
                 {
                     token: 'userRepository',
@@ -186,14 +186,14 @@ describe('ModuleHelpers', () => {
                 },
             ];
 
-            const module = ModuleHelpers.createRepositoryModule('SharedData', repos);
+            const context = ContextHelpers.createRepositoryContext('SharedData', repos);
 
-            expect(module.contextName).toBe('SharedData');
-            expect(module.metadata.name).toBe('shareddata-context');
-            expect(module.metadata.description).toBe('SharedData repositories');
-            expect(module.getRepositories()).toEqual(repos);
-            expect(module.getCommands()).toEqual([]);
-            expect(module.getQueries()).toEqual([]);
+            expect(context.name).toBe('SharedData');
+            expect(context.metadata.name).toBe('shareddata-context');
+            expect(context.metadata.description).toBe('SharedData repositories');
+            expect(context.getRepositories()).toEqual(repos);
+            expect(context.getCommands()).toEqual([]);
+            expect(context.getQueries()).toEqual([]);
         });
 
         it('should accept custom description', () => {
@@ -205,18 +205,18 @@ describe('ModuleHelpers', () => {
                 },
             ];
 
-            const module = ModuleHelpers.createRepositoryModule(
+            const context = ContextHelpers.createRepositoryContext(
                 'Data',
                 repos,
                 'Custom data repositories'
             );
 
-            expect(module.metadata.description).toBe('Custom data repositories');
+            expect(context.metadata.description).toBe('Custom data repositories');
         });
     });
 
-    describe('createReadOnlyModule', () => {
-        it('should create module with only queries', () => {
+    describe('createReadOnlyContext', () => {
+        it('should create context with only queries', () => {
             const queries = [
                 {
                     name: 'GetSalesReport',
@@ -230,15 +230,15 @@ describe('ModuleHelpers', () => {
                 },
             ];
 
-            const module = ModuleHelpers.createReadOnlyModule('Analytics', queries);
+            const context = ContextHelpers.createReadOnlyContext('Analytics', queries);
 
-            expect(module.contextName).toBe('Analytics');
-            expect(module.metadata.name).toBe('analytics-context');
-            expect(module.metadata.description).toBe('Analytics read-only module');
-            expect(module.getQueries()).toEqual(queries);
-            expect(module.getCommands()).toEqual([]);
-            expect(module.getEventHandlers()).toEqual([]);
-            expect(module.getRepositories()).toEqual([]);
+            expect(context.name).toBe('Analytics');
+            expect(context.metadata.name).toBe('analytics-context');
+            expect(context.metadata.description).toBe('Analytics read-only context');
+            expect(context.getQueries()).toEqual(queries);
+            expect(context.getCommands()).toEqual([]);
+            expect(context.getEventHandlers()).toEqual([]);
+            expect(context.getRepositories()).toEqual([]);
         });
 
         it('should accept repositories', () => {
@@ -258,14 +258,14 @@ describe('ModuleHelpers', () => {
                 },
             ];
 
-            const module = ModuleHelpers.createReadOnlyModule(
+            const context = ContextHelpers.createReadOnlyContext(
                 'Reporting',
                 queries,
                 repos
             );
 
-            expect(module.getQueries()).toEqual(queries);
-            expect(module.getRepositories()).toEqual(repos);
+            expect(context.getQueries()).toEqual(queries);
+            expect(context.getRepositories()).toEqual(repos);
         });
 
         it('should accept custom description', () => {
@@ -277,20 +277,20 @@ describe('ModuleHelpers', () => {
                 },
             ];
 
-            const module = ModuleHelpers.createReadOnlyModule(
+            const context = ContextHelpers.createReadOnlyContext(
                 'ReadOnly',
                 queries,
                 undefined,
-                'Custom read-only module'
+                'Custom read-only context'
             );
 
-            expect(module.metadata.description).toBe('Custom read-only module');
+            expect(context.metadata.description).toBe('Custom read-only context');
         });
     });
 
-    describe('module behavior', () => {
-        it('should create functional module that can be initialized', () => {
-            const module = ModuleHelpers.createSimpleModule('Test', {
+    describe('context behavior', () => {
+        it('should create functional context that can be initialized', () => {
+            const context = ContextHelpers.createSimpleContext('Test', {
                 commands: [
                     {
                         name: 'TestCmd',
@@ -300,23 +300,23 @@ describe('ModuleHelpers', () => {
                 ],
             });
 
-            // Module should have all required methods
-            expect(module.initialize).toBeDefined();
-            expect(module.start).toBeDefined();
-            expect(module.stop).toBeDefined();
-            expect(module.healthCheck).toBeDefined();
+            // Context should have all required methods
+            expect(context.initialize).toBeDefined();
+            expect(context.start).toBeDefined();
+            expect(context.stop).toBeDefined();
+            expect(context.healthCheck).toBeDefined();
         });
 
-        it('should maintain module identity', () => {
-            const module1 = ModuleHelpers.createSimpleModule('Products');
-            const module2 = ModuleHelpers.createSimpleModule('Products');
+        it('should maintain context identity', () => {
+            const context1 = ContextHelpers.createSimpleContext('Products');
+            const context2 = ContextHelpers.createSimpleContext('Products');
 
             // Different instances
-            expect(module1).not.toBe(module2);
+            expect(context1).not.toBe(context2);
 
             // But same metadata
-            expect(module1.metadata.name).toBe(module2.metadata.name);
-            expect(module1.contextName).toBe(module2.contextName);
+            expect(context1.metadata.name).toBe(context2.metadata.name);
+            expect(context1.name).toBe(context2.name);
         });
     });
 });

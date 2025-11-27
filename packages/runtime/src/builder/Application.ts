@@ -1,7 +1,7 @@
 import type { Container, Plugin, HealthCheckResult } from '@stratix/core';
 import { HealthStatus } from '@stratix/core';
 import { PluginRegistry } from '../registry/PluginRegistry.js';
-import { ModuleRegistry } from '../module/ModuleRegistry.js';
+import { ContextRegistry } from '../context/ContextRegistry.js';
 import { LifecycleManager, LifecyclePhase } from '../lifecycle/LifecycleManager.js';
 
 /**
@@ -24,7 +24,7 @@ export class Application {
   constructor(
     private readonly container: Container,
     private readonly pluginRegistry: PluginRegistry,
-    private readonly moduleRegistry: ModuleRegistry,
+    private readonly contextRegistry: ContextRegistry,
     private readonly lifecycleManager: LifecycleManager
   ) {}
 
@@ -91,13 +91,13 @@ export class Application {
   }
 
   /**
-   * Performs health checks on all plugins and modules.
+   * Performs health checks on all plugins and contexts.
    *
    * @returns Aggregated health check result
    */
   async healthCheck(): Promise<HealthCheckResult> {
     const plugins = this.pluginRegistry.getAll();
-    const modules = this.moduleRegistry.getAll();
+    const contexts = this.contextRegistry.getAll();
     const results: Record<string, HealthCheckResult> = {};
     let overallStatus: HealthStatus = HealthStatus.UP;
 
@@ -123,11 +123,11 @@ export class Application {
       }
     }
 
-    for (const module of modules) {
-      if (module.healthCheck) {
+    for (const context of contexts) {
+      if (context.healthCheck) {
         try {
-          const result = await module.healthCheck();
-          results[module.metadata.name] = result;
+          const result = await context.healthCheck();
+          results[context.metadata.name] = result;
 
           if (result.status === HealthStatus.DOWN) {
             overallStatus = HealthStatus.DOWN;
@@ -135,7 +135,7 @@ export class Application {
             overallStatus = HealthStatus.DEGRADED;
           }
         } catch (error) {
-          results[module.metadata.name] = {
+          results[context.metadata.name] = {
             status: HealthStatus.DOWN,
             message: `Health check failed: ${(error as Error).message}`,
           };

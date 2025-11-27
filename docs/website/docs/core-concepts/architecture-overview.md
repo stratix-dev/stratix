@@ -323,24 +323,24 @@ const app = await ApplicationBuilder.create()
 await app.start();
 ```
 
-## Bounded Contexts
+## Contexts
 
-Organize code by business domains (bounded contexts):
+Organize code by business domains (contexts):
 
 ```
 src/
-├── modules/
-│   ├── orders/              # Orders Bounded Context
+├── contexts/
+│   ├── orders/              # Orders Context
 │   │   ├── domain/
 │   │   ├── application/
 │   │   └── infrastructure/
 │   │
-│   ├── products/            # Products Bounded Context
+│   ├── products/            # Products Context
 │   │   ├── domain/
 │   │   ├── application/
 │   │   └── infrastructure/
 │   │
-│   └── customers/           # Customers Bounded Context
+│   └── customers/           # Customers Context
 │       ├── domain/
 │       ├── application/
 │       └── infrastructure/
@@ -518,7 +518,7 @@ describe('UpdateProductPriceHandler', () => {
 ## Next Steps
 
 - **[Domain Modeling](./domain-modeling)** - Learn about entities and value objects
-- **[Bounded Contexts](./bounded-contexts)** - Modular architecture
+- **[Contexts](./contexts)** - Modular architecture
 - **[CQRS](./cqrs)** - Command Query Responsibility Segregation
 - **[Result Pattern](./result-pattern)** - Error handling
 - **[Dependency Injection](./dependency-injection)** - DI container

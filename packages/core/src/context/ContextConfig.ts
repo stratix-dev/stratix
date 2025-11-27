@@ -2,14 +2,14 @@ import type { Container } from '../container/Container.js';
 import type { Logger } from '../infrastructure/Logger.js';
 
 /**
- * Context provided to modules during initialization.
+ * Configuration provided to contexts during initialization.
  *
- * Modules can:
+ * Contexts can:
  * - Access the DI container to resolve dependencies
  * - Access the logger for logging
- * - Access configuration specific to the module
+ * - Access configuration specific to the context
  */
-export interface ModuleContext {
+export interface ContextConfig {
   /**
    * The dependency injection container.
    */
@@ -21,13 +21,13 @@ export interface ModuleContext {
   readonly logger: Logger;
 
   /**
-   * Gets configuration for this module.
+   * Gets configuration for this context.
    *
-   * @returns The module configuration, or undefined if not set
+   * @returns The context configuration, or undefined if not set
    *
    * @example
    * ```typescript
-   * const config = context.getConfig<ProductsConfig>();
+   * const config = contextConfig.getConfig<ProductsConfig>();
    * ```
    */
   getConfig<T = unknown>(): T | undefined;

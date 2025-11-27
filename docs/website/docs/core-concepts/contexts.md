@@ -1,21 +1,21 @@
 ---
 sidebar_position: 5
-title: Bounded Contexts
+title: Contexts
 description: Build modular monoliths that easily migrate to microservices
 ---
 
-# Bounded Contexts
+# Contexts
 
-One of Stratix's most powerful features is **Bounded Contexts** - self-contained domain modules that work seamlessly in both monolithic and microservices architectures.
+One of Stratix's most powerful features is **Contexts** - self-contained domain units that work seamlessly in both monolithic and microservices architectures.
 
 > [!IMPORTANT]
 > **The Modular Advantage**
-> 
-> Start with a modular monolith and migrate to microservices **only when necessary**. Stratix makes this transition seamless because bounded contexts are portable by design.
+>
+> Start with a modular monolith and migrate to microservices **only when necessary**. Stratix makes this transition seamless because contexts are portable by design.
 
-## What are Bounded Contexts?
+## What are Contexts?
 
-A **Bounded Context** is a self-contained module that encapsulates:
+A **Context** is a self-contained unit of domain logic that encapsulates:
 - Domain logic (entities, value objects, domain services)
 - Application logic (commands, queries, handlers)
 - Infrastructure (repositories, external integrations)
@@ -23,11 +23,11 @@ A **Bounded Context** is a self-contained module that encapsulates:
 
 ### Key Benefits
 
-**Start Simple** - Build as a monolith, deploy as one application  
-**Scale Gradually** - Extract contexts to microservices when needed  
-**Team Autonomy** - Each team owns a bounded context  
-**Clear Boundaries** - No accidental coupling between domains  
-**Portable** - Same code works in monolith or microservice  
+**Start Simple** - Build as a monolith, deploy as one application
+**Scale Gradually** - Extract contexts to microservices when needed
+**Team Autonomy** - Each team owns a context
+**Clear Boundaries** - No accidental coupling between domains
+**Portable** - Same code works in monolith or microservice
 
 ## The Migration Path
 
@@ -35,7 +35,7 @@ A **Bounded Context** is a self-contained module that encapsulates:
 graph LR
     A[Modular Monolith] -->|When needed| B[Hybrid Architecture]
     B -->|When needed| C[Microservices]
-    
+
     style A fill:#4CAF50
     style B fill:#FF9800
     style C fill:#2196F3
@@ -114,31 +114,31 @@ Each context is a separate service
 - Technology diversity
 - Team autonomy
 
-## Context Module Interface
+## Context Interface
 
-Stratix provides the `ContextModule` interface for defining bounded contexts:
+Stratix provides the `Context` interface for defining contexts:
 
 ```typescript
-import { ContextModule, ModuleMetadata, ModuleContext } from '@stratix/core';
+import { Context, ContextMetadata, ContextConfig } from '@stratix/core';
 
-export class ProductsModule implements ContextModule {
-  readonly metadata: ModuleMetadata = {
+export class ProductsContext implements Context {
+  readonly metadata: ContextMetadata = {
     name: 'products-context',
     version: '1.0.0',
-    description: 'Products Bounded Context',
+    description: 'Products Context',
     requiredPlugins: ['postgres', 'rabbitmq'],
-    requiredModules: [] // Dependencies on other contexts
+    requiredContexts: [] // Dependencies on other contexts
   };
 
-  readonly contextName = 'Products';
+  readonly name = 'Products';
 
-  async initialize(context: ModuleContext): Promise<void> {
+  async initialize(config: ContextConfig): Promise<void> {
     // Register repositories, services, etc.
-    const repository = new PostgresProductRepository(context.container);
-    context.container.register('productRepository', () => repository);
+    const repository = new PostgresProductRepository(config.container);
+    config.container.register('productRepository', () => repository);
   }
 
-  getCommands(): CommandDefinition[] {
+  getCommands(): ContextCommandDefinition[] {
     return [
       {
         name: 'CreateProduct',
@@ -148,7 +148,7 @@ export class ProductsModule implements ContextModule {
     ];
   }
 
-  getQueries(): QueryDefinition[] {
+  getQueries(): ContextQueryDefinition[] {
     return [
       {
         name: 'GetProductById',
@@ -158,10 +158,11 @@ export class ProductsModule implements ContextModule {
     ];
   }
 
-  getEventHandlers(): EventHandlerDefinition[] {
+  getEventHandlers(): ContextEventHandlerDefinition[] {
     return [
       {
-        eventType: 'ProductCreated',
+        eventName: 'ProductCreated',
+        eventType: ProductCreatedEvent,
         handler: new ProductCreatedHandler(/* dependencies */)
       }
     ];
@@ -176,24 +177,24 @@ export class ProductsModule implements ContextModule {
 ```
 my-ecommerce/
 ├── src/
-│   ├── modules/
+│   ├── contexts/
 │   │   ├── products/           # Products Context
 │   │   │   ├── domain/
 │   │   │   ├── application/
 │   │   │   ├── infrastructure/
-│   │   │   └── ProductsModule.ts
+│   │   │   └── ProductsContext.ts
 │   │   │
 │   │   ├── orders/             # Orders Context
 │   │   │   ├── domain/
 │   │   │   ├── application/
 │   │   │   ├── infrastructure/
-│   │   │   └── OrdersModule.ts
+│   │   │   └── OrdersContext.ts
 │   │   │
 │   │   └── customers/          # Customers Context
 │   │       ├── domain/
 │   │       ├── application/
 │   │       ├── infrastructure/
-│   │       └── CustomersModule.ts
+│   │       └── CustomersContext.ts
 │   │
 │   └── index.ts                # Application entry point
 ```
@@ -203,40 +204,40 @@ my-ecommerce/
 ```typescript
 // src/index.ts
 import { ApplicationBuilder } from '@stratix/runtime';
-import { ProductsModule } from './modules/products/ProductsModule';
-import { OrdersModule } from './modules/orders/OrdersModule';
-import { CustomersModule } from './modules/customers/CustomersModule';
+import { ProductsContext } from './contexts/products/ProductsContext';
+import { OrdersContext } from './contexts/orders/OrdersContext';
+import { CustomersContext } from './contexts/customers/CustomersContext';
 
 const app = await ApplicationBuilder.create()
   .useContainer(new AwilixContainer())
   .useLogger(new ConsoleLogger())
-  
+
   // Infrastructure plugins
   .usePlugin(new PostgresPlugin({ /* config */ }))
   .usePlugin(new FastifyHTTPPlugin({ port: 3000 }))
-  
-  // Bounded contexts - all in one application
-  .useModule(new ProductsModule())
-  .useModule(new OrdersModule())
-  .useModule(new CustomersModule())
-  
+
+  // Contexts - all in one application
+  .useContext(new ProductsContext())
+  .useContext(new OrdersContext())
+  .useContext(new CustomersContext())
+
   .build();
 
 await app.start();
-// All contexts running in the same process! 
+// All contexts running in the same process!
 ```
 
 ## Migrating to Microservices
 
 ### Step 1: Identify the Context to Extract
 
-Let's say `OrdersModule` needs independent scaling:
+Let's say `OrdersContext` needs independent scaling:
 
 ```typescript
 // Before: Monolith with all contexts
-.useModule(new ProductsModule())
-.useModule(new OrdersModule())      // ← Extract this
-.useModule(new CustomersModule())
+.useContext(new ProductsContext())
+.useContext(new OrdersContext())      // ← Extract this
+.useContext(new CustomersContext())
 ```
 
 ### Step 2: Create a Separate Service
@@ -244,20 +245,20 @@ Let's say `OrdersModule` needs independent scaling:
 **orders-service/src/index.ts:**
 ```typescript
 import { ApplicationBuilder } from '@stratix/runtime';
-import { OrdersModule } from './modules/orders/OrdersModule';
+import { OrdersContext } from './contexts/orders/OrdersContext';
 
-// Orders microservice - SAME MODULE CODE!
+// Orders microservice - SAME CONTEXT CODE!
 const app = await ApplicationBuilder.create()
   .useContainer(new AwilixContainer())
   .useLogger(new ConsoleLogger())
-  
+
   .usePlugin(new PostgresPlugin({ /* config */ }))
   .usePlugin(new FastifyHTTPPlugin({ port: 3001 }))
   .usePlugin(new RabbitMQPlugin({ /* config */ }))
-  
-  // Same OrdersModule, different service!
-  .useModule(new OrdersModule())
-  
+
+  // Same OrdersContext, different service!
+  .useContext(new OrdersContext())
+
   .build();
 
 await app.start();
@@ -270,15 +271,15 @@ await app.start();
 const app = await ApplicationBuilder.create()
   .useContainer(new AwilixContainer())
   .useLogger(new ConsoleLogger())
-  
+
   .usePlugin(new PostgresPlugin({ /* config */ }))
   .usePlugin(new FastifyHTTPPlugin({ port: 3000 }))
   .usePlugin(new RabbitMQPlugin({ /* config */ }))
-  
-  // Remove OrdersModule from here
-  .useModule(new ProductsModule())
-  .useModule(new CustomersModule())
-  
+
+  // Remove OrdersContext from here
+  .useContext(new ProductsContext())
+  .useContext(new CustomersContext())
+
   .build();
 
 await app.start();
@@ -289,7 +290,7 @@ await app.start();
 Use events for communication between services:
 
 ```typescript
-// In ProductsModule (main app)
+// In ProductsContext (main app)
 class ProductCreatedHandler implements EventHandler<ProductCreatedEvent> {
   constructor(private eventBus: EventBus) {}
 
@@ -300,7 +301,7 @@ class ProductCreatedHandler implements EventHandler<ProductCreatedEvent> {
   }
 }
 
-// In OrdersModule (separate service)
+// In OrdersContext (separate service)
 class ProductCreatedHandler implements EventHandler<ProductCreatedEvent> {
   async handle(event: ProductCreatedEvent): Promise<void> {
     // React to product creation
@@ -314,16 +315,16 @@ class ProductCreatedHandler implements EventHandler<ProductCreatedEvent> {
 ### Declaring Dependencies
 
 ```typescript
-export class OrdersModule implements ContextModule {
-  readonly metadata: ModuleMetadata = {
+export class OrdersContext implements Context {
+  readonly metadata: ContextMetadata = {
     name: 'orders-context',
     version: '1.0.0',
-    
+
     // Require these plugins
     requiredPlugins: ['postgres', 'rabbitmq'],
-    
+
     // Depend on these contexts (in monolith)
-    requiredModules: ['products-context', 'customers-context']
+    requiredContexts: ['products-context', 'customers-context']
   };
 }
 ```
@@ -352,7 +353,7 @@ class CreateOrderHandler implements CommandHandler<CreateOrderCommand> {
     // Direct repository access - same process
     const product = await this.productRepository.findById(command.productId);
     const customer = await this.customerRepository.findById(command.customerId);
-    
+
     // Create order
     const order = new Order(/* ... */);
     return Success.create(order);
@@ -375,13 +376,13 @@ class CreateOrderHandler implements CommandHandler<CreateOrderCommand> {
     const product = await this.httpClient.get(
       `http://products-service/api/products/${command.productId}`
     );
-    
+
     // Create order
     const order = new Order(/* ... */);
-    
+
     // Publish event
     await this.eventBus.publish(new OrderCreatedEvent(order));
-    
+
     return Success.create(order);
   }
 }
@@ -394,9 +395,9 @@ class CreateOrderHandler implements CommandHandler<CreateOrderCommand> {
 ```typescript
 // Good: Start simple
 const app = await ApplicationBuilder.create()
-  .useModule(new ProductsModule())
-  .useModule(new OrdersModule())
-  .useModule(new CustomersModule())
+  .useContext(new ProductsContext())
+  .useContext(new OrdersContext())
+  .useContext(new CustomersContext())
   .build();
 ```
 
@@ -404,7 +405,7 @@ const app = await ApplicationBuilder.create()
 
 ```typescript
 // Good: Use interfaces, not concrete implementations
-class OrdersModule {
+class OrdersContext {
   getCommands() {
     return [{
       handler: new CreateOrderHandler(
@@ -416,7 +417,7 @@ class OrdersModule {
 }
 
 // ❌ Bad: Hard-coded dependencies
-class OrdersModule {
+class OrdersContext {
   getCommands() {
     return [{
       handler: new CreateOrderHandler(
@@ -440,7 +441,7 @@ const order = await this.orderRepository.findByProductId(productId);
 
 ### 4. Keep Contexts Independent
 
-Each bounded context should have its own database schema and tables. Avoid sharing database tables between contexts, as this creates tight coupling and makes contexts harder to evolve independently.
+Each context should have its own database schema and tables. Avoid sharing database tables between contexts, as this creates tight coupling and makes contexts harder to evolve independently.
 
 ## Real-World Example
 

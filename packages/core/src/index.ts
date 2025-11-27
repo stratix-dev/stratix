@@ -82,16 +82,16 @@ export type { PluginMetadata } from './plugin/PluginMetadata.js';
 export type { PluginContext } from './plugin/PluginContext.js';
 export type { Plugin } from './plugin/Plugin.js';
 
-// Module System (Bounded Contexts)
-export type { ModuleMetadata } from './module/ModuleMetadata.js';
-export type { ModuleContext } from './module/ModuleContext.js';
-export type { ContextModule } from './module/ContextModule.js';
+// Context System
+export type { ContextMetadata } from './context/ContextMetadata.js';
+export type { ContextConfig } from './context/ContextConfig.js';
+export type { Context } from './context/Context.js';
 export type {
-  CommandDefinition,
-  QueryDefinition,
-  EventHandlerDefinition,
-  RepositoryDefinition,
-} from './module/definitions.js';
+  ContextCommandDefinition,
+  ContextQueryDefinition,
+  ContextEventHandlerDefinition,
+  ContextRepositoryDefinition,
+} from './context/definitions.js';
 
 // ========================================
 // AI AGENTS
