@@ -98,9 +98,9 @@ jobs:
           ## Installation
 
           \`\`\`bash
-          npm install @stratix/primitives@${{ steps.version.outputs.version }}
-          npm install @stratix/abstractions@${{ steps.version.outputs.version }}
-          npm install @stratix/impl-ai-agents@${{ steps.version.outputs.version }}
+          npm install @stratix/core@${{ steps.version.outputs.version }}
+          npm install @stratix/runtime@${{ steps.version.outputs.version }}
+          npm install @stratix/cli@${{ steps.version.outputs.version }}
           \`\`\`
 
           ## Full Changelog

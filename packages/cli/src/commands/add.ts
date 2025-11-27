@@ -59,10 +59,6 @@ const EXTENSIONS: Record<string, ExtensionInfo> = {
     description: 'OpenTelemetry observability',
     dependencies: ['@opentelemetry/api', '@opentelemetry/sdk-node'],
   },
-  secrets: {
-    package: '@stratix/secrets',
-    description: 'Secrets management',
-  },
   'ai-openai': {
     package: '@stratix/ai-openai',
     description: 'OpenAI LLM provider',
@@ -175,7 +171,7 @@ export function createAddCommand(): Command {
       );
 
       console.log(chalk.yellow.bold('\nData & Infrastructure:'));
-      ['postgres', 'mongodb', 'redis', 'rabbitmq', 'opentelemetry', 'secrets'].forEach(
+      ['postgres', 'mongodb', 'redis', 'rabbitmq', 'opentelemetry'].forEach(
         (name) => {
           const ext = EXTENSIONS[name];
           console.log(

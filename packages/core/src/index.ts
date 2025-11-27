@@ -25,6 +25,10 @@ export { ValueObjectFactory } from './value-objects/ValueObjectFactory.js';
 // Errors
 export { DomainError } from './errors/DomainError.js';
 
+// Mapping
+export { Mapper } from './mapping/Mapper.js';
+export * from './security/SecretsProvider.js';
+
 // Value Objects
 export { Currency } from './value-objects/Currency.js';
 export { Money } from './value-objects/Money.js';

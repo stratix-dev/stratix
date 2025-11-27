@@ -1,12 +1,18 @@
 ---
 sidebar_position: 3
 title: Official Plugins
-description: Official Stratix plugins and extensions
+description: Official Stratix plugins
 ---
 
 # Official Plugins
 
-Stratix provides official plugins for common infrastructure needs.
+Stratix plugins are packages that implement the `Plugin` interface and manage external resources with a lifecycle (initialize → start → stop).
+
+:::info What's the difference?
+- **Plugins** 🔌 - Manage external resources, have lifecycle (this page)
+- **[Providers](../providers/providers-overview)** 🔧 - Implement core interfaces (AI, DI)
+- **[Libraries](../libraries/libraries-overview)** 📚 - Pure utility functions and classes
+:::
 
 ## HTTP Servers
 
@@ -24,15 +30,6 @@ stratix add http
 - Error handling
 - Schema validation
 - CORS support
-
-### @stratix/http-express
-
-HTTP server using Express (not yet available).
-
-```bash
-# Coming soon
-stratix add http-express
-```
 
 ## Databases
 
@@ -60,6 +57,8 @@ MongoDB database plugin.
 stratix add mongodb
 ```
 
+**[Documentation](../database/mongodb)**
+
 ### @stratix/redis
 
 Redis caching and pub/sub.
@@ -68,32 +67,7 @@ Redis caching and pub/sub.
 stratix add redis
 ```
 
-## AI Providers
-
-### @stratix/ai-openai
-
-OpenAI integration (GPT-4, GPT-3.5).
-
-```bash
-stratix add ai-openai
-```
-
-**Features:**
-- Chat completion
-- Streaming
-- Function calling
-- Embeddings
-- Cost tracking
-
-**[Documentation](../ai-agents/llm-providers)**
-
-### @stratix/ai-anthropic
-
-Anthropic Claude integration.
-
-```bash
-stratix add ai-anthropic
-```
+**[Documentation](../database/redis)**
 
 ## Message Queues
 
@@ -105,59 +79,11 @@ RabbitMQ message broker.
 stratix add rabbitmq
 ```
 
-## Dependency Injection
-
-### @stratix/di-awilix
-
-Awilix DI container (recommended).
-
-```bash
-stratix add awilix
-```
-
-**[Documentation](../core-concepts/dependency-injection)**
-
-## Utilities
-
-### @stratix/validation-zod
-
-Schema validation with Zod.
-
-```bash
-stratix add validation
-```
-
-### @stratix/mappers
-
-Entity-to-DTO mapping utilities.
-
-```bash
-stratix add mappers
-```
-
-### @stratix/auth
-
-JWT authentication and RBAC authorization.
-
-```bash
-stratix add auth
-```
-
-### @stratix/errors
-
-Structured error handling.
-
-```bash
-stratix add errors
-```
-
-### @stratix/secrets
-
-Secrets management.
-
-```bash
-stratix add secrets
-```
+**Features:**
+- Message publishing
+- Queue consumption
+- Topic exchanges
+- Dead letter queues
 
 ## Observability
 
@@ -169,44 +95,51 @@ OpenTelemetry integration for observability.
 stratix add opentelemetry
 ```
 
-## Testing
+**Features:**
+- Distributed tracing
+- Metrics collection
+- Log correlation
+- Auto-instrumentation
 
-### @stratix/testing
+## Security
 
-Testing utilities and mocks.
+### @stratix/auth
+
+JWT authentication and RBAC authorization.
 
 ```bash
-# Note: Use full package name for testing package
-npm install --save-dev @stratix/testing
+stratix add auth
 ```
 
 **Features:**
-- MockLLMProvider
-- AgentTester
-- Test helpers
+- JWT token generation and validation
+- Role-based access control (RBAC)
+- Permission checking
+- User authentication
 
-**[Documentation](../ai-agents/agent-testing)**
 
 ## Plugin Matrix
 
-| Plugin | Status | Version | Dependencies |
-|--------|--------|---------|--------------|
-| http-fastify | ✅ Stable | 0.1.3 | - |
-| http-express | ✅ Stable | 0.1.3 | - |
-| postgres | ✅ Stable | 0.1.3 | - |
-| mongodb | ✅ Stable | 0.1.3 | - |
-| redis | ✅ Stable | 0.1.3 | - |
-| ai-openai | ✅ Stable | 0.1.3 | - |
-| ai-anthropic | ✅ Stable | 0.1.3 | - |
-| rabbitmq | ✅ Stable | 0.1.3 | - |
-| di-awilix | ✅ Stable | 0.1.3 | - |
-| logger | ✅ Stable | 0.1.3 | - |
-| validation | ✅ Stable | 0.1.3 | - |
-| cache | ✅ Stable | 0.1.3 | - |
-| testing | ✅ Stable | 0.1.3 | - |
+| Plugin        | Category      | Status   | Version |
+| ------------- | ------------- | -------- | ------- |
+| http-fastify  | HTTP          | ✅ Stable | 0.5.0   |
+| postgres      | Database      | ✅ Stable | 0.5.0   |
+| mongodb       | Database      | ✅ Stable | 0.5.0   |
+| redis         | Database      | ✅ Stable | 0.5.0   |
+| rabbitmq      | Messaging     | ✅ Stable | 0.5.0   |
+| opentelemetry | Observability | ✅ Stable | 0.5.0   |
+| auth          | Security      | ✅ Stable | 0.5.0   |
+
+## Looking for Providers or Libraries?
+
+- **[AI Providers](../providers/ai-providers)** - Anthropic, OpenAI (LLM providers)
+- **[DI Providers](../providers/di-providers)** - Awilix (dependency injection)
+- **[Error Handling](../libraries/error-handling)** - Structured error classes
+- **[Validation](../providers/validation-providers)** - Zod schema validation
+- **[Mappers](../core-concepts/mapping)** - Domain-persistence mapping (now part of Core)
 
 ## Next Steps
 
-- **[Creating Plugins](./creating-plugins)** - Build your own
+- **[Creating Plugins](./creating-plugins)** - Build your own plugins
 - **[Plugin Configuration](./plugin-configuration)** - Configuration guide
 - **[add Command](../cli/add-command)** - Install plugins

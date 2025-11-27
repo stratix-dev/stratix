@@ -1,45 +1,43 @@
 {
-  "name": "@stratix/testing",
+  "name": "@stratix/di-awilix",
   "version": "0.6.0",
-  "description": "Testing utilities for Stratix AI agents",
+  "description": "Awilix dependency injection container implementation for Stratix",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "import": "./dist/index.js"
     }
   },
   "scripts": {
     "build": "tsc",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run || exit 0",
+    "test": "vitest run",
     "test:watch": "vitest"
   },
   "keywords": [
     "stratix",
-    "ai",
-    "agents",
-    "testing",
-    "mock"
+    "di",
+    "dependency-injection",
+    "ioc",
+    "awilix"
   ],
+  "author": "P. Andrés Carvajal <causticrez@gmail.com>",
+  "license": "MIT",
   "dependencies": {
-    "@stratix/runtime": "workspace:*",
-    "@stratix/di-awilix": "workspace:*",
+    "awilix": "^10.0.2",
     "@stratix/core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
     "typescript": "^5.3.3",
-    "vitest": "^1.0.0"
+    "vitest": "^1.6.1"
   },
-  "author": "P. Andrés Carvajal <causticrez@gmail.com>",
-  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/stratix-dev/stratix.git",
-    "directory": "packages/testing"
+    "directory": "packages/plugins/di/awilix"
   },
   "homepage": "https://stratix-dev.github.io/stratix/",
   "bugs": {

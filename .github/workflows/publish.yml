@@ -173,28 +173,18 @@ jobs:
           publish_package "packages/plugins/database/mongodb" || true
           publish_package "packages/plugins/database/redis" || true
 
-          # DI plugins
-          publish_package "packages/plugins/di/awilix" || true
-
-          # HTTP plugins
-          publish_package "packages/plugins/http/fastify" || true
-
-          # AI plugins
-          publish_package "packages/plugins/ai/openai" || true
-          publish_package "packages/plugins/ai/anthropic" || true
-
-          # Messaging plugins
-          publish_package "packages/plugins/messaging/rabbitmq" || true
-
-          # Observability plugins
-          publish_package "packages/plugins/observability/opentelemetry" || true
-
           # Utility plugins
-          publish_package "packages/plugins/utilities/auth" || true
-          publish_package "packages/plugins/utilities/validation-zod" || true
-          publish_package "packages/plugins/utilities/mappers" || true
-          publish_package "packages/plugins/utilities/errors" || true
-          publish_package "packages/plugins/utilities/secrets" || true
+          publish_package "packages/libraries/errors" || true
+          
+          # Security plugins
+          publish_package "packages/plugins/security/auth" || true
+          publish_package "packages/plugins/security/secrets" || true
+
+          # Providers
+          publish_package "packages/providers/di/awilix" || true
+          publish_package "packages/providers/ai/openai" || true
+          publish_package "packages/providers/ai/anthropic" || true
+          publish_package "packages/providers/validation/zod" || true
 
           # 4. Testing utilities (depend on core, runtime, di)
           publish_package "packages/testing" || true
@@ -261,33 +251,20 @@ jobs:
           add_to_summary "packages/plugins/database/redis"
 
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### DI Plugins" >> $GITHUB_STEP_SUMMARY
-          add_to_summary "packages/plugins/di/awilix"
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### HTTP Plugins" >> $GITHUB_STEP_SUMMARY
-          add_to_summary "packages/plugins/http/fastify"
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### AI Plugins" >> $GITHUB_STEP_SUMMARY
-          add_to_summary "packages/plugins/ai/openai"
-          add_to_summary "packages/plugins/ai/anthropic"
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Messaging Plugins" >> $GITHUB_STEP_SUMMARY
-          add_to_summary "packages/plugins/messaging/rabbitmq"
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Observability Plugins" >> $GITHUB_STEP_SUMMARY
-          add_to_summary "packages/plugins/observability/opentelemetry"
-
-          echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Utility Plugins" >> $GITHUB_STEP_SUMMARY
-          add_to_summary "packages/plugins/utilities/auth"
-          add_to_summary "packages/plugins/utilities/validation-zod"
-          add_to_summary "packages/plugins/utilities/mappers"
-          add_to_summary "packages/plugins/utilities/errors"
-          add_to_summary "packages/plugins/utilities/secrets"
+          add_to_summary "packages/libraries/errors"
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Security Plugins" >> $GITHUB_STEP_SUMMARY
+          add_to_summary "packages/plugins/security/auth"
+          add_to_summary "packages/plugins/security/secrets"
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Providers" >> $GITHUB_STEP_SUMMARY
+          add_to_summary "packages/providers/di/awilix"
+          add_to_summary "packages/providers/ai/openai"
+          add_to_summary "packages/providers/ai/anthropic"
+          add_to_summary "packages/providers/validation/zod"
 
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Tools" >> $GITHUB_STEP_SUMMARY

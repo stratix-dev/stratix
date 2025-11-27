@@ -146,7 +146,6 @@ stratix add list
 ### Production Extensions
 - `http` - Fastify HTTP server
 - `validation` - Zod schema validation
-- `mappers` - Entity-to-DTO mapping
 - `auth` - JWT authentication & RBAC
 - `errors` - Structured error handling
 
@@ -156,7 +155,7 @@ stratix add list
 - `redis` - Redis caching
 - `rabbitmq` - RabbitMQ messaging
 - `opentelemetry` - Observability
-- `secrets` - Secrets management
+
 
 ### AI Providers
 - `ai-openai` - OpenAI LLM provider

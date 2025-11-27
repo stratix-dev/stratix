@@ -1,7 +1,7 @@
 {
-  "name": "@stratix/http-fastify",
+  "name": "@stratix/validation-zod",
   "version": "0.6.0",
-  "description": "Fastify HTTP integration plugin for Stratix framework",
+  "description": "Zod-based input validation for Stratix framework",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -26,24 +26,20 @@
   },
   "keywords": [
     "stratix",
-    "http",
-    "fastify",
-    "plugin",
-    "rest",
-    "api"
+    "validation",
+    "zod",
+    "schema",
+    "dto"
   ],
   "author": "Stratix Team",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/stratix-dev/stratix.git",
-    "directory": "packages/plugins/http/fastify"
+    "directory": "packages/plugins/utilities/validation-zod"
   },
-  "homepage": "https://stratix-dev.github.io/stratix/",
   "dependencies": {
-    "@stratix/runtime": "workspace:*",
-    "fastify": "^5.2.0",
-    "@fastify/cors": "^10.0.1",
+    "zod": "^3.24.1",
     "@stratix/core": "workspace:*"
   },
   "devDependencies": {
@@ -53,5 +49,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "homepage": "https://stratix-dev.github.io/stratix/"
 }
