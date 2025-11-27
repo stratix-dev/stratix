@@ -42,7 +42,7 @@ cd my-app
 stratix generate entity Product
 
 # Add an extension
-stratix add @stratix/http-fastify
+stratix add http
 
 # Display project info
 stratix info
@@ -81,21 +81,21 @@ stratix add
 Provide all arguments for CI/CD pipelines:
 
 ```bash
-stratix new my-app --structure ddd --skip-install
+stratix new my-app --structure single-context --skip-install
 stratix generate entity Product --path src/domain/entities
-stratix add @stratix/http-fastify --skip-install
+stratix add http --skip-install
 ```
 
 ## Project Templates
 
 The CLI supports multiple project templates:
 
-- **DDD** (Default) - Domain-Driven Design structure
-- **Modular** - Contexts for modular architecture
+- **Single Context** (Default) - For single domain applications
+- **Multi Context** - For applications with multiple domains
 - **Minimal** - Bare-bones setup
 
 ```bash
-stratix new my-app --structure modular
+stratix new my-app --structure multi-context
 ```
 
 ## Code Generators
@@ -121,14 +121,14 @@ Add official and third-party extensions:
 
 ```bash
 # HTTP server
-stratix add @stratix/http-fastify
+stratix add http
 
 # Database
-stratix add @stratix/postgres
+stratix add postgres
 
 # AI providers
-stratix add @stratix/ai-openai
-stratix add @stratix/ai-anthropic
+stratix add ai-openai
+stratix add ai-anthropic
 ```
 
 ## Configuration
@@ -140,22 +140,32 @@ The CLI reads configuration from:
 3. **package.json** `stratix` field
 4. **Default values** (lowest priority)
 
-### stratix.config.js
+### stratix.config.ts
 
-```javascript
-module.exports = {
-  template: 'ddd',
+```typescript
+import { defineConfig } from '@stratix/cli';
+
+export default defineConfig({
+  structure: {
+    type: 'single-context',
+    sourceRoot: 'src',
+    domainPath: 'src/domain',
+    applicationPath: 'src/application',
+    infrastructurePath: 'src/infrastructure',
+  },
   generators: {
     entity: {
       path: 'src/domain/entities',
-      suffix: '.entity.ts'
+      aggregate: true,
+      withTests: false,
     },
     command: {
       path: 'src/application/commands',
-      suffix: '.command.ts'
+      withHandler: true,
+      withTests: false,
     }
   }
-};
+});
 ```
 
 ## Best Practices
@@ -169,21 +179,24 @@ stratix new  # Learn available options
 ### 2. Use Non-Interactive for Automation
 
 ```bash
-stratix new my-app --structure ddd --skip-install
+stratix new my-app --structure single-context --skip-install
 ```
 
 ### 3. Customize Generators
 
-```javascript
-// stratix.config.js
-module.exports = {
+```typescript
+// stratix.config.ts
+import { defineConfig } from '@stratix/cli';
+
+export default defineConfig({
   generators: {
     entity: {
       path: 'src/domain',
-      template: 'custom-entity.hbs'
+      aggregate: true,
+      withTests: true,
     }
   }
-};
+});
 ```
 
 ### 4. Version Lock in CI/CD

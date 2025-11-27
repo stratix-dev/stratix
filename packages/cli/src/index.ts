@@ -15,7 +15,7 @@ const program = new Command();
 
 program
   .name('stratix')
-  .description('Stratix CLI - Build DDD applications with ease')
+  .description('Stratix CLI - Build scalable applications with hexagonal architecture')
   .version(packageJson.version);
 
 program.addCommand(createNewCommand());

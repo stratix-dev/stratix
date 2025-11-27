@@ -96,7 +96,7 @@ export const stratixConfigTemplate = (): string => `import { defineConfig } from
 
 export default defineConfig({
   structure: {
-    type: 'ddd',
+    type: 'single-context',
     sourceRoot: 'src',
     domainPath: 'src/domain',
     applicationPath: 'src/application',
@@ -174,7 +174,7 @@ temp/
 export const stratixCliTypesTemplate = (): string => `declare module '@stratix/cli' {
   export interface StratixConfig {
     structure?: {
-      type?: 'ddd' | 'modular' | 'custom';
+      type?: 'single-context' | 'multi-context' | 'custom';
       sourceRoot?: string;
       domainPath?: string;
       applicationPath?: string;
@@ -247,7 +247,7 @@ export const prettierConfigTemplate = (): string => `{
 
 export const readmeTemplate = (data: ProjectTemplateData): string => `# ${data.projectName}
 
-A Stratix application built with Domain-Driven Design, CQRS, and Hexagonal Architecture.
+A Stratix application built with hexagonal architecture, CQRS, and layered design.
 
 ## Getting Started
 
@@ -270,8 +270,8 @@ ${data.packageManager} start
 Use Stratix CLI to generate code:
 
 \`\`\`bash
-# Generate a complete bounded context
-stratix generate context Products --props "name:string,price:number,stock:number"
+# Generate a complete context
+stratix generate context Products --props '[{"name":"name","type":"string"},{"name":"price","type":"number"}]'
 
 # Generate individual components
 stratix generate entity Product --props "name:string,price:number"
@@ -298,7 +298,7 @@ src/
 ## Learn More
 
 - [Stratix Documentation](https://stratix.dev/docs)
-- [Domain-Driven Design](https://martinfowler.com/bliki/DomainDrivenDesign.html)
+- [Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/)
 - [CQRS Pattern](https://martinfowler.com/bliki/CQRS.html)
 
 ## License

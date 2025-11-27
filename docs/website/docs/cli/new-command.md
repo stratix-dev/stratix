@@ -22,34 +22,34 @@ stratix new
 
 You'll be prompted for:
 - Project name
-- Project template (DDD, Modular, Minimal)
+- Project structure (Single-Context, Multi-Context, Minimal)
 - Package manager (npm, pnpm, yarn)
 - Install dependencies (yes/no)
 
 ## Non-Interactive Mode
 
 ```bash
-stratix new my-app --structure ddd --pm pnpm --skip-install
+stratix new my-app --structure single-context --pm pnpm --skip-install
 ```
 
 ## Options
 
 | Option | Alias | Description | Default |
 |--------|-------|-------------|---------|
-| `--template` | `-t` | Project template | `ddd` |
+| `--structure` | `-s` | Project structure | `single-context` |
 | `--package-manager` | `--pm` | Package manager | `npm` |
 | `--skip-install` | | Skip dependency installation | `false` |
 | `--skip-git` | | Skip git initialization | `false` |
 | `--directory` | `-d` | Target directory | `<project-name>` |
 
-## Templates
+## Structures
 
-### DDD Template (Default)
+### Single-Context Structure (Default)
 
-Domain-Driven Design structure:
+Organized by architectural layers, ideal for focused applications:
 
 ```bash
-stratix new my-app --structure ddd
+stratix new my-app --structure single-context
 ```
 
 **Structure:**
@@ -72,12 +72,12 @@ my-app/
 └── tsconfig.json
 ```
 
-### Modular Template
+### Multi-Context Structure
 
-Contexts for modular architecture:
+Multiple contexts for modular architecture:
 
 ```bash
-stratix new my-app --structure modular
+stratix new my-app --structure multi-context
 ```
 
 **Structure:**
@@ -99,7 +99,7 @@ my-app/
 └── tsconfig.json
 ```
 
-### Minimal Template
+### Minimal Structure
 
 Bare-bones setup:
 
@@ -138,10 +138,10 @@ pnpm install
 stratix new my-app --directory ./projects/my-app
 ```
 
-### Create modular project
+### Create multi-context project
 
 ```bash
-stratix new my-microservices --structure modular
+stratix new my-microservices --structure multi-context
 ```
 
 ## What Gets Created
@@ -180,8 +180,8 @@ cd my-app
 npm install
 
 # Add extensions
-stratix add @stratix/http-fastify
-stratix add @stratix/postgres
+stratix add http
+stratix add postgres
 
 # Generate code
 stratix generate entity Product
@@ -195,16 +195,16 @@ npm start
 
 ## Best Practices
 
-### 1. Use DDD Template for Most Projects
+### 1. Use Single-Context Structure for Most Projects
 
 ```bash
-stratix new my-app --structure ddd
+stratix new my-app --structure single-context
 ```
 
-### 2. Use Modular for Microservices
+### 2. Use Multi-Context for Microservices
 
 ```bash
-stratix new my-services --structure modular
+stratix new my-services --structure multi-context
 ```
 
 ### 3. Choose Package Manager Wisely

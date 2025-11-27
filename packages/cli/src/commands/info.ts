@@ -46,11 +46,11 @@ function detectPackageManager(): string {
 }
 
 function detectProjectStructure(): string {
-  if (existsSync('src/contexts') || existsSync('src/domain')) {
-    return 'DDD/Hexagonal';
+  if (existsSync('src/contexts')) {
+    return 'Multi-Context';
   }
-  if (existsSync('src/modules')) {
-    return 'Modular';
+  if (existsSync('src/domain')) {
+    return 'Single-Context';
   }
   return 'Custom';
 }
@@ -100,7 +100,7 @@ export function createInfoCommand(): Command {
       }
 
       console.log(chalk.yellow('Quick Commands:'));
-      console.log(chalk.white('  stratix g context <name>    - Generate bounded context'));
+      console.log(chalk.white('  stratix g context <name>    - Generate context'));
       console.log(chalk.white('  stratix g entity <name>     - Generate entity'));
       console.log(chalk.white('  stratix add <extension>     - Install extension'));
       console.log(chalk.white('  stratix add list            - List available extensions'));

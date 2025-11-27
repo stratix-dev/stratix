@@ -11,7 +11,7 @@ PostgreSQL database integration for Stratix.
 ## Installation
 
 ```bash
-stratix add @stratix/postgres
+stratix add postgres
 ```
 
 ## Configuration

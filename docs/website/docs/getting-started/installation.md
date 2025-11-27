@@ -65,7 +65,7 @@ stratix new
 You'll be prompted for:
 - **Project name** - Name of your project directory
 - **Package manager** - npm, pnpm, or yarn
-- **Project structure** - DDD or Modular
+- **Project structure** - Single-Context or Multi-Context
 - **Git initialization** - Whether to initialize a git repository
 - **Install dependencies** - Whether to install dependencies automatically
 
@@ -74,26 +74,26 @@ You'll be prompted for:
 You can also create a project with command-line options:
 
 ```bash
-stratix new my-app --pm pnpm --structure ddd
+stratix new my-app --pm pnpm --structure single-context
 ```
 
 **Options:**
 - `--pm <manager>` - Package manager (npm, pnpm, yarn)
-- `--structure <type>` - Project structure (ddd, modular)
+- `--structure <type>` - Project structure (single-context, multi-context)
 - `--no-git` - Skip git initialization
 - `--skip-install` - Skip dependency installation
 
 ### Examples
 
 ```bash
-# Create with pnpm and DDD structure
-stratix new my-ecommerce --pm pnpm --structure ddd
+# Create with pnpm and Single-Context structure
+stratix new my-ecommerce --pm pnpm --structure single-context
 
 # Create without git and skip install
 stratix new my-api --no-git --skip-install
 
-# Create with modular structure
-stratix new my-service --structure modular
+# Create with Multi-Context structure
+stratix new my-service --structure multi-context
 ```
 
 ## Project Structure
@@ -139,7 +139,7 @@ stratix add validation
 stratix add list
 ```
 
-**Note:** The `stratix add` command uses simplified names for official Stratix extensions. External dependencies (like `pg`, `redis`, etc.) are automatically installed from the public npm registry.
+**Note:** The `stratix add` command uses simplified names. For example, `stratix add http` installs `@stratix/http-fastify`. External dependencies (like `fastify`, `pg`, `redis`, etc.) are automatically installed from the public npm registry.
 
 **Available Extensions:**
 

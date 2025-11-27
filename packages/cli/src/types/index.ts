@@ -1,6 +1,6 @@
 export interface NewCommandOptions {
   pm?: 'npm' | 'pnpm' | 'yarn';
-  structure?: 'ddd' | 'modular';
+  structure?: 'single-context' | 'multi-context';
   git?: boolean;
 }
 
@@ -17,7 +17,7 @@ export interface GenerateCommandOptions {
 }
 
 export interface ProjectStructure {
-  type: 'ddd' | 'modular' | 'unknown';
+  type: 'single-context' | 'multi-context' | 'unknown';
   basePath: string;
   sourceRoot: string;
   domainPath?: string;

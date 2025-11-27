@@ -11,7 +11,7 @@ Redis integration for caching and pub/sub.
 ## Installation
 
 ```bash
-stratix add @stratix/redis
+stratix add redis
 ```
 
 ## Configuration

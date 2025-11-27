@@ -296,12 +296,12 @@ export function createGenerateCommand(): Command {
   // Context generator
   command
     .command('context <name>')
-    .description('Generate a complete bounded context (modular architecture)')
+    .description('Generate a complete context with domain, application, and infrastructure layers')
     .option('--props <props>', 'Properties as JSON array: [{"name":"name","type":"string"}]')
     .option('--dry-run', 'Preview generated files without writing')
     .action(async (name: string, options: any) => {
       try {
-        console.log(chalk.blue.bold('\nGenerate Bounded Context\n'));
+        console.log(chalk.blue.bold('\nGenerate Context\n'));
 
         const generator = await generatorRegistry.get('context');
         if (!generator) {
@@ -327,7 +327,7 @@ export function createGenerateCommand(): Command {
         });
 
         if (!options.dryRun) {
-          console.log(chalk.green.bold('\nBounded context generated!\n'));
+          console.log(chalk.green.bold('\nContext generated!\n'));
         } else {
           console.log(chalk.yellow.bold('\nDry run - no files written\n'));
           result.files.forEach(f => console.log(chalk.gray(`  ${f.path}`)));

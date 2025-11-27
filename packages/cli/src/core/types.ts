@@ -52,7 +52,7 @@ export interface TemplateData {
 /**
  * Project structure type
  */
-export type ProjectStructureType = 'ddd' | 'modular' | 'unknown';
+export type ProjectStructureType = 'single-context' | 'multi-context' | 'unknown';
 
 /**
  * Project structure

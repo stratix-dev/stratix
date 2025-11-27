@@ -16,7 +16,7 @@ export function createNewCommand(): Command {
     .description('Create a new Stratix project')
     .argument('[project-name]', 'Project name')
     .option('--pm <manager>', 'Package manager (npm, pnpm, yarn)')
-    .option('--structure <type>', 'Project structure (ddd, modular)', 'ddd')
+    .option('--structure <type>', 'Project structure (single-context, multi-context)', 'single-context')
     .option('--no-git', 'Skip git initialization')
     .option('--skip-install', 'Skip dependency installation')
     .action(
@@ -57,7 +57,7 @@ export function createNewCommand(): Command {
 
         interface NewProjectAnswers {
           packageManager?: 'npm' | 'pnpm' | 'yarn';
-          structure?: 'ddd' | 'modular';
+          structure?: 'single-context' | 'multi-context';
           git?: boolean;
         }
 
@@ -78,10 +78,10 @@ export function createNewCommand(): Command {
             name: 'structure',
             message: 'Project structure:',
             choices: [
-              { name: 'DDD (Domain-Driven Design)', value: 'ddd' },
-              { name: 'Modular Monolith', value: 'modular' },
+              { name: 'Single Context (single domain)', value: 'single-context' },
+              { name: 'Multi Context (multiple domains)', value: 'multi-context' },
             ],
-            default: 'ddd',
+            default: 'single-context',
             when: !options?.structure,
           },
           {
@@ -97,7 +97,7 @@ export function createNewCommand(): Command {
           | 'npm'
           | 'pnpm'
           | 'yarn';
-        const structure = (options?.structure || answers.structure || 'ddd') as 'ddd' | 'modular';
+        const structure = (options?.structure || answers.structure || 'single-context') as 'single-context' | 'multi-context';
         const git = options?.git !== false && answers.git !== false;
 
         const spinner = ora('Creating project...').start();
@@ -128,8 +128,8 @@ export function createNewCommand(): Command {
         
         console.log(chalk.white(`  ${PackageManagerUtils.getRunCommand(packageManager, 'dev')}\n`));
 
-        if (structure === 'modular') {
-          console.log(chalk.gray('Generate your first bounded context:\n'));
+        if (structure === 'multi-context') {
+          console.log(chalk.gray('Generate your first context:\n'));
           console.log(chalk.white('  stratix generate context Product --props \'[{"name":"name","type":"string"},{"name":"price","type":"number"}]\'\n'));
         } else {
           console.log(chalk.gray('Generate your first entity:\n'));

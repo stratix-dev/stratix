@@ -25,80 +25,82 @@ Browse and select from available extensions.
 ## Non-Interactive Mode
 
 ```bash
-stratix add @stratix/http-fastify
-stratix add @stratix/postgres --skip-install
+stratix add http
+stratix add postgres --skip-install
 ```
+
+The `add` command uses simplified names for official Stratix extensions. For example, `stratix add http` installs `@stratix/http-fastify`.
 
 ## Official Extensions
 
 ### HTTP Servers
 
 ```bash
-# Fastify (Recommended)
-stratix add @stratix/http-fastify
-
-# Express
-stratix add @stratix/http-express
+# Fastify (installs @stratix/http-fastify)
+stratix add http
 ```
 
 ### Databases
 
 ```bash
-# PostgreSQL
-stratix add @stratix/postgres
+# PostgreSQL (installs @stratix/db-postgres)
+stratix add postgres
 
-# MongoDB
-stratix add @stratix/mongodb
+# MongoDB (installs @stratix/db-mongodb)
+stratix add mongodb
 
-# Redis
-stratix add @stratix/redis
+# Redis (installs @stratix/db-redis)
+stratix add redis
 ```
 
 ### AI Providers
 
 ```bash
-# OpenAI
-stratix add @stratix/ai-openai
+# OpenAI (installs @stratix/ai-openai)
+stratix add ai-openai
 
-# Anthropic (Claude)
-stratix add @stratix/ai-anthropic
+# Anthropic Claude (installs @stratix/ai-anthropic)
+stratix add ai-anthropic
 ```
 
 ### Message Queues
 
 ```bash
-# RabbitMQ
-stratix add @stratix/rabbitmq
-
-# Kafka
-stratix add @stratix/kafka
+# RabbitMQ (installs @stratix/msg-rabbitmq)
+stratix add rabbitmq
 ```
 
 ### Utilities
 
 ```bash
-# Logging
-stratix add @stratix/logger
+# Validation (installs @stratix/validation-zod)
+stratix add validation
 
-# Validation
-stratix add @stratix/validation
+# Mappers (installs @stratix/mappers)
+stratix add mappers
 
-# Caching
-stratix add @stratix/cache
+# Auth (installs @stratix/auth)
+stratix add auth
+
+# Errors (installs @stratix/errors)
+stratix add errors
+
+# Secrets (installs @stratix/secrets)
+stratix add secrets
 ```
 
-### Testing
+### Observability
 
 ```bash
-# Testing utilities
-stratix add @stratix/testing
+# OpenTelemetry (installs @stratix/obs-opentelemetry)
+stratix add opentelemetry
 ```
 
 ### Dependency Injection
 
 ```bash
-# Awilix (Recommended)
-stratix add @stratix/di-awilix
+# Awilix (installs @stratix/di-awilix)
+stratix add awilix
 ```
 
 ## Options
@@ -123,7 +125,7 @@ When you add an extension:
 ### Add HTTP server
 
 ```bash
-stratix add @stratix/http-fastify
+stratix add http
 ```
 
 **Creates:**
@@ -133,7 +135,7 @@ stratix add @stratix/http-fastify
 ### Add database
 
 ```bash
-stratix add @stratix/postgres
+stratix add postgres
 ```
 
 **Creates:**
@@ -143,7 +145,7 @@ stratix add @stratix/postgres
 ### Add AI provider
 
 ```bash
-stratix add @stratix/ai-openai
+stratix add ai-openai
 ```
 
 **Creates:**
@@ -153,7 +155,7 @@ stratix add @stratix/ai-openai
 ### Add multiple extensions
 
 ```bash
-stratix add @stratix/http-fastify @stratix/postgres @stratix/ai-openai
+stratix add http postgres ai-openai
 ```
 
 ## Third-Party Extensions
@@ -194,25 +196,25 @@ await app.start();
 
 ```bash
 # Set up infrastructure first
-stratix add @stratix/http-fastify
-stratix add @stratix/postgres
-stratix add @stratix/di-awilix
+stratix add http
+stratix add postgres
+stratix add awilix
 ```
 
 ### 2. Use Official Extensions
 
 ```bash
-# ✅ Official, well-maintained
-stratix add @stratix/http-fastify
+# Official, well-maintained
+stratix add http
 
-# ⚠️ Third-party, verify compatibility
+# Third-party, verify compatibility
 stratix add some-random-plugin
 ```
 
 ### 3. Skip Install in CI/CD
 
 ```bash
-stratix add @stratix/http-fastify --skip-install
+stratix add http --skip-install
 ```
 
 ## Removing Extensions
@@ -220,7 +222,7 @@ stratix add @stratix/http-fastify --skip-install
 To remove an extension:
 
 ```bash
-# Remove package
+# Remove package (use full package name)
 npm uninstall @stratix/http-fastify
 
 # Remove plugin registration from src/main.ts
