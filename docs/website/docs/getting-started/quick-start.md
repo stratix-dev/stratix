@@ -21,7 +21,7 @@ A REST API for managing products with:
 
 ```bash
 # Create a new project
-stratix new product-api --pm pnpm --structure ddd
+stratix new product-api --pm pnpm --structure single-context
 
 # Navigate to the project
 cd product-api
@@ -34,7 +34,7 @@ cd product-api
 stratix add http
 ```
 
-This installs `@stratix/http-fastify` and its dependencies.
+This installs `@stratix/http-fastify` and required dependencies like `fastify`.
 
 ## Step 3: Generate Domain Entity
 
@@ -262,10 +262,8 @@ Congratulations! You've just built a complete CRUD API with:
 Now that you've built your first application, explore:
 
 1. **[Project Structure](./project-structure)** - Understand the project organization
-2. **[Core Concepts](../core-concepts/architecture-overview)** - Learn DDD and hexagonal architecture
-3. **[Core Concepts](../core-concepts/architecture-overview)** - Understand Stratix architecture
-4. **[AI Agents](../ai-agents/ai-agents-overview)** - Build AI-powered features
-5. **[AI Agents](../ai-agents/ai-agents-overview)** - Add AI capabilities to your app
+2. **[Core Concepts](../core-concepts/architecture-overview)** - Learn about Stratix architecture and patterns
+3. **[AI Agents](../ai-agents/ai-agents-overview)** - Build AI-powered features
 
 ## Add More Features
 
@@ -275,7 +273,7 @@ Now that you've built your first application, explore:
 stratix add validation
 ```
 
-Then add Zod schemas to validate requests.
+This installs `@stratix/validation-zod`. Then add Zod schemas to validate requests.
 
 ### Add Database
 
@@ -283,7 +281,7 @@ Then add Zod schemas to validate requests.
 stratix add postgres
 ```
 
-Replace the in-memory repository with PostgreSQL.
+This installs `@stratix/db-postgres`. Replace the in-memory repository with PostgreSQL.
 
 ### Add AI Agent
 
@@ -291,7 +289,7 @@ Replace the in-memory repository with PostgreSQL.
 stratix add ai-openai
 ```
 
-Create an AI agent for product recommendations.
+This installs `@stratix/ai-openai`. Create an AI agent for product recommendations.
 
 ### Add Authentication
 
@@ -299,7 +297,7 @@ Create an AI agent for product recommendations.
 stratix add auth
 ```
 
-Protect your endpoints with JWT authentication.
+This installs `@stratix/auth`. Protect your endpoints with JWT authentication.
 
 ## Full Example
 

@@ -11,7 +11,7 @@ MongoDB integration for Stratix.
 ## Installation
 
 ```bash
-stratix add @stratix/mongodb
+stratix add mongodb
 ```
 
 ## Configuration

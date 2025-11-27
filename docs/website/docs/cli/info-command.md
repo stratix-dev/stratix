@@ -23,7 +23,7 @@ The `info` command displays:
 ```
 Project: my-app
 Version: 1.0.0
-Template: ddd
+Structure: Single-Context
 Node: v20.10.0
 Package Manager: pnpm
 ```
@@ -49,7 +49,7 @@ Extensions:
 ### Project Structure
 
 ```
-Structure: DDD
+Structure: Single-Context
 Layers:
   ✓ Domain (src/domain)
   ✓ Application (src/application)
@@ -84,7 +84,7 @@ stratix info --json
   "project": {
     "name": "my-app",
     "version": "1.0.0",
-    "template": "ddd"
+    "structure": "single-context"
   },
   "environment": {
     "node": "v20.10.0",

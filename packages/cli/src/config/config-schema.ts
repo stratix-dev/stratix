@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const StratixConfigSchema = z.object({
   structure: z.object({
-    type: z.enum(['ddd', 'modular', 'custom']).default('ddd'),
+    type: z.enum(['single-context', 'multi-context', 'custom']).default('single-context'),
     sourceRoot: z.string().default('src'),
     domainPath: z.string().optional(),
     applicationPath: z.string().optional(),

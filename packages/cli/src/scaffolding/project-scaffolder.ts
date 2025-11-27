@@ -18,7 +18,7 @@ import { execa } from 'execa';
 export interface ProjectScaffolderOptions {
   projectName: string;
   packageManager: PackageManager;
-  structure: 'ddd' | 'modular';
+  structure: 'single-context' | 'multi-context';
   git: boolean;
 }
 
@@ -93,7 +93,7 @@ export class ProjectScaffolder {
   }
 
   private async createDirectoryStructure(projectPath: string): Promise<void> {
-    if (this.options.structure === 'ddd') {
+    if (this.options.structure === 'single-context') {
       await FileSystemUtils.createDirectory(path.join(projectPath, 'src', 'domain', 'entities'));
       await FileSystemUtils.createDirectory(path.join(projectPath, 'src', 'domain', 'value-objects'));
       await FileSystemUtils.createDirectory(path.join(projectPath, 'src', 'domain', 'repositories'));

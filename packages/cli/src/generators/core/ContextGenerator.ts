@@ -18,13 +18,13 @@ const ContextOptionsSchema = z.object({
 });
 
 /**
- * Context generator for modular monolith architecture
+ * Context generator
  *
- * Generates a complete bounded context with entity, repository, commands, and queries
+ * Generates a complete context with entity, repository, commands, and queries
  */
 export class ContextGenerator extends Generator {
     name = 'context';
-    description = 'Generate a complete bounded context (modular architecture)';
+    description = 'Generate a complete context with domain, application, and infrastructure layers';
 
     /**
      * Initialize generator
@@ -41,7 +41,7 @@ export class ContextGenerator extends Generator {
         // Validate options
         const options = ContextOptionsSchema.parse(context.options);
 
-        logger.info(`Generating bounded context: ${options.name}`);
+        logger.info(`Generating context: ${options.name}`);
 
         const files: GeneratedFile[] = [];
         const contextPath = path.join(options.outputDir, options.name.toLowerCase());
@@ -134,7 +134,7 @@ export class ContextGenerator extends Generator {
             action: 'create'
         });
 
-        logger.info(`Bounded context ${options.name} will be created at: ${contextPath}`);
+        logger.info(`Context ${options.name} will be created at: ${contextPath}`);
 
         return { files };
     }

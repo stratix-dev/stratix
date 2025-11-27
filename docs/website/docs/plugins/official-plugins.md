@@ -15,7 +15,7 @@ Stratix provides official plugins for common infrastructure needs.
 High-performance HTTP server using Fastify.
 
 ```bash
-stratix add @stratix/http-fastify
+stratix add http
 ```
 
 **Features:**
@@ -27,10 +27,11 @@ stratix add @stratix/http-fastify
 
 ### @stratix/http-express
 
-HTTP server using Express.
+HTTP server using Express (not yet available).
 
 ```bash
-stratix add @stratix/http-express
+# Coming soon
+stratix add http-express
 ```
 
 ## Databases
@@ -40,7 +41,7 @@ stratix add @stratix/http-express
 PostgreSQL database plugin.
 
 ```bash
-stratix add @stratix/postgres
+stratix add postgres
 ```
 
 **Features:**
@@ -56,7 +57,7 @@ stratix add @stratix/postgres
 MongoDB database plugin.
 
 ```bash
-stratix add @stratix/mongodb
+stratix add mongodb
 ```
 
 ### @stratix/redis
@@ -64,7 +65,7 @@ stratix add @stratix/mongodb
 Redis caching and pub/sub.
 
 ```bash
-stratix add @stratix/redis
+stratix add redis
 ```
 
 ## AI Providers
@@ -74,7 +75,7 @@ stratix add @stratix/redis
 OpenAI integration (GPT-4, GPT-3.5).
 
 ```bash
-stratix add @stratix/ai-openai
+stratix add ai-openai
 ```
 
 **Features:**
@@ -91,7 +92,7 @@ stratix add @stratix/ai-openai
 Anthropic Claude integration.
 
 ```bash
-stratix add @stratix/ai-anthropic
+stratix add ai-anthropic
 ```
 
 ## Message Queues
@@ -101,7 +102,7 @@ stratix add @stratix/ai-anthropic
 RabbitMQ message broker.
 
 ```bash
-stratix add @stratix/rabbitmq
+stratix add rabbitmq
 ```
 
 ## Dependency Injection
@@ -111,35 +112,61 @@ stratix add @stratix/rabbitmq
 Awilix DI container (recommended).
 
 ```bash
-stratix add @stratix/di-awilix
+stratix add awilix
 ```
 
 **[Documentation](../core-concepts/dependency-injection)**
 
 ## Utilities
 
-### @stratix/logger
+### @stratix/validation-zod
 
-Structured logging.
+Schema validation with Zod.
 
 ```bash
-stratix add @stratix/logger
+stratix add validation
 ```
 
-### @stratix/validation
+### @stratix/mappers
 
-Schema validation.
+Entity-to-DTO mapping utilities.
 
 ```bash
-stratix add @stratix/validation
+stratix add mappers
 ```
 
-### @stratix/cache
+### @stratix/auth
 
-Caching abstraction.
+JWT authentication and RBAC authorization.
 
 ```bash
-stratix add @stratix/cache
+stratix add auth
+```
+
+### @stratix/errors
+
+Structured error handling.
+
+```bash
+stratix add errors
+```
+
+### @stratix/secrets
+
+Secrets management.
+
+```bash
+stratix add secrets
+```
+
+## Observability
+
+### @stratix/obs-opentelemetry
+
+OpenTelemetry integration for observability.
+
+```bash
+stratix add opentelemetry
 ```
 
 ## Testing
@@ -149,7 +176,8 @@ stratix add @stratix/cache
 Testing utilities and mocks.
 
 ```bash
-stratix add @stratix/testing --dev
+# Note: Use full package name for testing package
+npm install --save-dev @stratix/testing
 ```
 
 **Features:**

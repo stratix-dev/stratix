@@ -24,7 +24,7 @@ stratix g <generator> <name> [options]
 | `command` | CQRS command |
 | `query` | CQRS query |
 | `repository` | Repository interface |
-| `context` | Context (modular architecture) |
+| `context` | Context (multi-context architecture) |
 | `quality` | Quality checks (tests, linting) |
 
 ## entity Generator
@@ -213,7 +213,7 @@ stratix g repository User --path src/domain/repositories
 
 ## context Generator
 
-Generate a complete context for modular architecture projects:
+Generate a complete context for multi-context architecture projects:
 
 ```bash
 stratix generate context Order
@@ -266,7 +266,7 @@ stratix g context Product --props '[
 ]'
 ```
 
-This creates a complete context with the specified properties in the entity. The context generator is ideal for modular monolith projects where you want to keep related functionality together.
+This creates a complete context with the specified properties in the entity. The context generator is ideal for multi-context architecture projects where you want to keep related functionality together.
 
 **Note:** This generator automatically creates all necessary files and intelligent dependencies. If an entity or repository is missing, it will be created automatically.
 
