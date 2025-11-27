@@ -27,6 +27,7 @@ export { DomainError } from './errors/DomainError.js';
 
 // Mapping
 export { Mapper } from './mapping/Mapper.js';
+export * from './security/SecretsProvider.js';
 
 // Value Objects
 export { Currency } from './value-objects/Currency.js';

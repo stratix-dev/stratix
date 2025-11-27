@@ -82,9 +82,6 @@ stratix add auth
 
 # Errors (installs @stratix/errors)
 stratix add errors
-
-# Secrets (installs @stratix/secrets)
-stratix add secrets
 ```
 
 ### Observability

@@ -41,7 +41,9 @@ export { InMemoryEventBus } from './messaging/InMemoryEventBus.js';
 
 // Infrastructure Implementations
 export { ConsoleLogger } from './infrastructure/ConsoleLogger.js';
+export { SecretsManager } from './infrastructure/SecretsManager.js';
 export type { ConsoleLoggerOptions } from './infrastructure/ConsoleLogger.js';
+export type { SecretsManagerConfig } from './infrastructure/SecretsManager.js';
 export { InMemoryRepository } from './infrastructure/InMemoryRepository.js';
 
 // Testing Utilities

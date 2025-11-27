@@ -117,19 +117,6 @@ stratix add auth
 - Permission checking
 - User authentication
 
-### @stratix/secrets
-
-Secrets management plugin.
-
-```bash
-stratix add secrets
-```
-
-**Features:**
-- Environment-based secrets
-- AWS Secrets Manager integration
-- Azure Key Vault integration
-- Secret rotation support
 
 ## Plugin Matrix
 
@@ -142,7 +129,6 @@ stratix add secrets
 | rabbitmq      | Messaging     | ✅ Stable | 0.5.0   |
 | opentelemetry | Observability | ✅ Stable | 0.5.0   |
 | auth          | Security      | ✅ Stable | 0.5.0   |
-| secrets       | Security      | ✅ Stable | 0.5.0   |
 
 ## Looking for Providers or Libraries?
 

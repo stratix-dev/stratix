@@ -155,7 +155,7 @@ stratix add list
 - `redis` - Redis caching
 - `rabbitmq` - RabbitMQ messaging
 - `opentelemetry` - Observability
-- `secrets` - Secrets management
+
 
 ### AI Providers
 - `ai-openai` - OpenAI LLM provider
