@@ -3,7 +3,7 @@
 
 # @stratix/validation-zod
 
-**Zod-based schema validation for Stratix applications**
+**🔧 Provider** | Schema validation with Zod for Stratix applications
 
 [![npm version](https://img.shields.io/npm/v/@stratix/validation-zod.svg)](https://www.npmjs.com/package/@stratix/validation-zod)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)

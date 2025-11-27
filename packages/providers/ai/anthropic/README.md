@@ -1,16 +1,18 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
 
-# @stratix/di-awilix
+# @stratix/ai-anthropic
 
-**Awilix dependency injection container for Stratix**
+**🔧 Provider** | Anthropic Claude LLM provider for Stratix AI agents
 
-[![npm version](https://img.shields.io/npm/v/@stratix/di-awilix.svg)](https://www.npmjs.com/package/@stratix/di-awilix)
+[![npm version](https://img.shields.io/npm/v/@stratix/ai-anthropic.svg)](https://www.npmjs.com/package/@stratix/ai-anthropic)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Type: Provider](https://img.shields.io/badge/Type-Provider-blue.svg)](https://stratix-dev.github.io/stratix/docs/providers/providers-overview)
 
 [Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
 
 </div>
+
 
 > Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
 >
@@ -19,9 +21,11 @@
 
 ## About This Package
 
-`@stratix/di-awilix` is a dependency injection plugin for the Stratix framework.
+`@stratix/ai-anthropic` is an **AI provider** (not a plugin) that implements the `LLMProvider` interface from `@stratix/core`.
 
-Awilix dependency injection container for Stratix
+> **Provider vs Plugin:** Providers implement core interfaces and are instantiated directly. Plugins manage external resources and have a lifecycle. [Learn more](https://stratix-dev.github.io/stratix/docs/providers/providers-overview)
+
+This provider enables Stratix AI agents to use Anthropic's Claude models (Opus, Sonnet, Haiku) for chat completion, streaming, and tool calling.
 
 ## About Stratix
 
@@ -41,12 +45,12 @@ Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexa
 
 **Recommended:** Use the Stratix CLI
 ```bash
-stratix add di
+stratix add anthropic
 ```
 
 **Manual installation:**
 ```bash
-npm install @stratix/di-awilix
+npm install @stratix/ai-anthropic
 ```
 
 ## Related Packages
@@ -56,13 +60,14 @@ npm install @stratix/di-awilix
 - [`@stratix/runtime`](https://www.npmjs.com/package/@stratix/runtime) - Application runtime and plugin system
 - [`@stratix/cli`](https://www.npmjs.com/package/@stratix/cli) - Code generation and scaffolding
 
-[View all plugins](https://stratix-dev.github.io/stratix/docs/plugins/official-plugins)
+[View all providers](https://stratix-dev.github.io/stratix/docs/providers/ai-providers)
 
 ## Documentation
 
 - [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
 - [Core Concepts](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
-- [Plugin Architecture](https://stratix-dev.github.io/stratix/docs/plugins/plugin-architecture)
+- [AI Providers](https://stratix-dev.github.io/stratix/docs/providers/ai-providers)
+- [Providers Overview](https://stratix-dev.github.io/stratix/docs/providers/providers-overview)
 - [Complete Documentation](https://stratix-dev.github.io/stratix/)
 
 ## Support

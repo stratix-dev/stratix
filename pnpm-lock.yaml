@@ -140,49 +140,37 @@ importers:
         specifier: ^1.0.0
         version: 1.6.1(@types/node@20.19.24)(terser@5.44.0)
 
-  packages/plugins/ai/anthropic:
+  packages/libraries/errors:
     dependencies:
-      '@anthropic-ai/sdk':
-        specifier: ^0.35.0
-        version: 0.35.0
       '@stratix/core':
         specifier: workspace:*
-        version: link:../../../core
+        version: link:../../core
     devDependencies:
       '@types/node':
-        specifier: ^20.0.0
-        version: 20.19.24
-      eslint:
-        specifier: ^8.0.0
-        version: 8.57.1
+        specifier: ^22.10.2
+        version: 22.19.0
       typescript:
-        specifier: ^5.3.0
+        specifier: ^5.7.2
         version: 5.9.3
       vitest:
-        specifier: ^1.0.0
-        version: 1.6.1(@types/node@20.19.24)(terser@5.44.0)
+        specifier: ^3.0.4
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.19.0)(terser@5.44.0)
 
-  packages/plugins/ai/openai:
+  packages/libraries/mappers:
     dependencies:
       '@stratix/core':
         specifier: workspace:*
-        version: link:../../../core
-      openai:
-        specifier: ^4.75.0
-        version: 4.104.0(ws@8.18.3)(zod@3.25.76)
+        version: link:../../core
     devDependencies:
       '@types/node':
-        specifier: ^20.0.0
-        version: 20.19.24
-      eslint:
-        specifier: ^8.0.0
-        version: 8.57.1
+        specifier: ^22.10.2
+        version: 22.19.0
       typescript:
-        specifier: ^5.3.0
+        specifier: ^5.7.2
         version: 5.9.3
       vitest:
-        specifier: ^1.0.0
-        version: 1.6.1(@types/node@20.19.24)(terser@5.44.0)
+        specifier: ^3.0.4
+        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.19.0)(terser@5.44.0)
 
   packages/plugins/database/mongodb:
     dependencies:
@@ -234,25 +222,6 @@ importers:
       vitest:
         specifier: ^1.6.1
         version: 1.6.1(@types/node@22.19.0)(terser@5.44.0)
-
-  packages/plugins/di/awilix:
-    dependencies:
-      '@stratix/core':
-        specifier: workspace:*
-        version: link:../../../core
-      awilix:
-        specifier: ^10.0.2
-        version: 10.0.2
-    devDependencies:
-      '@types/node':
-        specifier: ^20.10.0
-        version: 20.19.24
-      typescript:
-        specifier: ^5.3.3
-        version: 5.9.3
-      vitest:
-        specifier: ^1.6.1
-        version: 1.6.1(@types/node@20.19.24)(terser@5.44.0)
 
   packages/plugins/http/fastify:
     dependencies:
@@ -329,7 +298,7 @@ importers:
         specifier: ^1.6.1
         version: 1.6.1(@types/node@22.19.0)(terser@5.44.0)
 
-  packages/plugins/utilities/auth:
+  packages/plugins/security/auth:
     dependencies:
       '@stratix/core':
         specifier: workspace:*
@@ -360,39 +329,7 @@ importers:
         specifier: ^3.0.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.19.0)(terser@5.44.0)
 
-  packages/plugins/utilities/errors:
-    dependencies:
-      '@stratix/core':
-        specifier: workspace:*
-        version: link:../../../core
-    devDependencies:
-      '@types/node':
-        specifier: ^22.10.2
-        version: 22.19.0
-      typescript:
-        specifier: ^5.7.2
-        version: 5.9.3
-      vitest:
-        specifier: ^3.0.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.19.0)(terser@5.44.0)
-
-  packages/plugins/utilities/mappers:
-    dependencies:
-      '@stratix/core':
-        specifier: workspace:*
-        version: link:../../../core
-    devDependencies:
-      '@types/node':
-        specifier: ^22.10.2
-        version: 22.19.0
-      typescript:
-        specifier: ^5.7.2
-        version: 5.9.3
-      vitest:
-        specifier: ^3.0.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.19.0)(terser@5.44.0)
-
-  packages/plugins/utilities/secrets:
+  packages/plugins/security/secrets:
     dependencies:
       '@stratix/core':
         specifier: workspace:*
@@ -405,7 +342,70 @@ importers:
         specifier: ^1.6.1
         version: 1.6.1(@types/node@22.19.0)(terser@5.44.0)
 
-  packages/plugins/utilities/validation-zod:
+  packages/providers/ai/anthropic:
+    dependencies:
+      '@anthropic-ai/sdk':
+        specifier: ^0.35.0
+        version: 0.35.0
+      '@stratix/core':
+        specifier: workspace:*
+        version: link:../../../core
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.24
+      eslint:
+        specifier: ^8.0.0
+        version: 8.57.1
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@20.19.24)(terser@5.44.0)
+
+  packages/providers/ai/openai:
+    dependencies:
+      '@stratix/core':
+        specifier: workspace:*
+        version: link:../../../core
+      openai:
+        specifier: ^4.75.0
+        version: 4.104.0(ws@8.18.3)(zod@3.25.76)
+    devDependencies:
+      '@types/node':
+        specifier: ^20.0.0
+        version: 20.19.24
+      eslint:
+        specifier: ^8.0.0
+        version: 8.57.1
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@20.19.24)(terser@5.44.0)
+
+  packages/providers/di/awilix:
+    dependencies:
+      '@stratix/core':
+        specifier: workspace:*
+        version: link:../../../core
+      awilix:
+        specifier: ^10.0.2
+        version: 10.0.2
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.24
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
+      vitest:
+        specifier: ^1.6.1
+        version: 1.6.1(@types/node@20.19.24)(terser@5.44.0)
+
+  packages/providers/validation/zod:
     dependencies:
       '@stratix/core':
         specifier: workspace:*
@@ -450,7 +450,7 @@ importers:
         version: link:../core
       '@stratix/di-awilix':
         specifier: workspace:*
-        version: link:../plugins/di/awilix
+        version: link:../providers/di/awilix
       '@stratix/runtime':
         specifier: workspace:*
         version: link:../runtime

@@ -3,7 +3,7 @@
 
 # @stratix/errors
 
-**Structured error handling utilities for Stratix applications**
+**📚 Library** | Structured error handling utilities for Stratix applications
 
 [![npm version](https://img.shields.io/npm/v/@stratix/errors.svg)](https://www.npmjs.com/package/@stratix/errors)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)

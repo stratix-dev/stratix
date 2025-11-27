@@ -72,7 +72,7 @@ const sidebars: SidebarsConfig = {
     // ========================================
     {
       type: 'category',
-      label: 'Plugin System',
+      label: 'Plugins',
       collapsed: true,
       items: [
         'plugins/plugin-architecture',
@@ -83,7 +83,36 @@ const sidebars: SidebarsConfig = {
     },
 
     // ========================================
-    // 5. AI AGENTS (AI-FIRST)
+    // 5. PROVIDERS
+    // ========================================
+    {
+      type: 'category',
+      label: 'Providers',
+      collapsed: true,
+      items: [
+        'providers/providers-overview',
+        'providers/ai-providers',
+        'providers/di-providers',
+        'providers/validation-providers',
+      ],
+    },
+
+    // ========================================
+    // 6. LIBRARIES
+    // ========================================
+    {
+      type: 'category',
+      label: 'Libraries',
+      collapsed: true,
+      items: [
+        'libraries/libraries-overview',
+        'libraries/error-handling',
+        'libraries/mappers',
+      ],
+    },
+
+    // ========================================
+    // 7. AI AGENTS (AI-FIRST)
     // ========================================
     {
       type: 'category',
@@ -101,7 +130,7 @@ const sidebars: SidebarsConfig = {
     },
 
     // ========================================
-    // 6. CLI REFERENCE
+    // 8. CLI REFERENCE
     // ========================================
     {
       type: 'category',
@@ -117,8 +146,9 @@ const sidebars: SidebarsConfig = {
     },
 
     // ========================================
-    // 7. DATABASE & PERSISTENCE
+    // 9. DATABASE & PERSISTENCE
     // ========================================
+
     {
       type: 'category',
       label: 'Database & Persistence',

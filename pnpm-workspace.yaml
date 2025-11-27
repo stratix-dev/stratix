@@ -3,11 +3,16 @@ packages:
   - 'packages/runtime'
   - 'packages/testing'
   - 'packages/cli'
-  - 'packages/plugins/ai/*'
+  # Plugins (solo paquetes que implementan Plugin interface)
   - 'packages/plugins/database/*'
   - 'packages/plugins/http/*'
   - 'packages/plugins/messaging/*'
-  - 'packages/plugins/di/*'
   - 'packages/plugins/observability/*'
-  - 'packages/plugins/utilities/*'
+  - 'packages/plugins/security/*'
+  # Providers (implementaciones de interfaces core)
+  - 'packages/providers/ai/*'
+  - 'packages/providers/di/*'
+  - 'packages/providers/validation/*'
+  # Libraries (utilidades puras)
+  - 'packages/libraries/*'
   - 'docs/website'

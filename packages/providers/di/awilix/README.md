@@ -1,11 +1,11 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
 
-# @stratix/ai-openai
+# @stratix/di-awilix
 
-**OpenAI LLM provider for Stratix AI agents**
+**🔧 Provider** | Awilix dependency injection container for Stratix
 
-[![npm version](https://img.shields.io/npm/v/@stratix/ai-openai.svg)](https://www.npmjs.com/package/@stratix/ai-openai)
+[![npm version](https://img.shields.io/npm/v/@stratix/di-awilix.svg)](https://www.npmjs.com/package/@stratix/di-awilix)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 [Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
@@ -16,11 +16,12 @@
 >
 > **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
 
+
 ## About This Package
 
-`@stratix/ai-openai` is a AI provider plugin for the Stratix framework.
+`@stratix/di-awilix` is a dependency injection plugin for the Stratix framework.
 
-OpenAI LLM provider for Stratix AI agents
+Awilix dependency injection container for Stratix
 
 ## About Stratix
 
@@ -40,12 +41,12 @@ Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexa
 
 **Recommended:** Use the Stratix CLI
 ```bash
-stratix add openai
+stratix add di
 ```
 
 **Manual installation:**
 ```bash
-npm install @stratix/ai-openai
+npm install @stratix/di-awilix
 ```
 
 ## Related Packages

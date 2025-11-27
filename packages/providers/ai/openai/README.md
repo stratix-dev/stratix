@@ -1,28 +1,26 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
 
-# @stratix/ai-anthropic
+# @stratix/ai-openai
 
-**Anthropic Claude LLM provider for Stratix AI agents**
+**🔧 Provider** | OpenAI LLM provider for Stratix AI agents
 
-[![npm version](https://img.shields.io/npm/v/@stratix/ai-anthropic.svg)](https://www.npmjs.com/package/@stratix/ai-anthropic)
+[![npm version](https://img.shields.io/npm/v/@stratix/ai-openai.svg)](https://www.npmjs.com/package/@stratix/ai-openai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 [Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
 
 </div>
 
-
 > Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
 >
 > **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
 
-
 ## About This Package
 
-`@stratix/ai-anthropic` is a AI provider plugin for the Stratix framework.
+`@stratix/ai-openai` is a AI provider plugin for the Stratix framework.
 
-Anthropic Claude LLM provider for Stratix AI agents
+OpenAI LLM provider for Stratix AI agents
 
 ## About Stratix
 
@@ -42,12 +40,12 @@ Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexa
 
 **Recommended:** Use the Stratix CLI
 ```bash
-stratix add anthropic
+stratix add openai
 ```
 
 **Manual installation:**
 ```bash
-npm install @stratix/ai-anthropic
+npm install @stratix/ai-openai
 ```
 
 ## Related Packages
