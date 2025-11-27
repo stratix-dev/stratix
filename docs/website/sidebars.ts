@@ -64,6 +64,7 @@ const sidebars: SidebarsConfig = {
         'core-concepts/contexts',
         'core-concepts/dependency-injection',
         'core-concepts/dx-helpers',
+        'core-concepts/mapping',
       ],
     },
 
@@ -107,7 +108,6 @@ const sidebars: SidebarsConfig = {
       items: [
         'libraries/libraries-overview',
         'libraries/error-handling',
-        'libraries/mappers',
       ],
     },
 

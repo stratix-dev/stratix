@@ -16,7 +16,7 @@ Libraries are **pure utility packages** that provide reusable functions, classes
 | **Lifecycle** | No                                | Yes (initialize → start → stop)            | No                                 |
 | **State**     | Stateless                         | Stateful                                   | Can be stateful                    |
 | **Usage**     | Direct import                     | Via runtime plugin system                  | Direct instantiation               |
-| **Examples**  | @stratix/errors, @stratix/mappers | PostgresPlugin, FastifyHTTPPlugin          | AnthropicProvider, AwilixContainer |
+| **Examples**  | @stratix/errors                   | PostgresPlugin, FastifyHTTPPlugin          | AnthropicProvider, AwilixContainer |
 
 ## When to Use Libraries
 
@@ -43,21 +43,6 @@ throw new NotFoundError('User not found');
 [Learn more →](./error-handling)
 
 ---
-
-### Mappers
-
-**[@stratix/mappers](./mappers)** - Interface for mapping between domain and persistence layers
-
-```typescript
-import { Mapper } from '@stratix/mappers';
-
-class UserMapper implements Mapper<User, UserPersistence> {
-  toDomain(raw: UserPersistence): User { /* ... */ }
-  toPersistence(entity: User): UserPersistence { /* ... */ }
-}
-```
-
-[Learn more →](./mappers)
 
 ## Best Practices
 
@@ -162,4 +147,3 @@ export { capitalize, slugify } from './utils.js';
 
 - **[Error Handling](./error-handling)** - Learn about structured error classes
 - **[Validation](../providers/validation-providers)** - Learn about schema validation
-- **[Mappers](./mappers)** - Learn about domain-persistence mapping

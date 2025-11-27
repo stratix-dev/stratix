@@ -19,7 +19,7 @@ Understanding the distinction between these three types of packages is crucial:
 | **Interface**         | Implements `Plugin`                        | Implements specific interfaces (e.g., `LLMProvider`, `Container`) | Exports utilities                 |
 | **Manages Resources** | Yes (databases, servers, connections)      | Sometimes                                                         | No                                |
 | **Registration**      | Via runtime plugin system                  | Direct instantiation                                              | Direct import                     |
-| **Examples**          | PostgresPlugin, FastifyHTTPPlugin          | AnthropicProvider, AwilixContainer                                | @stratix/errors, @stratix/mappers |
+| **Examples**          | PostgresPlugin, FastifyHTTPPlugin          | AnthropicProvider, AwilixContainer                                | @stratix/errors                   |
 
 ## When to Use Providers
 

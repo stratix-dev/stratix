@@ -76,8 +76,6 @@ stratix add rabbitmq
 # Validation (installs @stratix/validation-zod)
 stratix add validation
 
-# Mappers (installs @stratix/mappers)
-stratix add mappers
 
 # Auth (installs @stratix/auth)
 stratix add auth
@@ -105,11 +103,11 @@ stratix add awilix
 
 ## Options
 
-| Option | Description | Default |
-|--------|-------------|---------|
+| Option           | Description                       | Default |
+| ---------------- | --------------------------------- | ------- |
 | `--skip-install` | Don't run package manager install | `false` |
-| `--dev` | Install as dev dependency | `false` |
-| `--exact` | Install exact version | `false` |
+| `--dev`          | Install as dev dependency         | `false` |
+| `--exact`        | Install exact version             | `false` |
 
 ## What Happens
 

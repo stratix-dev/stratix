@@ -146,7 +146,6 @@ stratix add list
 ### Production Extensions
 - `http` - Fastify HTTP server
 - `validation` - Zod schema validation
-- `mappers` - Entity-to-DTO mapping
 - `auth` - JWT authentication & RBAC
 - `errors` - Structured error handling
 

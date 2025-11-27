@@ -6,21 +6,13 @@ description: Domain-persistence mapping with @stratix/mappers
 
 # Mappers
 
-**Package:** `@stratix/mappers`
+**Package:** `@stratix/core`
 
-The `@stratix/mappers` library provides the `Mapper` interface for converting between domain entities and persistence models, following Domain-Driven Design principles.
+The `Mapper` interface provides a type-safe way to convert between domain entities and persistence models (DTOs), following Domain-Driven Design principles. It is now part of the core package.
 
 ## Installation
 
-```bash
-npm install @stratix/mappers
-```
-
-Or using the CLI:
-
-```bash
-stratix add mappers
-```
+Since `Mapper` is part of `@stratix/core`, no additional installation is required.
 
 ## Mapper Interface
 
@@ -34,7 +26,7 @@ export interface Mapper<Domain, Persistence> {
 ## Basic Usage
 
 ```typescript
-import { Mapper } from '@stratix/mappers';
+import { Mapper } from '@stratix/core';
 
 interface UserPersistence {
   id: string;
@@ -68,7 +60,7 @@ class UserMapper implements Mapper<User, UserPersistence> {
 
 ```typescript
 import { Repository } from '@stratix/core';
-import { Mapper } from '@stratix/mappers';
+import { Mapper } from '@stratix/core';
 
 export class PostgresUserRepository implements Repository<User, string> {
   constructor(

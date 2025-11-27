@@ -150,7 +150,7 @@ stratix add secrets
 - **[DI Providers](../providers/di-providers)** - Awilix (dependency injection)
 - **[Error Handling](../libraries/error-handling)** - Structured error classes
 - **[Validation](../providers/validation-providers)** - Zod schema validation
-- **[Mappers](../libraries/mappers)** - Domain-persistence mapping
+- **[Mappers](../core-concepts/mapping)** - Domain-persistence mapping (now part of Core)
 
 ## Next Steps
 
