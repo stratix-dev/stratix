@@ -39,7 +39,7 @@ const sidebars: SidebarsConfig = {
     // ========================================
     {
       type: 'category',
-      label: '🤖 Stratix Copilot',
+      label: 'Stratix Copilot',
       collapsed: false,
       items: [
         'stratix-copilot/overview',
@@ -61,7 +61,7 @@ const sidebars: SidebarsConfig = {
         'core-concepts/domain-modeling',
         'core-concepts/result-pattern',
         'core-concepts/cqrs',
-        'core-concepts/bounded-contexts',
+        'core-concepts/contexts',
         'core-concepts/dependency-injection',
         'core-concepts/dx-helpers',
       ],

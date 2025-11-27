@@ -31,6 +31,6 @@ sidebar_position: 1
 ## Key Features
 
 - **AI-First** - AI agents as domain entities + Stratix Copilot VS Code extension
-- **Modular** - Portable bounded contexts
+- **Modular** - Portable contexts for monoliths or microservices
 - **Enterprise-Ready** - DDD, CQRS, Hexagonal Architecture
 - **Developer Experience** - Powerful CLI, Copilot integration, and comprehensive docs

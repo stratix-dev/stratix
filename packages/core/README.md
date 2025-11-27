@@ -12,13 +12,9 @@
 
 </div>
 
--
-
 > Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
 >
 > **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
-
--
 
 ## About This Package
 
@@ -30,7 +26,7 @@
 - AI Agent base classes and interfaces
 - Result pattern for error handling
 - Pre-built value objects (Money, Email, URL, etc.)
-- Plugin and module system interfaces
+- Plugin and context system interfaces
 
 ## About Stratix
 
@@ -324,8 +320,6 @@ class MyAgent extends AIAgent<string, string> {
 ## License
 
 MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) for details.
-
--
 
 <div align="center">
 

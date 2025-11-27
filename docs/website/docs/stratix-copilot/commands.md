@@ -133,7 +133,7 @@ Complete reference of all Stratix Copilot commands and features.
 
 ---
 
-### Bounded Context Generation
+### Context Generation
 
 **Command:** `/context`
 
@@ -200,7 +200,7 @@ class User {
 @stratix /explain aggregate roots
 @stratix /explain Result pattern
 @stratix /explain dependency injection
-@stratix /explain bounded contexts
+@stratix /explain contexts
 ```
 
 **Provides:**

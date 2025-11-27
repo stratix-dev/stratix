@@ -5,10 +5,10 @@ export { ApplicationBuilderHelpers } from './builder/ApplicationBuilderHelpers.j
 export { Application } from './builder/Application.js';
 export { DefaultPluginContext } from './builder/DefaultPluginContext.js';
 
-// Module
-export { BaseContextModule } from './module/BaseContextModule.js';
-export { ModuleRegistry } from './module/ModuleRegistry.js';
-export { DefaultModuleContext } from './module/DefaultModuleContext.js';
+// Context
+export { BaseContext } from './context/BaseContext.js';
+export { ContextRegistry } from './context/ContextRegistry.js';
+export { DefaultContextConfig } from './context/DefaultContextConfig.js';
 
 // Registry
 export { PluginRegistry } from './registry/PluginRegistry.js';
@@ -47,9 +47,9 @@ export { InMemoryRepository } from './infrastructure/InMemoryRepository.js';
 // Testing Utilities
 export { TestHelpers } from './testing/TestHelpers.js';
 
-// Module Utilities
-export { ModuleHelpers } from './module/ModuleHelpers.js';
-export type { SimpleModuleOptions } from './module/ModuleHelpers.js';
+// Context Utilities
+export { ContextHelpers } from './context/ContextHelpers.js';
+export type { SimpleContextOptions } from './context/ContextHelpers.js';
 
 // Container Utilities
 export { ContainerHelpers } from './container/ContainerHelpers.js';

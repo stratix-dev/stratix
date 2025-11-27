@@ -91,7 +91,7 @@ stratix add @stratix/http-fastify --skip-install
 The CLI supports multiple project templates:
 
 - **DDD** (Default) - Domain-Driven Design structure
-- **Modular** - Bounded contexts for microservices
+- **Modular** - Contexts for modular architecture
 - **Minimal** - Bare-bones setup
 
 ```bash

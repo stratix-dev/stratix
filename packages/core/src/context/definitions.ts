@@ -6,12 +6,12 @@ import { QueryHandler } from '../messaging/QueryHandler.js';
 import { EventHandler } from '../messaging/EventHandler.js';
 
 /**
- * Definition for registering a command with its handler.
+ * Definition for registering a command with its handler within a context.
  *
  * @template TCommand - The command type
  * @template TResult - The result type returned by the handler
  */
-export interface CommandDefinition<TCommand extends Command = Command, TResult = unknown> {
+export interface ContextCommandDefinition<TCommand extends Command = Command, TResult = unknown> {
   /**
    * Unique name for the command type.
    */
@@ -29,12 +29,12 @@ export interface CommandDefinition<TCommand extends Command = Command, TResult =
 }
 
 /**
- * Definition for registering a query with its handler.
+ * Definition for registering a query with its handler within a context.
  *
  * @template TQuery - The query type
  * @template TResult - The result type returned by the handler
  */
-export interface QueryDefinition<TQuery extends Query = Query, TResult = unknown> {
+export interface ContextQueryDefinition<TQuery extends Query = Query, TResult = unknown> {
   /**
    * Unique name for the query type.
    */
@@ -52,11 +52,11 @@ export interface QueryDefinition<TQuery extends Query = Query, TResult = unknown
 }
 
 /**
- * Definition for registering an event handler.
+ * Definition for registering an event handler within a context.
  *
  * @template TEvent - The event type
  */
-export interface EventHandlerDefinition<TEvent extends Event = Event> {
+export interface ContextEventHandlerDefinition<TEvent extends Event = Event> {
   /**
    * Name of the event to handle.
    */
@@ -74,9 +74,9 @@ export interface EventHandlerDefinition<TEvent extends Event = Event> {
 }
 
 /**
- * Definition for registering a repository or service in the DI container.
+ * Definition for registering a repository or service in the DI container within a context.
  */
-export interface RepositoryDefinition {
+export interface ContextRepositoryDefinition {
   /**
    * Token or name to register in the container.
    */

@@ -25,7 +25,7 @@ Stratix combines proven enterprise patterns with cutting-edge AI capabilities to
 - **Agent Testing** - Comprehensive testing utilities for AI agents
 
 ### Modular & Scalable
-- **Bounded Contexts** - Portable domain modules that work in monoliths or microservices
+- **Context System** - Portable domain contexts that work in monoliths or microservices
 - **Plugin Architecture** - Extensible system with lifecycle management and health checks
 - **Dependency Injection** - Clean, testable code with automatic dependency resolution
 - **CQRS Pattern** - Command Query Responsibility Segregation for scalable architectures
@@ -166,7 +166,7 @@ Stratix is ideal for:
 | **Plugin System** | ✅ | ✅ | ⚠️ | ⚠️ |
 | **Type Safety** | ✅ | ✅ | ⚠️ | ⚠️ |
 | **Code Generation CLI** | ✅ | ✅ | ❌ | ❌ |
-| **Bounded Contexts** | ✅ | ❌ | ❌ | ❌ |
+| **Context System** | ✅ | ❌ | ❌ | ❌ |
 | **Production-Ready AI** | ✅ | ❌ | ⚠️ | ❌ |
 
 > **Legend**: ✅ Full Support | ⚠️ Partial Support | ❌ Not Supported

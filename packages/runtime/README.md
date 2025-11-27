@@ -12,13 +12,11 @@
 
 </div>
 
--
 
 > Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
 >
 > **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
 
--
 
 ## About This Package
 
@@ -65,7 +63,7 @@ npm install @stratix/core @stratix/runtime
 - **Plugin System** - Lifecycle management (initialize, start, stop)
 - **Dependency Graph** - Automatic plugin ordering
 - **Health Checks** - Built-in health monitoring
-- **Module System** - Organize code by bounded contexts
+- **Context System** - Organize code by domain contexts
 
 ### DX Helpers (New!)
 
@@ -74,7 +72,7 @@ Productivity helpers that reduce boilerplate by 60-90%:
 - **ApplicationBuilderHelpers** - Quick setup with sensible defaults
 - **InMemoryRepository** - Base class for in-memory repositories
 - **TestHelpers** - Utilities for testing (entity creation, event capture, etc.)
-- **ModuleHelpers** - Create modules with minimal boilerplate
+- **ContextHelpers** - Create contexts with minimal boilerplate
 - **ContainerHelpers** - Simplify DI container operations
 
 ## Quick Start
@@ -138,12 +136,12 @@ describe('Product Service', () => {
 });
 ```
 
-**Module Helpers** - Create modules inline:
+**Context Helpers** - Create contexts inline:
 
 ```typescript
-import { ModuleHelpers } from '@stratix/runtime';
+import { ContextHelpers } from '@stratix/runtime';
 
-const productsModule = ModuleHelpers.createSimpleModule('Products', {
+const productsContext = ContextHelpers.createSimpleContext('Products', {
   commands: [
     { name: 'CreateProduct', commandType: CreateProductCommand, handler }
   ],
@@ -214,8 +212,6 @@ class ProductRepository extends InMemoryRepository<Product> {
 ## License
 
 MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) for details.
-
--
 
 <div align="center">
 

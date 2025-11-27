@@ -1,8 +1,8 @@
-import type { Plugin, PluginContext, ContextModule, Container, Logger } from '@stratix/core';
+import type { Plugin, PluginContext, Context, Container, Logger } from '@stratix/core';
 import { ServiceLifetime } from '@stratix/core';
 import { PluginRegistry } from '../registry/PluginRegistry.js';
-import { ModuleRegistry } from '../module/ModuleRegistry.js';
-import { DefaultModuleContext } from '../module/DefaultModuleContext.js';
+import { ContextRegistry } from '../context/ContextRegistry.js';
+import { DefaultContextConfig } from '../context/DefaultContextConfig.js';
 import { PluginLifecycleError } from '../errors/RuntimeError.js';
 
 /**
@@ -19,18 +19,18 @@ export enum LifecyclePhase {
 }
 
 /**
- * Manages the lifecycle of plugins and modules.
+ * Manages the lifecycle of plugins and contexts.
  *
  * Handles initialization, startup, and shutdown in the correct order:
  * 1. Plugins (infrastructure)
- * 2. Modules (domain contexts)
+ * 2. Contexts (domain logic)
  *
  * @example
  * ```typescript
- * const manager = new LifecycleManager(pluginRegistry, moduleRegistry);
+ * const manager = new LifecycleManager(pluginRegistry, contextRegistry);
  *
  * await manager.initializePlugins(pluginContext);
- * await manager.initializeModules(container, logger, configs);
+ * await manager.initializeContexts(container, logger, configs);
  * await manager.startAll();
  * await manager.stopAll();
  * ```
@@ -38,11 +38,11 @@ export enum LifecyclePhase {
 export class LifecycleManager {
   private phase = LifecyclePhase.UNINITIALIZED;
   private pluginPhases = new Map<string, LifecyclePhase>();
-  private modulePhases = new Map<string, LifecyclePhase>();
+  private contextPhases = new Map<string, LifecyclePhase>();
 
   constructor(
     private readonly pluginRegistry: PluginRegistry,
-    private readonly moduleRegistry: ModuleRegistry
+    private readonly contextRegistry: ContextRegistry
   ) {}
 
   /**
@@ -90,32 +90,32 @@ export class LifecycleManager {
   }
 
   /**
-   * Initializes all modules in dependency order.
-   * Modules are initialized after plugins since they depend on infrastructure.
+   * Initializes all contexts in dependency order.
+   * Contexts are initialized after plugins since they depend on infrastructure.
    *
    * @param container - The DI container
    * @param logger - The logger
-   * @param configs - Module configurations
-   * @throws {PluginLifecycleError} If a module fails to initialize
+   * @param configs - Context configurations
+   * @throws {PluginLifecycleError} If a context fails to initialize
    *
    * @example
    * ```typescript
-   * await manager.initializeModules(container, logger, moduleConfigs);
+   * await manager.initializeContexts(container, logger, contextConfigs);
    * ```
    */
-  async initializeModules(
+  async initializeContexts(
     container: Container,
     logger: Logger,
     configs: Map<string, unknown>
   ): Promise<void> {
     if (this.phase !== LifecyclePhase.INITIALIZED) {
-      throw new Error('Plugins must be initialized before modules');
+      throw new Error('Plugins must be initialized before contexts');
     }
 
-    const modules = this.moduleRegistry.getModulesInOrder();
+    const contexts = this.contextRegistry.getContextsInOrder();
 
-    for (const module of modules) {
-      await this.initializeModule(module, container, logger, configs);
+    for (const context of contexts) {
+      await this.initializeContext(context, container, logger, configs);
     }
   }
 
@@ -127,9 +127,9 @@ export class LifecycleManager {
   }
 
   /**
-   * Starts all plugins and modules in dependency order.
+   * Starts all plugins and contexts in dependency order.
    *
-   * @throws {PluginLifecycleError} If a plugin or module fails to start
+   * @throws {PluginLifecycleError} If a plugin or context fails to start
    *
    * @example
    * ```typescript
@@ -149,19 +149,19 @@ export class LifecycleManager {
       await this.startPlugin(plugin);
     }
 
-    // Start modules after plugins
-    const modules = this.moduleRegistry.getModulesInOrder();
-    for (const module of modules) {
-      await this.startModule(module);
+    // Start contexts after plugins
+    const contexts = this.contextRegistry.getContextsInOrder();
+    for (const context of contexts) {
+      await this.startContext(context);
     }
 
     this.phase = LifecyclePhase.STARTED;
   }
 
   /**
-   * Stops all modules and plugins in reverse dependency order.
+   * Stops all contexts and plugins in reverse dependency order.
    *
-   * @throws {PluginLifecycleError} If a plugin or module fails to stop
+   * @throws {PluginLifecycleError} If a plugin or context fails to stop
    *
    * @example
    * ```typescript
@@ -175,13 +175,13 @@ export class LifecycleManager {
 
     this.phase = LifecyclePhase.STOPPING;
 
-    // Stop modules first (reverse order)
-    const modules = this.moduleRegistry.getModulesInReverseOrder();
-    for (const module of modules) {
-      await this.stopModule(module);
+    // Stop contexts first (reverse order)
+    const contexts = this.contextRegistry.getContextsInReverseOrder();
+    for (const context of contexts) {
+      await this.stopContext(context);
     }
 
-    // Stop plugins after modules (reverse order)
+    // Stop plugins after contexts (reverse order)
     const plugins = this.pluginRegistry.getPluginsInReverseOrder();
     for (const plugin of plugins) {
       await this.stopPlugin(plugin);
@@ -269,27 +269,27 @@ export class LifecycleManager {
   }
 
   /**
-   * Initializes a single module.
+   * Initializes a single context.
    *
-   * @param module - The module to initialize
+   * @param context - The context to initialize
    * @param container - The DI container
    * @param logger - The logger
-   * @param configs - Module configurations
+   * @param configs - Context configurations
    * @private
    */
-  private async initializeModule(
-    module: ContextModule,
+  private async initializeContext(
+    context: Context,
     container: Container,
     logger: Logger,
     configs: Map<string, unknown>
   ): Promise<void> {
-    const name = module.metadata.name;
+    const name = context.metadata.name;
 
     try {
-      this.modulePhases.set(name, LifecyclePhase.INITIALIZING);
+      this.contextPhases.set(name, LifecyclePhase.INITIALIZING);
 
       // Register repositories first
-      const repositories = module.getRepositories?.() || [];
+      const repositories = context.getRepositories?.() || [];
       for (const repo of repositories) {
         container.register(repo.token, () => repo.instance, {
           lifetime: repo.singleton !== false ? ServiceLifetime.SINGLETON : ServiceLifetime.TRANSIENT,
@@ -310,80 +310,80 @@ export class LifecycleManager {
       }>('eventBus');
 
       // Register commands
-      const commands = module.getCommands?.() || [];
+      const commands = context.getCommands?.() || [];
       for (const cmd of commands) {
         commandBus.register(cmd.commandType, cmd.handler);
       }
 
       // Register queries
-      const queries = module.getQueries?.() || [];
+      const queries = context.getQueries?.() || [];
       for (const query of queries) {
         queryBus.register(query.queryType, query.handler);
       }
 
       // Subscribe event handlers
-      const eventHandlers = module.getEventHandlers?.() || [];
+      const eventHandlers = context.getEventHandlers?.() || [];
       for (const handler of eventHandlers) {
         eventBus.subscribe(handler.eventType, handler.handler);
       }
 
-      // Call module initialize if present
-      if (module.initialize) {
-        const moduleContext = new DefaultModuleContext(container, logger, configs, name);
-        await module.initialize(moduleContext);
+      // Call context initialize if present
+      if (context.initialize) {
+        const contextConfig = new DefaultContextConfig(container, logger, configs, name);
+        await context.initialize(contextConfig);
       }
 
-      this.modulePhases.set(name, LifecyclePhase.INITIALIZED);
+      this.contextPhases.set(name, LifecyclePhase.INITIALIZED);
     } catch (error) {
-      this.modulePhases.set(name, LifecyclePhase.UNINITIALIZED);
+      this.contextPhases.set(name, LifecyclePhase.UNINITIALIZED);
       throw new PluginLifecycleError(name, 'initialize', error as Error);
     }
   }
 
   /**
-   * Starts a single module.
+   * Starts a single context.
    *
-   * @param module - The module to start
+   * @param context - The context to start
    * @private
    */
-  private async startModule(module: ContextModule): Promise<void> {
-    const name = module.metadata.name;
+  private async startContext(context: Context): Promise<void> {
+    const name = context.metadata.name;
 
     try {
-      this.modulePhases.set(name, LifecyclePhase.STARTING);
+      this.contextPhases.set(name, LifecyclePhase.STARTING);
 
-      if (module.start) {
-        await module.start();
+      if (context.start) {
+        await context.start();
       }
 
-      this.modulePhases.set(name, LifecyclePhase.STARTED);
+      this.contextPhases.set(name, LifecyclePhase.STARTED);
     } catch (error) {
-      this.modulePhases.set(name, LifecyclePhase.INITIALIZED);
+      this.contextPhases.set(name, LifecyclePhase.INITIALIZED);
       throw new PluginLifecycleError(name, 'start', error as Error);
     }
   }
 
   /**
-   * Stops a single module.
+   * Stops a single context.
    *
-   * @param module - The module to stop
+   * @param context - The context to stop
    * @private
    */
-  private async stopModule(module: ContextModule): Promise<void> {
-    const name = module.metadata.name;
+  private async stopContext(context: Context): Promise<void> {
+    const name = context.metadata.name;
 
     try {
-      this.modulePhases.set(name, LifecyclePhase.STOPPING);
+      this.contextPhases.set(name, LifecyclePhase.STOPPING);
 
-      if (module.stop) {
-        await module.stop();
+      if (context.stop) {
+        await context.stop();
       }
 
-      this.modulePhases.set(name, LifecyclePhase.STOPPED);
+      this.contextPhases.set(name, LifecyclePhase.STOPPED);
     } catch (error) {
-      // Continue stopping other modules even if one fails
-      console.error(`Failed to stop module '${name}':`, error);
-      this.modulePhases.set(name, LifecyclePhase.STOPPED);
+      // Continue stopping other contexts even if one fails
+      console.error(`Failed to stop context '${name}':`, error);
+      this.contextPhases.set(name, LifecyclePhase.STOPPED);
     }
   }
 }

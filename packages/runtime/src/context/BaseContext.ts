@@ -1,48 +1,48 @@
 import {
-  ContextModule,
-  CommandDefinition,
-  QueryDefinition,
-  EventHandlerDefinition,
-  RepositoryDefinition,
-  ModuleContext,
-  ModuleMetadata,
+  Context,
+  ContextCommandDefinition,
+  ContextQueryDefinition,
+  ContextEventHandlerDefinition,
+  ContextRepositoryDefinition,
+  ContextConfig,
+  ContextMetadata,
   HealthCheckResult,
   HealthStatus,
   ServiceLifetime,
 } from '@stratix/core';
 
 /**
- * Base implementation for domain modules.
+ * Base implementation for contexts.
  *
  * Provides automatic registration of commands, queries, event handlers,
  * and repositories during the initialize phase.
  *
  * Subclasses only need to:
  * 1. Define metadata (name, dependencies)
- * 2. Set contextName
+ * 2. Set name property
  * 3. Implement getCommands(), getQueries(), getEventHandlers(), getRepositories()
  *
  * The base class handles all the wiring automatically.
  *
- * Note: ContextModule is different from Plugin:
+ * Note: Context is different from Plugin:
  * - Plugin: Infrastructure extensions (Postgres, Redis, RabbitMQ)
- * - ContextModule: Domain/business logic modules (Orders, Products, Inventory)
+ * - Context: Domain/business logic contexts (Orders, Products, Inventory)
  *
  * @example
  * ```typescript
- * export class ProductsContextModule extends BaseContextModule {
- *   readonly metadata: ModuleMetadata = {
+ * export class ProductsContext extends BaseContext {
+ *   readonly metadata: ContextMetadata = {
  *     name: 'products-context',
- *     description: 'Products Domain Module',
+ *     description: 'Products Domain Context',
  *     requiredPlugins: ['postgres'],
- *     requiredModules: []
+ *     requiredContexts: []
  *   };
  *
- *   readonly contextName = 'Products';
+ *   readonly name = 'Products';
  *
  *   private productRepository!: ProductRepository;
  *
- *   getCommands(): CommandDefinition[] {
+ *   getCommands(): ContextCommandDefinition[] {
  *     return [
  *       {
  *         name: 'CreateProduct',
@@ -57,7 +57,7 @@ import {
  *     ];
  *   }
  *
- *   getQueries(): QueryDefinition[] {
+ *   getQueries(): ContextQueryDefinition[] {
  *     return [
  *       {
  *         name: 'GetProductById',
@@ -72,7 +72,7 @@ import {
  *     ];
  *   }
  *
- *   getEventHandlers(): EventHandlerDefinition[] {
+ *   getEventHandlers(): ContextEventHandlerDefinition[] {
  *     return [
  *       {
  *         eventName: 'ProductCreated',
@@ -82,7 +82,7 @@ import {
  *     ];
  *   }
  *
- *   getRepositories(): RepositoryDefinition[] {
+ *   getRepositories(): ContextRepositoryDefinition[] {
  *     return [
  *       {
  *         token: 'productRepository',
@@ -92,76 +92,76 @@ import {
  *     ];
  *   }
  *
- *   async initialize(context: ModuleContext): Promise<void> {
+ *   async initialize(config: ContextConfig): Promise<void> {
  *     // Repositories are registered first, so we can resolve them
- *     this.productRepository = context.container.resolve<ProductRepository>('productRepository');
+ *     this.productRepository = config.container.resolve<ProductRepository>('productRepository');
  *
  *     // Call super to register all commands, queries, events
- *     await super.initialize(context);
+ *     await super.initialize(config);
  *   }
  * }
  * ```
  */
-export abstract class BaseContextModule implements ContextModule {
+export abstract class BaseContext implements Context {
   /**
-   * Module metadata (name, dependencies).
+   * Context metadata (name, dependencies).
    * Must be implemented by subclasses.
    */
-  abstract readonly metadata: ModuleMetadata;
+  abstract readonly metadata: ContextMetadata;
 
   /**
-   * The name of the domain module.
+   * The name of the context.
    * Must be implemented by subclasses.
    */
-  abstract readonly contextName: string;
+  abstract readonly name: string;
 
   /**
-   * Reference to the module context, available after initialize.
+   * Reference to the context configuration, available after initialize.
    */
-  protected context?: ModuleContext;
+  protected config?: ContextConfig;
 
   /**
-   * Returns all command definitions for this module.
-   * Override to provide commands for this domain module.
+   * Returns all command definitions for this context.
+   * Override to provide commands for this context.
    *
    * @returns Array of command definitions (empty by default)
    */
-  getCommands(): CommandDefinition[] {
+  getCommands(): ContextCommandDefinition[] {
     return [];
   }
 
   /**
-   * Returns all query definitions for this module.
-   * Override to provide queries for this domain module.
+   * Returns all query definitions for this context.
+   * Override to provide queries for this context.
    *
    * @returns Array of query definitions (empty by default)
    */
-  getQueries(): QueryDefinition[] {
+  getQueries(): ContextQueryDefinition[] {
     return [];
   }
 
   /**
-   * Returns all event handler definitions for this module.
-   * Override to provide event handlers for this domain module.
+   * Returns all event handler definitions for this context.
+   * Override to provide event handlers for this context.
    *
    * @returns Array of event handler definitions (empty by default)
    */
-  getEventHandlers(): EventHandlerDefinition[] {
+  getEventHandlers(): ContextEventHandlerDefinition[] {
     return [];
   }
 
   /**
-   * Returns all repository definitions for this module.
-   * Override to provide repositories for this domain module.
+   * Returns all repository definitions for this context.
+   * Override to provide repositories for this context.
    *
    * @returns Array of repository definitions (empty by default)
    */
-  getRepositories(): RepositoryDefinition[] {
+  getRepositories(): ContextRepositoryDefinition[] {
     return [];
   }
 
   /**
-   * Initializes the domain module.
+   * Initializes the context.
    *
    * This method:
    * 1. Registers all repositories in the DI container
@@ -172,30 +172,30 @@ export abstract class BaseContextModule implements ContextModule {
    * Subclasses can override this method but should call super.initialize()
    * to ensure automatic registration happens.
    *
-   * @param context - The module context
+   * @param config - The context configuration
    */
   // eslint-disable-next-line @typescript-eslint/require-await
-  async initialize(context: ModuleContext): Promise<void> {
-    this.context = context;
+  async initialize(config: ContextConfig): Promise<void> {
+    this.config = config;
 
     // 1. Register repositories first (other things depend on them)
     const repositories = this.getRepositories();
     for (const repo of repositories) {
-      context.container.register(repo.token, () => repo.instance, {
+      config.container.register(repo.token, () => repo.instance, {
         lifetime: repo.singleton !== false ? ServiceLifetime.SINGLETON : ServiceLifetime.TRANSIENT,
       });
     }
 
     // 2. Get the buses from container
-    const commandBus = context.container.resolve<{
+    const commandBus = config.container.resolve<{
       register: (commandType: new (...args: unknown[]) => unknown, handler: unknown) => void;
     }>('commandBus');
 
-    const queryBus = context.container.resolve<{
+    const queryBus = config.container.resolve<{
       register: (queryType: new (...args: unknown[]) => unknown, handler: unknown) => void;
     }>('queryBus');
 
-    const eventBus = context.container.resolve<{
+    const eventBus = config.container.resolve<{
       subscribe: (eventType: new (...args: unknown[]) => unknown, handler: unknown) => void;
     }>('eventBus');
 
@@ -219,14 +219,14 @@ export abstract class BaseContextModule implements ContextModule {
   }
 
   /**
-   * Starts the domain module.
-   * Override if your module needs to start external resources.
+   * Starts the context.
+   * Override if your context needs to start external resources.
    *
    * @example
    * ```typescript
    * async start(): Promise<void> {
    *   await super.start();
-   *   // Start any module-specific resources
+   *   // Start any context-specific resources
    *   await this.myService.connect();
    * }
    * ```
@@ -237,8 +237,8 @@ export abstract class BaseContextModule implements ContextModule {
   }
 
   /**
-   * Stops the domain module.
-   * Override if your module needs to clean up resources.
+   * Stops the context.
+   * Override if your context needs to clean up resources.
    *
    * @example
    * ```typescript
@@ -254,7 +254,7 @@ export abstract class BaseContextModule implements ContextModule {
   }
 
   /**
-   * Health check for the domain module.
+   * Health check for the context.
    * Default implementation returns healthy.
    * Override to provide custom health checks.
    *
@@ -279,7 +279,7 @@ export abstract class BaseContextModule implements ContextModule {
   async healthCheck(): Promise<HealthCheckResult> {
     return {
       status: HealthStatus.UP,
-      message: `${this.contextName} module is healthy`,
+      message: `${this.name} context is healthy`,
     };
   }
 }

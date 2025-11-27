@@ -74,7 +74,7 @@ my-app/
 
 ### Modular Template
 
-Bounded contexts for microservices:
+Contexts for modular architecture:
 
 ```bash
 stratix new my-app --structure modular

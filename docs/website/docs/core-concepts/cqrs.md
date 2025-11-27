@@ -550,4 +550,4 @@ async handle(command: CreateProductCommand): Promise<Product> {
 
 - **[Domain Modeling](./domain-modeling)** - Entities and value objects
 - **[Result Pattern](./result-pattern)** - Error handling
-- **[Bounded Contexts](./bounded-contexts)** - Modular architecture
+- **[Contexts](./contexts)** - Modular architecture
