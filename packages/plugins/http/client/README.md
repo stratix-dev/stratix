@@ -1,34 +1,26 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
 
-# @stratix/runtime
+# @stratix/http-client
 
-**Application runtime and plugin lifecycle management for Stratix**
+**HTTP client plugin for making outbound requests with Axios**
 
-[![npm version](https://img.shields.io/npm/v/@stratix/runtime.svg)](https://www.npmjs.com/package/@stratix/runtime)
+[![npm version](https://img.shields.io/npm/v/@stratix/http-client.svg)](https://www.npmjs.com/package/@stratix/http-client)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-[Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start) 
+[Documentation](https://stratix-dev.github.io/stratix/docs/http/http-client-overview) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
 
 </div>
-
 
 > Part of **[Stratix Framework](https://stratix-dev.github.io/stratix/)** - A TypeScript framework for building scalable applications with Domain-Driven Design, Hexagonal Architecture, and CQRS patterns.
 >
 > **New to Stratix?** Start with the [Getting Started Guide](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
 
-
 ## About This Package
 
-`@stratix/runtime` provides the application runtime and plugin lifecycle management system for Stratix applications. It includes the ApplicationBuilder, plugin registry, and lifecycle management utilities.
+`@stratix/http-client` is an HTTP client plugin for the Stratix framework.
 
-**This package includes:**
-- ApplicationBuilder for fluent app configuration
-- Plugin lifecycle management (initialize, start, stop)
-- Dependency graph for automatic plugin ordering
-- Health check system
-- Application lifecycle hooks
-- DX Helpers for productivity
+HTTP client for making outbound HTTP requests using Axios with advanced features like automatic retries, circuit breaker pattern, and request/response interceptors.
 
 ## About Stratix
 
@@ -43,38 +35,29 @@ Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexa
 
 **Prerequisites:**
 - Node.js 18.0.0 or higher
-- `@stratix/core` installed
-
-**Recommended:** Create a new Stratix project
-```bash
-npm install -g @stratix/cli
-stratix new my-app
-```
+- `@stratix/core` and `@stratix/runtime` installed
+- Basic understanding of [Stratix architecture](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
 
 **Manual installation:**
 ```bash
-npm install @stratix/core @stratix/runtime
+pnpm add @stratix/http-client
 ```
 
 ## Related Packages
 
 **Essential:**
 - [`@stratix/core`](https://www.npmjs.com/package/@stratix/core) - Core primitives and abstractions
+- [`@stratix/runtime`](https://www.npmjs.com/package/@stratix/runtime) - Application runtime and plugin system
 - [`@stratix/cli`](https://www.npmjs.com/package/@stratix/cli) - Code generation and scaffolding
-
-**Plugins:**
-- [`@stratix/db-postgres`](https://www.npmjs.com/package/@stratix/db-postgres) - PostgreSQL integration
-- [`@stratix/http-fastify`](https://www.npmjs.com/package/@stratix/http-fastify) - Fastify HTTP server
-- [`@stratix/di-awilix`](https://www.npmjs.com/package/@stratix/di-awilix) - Dependency injection
 
 [View all plugins](https://stratix-dev.github.io/stratix/docs/plugins/official-plugins)
 
 ## Documentation
 
-- [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start) - Quick start guide
-- [Plugin Architecture](https://stratix-dev.github.io/stratix/docs/plugins/plugin-architecture) - Plugin system overview
-- [Creating Plugins](https://stratix-dev.github.io/stratix/docs/plugins/creating-plugins) - Build custom plugins
-- [Dependency Injection](https://stratix-dev.github.io/stratix/docs/core-concepts/dependency-injection) - DI container usage
+- [HTTP Client Overview](https://stratix-dev.github.io/stratix/docs/http/http-client-overview) - Getting started and basic usage
+- [Configuration Guide](https://stratix-dev.github.io/stratix/docs/http/configuration) - Configuration options
+- [Advanced Usage](https://stratix-dev.github.io/stratix/docs/http/advanced-usage) - Interceptors, retries, circuit breaker
+- [API Reference](https://stratix-dev.github.io/stratix/docs/http/api-reference) - Complete API documentation
 - [Complete Documentation](https://stratix-dev.github.io/stratix/)
 
 ## Support

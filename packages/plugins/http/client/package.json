@@ -1,7 +1,7 @@
 {
-  "name": "@stratix/validation-zod",
+  "name": "@stratix/http-client",
   "version": "0.6.1",
-  "description": "Zod-based input validation for Stratix framework",
+  "description": "HTTP client plugin for Stratix framework using Axios",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -19,28 +19,33 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run || exit 0",
+    "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "lint": "eslint src --ext .ts",
     "clean": "rm -rf dist"
   },
   "keywords": [
     "stratix",
-    "validation",
-    "zod",
-    "schema",
-    "dto"
+    "http",
+    "client",
+    "axios",
+    "plugin",
+    "rest",
+    "api"
   ],
   "author": "Stratix Team",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/stratix-dev/stratix.git",
-    "directory": "packages/plugins/utilities/validation-zod"
+    "directory": "packages/plugins/http/client"
   },
+  "homepage": "https://stratix-dev.github.io/stratix/",
   "dependencies": {
-    "zod": "^3.24.1",
-    "@stratix/core": "workspace:*"
+    "@stratix/core": "workspace:*",
+    "@stratix/runtime": "workspace:*",
+    "axios": "^1.6.0"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
@@ -50,5 +55,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "homepage": "https://stratix-dev.github.io/stratix/"
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }

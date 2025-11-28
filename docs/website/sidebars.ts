@@ -146,7 +146,22 @@ const sidebars: SidebarsConfig = {
     },
 
     // ========================================
-    // 9. DATABASE & PERSISTENCE
+    // 9. HTTP
+    // ========================================
+    {
+      type: 'category',
+      label: 'HTTP',
+      collapsed: true,
+      items: [
+        'http/http-client-overview',
+        'http/configuration',
+        'http/advanced-usage',
+        'http/api-reference',
+      ],
+    },
+
+    // ========================================
+    // 10. DATABASE & PERSISTENCE
     // ========================================
 
     {
