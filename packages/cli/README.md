@@ -38,12 +38,8 @@ Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexa
 - `@stratix/core` and `@stratix/runtime` installed
 - Basic understanding of [Stratix architecture](https://stratix-dev.github.io/stratix/docs/core-concepts/architecture-overview)
 
-**Recommended:** Use the Stratix CLI
-```bash
-stratix add cli
-```
 
-**Manual installation:**
+**Installation:**
 ```bash
 npm install @stratix/cli
 ```
