@@ -45,6 +45,9 @@ jobs:
         env:
           CI: true
 
+      - name: Prepare for publish
+        run: node scripts/prepare-publish.js
+
       - name: Verify package contents
         run: |
           echo "Verifying package contents..."
