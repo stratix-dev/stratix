@@ -121,7 +121,7 @@ const config: Config = {
           label: 'Docs',
         },
         {
-          to: '/api',
+          href: '/stratix/api/',
           position: 'left',
           label: 'API Reference',
         },
@@ -156,7 +156,7 @@ const config: Config = {
             },
             {
               label: 'API Reference',
-              to: '/api',
+              href: '/stratix/api/',
             },
           ],
         },
