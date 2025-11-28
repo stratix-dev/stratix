@@ -31,6 +31,27 @@ stratix add http
 - Schema validation
 - CORS support
 
+## HTTP Clients
+
+### @stratix/http-client
+
+HTTP client for making outbound requests using Axios.
+
+```bash
+pnpm add @stratix/http-client
+```
+
+**Features:**
+- Multiple named clients
+- Automatic retries with exponential backoff
+- Circuit breaker pattern
+- Request/response interceptors
+- Type-safe with generics
+- Authentication support (Bearer, Basic, Custom)
+- Health checks
+
+**[Documentation](../http/http-client-overview)**
+
 ## Databases
 
 ### @stratix/postgres
@@ -122,13 +143,14 @@ stratix add auth
 
 | Plugin        | Category      | Status   | Version |
 | ------------- | ------------- | -------- | ------- |
-| http-fastify  | HTTP          | ✅ Stable | 0.5.0   |
-| postgres      | Database      | ✅ Stable | 0.5.0   |
-| mongodb       | Database      | ✅ Stable | 0.5.0   |
-| redis         | Database      | ✅ Stable | 0.5.0   |
-| rabbitmq      | Messaging     | ✅ Stable | 0.5.0   |
-| opentelemetry | Observability | ✅ Stable | 0.5.0   |
-| auth          | Security      | ✅ Stable | 0.5.0   |
+| http-fastify  | HTTP Server   | ✅ Stable | 0.6.0   |
+| http-client   | HTTP Client   | ✅ Stable | 0.1.0   |
+| postgres      | Database      | ✅ Stable | 0.6.0   |
+| mongodb       | Database      | ✅ Stable | 0.6.0   |
+| redis         | Database      | ✅ Stable | 0.6.0   |
+| rabbitmq      | Messaging     | ✅ Stable | 0.6.0   |
+| opentelemetry | Observability | ✅ Stable | 0.6.0   |
+| auth          | Security      | ✅ Stable | 0.6.0   |
 
 ## Looking for Providers or Libraries?
 
