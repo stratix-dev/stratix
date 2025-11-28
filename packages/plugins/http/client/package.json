@@ -1,6 +1,6 @@
 {
   "name": "@stratix/http-client",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "HTTP client plugin for Stratix framework using Axios",
   "type": "module",
   "main": "./dist/index.js",
@@ -43,8 +43,8 @@
   },
   "homepage": "https://stratix-dev.github.io/stratix/",
   "dependencies": {
-    "@stratix/core": "workspace:*",
-    "@stratix/runtime": "workspace:*",
+    "@stratix/core": "workspace:^",
+    "@stratix/runtime": "workspace:^",
     "axios": "^1.6.0"
   },
   "devDependencies": {

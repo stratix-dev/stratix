@@ -1,6 +1,6 @@
 {
   "name": "@stratix/cli",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Global CLI for Stratix framework",
   "type": "module",
   "main": "./dist/index.js",
@@ -40,7 +40,7 @@
   "author": "P. Andrés Carvajal <causticrez@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "@stratix/core": "workspace:*",
+    "@stratix/core": "workspace:^",
     "chalk": "^5.3.0",
     "commander": "^12.0.0",
     "cosmiconfig": "^9.0.0",

@@ -1,6 +1,6 @@
 {
   "name": "@stratix/obs-opentelemetry",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "OpenTelemetry extension for Stratix framework",
   "type": "module",
   "main": "./dist/index.js",
@@ -38,7 +38,7 @@
     "@opentelemetry/auto-instrumentations-node": "^0.50.0",
     "@opentelemetry/exporter-trace-otlp-http": "^0.53.0",
     "@opentelemetry/exporter-metrics-otlp-http": "^0.53.0",
-    "@stratix/core": "workspace:*"
+    "@stratix/core": "workspace:^"
   },
   "devDependencies": {
     "typescript": "^5.7.2",
