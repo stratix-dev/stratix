@@ -9,6 +9,20 @@ import { PackageManagerUtils } from '../utils/package-manager.js';
 import { ProjectScaffolder } from '../scaffolding/project-scaffolder.js';
 import type { NewCommandOptions } from '../types/index.js';
 
+/**
+ * Creates the 'new' command for scaffolding Stratix projects.
+ *
+ * Supports single-context and multi-context structures with interactive prompts.
+ *
+ * @returns Command instance
+ *
+ * @example
+ * ```bash
+ * stratix new my-app
+ * stratix new my-app --pm pnpm --structure multi-context
+ * stratix new my-app --no-git --skip-install
+ * ```
+ */
 export function createNewCommand(): Command {
   const command = new Command('new');
 

@@ -1,8 +1,14 @@
+/**
+ * Template data for project scaffolding.
+ */
 export interface ProjectTemplateData {
   projectName: string;
   packageManager: string;
 }
 
+/**
+ * Generates package.json content.
+ */
 export const packageJsonTemplate = (data: ProjectTemplateData): string => `{
   "name": "${data.projectName}",
   "version": "0.1.0",
@@ -35,6 +41,9 @@ export const packageJsonTemplate = (data: ProjectTemplateData): string => `{
 }
 `;
 
+/**
+ * Generates tsconfig.json content.
+ */
 export const tsconfigTemplate = (): string => `{
   "compilerOptions": {
     "target": "ES2022",
@@ -63,6 +72,9 @@ export const tsconfigTemplate = (): string => `{
 }
 `;
 
+/**
+ * Generates index.ts main entry point.
+ */
 export const indexTemplate = (data: ProjectTemplateData): string => `import { ApplicationBuilder } from '@stratix/runtime';
 import { AwilixContainer } from '@stratix/di-awilix';
 import { ConsoleLogger } from '@stratix/runtime';
@@ -92,6 +104,9 @@ bootstrap().catch((error) => {
 });
 `;
 
+/**
+ * Generates stratix.config.ts configuration file.
+ */
 export const stratixConfigTemplate = (): string => `import { defineConfig } from '@stratix/cli';
 
 export default defineConfig({
@@ -131,6 +146,9 @@ export default defineConfig({
 });
 `;
 
+/**
+ * Generates .gitignore content.
+ */
 export const gitignoreTemplate = (): string => `# Dependencies
 node_modules/
 pnpm-lock.yaml
@@ -171,6 +189,9 @@ tmp/
 temp/
 `;
 
+/**
+ * Generates TypeScript type definitions for stratix.config.ts.
+ */
 export const stratixCliTypesTemplate = (): string => `declare module '@stratix/cli' {
   export interface StratixConfig {
     structure?: {
@@ -213,6 +234,9 @@ export const stratixCliTypesTemplate = (): string => `declare module '@stratix/c
 }
 `;
 
+/**
+ * Generates ESLint configuration.
+ */
 export const eslintConfigTemplate = (): string => `{
   "extends": [
     "eslint:recommended",
@@ -236,6 +260,9 @@ export const eslintConfigTemplate = (): string => `{
 }
 `;
 
+/**
+ * Generates Prettier configuration.
+ */
 export const prettierConfigTemplate = (): string => `{
   "semi": true,
   "singleQuote": true,
@@ -245,6 +272,9 @@ export const prettierConfigTemplate = (): string => `{
 }
 `;
 
+/**
+ * Generates README.md content.
+ */
 export const readmeTemplate = (data: ProjectTemplateData): string => `# ${data.projectName}
 
 A Stratix application built with hexagonal architecture, CQRS, and layered design.

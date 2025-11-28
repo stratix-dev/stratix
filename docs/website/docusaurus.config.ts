@@ -121,6 +121,11 @@ const config: Config = {
           label: 'Docs',
         },
         {
+          to: '/api',
+          position: 'left',
+          label: 'API Reference',
+        },
+        {
           href: 'https://github.com/stratix-dev/stratix',
           label: 'GitHub',
           position: 'right',
@@ -148,6 +153,10 @@ const config: Config = {
             {
               label: 'CLI Reference',
               to: '/docs/cli/cli-overview',
+            },
+            {
+              label: 'API Reference',
+              to: '/api',
             },
           ],
         },

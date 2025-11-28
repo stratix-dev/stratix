@@ -22,12 +22,12 @@ npx @stratix/cli new my-app
 
 ## Available Commands
 
-| Command | Description |
-|---------|-------------|
-| `new` | Create a new Stratix project |
+| Command             | Description                                       |
+| ------------------- | ------------------------------------------------- |
+| `new`               | Create a new Stratix project                      |
 | `generate` (or `g`) | Generate code (entities, commands, queries, etc.) |
-| `add` | Add extensions to your project |
-| `info` | Display project information |
+| `add`               | Add extensions to your project                    |
+| `info`              | Display project information                       |
 
 ## Quick Start
 
@@ -202,7 +202,7 @@ export default defineConfig({
 ### 4. Version Lock in CI/CD
 
 ```bash
-npx @stratix/cli@0.1.3 new my-app
+npx @stratix/cli@latest new my-app
 ```
 
 ## Next Steps

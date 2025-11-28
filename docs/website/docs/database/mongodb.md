@@ -17,7 +17,7 @@ stratix add mongodb
 ## Configuration
 
 ```typescript
-import { MongoDBPlugin } from '@stratix/mongodb';
+import { MongoDBPlugin } from '@stratix/db-mongodb';
 
 const app = await ApplicationBuilder.create()
   .usePlugin(new MongoDBPlugin({

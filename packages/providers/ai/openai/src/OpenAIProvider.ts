@@ -30,9 +30,9 @@ const MODEL_PRICING = {
 /**
  * OpenAI provider implementation for Stratix AI Agents.
  *
- * Supports GPT-4, GPT-3.5, and embeddings models with function calling.
+ * Supports GPT-4, GPT-3.5, and embeddings models with function calling and streaming.
  *
- * @example
+ * @example Basic chat
  * ```typescript
  * const provider = new OpenAIProvider({
  *   apiKey: process.env.OPENAI_API_KEY!,
@@ -46,6 +46,41 @@ const MODEL_PRICING = {
  *   ],
  *   temperature: 0.7
  * });
+ * ```
+ *
+ * @example Streaming
+ * ```typescript
+ * for await (const chunk of provider.streamChat({
+ *   model: 'gpt-4',
+ *   messages: [{ role: 'user', content: 'Write a story', timestamp: new Date() }]
+ * })) {
+ *   process.stdout.write(chunk.content);
+ * }
+ * ```
+ *
+ * @example Function calling
+ * ```typescript
+ * const response = await provider.chat({
+ *   model: 'gpt-4',
+ *   messages: [{ role: 'user', content: 'What is the weather?', timestamp: new Date() }],
+ *   tools: [{
+ *     name: 'getWeather',
+ *     description: 'Get weather for a location',
+ *     parameters: {
+ *       type: 'object',
+ *       properties: { city: { type: 'string' } }
+ *     }
+ *   }]
+ * });
+ * ```
+ *
+ * @example Embeddings
+ * ```typescript
+ * const result = await provider.embeddings({
+ *   model: 'text-embedding-3-small',
+ *   input: ['Hello world', 'Another text']
+ * });
+ * console.log(result.embeddings.length);
  * ```
  */
 export class OpenAIProvider implements LLMProvider {

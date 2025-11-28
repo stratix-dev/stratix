@@ -31,19 +31,19 @@ Package Manager: pnpm
 ### Stratix Packages
 
 ```
-@stratix/core: 0.1.3
-@stratix/runtime: 0.1.3
-@stratix/cli: 0.1.3
+@stratix/core: x.y.z
+@stratix/runtime: x.y.z
+@stratix/cli: x.y.z
 ```
 
 ### Installed Extensions
 
 ```
 Extensions:
-  ✓ @stratix/http-fastify (0.1.3)
-  ✓ @stratix/postgres (0.1.3)
-  ✓ @stratix/ai-openai (0.1.3)
-  ✓ @stratix/di-awilix (0.1.3)
+  ✓ @stratix/http-fastify (x.y.z)
+  ✓ @stratix/db-postgres (x.y.z)
+  ✓ @stratix/ai-openai (x.y.z)
+  ✓ @stratix/di-awilix (x.y.z)
 ```
 
 ### Project Structure
@@ -68,9 +68,9 @@ Repositories: 5
 
 ## Options
 
-| Option | Description |
-|--------|-------------|
-| `--json` | Output as JSON |
+| Option      | Description               |
+| ----------- | ------------------------- |
+| `--json`    | Output as JSON            |
 | `--verbose` | Show detailed information |
 
 ## JSON Output
@@ -91,18 +91,18 @@ stratix info --json
     "packageManager": "pnpm"
   },
   "stratix": {
-    "core": "0.1.3",
-    "runtime": "0.1.3",
-    "cli": "0.1.3"
+    "core": "x.y.z",
+    "runtime": "x.y.z",
+    "cli": "x.y.z"
   },
   "extensions": [
     {
       "name": "@stratix/http-fastify",
-      "version": "0.1.3"
+      "version": "x.y.z"
     },
     {
-      "name": "@stratix/postgres",
-      "version": "0.1.3"
+      "name": "@stratix/db-postgres",
+      "version": "x.y.z"
     }
   ],
   "statistics": {

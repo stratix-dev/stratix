@@ -10,9 +10,9 @@ Stratix supports multiple databases through plugins.
 
 ## Available Database Plugins
 
-- **@stratix/postgres** - PostgreSQL
-- **@stratix/mongodb** - MongoDB
-- **@stratix/redis** - Redis
+- **@stratix/db-postgres** - PostgreSQL
+- **@stratix/db-mongodb** - MongoDB
+- **@stratix/db-redis** - Redis
 
 ## Repository Pattern
 
@@ -30,7 +30,7 @@ export interface IProductRepository {
 ## PostgreSQL Example
 
 ```typescript
-import { PostgresPlugin } from '@stratix/postgres';
+import { PostgresPlugin } from '@stratix/db-postgres';
 
 const app = await ApplicationBuilder.create()
   .usePlugin(new PostgresPlugin({

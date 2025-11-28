@@ -110,7 +110,7 @@ graph TB
 ```typescript
 import { ApplicationBuilder } from '@stratix/runtime';
 import { FastifyHTTPPlugin } from '@stratix/http-fastify';
-import { PostgresPlugin } from '@stratix/database-postgres';
+import { PostgresPlugin } from '@stratix/db-postgres';
 import { OpenAIProvider } from '@stratix/ai-openai';
 
 // Build your application

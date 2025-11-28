@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
+  <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
 
 # Stratix
 
@@ -10,21 +10,13 @@ Production-ready from day one with type safety, dependency injection, AI agents 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3+-blue.svg)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
-[![Version](https://img.shields.io/badge/version-0.6.1-orange.svg)](https://github.com/stratix-dev/stratix)
+[![Version](https://img.shields.io/badge/version-0.6.2-orange.svg)](https://github.com/stratix-dev/stratix)
 
 [Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix)
 
 </div>
 
 > **Pre-release Notice**: Stratix is in active development. The API may change until version 1.0.0.
-
-## What's New in 0.4.0
-
-- **Repository Migration**: Now available at `github.com/stratix-dev/stratix`
-- **Enhanced Documentation**: Updated theme with official brand colors for better readability
-- **Stratix Copilot**: Improved documentation with accurate workflow descriptions
-
-See the [CHANGELOG](./CHANGELOG.md) for complete release notes.
 
 ## Features
 
@@ -79,8 +71,11 @@ npm run dev
 - [**@stratix/db-mongodb**](https://www.npmjs.com/package/@stratix/db-mongodb) - MongoDB integration with aggregations and pagination
 - [**@stratix/db-redis**](https://www.npmjs.com/package/@stratix/db-redis) - Redis caching, rate limiting, and distributed locks
 
-#### Infrastructure Plugins
+#### HTTP Plugins
 - [**@stratix/http-fastify**](https://www.npmjs.com/package/@stratix/http-fastify) - Fastify HTTP server integration
+- [**@stratix/http-client**](https://www.npmjs.com/package/@stratix/http-client) - Type-safe HTTP client with Axios, retries, and circuit breaker
+
+#### Messaging & Observability
 - [**@stratix/msg-rabbitmq**](https://www.npmjs.com/package/@stratix/msg-rabbitmq) - RabbitMQ message broker with RPC and priority queues
 - [**@stratix/obs-opentelemetry**](https://www.npmjs.com/package/@stratix/obs-opentelemetry) - OpenTelemetry observability integration
 

@@ -54,7 +54,7 @@ pnpm add @stratix/http-client
 
 ## Databases
 
-### @stratix/postgres
+### @stratix/db-postgres
 
 PostgreSQL database plugin.
 
@@ -70,7 +70,7 @@ stratix add postgres
 
 **[Documentation](../database/postgres)**
 
-### @stratix/mongodb
+### @stratix/db-mongodb
 
 MongoDB database plugin.
 
@@ -80,7 +80,7 @@ stratix add mongodb
 
 **[Documentation](../database/mongodb)**
 
-### @stratix/redis
+### @stratix/db-redis
 
 Redis caching and pub/sub.
 

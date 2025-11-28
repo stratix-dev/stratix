@@ -17,7 +17,7 @@ stratix add redis
 ## Configuration
 
 ```typescript
-import { RedisPlugin } from '@stratix/redis';
+import { RedisPlugin } from '@stratix/db-redis';
 
 const app = await ApplicationBuilder.create()
   .usePlugin(new RedisPlugin({

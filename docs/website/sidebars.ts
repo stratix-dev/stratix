@@ -63,6 +63,7 @@ const sidebars: SidebarsConfig = {
         'core-concepts/cqrs',
         'core-concepts/contexts',
         'core-concepts/dependency-injection',
+        'core-concepts/secrets-management',
         'core-concepts/dx-helpers',
         'core-concepts/mapping',
       ],

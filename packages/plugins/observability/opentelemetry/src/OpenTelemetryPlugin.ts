@@ -54,25 +54,35 @@ export interface OpenTelemetryConfig {
  * OpenTelemetry Plugin for Stratix
  *
  * Provides distributed tracing and metrics collection using OpenTelemetry.
+ * Compatible with Jaeger, Zipkin, and other OTLP-compatible backends.
  *
- * @example
+ * @example Basic usage
  * ```typescript
  * import { ApplicationBuilder } from '@stratix/runtime';
  * import { OpenTelemetryPlugin } from '@stratix/obs-opentelemetry';
  *
  * const app = await ApplicationBuilder.create()
- *   .usePlugin(new OpenTelemetryPlugin())
- *   .withConfig({
- *     'opentelemetry': {
- *       serviceName: 'my-service',
- *       environment: 'production',
- *       traceEndpoint: 'http://localhost:4318/v1/traces',
- *       autoInstrumentation: true
- *     }
+ *   .usePlugin(new OpenTelemetryPlugin(), {
+ *     serviceName: 'my-service',
+ *     environment: 'production',
+ *     traceEndpoint: 'http://localhost:4318/v1/traces',
+ *     autoInstrumentation: true
  *   })
  *   .build();
  *
  * await app.start();
+ * ```
+ *
+ * @example With Jaeger
+ * ```typescript
+ * const app = await ApplicationBuilder.create()
+ *   .usePlugin(new OpenTelemetryPlugin(), {
+ *     serviceName: 'my-service',
+ *     traceEndpoint: 'http://jaeger:4318/v1/traces',
+ *     metricsEndpoint: 'http://jaeger:4318/v1/metrics',
+ *     environment: 'production'
+ *   })
+ *   .build();
  * ```
  */
 export class OpenTelemetryPlugin implements Plugin {
