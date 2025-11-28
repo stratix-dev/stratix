@@ -173,6 +173,16 @@ jobs:
           publish_package "packages/plugins/database/mongodb" || true
           publish_package "packages/plugins/database/redis" || true
 
+          # HTTP plugins
+          publish_package "packages/plugins/http/client" || true
+          publish_package "packages/plugins/http/fastify" || true
+
+          # Messaging plugins
+          publish_package "packages/plugins/messaging/rabbitmq" || true
+
+          # Observability plugins
+          publish_package "packages/plugins/observability/opentelemetry" || true
+
           # Utility plugins
           publish_package "packages/libraries/errors" || true
           
@@ -249,6 +259,19 @@ jobs:
           add_to_summary "packages/plugins/database/postgres"
           add_to_summary "packages/plugins/database/mongodb"
           add_to_summary "packages/plugins/database/redis"
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### HTTP Plugins" >> $GITHUB_STEP_SUMMARY
+          add_to_summary "packages/plugins/http/client"
+          add_to_summary "packages/plugins/http/fastify"
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Messaging Plugins" >> $GITHUB_STEP_SUMMARY
+          add_to_summary "packages/plugins/messaging/rabbitmq"
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Observability Plugins" >> $GITHUB_STEP_SUMMARY
+          add_to_summary "packages/plugins/observability/opentelemetry"
 
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Utility Plugins" >> $GITHUB_STEP_SUMMARY

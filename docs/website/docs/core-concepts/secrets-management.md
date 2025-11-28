@@ -334,15 +334,15 @@ Each cached secret stores:
 
 For 100 secrets averaging 50 bytes each: ~5KB memory usage.
 
-## Migration from @stratix/secrets Plugin
+## Migration from @stratix/runtime Plugin
 
-If you were using the old `@stratix/secrets` plugin:
+If you were using the old `@stratix/runtime` plugin:
 
 ### Before (Plugin)
 
 ```typescript
 import { ApplicationBuilder } from '@stratix/runtime';
-import { SecretsPlugin } from '@stratix/secrets';
+import { SecretsPlugin } from '@stratix/runtime';
 
 const app = await ApplicationBuilder.create()
   .usePlugin(new SecretsPlugin())

@@ -17,7 +17,7 @@ stratix add postgres
 ## Configuration
 
 ```typescript
-import { PostgresPlugin } from '@stratix/postgres';
+import { PostgresPlugin } from '@stratix/db-postgres';
 
 const app = await ApplicationBuilder.create()
   .usePlugin(new PostgresPlugin({

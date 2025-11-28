@@ -176,6 +176,21 @@ export class AwilixContainer implements Container {
 
   /**
    * Registers a scoped factory.
+   *
+   * @example
+   * ```typescript
+   * container.scoped('requestContext', () => ({
+   *   requestId: crypto.randomUUID(),
+   *   timestamp: Date.now()
+   * }));
+   *
+   * const scope1 = container.createScope();
+   * const ctx1 = scope1.resolve('requestContext');
+   * const ctx2 = scope1.resolve('requestContext'); // Same instance
+   *
+   * const scope2 = container.createScope();
+   * const ctx3 = scope2.resolve('requestContext'); // Different instance
+   * ```
    */
   scoped<T>(token: Token<T>, factory: () => T): void {
     const name = this.getTokenName(token);

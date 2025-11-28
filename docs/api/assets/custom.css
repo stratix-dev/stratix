@@ -1,0 +1,288 @@
+/**
+ * Stratix Custom Theme for TypeDoc
+ * Matches the brand colors from docs/website
+ */
+
+:root {
+    /* Light Theme - Stratix Brand Colors */
+    --light-color-background: #FDFDFD;
+    --light-color-background-secondary: #f8f9fa;
+    --light-color-background-warning: #E035B6;
+    --light-color-warning-text: #fff;
+    --light-color-icon-background: var(--light-color-background);
+    --light-color-accent: #2895FD;
+    --light-color-active-menu-item: #2958FC;
+    --light-color-text: #222;
+    --light-color-text-aside: #64748b;
+    --light-color-link: #2958FC;
+
+    /* TypeScript syntax highlighting - Stratix colors */
+    --light-color-ts-keyword: #2958FC;
+    --light-color-ts-project: #E035B6;
+    --light-color-ts-module: #2895FD;
+    --light-color-ts-namespace: #2895FD;
+    --light-color-ts-enum: #14E4E8;
+    --light-color-ts-enum-member: #14E4E8;
+    --light-color-ts-variable: #2958FC;
+    --light-color-ts-function: #2895FD;
+    --light-color-ts-class: #2958FC;
+    --light-color-ts-interface: #14E4E8;
+    --light-color-ts-constructor: #2958FC;
+    --light-color-ts-property: #2895FD;
+    --light-color-ts-method: #2895FD;
+    --light-color-ts-call-signature: #2895FD;
+    --light-color-ts-index-signature: #2895FD;
+    --light-color-ts-constructor-signature: #2958FC;
+    --light-color-ts-parameter: #2895FD;
+    --light-color-ts-type-parameter: #E035B6;
+    --light-color-ts-accessor: #2895FD;
+    --light-color-ts-get-signature: #2895FD;
+    --light-color-ts-set-signature: #2895FD;
+    --light-color-ts-type-alias: #E035B6;
+
+    /* Dark Theme - Stratix Brand Colors */
+    --dark-color-background: #0a0e13;
+    --dark-color-background-secondary: #0f1419;
+    --dark-color-background-warning: #E035B6;
+    --dark-color-warning-text: #fff;
+    --dark-color-icon-background: #0f1419;
+    --dark-color-accent: #2895FD;
+    --dark-color-active-menu-item: #14E4E8;
+    --dark-color-text: #f8fafc;
+    --dark-color-text-aside: #cbd5e1;
+    --dark-color-link: #14E4E8;
+
+    /* TypeScript syntax highlighting - Dark theme */
+    --dark-color-ts-keyword: #14E4E8;
+    --dark-color-ts-project: #E035B6;
+    --dark-color-ts-module: #2895FD;
+    --dark-color-ts-namespace: #2895FD;
+    --dark-color-ts-enum: #14E4E8;
+    --dark-color-ts-enum-member: #14E4E8;
+    --dark-color-ts-variable: #14E4E8;
+    --dark-color-ts-function: #2895FD;
+    --dark-color-ts-class: #14E4E8;
+    --dark-color-ts-interface: #14E4E8;
+    --dark-color-ts-constructor: #14E4E8;
+    --dark-color-ts-property: #2895FD;
+    --dark-color-ts-method: #2895FD;
+    --dark-color-ts-call-signature: #2895FD;
+    --dark-color-ts-index-signature: #2895FD;
+    --dark-color-ts-constructor-signature: #14E4E8;
+    --dark-color-ts-parameter: #2895FD;
+    --dark-color-ts-type-parameter: #E035B6;
+    --dark-color-ts-accessor: #2895FD;
+    --dark-color-ts-get-signature: #2895FD;
+    --dark-color-ts-set-signature: #2895FD;
+    --dark-color-ts-type-alias: #E035B6;
+}
+
+/* Header customization */
+.tsd-page-toolbar {
+    background: var(--color-background);
+    border-bottom: 1px solid rgba(41, 88, 252, 0.1);
+}
+
+[data-theme='dark'] .tsd-page-toolbar {
+    border-bottom: 1px solid rgba(20, 228, 232, 0.1);
+}
+
+/* Title link styling */
+.title a {
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.title a:hover {
+    color: var(--color-link);
+    text-decoration: none;
+}
+
+/* Navigation links */
+#tsd-toolbar-links a {
+    color: var(--color-text-aside);
+    transition: color 0.2s ease;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+}
+
+#tsd-toolbar-links a:hover {
+    color: var(--color-link);
+    background: rgba(41, 88, 252, 0.05);
+}
+
+[data-theme='dark'] #tsd-toolbar-links a:hover {
+    background: rgba(20, 228, 232, 0.05);
+}
+
+/* Sidebar improvements */
+.tsd-navigation {
+    padding: 1rem;
+}
+
+.tsd-navigation a {
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.tsd-navigation a:hover {
+    background: rgba(41, 88, 252, 0.05);
+    color: var(--color-link);
+}
+
+[data-theme='dark'] .tsd-navigation a:hover {
+    background: rgba(20, 228, 232, 0.05);
+}
+
+.tsd-navigation a.current {
+    font-weight: 600;
+    border-left: 2px solid var(--color-active-menu-item);
+    padding-left: calc(var(--padding) - 2px);
+}
+
+/* Code blocks */
+pre {
+    background: rgba(41, 88, 252, 0.03);
+    border: 1px solid rgba(41, 88, 252, 0.1);
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+[data-theme='dark'] pre {
+    background: rgba(20, 228, 232, 0.03);
+    border: 1px solid rgba(20, 228, 232, 0.1);
+}
+
+code {
+    background: rgba(41, 88, 252, 0.08);
+    color: #2958FC;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-weight: 500;
+}
+
+[data-theme='dark'] code {
+    background: rgba(20, 228, 232, 0.12);
+    color: #14E4E8;
+}
+
+pre code {
+    background: transparent;
+    color: inherit;
+    padding: 0;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1rem 0;
+}
+
+table th {
+    background: rgba(41, 88, 252, 0.08);
+    font-weight: 600;
+    text-align: left;
+    border-bottom: 2px solid #2958FC;
+    padding: 0.75rem;
+}
+
+[data-theme='dark'] table th {
+    background: rgba(20, 228, 232, 0.08);
+    border-bottom: 2px solid #14E4E8;
+}
+
+table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--color-accent);
+}
+
+table tr:hover {
+    background: rgba(41, 88, 252, 0.03);
+}
+
+[data-theme='dark'] table tr:hover {
+    background: rgba(20, 228, 232, 0.03);
+}
+
+/* Buttons and interactive elements */
+button, .tsd-widget {
+    transition: all 0.2s ease;
+}
+
+button:hover, .tsd-widget:hover {
+    transform: translateY(-1px);
+}
+
+/* Links */
+a {
+    color: var(--color-link);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--color-accent);
+}
+
+/* Tags and badges */
+.tsd-tag {
+    background: linear-gradient(135deg, #2958FC 0%, #2895FD 100%);
+    color: white;
+    border-radius: 1rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+[data-theme='dark'] .tsd-tag {
+    background: linear-gradient(135deg, #14E4E8 0%, #2895FD 100%);
+    color: #0a0e13;
+}
+
+/* Footer */
+footer {
+    background: linear-gradient(180deg, var(--color-background) 0%, var(--color-background-secondary) 100%);
+    border-top: 1px solid rgba(41, 88, 252, 0.1);
+    padding: 2rem 0;
+}
+
+[data-theme='dark'] footer {
+    border-top: 1px solid rgba(20, 228, 232, 0.1);
+}
+
+/* Smooth transitions */
+* {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Hierarchy icons */
+.tsd-signature {
+    border-color: var(--color-accent);
+}
+
+.tsd-signature:hover {
+    border-color: var(--color-link);
+}
+
+/* Search */
+.tsd-search {
+    background: rgba(41, 88, 252, 0.05);
+    border: 1px solid rgba(41, 88, 252, 0.2);
+    border-radius: 0.5rem;
+}
+
+[data-theme='dark'] .tsd-search {
+    background: rgba(20, 228, 232, 0.05);
+    border: 1px solid rgba(20, 228, 232, 0.2);
+}
+
+.tsd-search:focus-within {
+    border-color: var(--color-link);
+    box-shadow: 0 0 0 2px rgba(41, 88, 252, 0.1);
+}
+
+[data-theme='dark'] .tsd-search:focus-within {
+    box-shadow: 0 0 0 2px rgba(20, 228, 232, 0.1);
+}

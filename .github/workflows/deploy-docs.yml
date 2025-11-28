@@ -6,6 +6,9 @@ on:
       - main
     paths:
       - 'docs/website/**'
+      - 'packages/*/src/**/*.ts'
+      - 'typedoc.json'
+      - 'typedoc-theme.css'
       - '.github/workflows/deploy-docs.yml'
   workflow_dispatch:
 
@@ -21,9 +24,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: docs/website
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -49,11 +49,27 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Install dependencies
+      - name: Install dependencies (root)
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Generate API documentation
+        run: pnpm docs:api
+
+      - name: Install dependencies (website)
+        working-directory: docs/website
         run: pnpm install --frozen-lockfile
 
       - name: Build website
+        working-directory: docs/website
         run: pnpm build
+
+      - name: Copy API docs to website build
+        run: |
+          mkdir -p docs/website/build/api
+          cp -r docs/api/* docs/website/build/api/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

@@ -22,20 +22,59 @@ const MODEL_PRICING = {
 /**
  * Anthropic provider implementation for Stratix AI Agents.
  *
- * Supports Claude 3 models (Opus, Sonnet, Haiku) with tool use.
+ * Supports Claude 3 models (Opus, Sonnet, Haiku) with tool use and streaming.
+ * Note: Anthropic does not support embeddings.
  *
- * @example
+ * @example Basic chat
  * ```typescript
  * const provider = new AnthropicProvider({
  *   apiKey: process.env.ANTHROPIC_API_KEY!
  * });
  *
  * const response = await provider.chat({
- *   model: 'claude-3-sonnet-20240229',
+ *   model: 'claude-3-5-sonnet-20241022',
  *   messages: [
  *     { role: 'user', content: 'Hello!', timestamp: new Date() }
  *   ],
  *   temperature: 0.7
+ * });
+ * ```
+ *
+ * @example Streaming
+ * ```typescript
+ * for await (const chunk of provider.streamChat({
+ *   model: 'claude-3-5-sonnet-20241022',
+ *   messages: [{ role: 'user', content: 'Write a story', timestamp: new Date() }]
+ * })) {
+ *   process.stdout.write(chunk.content);
+ * }
+ * ```
+ *
+ * @example Tool use
+ * ```typescript
+ * const response = await provider.chat({
+ *   model: 'claude-3-5-sonnet-20241022',
+ *   messages: [{ role: 'user', content: 'What is the weather?', timestamp: new Date() }],
+ *   tools: [{
+ *     name: 'getWeather',
+ *     description: 'Get weather for a location',
+ *     parameters: {
+ *       type: 'object',
+ *       properties: { city: { type: 'string' } },
+ *       required: ['city']
+ *     }
+ *   }]
+ * });
+ * ```
+ *
+ * @example System messages
+ * ```typescript
+ * const response = await provider.chat({
+ *   model: 'claude-3-5-sonnet-20241022',
+ *   messages: [
+ *     { role: 'system', content: 'You are a helpful assistant', timestamp: new Date() },
+ *     { role: 'user', content: 'Hello', timestamp: new Date() }
+ *   ]
  * });
  * ```
  */

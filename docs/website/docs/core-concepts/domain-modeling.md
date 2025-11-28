@@ -160,7 +160,7 @@ export class Order extends AggregateRoot<'Order'> {
     this.items.push(item);
 
     // Emit domain event
-    this.addDomainEvent(new OrderItemAddedEvent(this.id, productId, quantity));
+    this.record(new OrderItemAddedEvent(this.id, productId, quantity));
     this.touch();
   }
 
@@ -176,7 +176,7 @@ export class Order extends AggregateRoot<'Order'> {
     }
 
     this.items.splice(index, 1);
-    this.addDomainEvent(new OrderItemRemovedEvent(this.id, productId));
+    this.record(new OrderItemRemovedEvent(this.id, productId));
     this.touch();
   }
 
@@ -193,7 +193,7 @@ export class Order extends AggregateRoot<'Order'> {
     }
 
     this.status = OrderStatus.CONFIRMED;
-    this.addDomainEvent(new OrderConfirmedEvent(this.id, this.calculateTotal()));
+    this.record(new OrderConfirmedEvent(this.id, this.calculateTotal()));
     this.touch();
   }
 
@@ -240,15 +240,15 @@ enum OrderStatus {
 ### Domain Events
 
 ```typescript
-// Retrieve and clear domain events
-const events = order.getDomainEvents();
-order.clearDomainEvents();
+// Retrieve domain events (also clears them)
+const events = order.pullDomainEvents();
 
 // Publish events
 for (const event of events) {
   await eventBus.publish(event);
 }
 ```
+
 
 ## Value Object
 

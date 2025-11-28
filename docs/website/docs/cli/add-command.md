@@ -171,7 +171,7 @@ After adding an extension, configure it in `src/main.ts`:
 ```typescript
 import { ApplicationBuilder } from '@stratix/runtime';
 import { FastifyHTTPPlugin } from '@stratix/http-fastify';
-import { PostgresPlugin } from '@stratix/postgres';
+import { PostgresPlugin } from '@stratix/db-postgres';
 
 const app = await ApplicationBuilder.create()
   .usePlugin(new FastifyHTTPPlugin({ port: 3000 }))

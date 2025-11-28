@@ -90,6 +90,21 @@ function getInstallCommand(pm: string, packages: string[]): string {
   }
 }
 
+/**
+ * Creates the 'add' command for installing Stratix extensions.
+ *
+ * Installs plugins with their dependencies automatically.
+ *
+ * @returns Command instance
+ *
+ * @example
+ * ```bash
+ * stratix add postgres
+ * stratix add http
+ * stratix add ai-openai
+ * stratix add list
+ * ```
+ */
 export function createAddCommand(): Command {
   const command = new Command('add');
 

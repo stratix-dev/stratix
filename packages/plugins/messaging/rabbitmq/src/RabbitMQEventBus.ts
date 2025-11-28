@@ -33,7 +33,30 @@ export interface RabbitMQEventBusOptions {
  * - Automatic retries with exponential backoff
  * - Dead letter queue for failed messages
  * - Message acknowledgment
- * -
+ * - Routing patterns (topic, direct, fanout)
+ *
+ * @example
+ * ```typescript
+ * const eventBus = new RabbitMQEventBus({
+ *   url: 'amqp://localhost:5672',
+ *   exchangeName: 'app-events',
+ *   exchangeType: 'topic',
+ *   enableDLQ: true,
+ *   maxRetries: 3
+ * });
+ *
+ * await eventBus.initialize(connection, channel);
+ *
+ * // Publish events
+ * await eventBus.publish([
+ *   { aggregateId: '123', occurredOn: new Date(), type: 'UserCreated' }
+ * ]);
+ *
+ * // Subscribe to events
+ * await eventBus.subscribe('UserCreated', async (event) => {
+ *   console.log('User created:', event);
+ * });
+ * ```
  */
 export class RabbitMQEventBus {
   private channel?: Channel;

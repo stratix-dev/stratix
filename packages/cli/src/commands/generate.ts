@@ -4,6 +4,24 @@ import { generatorRegistry } from '../core/GeneratorRegistry.js';
 import type { GeneratorContext } from '../core/types.js';
 import { fileWriter } from '../utils/FileWriter.js';
 
+/**
+ * Creates the 'generate' command for generating code artifacts.
+ *
+ * Supports entity, value-object, command, query, repository, context, and quality generators.
+ *
+ * @returns Command instance
+ *
+ * @example
+ * ```bash
+ * stratix generate entity Product --props '[{"name":"name","type":"string"}]'
+ * stratix g command CreateOrder --props '[{"name":"userId","type":"string"}]'
+ * stratix g query GetUserById --props '[{"name":"id","type":"string"}]' --return-type User
+ * stratix g repository Product
+ * stratix g context Billing
+ * stratix g quality
+ * stratix g list
+ * ```
+ */
 export function createGenerateCommand(): Command {
   const command = new Command('generate');
 

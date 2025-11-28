@@ -200,7 +200,7 @@ export class User extends AggregateRoot<UserId> {
     }
     
     this.email = newEmail;
-    this.addDomainEvent(new UserEmailChanged(this.id, newEmail));
+    this.record(new UserEmailChanged(this.id, newEmail));
   }
 }
 ```

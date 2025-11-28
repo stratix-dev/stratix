@@ -55,6 +55,18 @@ function detectProjectStructure(): string {
   return 'Custom';
 }
 
+/**
+ * Creates the 'info' command for displaying project information.
+ *
+ * Shows project details, installed Stratix packages, and quick commands.
+ *
+ * @returns Command instance
+ *
+ * @example
+ * ```bash
+ * stratix info
+ * ```
+ */
 export function createInfoCommand(): Command {
   const command = new Command('info');
 

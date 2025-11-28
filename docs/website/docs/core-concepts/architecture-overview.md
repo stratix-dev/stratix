@@ -86,7 +86,7 @@ export class Order extends AggregateRoot<'Order'> {
     }
     
     this.items.push(item);
-    this.addDomainEvent(new OrderItemAddedEvent(this.id, item));
+    this.record(new OrderItemAddedEvent(this.id, item));
   }
 
   calculateTotal(): Money {
@@ -371,7 +371,7 @@ export class Product extends AggregateRoot<'Product'> {
     }
     this.price = newPrice;
     this.touch();
-    this.addDomainEvent(new ProductPriceChangedEvent(this.id, newPrice));
+    this.record(new ProductPriceChangedEvent(this.id, newPrice));
   }
 }
 

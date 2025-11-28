@@ -99,7 +99,7 @@ export class CreateProductHandler extends BaseCommandHandler<CreateProductComman
     await this.productRepository.save(product);
 
     // Publish events
-    const events = product.getDomainEvents();
+    const events = product.pullDomainEvents();
     for (const event of events) {
       await this.eventBus.publish(event);
     }

@@ -26,7 +26,25 @@ enum CircuitState {
 }
 
 /**
- * HTTP Client wrapper around Axios
+ * HTTP Client wrapper around Axios.
+ *
+ * Features:
+ * - Automatic retries with exponential backoff
+ * - Circuit breaker pattern
+ * - Request/response interceptors
+ * - Comprehensive error handling
+ * - Authentication support (Bearer, Basic, API Key)
+ *
+ * @example
+ * ```typescript
+ * const client = new HTTPClient(
+ *   { baseURL: 'https://api.example.com', timeout: 5000 },
+ *   { retry: { maxRetries: 3, retryDelay: 1000 } }
+ * );
+ *
+ * const response = await client.get('/users/123');
+ * console.log(response.data);
+ * ```
  */
 export class HTTPClient {
     private readonly axiosInstance: AxiosInstance;
