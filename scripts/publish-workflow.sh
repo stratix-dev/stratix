@@ -5,8 +5,8 @@
 
 set -e
 
-CURRENT_VERSION="0.6.3"
-NEW_VERSION="0.6.4"
+CURRENT_VERSION="0.6.4"
+NEW_VERSION="0.6.5"
 
 echo "🚀 Stratix Publish Workflow"
 echo "=========================="
