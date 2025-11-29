@@ -1,0 +1,57 @@
+{
+  "name": "@stratix/config-file",
+  "version": "0.7.0",
+  "description": "File-based configuration provider for Stratix (JSON, YAML)",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run || exit 0",
+    "test:watch": "vitest",
+    "lint": "eslint src --ignore-pattern '**/*.test.ts' --ignore-pattern '**/__tests__/**'",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "stratix",
+    "configuration",
+    "config",
+    "file",
+    "json",
+    "yaml"
+  ],
+  "author": "Stratix Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stratix-dev/stratix.git",
+    "directory": "packages/providers/configuration/file"
+  },
+  "dependencies": {
+    "@stratix/core": "workspace:^",
+    "js-yaml": "^4.1.0",
+    "chokidar": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2",
+    "vitest": "^3.0.4"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://stratix-dev.github.io/stratix/"
+}

@@ -1,4 +1,5 @@
-import type { Container, Logger, Plugin, Context } from '@stratix/core';
+import type { Container, Logger, Plugin, Context, ConfigProvider } from '@stratix/core';
+import { ServiceLifetime } from '@stratix/core';
 import { PluginRegistry } from '../registry/PluginRegistry.js';
 import { ContextRegistry } from '../context/ContextRegistry.js';
 import { LifecycleManager } from '../lifecycle/LifecycleManager.js';
@@ -20,6 +21,12 @@ export interface ApplicationBuilderOptions {
    * Must be provided before building.
    */
   logger?: Logger;
+
+  /**
+   * The configuration provider.
+   * Optional, can be set via useConfig().
+   */
+  config?: ConfigProvider;
 
   /**
    * Plugin configurations.
@@ -49,6 +56,7 @@ export interface ApplicationBuilderOptions {
 export class ApplicationBuilder {
   private container?: Container;
   private logger?: Logger;
+  private config?: ConfigProvider;
   private pluginRegistry = new PluginRegistry();
   private contextRegistry = new ContextRegistry();
   private pluginConfigs = new Map<string, unknown>();
@@ -94,6 +102,45 @@ export class ApplicationBuilder {
    */
   useLogger(logger: Logger): this {
     this.logger = logger;
+    return this;
+  }
+
+  /**
+   * Sets the configuration provider.
+   *
+   * The configuration provider will be registered in the DI container
+   * and available to all plugins and contexts.
+   *
+   * @param config - The configuration provider to use
+   * @returns This builder for chaining
+   *
+   * @example
+   * ```typescript
+   * import { EnvConfigProvider } from '@stratix/config-env';
+   *
+   * builder.useConfig(new EnvConfigProvider({
+   *   prefix: 'APP_',
+   *   autoTransform: true,
+   * }));
+   * ```
+   *
+   * @example
+   * ```typescript
+   * import { CompositeConfigProvider } from '@stratix/config-composite';
+   * import { EnvConfigProvider } from '@stratix/config-env';
+   * import { FileConfigProvider } from '@stratix/config-file';
+   *
+   * builder.useConfig(new CompositeConfigProvider({
+   *   providers: [
+   *     new EnvConfigProvider({ prefix: 'APP_' }),
+   *     new FileConfigProvider({ files: ['./config.json'] }),
+   *   ],
+   *   strategy: 'first-wins',
+   * }));
+   * ```
+   */
+  useConfig(config: ConfigProvider): this {
+    this.config = config;
     return this;
   }
 
@@ -233,6 +280,11 @@ export class ApplicationBuilder {
 
     if (!this.logger) {
       throw new Error('Logger must be set before building');
+    }
+
+    // Register config provider in container if provided
+    if (this.config) {
+      this.container.register('config', () => this.config, { lifetime: ServiceLifetime.SINGLETON });
     }
 
     const lifecycleManager = new LifecycleManager(this.pluginRegistry, this.contextRegistry);

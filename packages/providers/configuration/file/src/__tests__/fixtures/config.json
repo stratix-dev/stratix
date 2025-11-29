@@ -1,0 +1,13 @@
+{
+  "server": {
+    "port": 3000,
+    "host": "localhost"
+  },
+  "database": {
+    "url": "postgresql://localhost/test",
+    "poolSize": 10
+  },
+  "features": {
+    "enableCache": true
+  }
+}

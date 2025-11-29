@@ -53,6 +53,19 @@ stratix add mongodb
 stratix add redis
 ```
 
+### Configuration
+
+```bash
+# Environment variable configuration (installs @stratix/config-env)
+stratix add config-env
+
+# File-based configuration (installs @stratix/config-file)
+stratix add config-file
+
+# Composite configuration (installs @stratix/config-composite)
+stratix add config-composite
+```
+
 ### AI Providers
 
 ```bash
@@ -137,6 +150,18 @@ stratix add postgres
 - `src/infrastructure/persistence/postgres.plugin.ts`
 - Example repository implementation
 
+### Add configuration provider
+
+```bash
+stratix add config-env
+```
+
+**Next steps shown:**
+- Creates `.env` file example
+- Import and usage example
+- ApplicationBuilder integration
+- Link to documentation
+
 ### Add AI provider
 
 ```bash
@@ -150,7 +175,7 @@ stratix add ai-openai
 ### Add multiple extensions
 
 ```bash
-stratix add http postgres ai-openai
+stratix add http postgres config-env ai-openai
 ```
 
 ## Third-Party Extensions
@@ -184,6 +209,116 @@ const app = await ApplicationBuilder.create()
 
 await app.start();
 ```
+
+## Configuration Setup
+
+After adding a configuration provider, set it up in your application:
+
+### Environment Variable Configuration
+
+```bash
+stratix add config-env
+```
+
+Create `.env` file:
+
+```bash
+APP_PORT=3000
+APP_HOST=localhost
+APP_DATABASE__URL=postgresql://localhost:5432/mydb
+```
+
+Configure in `src/main.ts`:
+
+```typescript
+import { ApplicationBuilder } from '@stratix/runtime';
+import { EnvConfigProvider } from '@stratix/config-env';
+
+const config = new EnvConfigProvider({
+  prefix: 'APP_',
+  autoTransform: true,
+});
+
+const app = await ApplicationBuilder.create()
+  .useConfig(config)
+  .useContainer(container)
+  .build();
+
+await app.start();
+```
+
+### File-Based Configuration
+
+```bash
+stratix add config-file
+```
+
+Create `config/default.json`:
+
+```json
+{
+  "server": {
+    "port": 3000,
+    "host": "localhost"
+  },
+  "database": {
+    "url": "postgresql://localhost:5432/mydb"
+  }
+}
+```
+
+Configure in `src/main.ts`:
+
+```typescript
+import { ApplicationBuilder } from '@stratix/runtime';
+import { FileConfigProvider } from '@stratix/config-file';
+
+const config = new FileConfigProvider({
+  files: ['./config/default.json'],
+  watch: true, // Enable hot reload
+});
+
+const app = await ApplicationBuilder.create()
+  .useConfig(config)
+  .useContainer(container)
+  .build();
+
+await app.start();
+```
+
+### Composite Configuration (Multiple Sources)
+
+```bash
+stratix add config-composite
+stratix add config-env
+stratix add config-file
+```
+
+Configure in `src/main.ts`:
+
+```typescript
+import { ApplicationBuilder } from '@stratix/runtime';
+import { CompositeConfigProvider } from '@stratix/config-composite';
+import { EnvConfigProvider } from '@stratix/config-env';
+import { FileConfigProvider } from '@stratix/config-file';
+
+const config = new CompositeConfigProvider({
+  providers: [
+    new EnvConfigProvider({ prefix: 'APP_' }),        // Highest priority
+    new FileConfigProvider({ files: ['./config/default.json'] }), // Fallback
+  ],
+  strategy: 'first-wins',
+});
+
+const app = await ApplicationBuilder.create()
+  .useConfig(config)
+  .useContainer(container)
+  .build();
+
+await app.start();
+```
+
+See [Configuration Documentation](../configuration/overview) for more details.
 
 ## Best Practices
 
