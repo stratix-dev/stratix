@@ -1,6 +1,6 @@
 {
   "name": "@stratix/http-client",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "HTTP client plugin for Stratix framework using Axios",
   "type": "module",
   "main": "./dist/index.js",

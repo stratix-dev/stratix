@@ -1,6 +1,6 @@
 {
   "name": "@stratix/core",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "Stratix core - DDD primitives, abstractions, and interfaces",
   "type": "module",
   "main": "./dist/index.js",
