@@ -13,6 +13,7 @@ packages:
   - 'packages/providers/ai/*'
   - 'packages/providers/di/*'
   - 'packages/providers/validation/*'
+  - 'packages/providers/configuration/*'
   # Libraries (utilidades puras)
   - 'packages/libraries/*'
   - 'docs/website'

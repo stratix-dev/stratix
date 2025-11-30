@@ -2,14 +2,19 @@ import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
 /**
  * Comprehensive sidebar configuration for Stratix documentation.
- * 
- * Organized into 6 major sections:
+ *
+ * Organized into major sections:
  * 1. Getting Started
- * 2. Core Concepts
- * 3. Plugin System
- * 4. AI Agents (AI-First Feature)
- * 5. CLI Reference
- * 6. Database & Persistence
+ * 2. Stratix Copilot (VS Code Extension)
+ * 3. Core Concepts
+ * 4. Configuration
+ * 5. Plugin System
+ * 6. Providers
+ * 7. Libraries
+ * 8. AI Agents (AI-First Feature)
+ * 9. CLI Reference
+ * 10. HTTP
+ * 11. Database & Persistence
  */
 const sidebars: SidebarsConfig = {
   tutorialSidebar: [
@@ -70,7 +75,24 @@ const sidebars: SidebarsConfig = {
     },
 
     // ========================================
-    // 4. PLUGIN SYSTEM
+    // 4. CONFIGURATION
+    // ========================================
+    {
+      type: 'category',
+      label: 'Configuration',
+      collapsed: false,
+      items: [
+        'configuration/overview',
+        'configuration/env-provider',
+        'configuration/file-provider',
+        'configuration/composite-provider',
+        'configuration/validation',
+        'configuration/best-practices',
+      ],
+    },
+
+    // ========================================
+    // 5. PLUGIN SYSTEM
     // ========================================
     {
       type: 'category',
@@ -85,7 +107,7 @@ const sidebars: SidebarsConfig = {
     },
 
     // ========================================
-    // 5. PROVIDERS
+    // 6. PROVIDERS
     // ========================================
     {
       type: 'category',
@@ -100,7 +122,7 @@ const sidebars: SidebarsConfig = {
     },
 
     // ========================================
-    // 6. LIBRARIES
+    // 7. LIBRARIES
     // ========================================
     {
       type: 'category',
@@ -113,7 +135,7 @@ const sidebars: SidebarsConfig = {
     },
 
     // ========================================
-    // 7. AI AGENTS (AI-FIRST)
+    // 8. AI AGENTS (AI-FIRST)
     // ========================================
     {
       type: 'category',
@@ -131,7 +153,7 @@ const sidebars: SidebarsConfig = {
     },
 
     // ========================================
-    // 8. CLI REFERENCE
+    // 9. CLI REFERENCE
     // ========================================
     {
       type: 'category',
@@ -147,7 +169,7 @@ const sidebars: SidebarsConfig = {
     },
 
     // ========================================
-    // 9. HTTP
+    // 10. HTTP
     // ========================================
     {
       type: 'category',
@@ -162,7 +184,7 @@ const sidebars: SidebarsConfig = {
     },
 
     // ========================================
-    // 10. DATABASE & PERSISTENCE
+    // 11. DATABASE & PERSISTENCE
     // ========================================
 
     {

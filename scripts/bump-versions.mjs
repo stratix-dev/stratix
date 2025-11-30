@@ -49,6 +49,20 @@ console.log(`Found ${packageFiles.length} packages\n`);
 let updated = 0;
 let skipped = 0;
 
+// Update root package.json first
+try {
+  const rootPackagePath = resolve(process.cwd(), 'package.json');
+  const rootContent = readFileSync(rootPackagePath, 'utf8');
+  const rootPkg = JSON.parse(rootContent);
+  const oldVersion = rootPkg.version;
+
+  rootPkg.version = NEW_VERSION;
+  writeFileSync(rootPackagePath, JSON.stringify(rootPkg, null, 2) + '\n', 'utf8');
+  console.log(`✓ ${rootPkg.name} (root): ${oldVersion} → ${NEW_VERSION}\n`);
+} catch (error) {
+  console.error(`✗ Failed to update root package.json:`, error.message);
+}
+
 for (const file of packageFiles) {
   try {
     const content = readFileSync(file, 'utf8');
@@ -92,6 +106,21 @@ try {
   }
 } catch (error) {
   console.error(`\n✗ Failed to update README.md:`, error.message);
+}
+
+// Update versions in CLI templates
+try {
+  const templatesPath = resolve(process.cwd(), 'packages/cli/src/scaffolding/templates.ts');
+  let templatesContent = readFileSync(templatesPath, 'utf8');
+
+  // Update all Stratix package versions in templates
+  const versionRegex = /@stratix\/([\w-]+)": "\^[\d.]+"/g;
+  templatesContent = templatesContent.replace(versionRegex, `@stratix/$1": "^${NEW_VERSION}"`);
+
+  writeFileSync(templatesPath, templatesContent, 'utf8');
+  console.log(`✓ Updated versions in CLI templates to ^${NEW_VERSION}`);
+} catch (error) {
+  console.error(`✗ Failed to update CLI templates:`, error.message);
 }
 
 console.log(`\nSummary:`);

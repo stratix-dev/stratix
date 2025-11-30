@@ -25,7 +25,7 @@ import { ValueObject } from './ValueObject.js';
  */
 export class EntityId<T extends string> extends ValueObject {
   private readonly _value: string;
-  // @ts-ignore - Phantom type for type safety, intentionally unused
+  // @ts-expect-error - Phantom type for type safety, intentionally unused
   private readonly _brand!: T;
 
   private constructor(value: string) {

@@ -27,7 +27,24 @@ export { DomainError } from './errors/DomainError.js';
 
 // Mapping
 export { Mapper } from './mapping/Mapper.js';
+
+// Security
 export * from './security/SecretsProvider.js';
+
+// Configuration
+export type { ConfigProvider, ConfigChange } from './configuration/ConfigProvider.js';
+export type {
+  ConfigSchema,
+  ConfigProviderOptions,
+  ValidationResult,
+  ValidationError,
+} from './configuration/ConfigSchema.js';
+export {
+  ConfigError,
+  ConfigNotFoundError,
+  ConfigValidationError,
+  ConfigParseError,
+} from './configuration/ConfigError.js';
 
 // Value Objects
 export { Currency } from './value-objects/Currency.js';

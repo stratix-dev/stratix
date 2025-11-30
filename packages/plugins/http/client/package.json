@@ -1,6 +1,6 @@
 {
   "name": "@stratix/http-client",
-  "version": "0.6.5",
+  "version": "0.7.0",
   "description": "HTTP client plugin for Stratix framework using Axios",
   "type": "module",
   "main": "./dist/index.js",
@@ -22,7 +22,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "lint": "eslint src --ext .ts",
+    "lint": "eslint src --ignore-pattern '**/*.test.ts' --ignore-pattern '**/__tests__/**'",
     "clean": "rm -rf dist"
   },
   "keywords": [
