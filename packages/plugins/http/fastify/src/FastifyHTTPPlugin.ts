@@ -2,7 +2,6 @@ import type {
   Plugin,
   PluginContext,
   HealthCheckResult,
-  Logger,
   PluginMetadata,
   HealthStatus,
 } from '@stratix/core';
@@ -16,20 +15,17 @@ export class FastifyHTTPPlugin implements Plugin {
     name: 'fastify-http',
     version: '0.1.2',
     description: 'Fastify HTTP integration plugin',
-    dependencies: ['logger'],
+    dependencies: [],
   };
 
   private server?: FastifyInstance;
-  private logger?: Logger;
   private routes: RouteConfig[] = [];
 
-  constructor(private readonly options: FastifyHTTPPluginOptions = {}) {}
+  constructor(private readonly options: FastifyHTTPPluginOptions = {}) { }
 
   async initialize(context: PluginContext): Promise<void> {
-    this.logger = context.container.resolve<Logger>('logger');
 
     this.server = Fastify({
-      logger: this.options.logger || false,
       trustProxy: this.options.trustProxy || false,
     });
 
@@ -56,13 +52,13 @@ export class FastifyHTTPPlugin implements Plugin {
     const host = this.options.host || '0.0.0.0';
 
     await this.server.listen({ port, host });
-    this.logger?.info(`HTTP server listening on ${host}:${port}`);
+    console.log(`HTTP server listening on ${host}:${port}`);
   }
 
   async stop(): Promise<void> {
     if (this.server) {
       await this.server.close();
-      this.logger?.info('HTTP server stopped');
+      console.log('HTTP server stopped');
     }
   }
 
@@ -208,7 +204,7 @@ export class FastifyHTTPPlugin implements Plugin {
     }
 
     if (error instanceof Error) {
-      this.logger?.error('Unhandled error', { error: error.message, stack: error.stack });
+      console.error('Unhandled error:', error.message, error.stack);
       void reply.code(500).send({
         error: 'INTERNAL_SERVER_ERROR',
         message: 'An unexpected error occurred',
@@ -217,7 +213,7 @@ export class FastifyHTTPPlugin implements Plugin {
       return;
     }
 
-    this.logger?.error('Unknown error', { error });
+    console.error('Unknown error:', error);
     void reply.code(500).send({
       error: 'INTERNAL_SERVER_ERROR',
       message: 'An unexpected error occurred',

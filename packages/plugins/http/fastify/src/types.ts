@@ -60,14 +60,12 @@ export interface FastifyHTTPPluginOptions {
   prefix?: string;
   /** CORS configuration */
   cors?:
-    | boolean
-    | {
-        origin?: string | string[] | boolean;
-        methods?: string[];
-        credentials?: boolean;
-      };
-  /** Enable Fastify logger @default false */
-  logger?: boolean;
+  | boolean
+  | {
+    origin?: string | string[] | boolean;
+    methods?: string[];
+    credentials?: boolean;
+  };
   /** Trust proxy headers @default false */
   trustProxy?: boolean;
 }
