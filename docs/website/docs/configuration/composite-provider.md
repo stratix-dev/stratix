@@ -213,7 +213,7 @@ const config = new CompositeConfigProvider({
 });
 ```
 
-**Priority:** ENV > local.json > {env}.json > default.json
+**Priority:** ENV > local.json > `{env}.json` > default.json
 
 ### Secrets Separate from Config
 
