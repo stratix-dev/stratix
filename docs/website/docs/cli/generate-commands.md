@@ -17,15 +17,15 @@ stratix g <generator> <name> [options]
 
 ## Available Generators
 
-| Generator | Description |
-|-----------|-------------|
-| `entity` | Domain entity |
-| `value-object` | Value object |
-| `command` | CQRS command |
-| `query` | CQRS query |
-| `repository` | Repository interface |
-| `context` | Context (multi-context architecture) |
-| `quality` | Quality checks (tests, linting) |
+| Generator      | Description                          |
+| -------------- | ------------------------------------ |
+| `entity`       | Domain entity                        |
+| `value-object` | Value object                         |
+| `command`      | CQRS command                         |
+| `query`        | CQRS query                           |
+| `repository`   | Repository interface                 |
+| `context`      | Context (multi-context architecture) |
+| `quality`      | Quality checks (tests, linting)      |
 
 ## entity Generator
 
@@ -218,6 +218,7 @@ Generate a complete context for multi-context architecture projects:
 ```bash
 stratix generate context Order
 stratix g context Product --props '[{"name":"name","type":"string"},{"name":"price","type":"number"}]'
+stratix g context User --props "email:string,name:string" --with-http
 ```
 
 **Generated files:**
@@ -230,6 +231,7 @@ stratix g context Product --props '[{"name":"name","type":"string"},{"name":"pri
 - `order/application/queries/GetOrderByIdHandler.ts` - Query handler
 - `order/application/queries/ListOrders.ts` - List query
 - `order/application/queries/ListOrdersHandler.ts` - List handler
+- `order/infrastructure/http/OrderRoutes.ts` - HTTP routes (if `--with-http`)
 - `order/index.ts` - Barrel exports
 
 **Example output structure:**
@@ -251,9 +253,76 @@ src/contexts/order/
 │       ├── ListOrders.ts
 │       └── ListOrdersHandler.ts
 ├── infrastructure/
-│   └── repositories/
-│       └── InMemoryOrderRepository.ts
+│   ├── repositories/
+│   │   └── InMemoryOrderRepository.ts
+│   └── http/
+│       └── OrderRoutes.ts  ← Generated with --with-http
 └── index.ts
+```
+
+### With HTTP Routes
+
+Use `--with-http` to automatically generate HTTP routes:
+
+```bash
+stratix g context Product --props "name:string,price:number" --with-http
+```
+
+**Generated routes include:**
+- `POST /{context}s` - Create entity
+- `GET /{context}s/:id` - Get by ID
+- `GET /{context}s` - List all
+
+**Example generated routes:**
+
+```typescript
+import { FastifyHTTPPlugin } from '@stratix/http-fastify';
+import { CommandBus, QueryBus } from '@stratix/core';
+import { CreateProductCommand } from '../../application/commands/CreateProduct.js';
+import { GetProductByIdQuery } from '../../application/queries/GetProductById.js';
+import { ListProductsQuery } from '../../application/queries/ListProducts.js';
+
+export function registerProductRoutes(
+  http: FastifyHTTPPlugin,
+  commandBus: CommandBus,
+  queryBus: QueryBus
+): void {
+  const basePath = '/products';
+
+  // POST /products
+  http.post(basePath, async (request) => {
+    const body = request.body as any;
+    const command = new CreateProductCommand(body.name, body.price);
+    const result = await commandBus.dispatch(command);
+    
+    if (result.isFailure) {
+      return { statusCode: 400, body: { error: result.error.message } };
+    }
+    
+    return { statusCode: 201, body: result.value };
+  });
+
+  // GET /products/:id
+  http.get(\`\${basePath}/:id\`, async (request) => {
+    const { id } = request.params as { id: string };
+    const query = new GetProductByIdQuery(id);
+    const result = await queryBus.execute(query);
+    
+    if (result.isFailure) {
+      return { statusCode: 404, body: { error: 'Not found' } };
+    }
+    
+    return { statusCode: 200, body: result.value };
+  });
+
+  // GET /products
+  http.get(basePath, async (request) => {
+    const query = new ListProductsQuery();
+    const result = await queryBus.execute(query);
+    
+    return { statusCode: 200, body: result.value || [] };
+  });
+}
 ```
 
 **With properties:**
@@ -263,10 +332,10 @@ stratix g context Product --props '[
   {"name":"name","type":"string"},
   {"name":"price","type":"number"},
   {"name":"stock","type":"number"}
-]'
+]' --with-http
 ```
 
-This creates a complete context with the specified properties in the entity. The context generator is ideal for multi-context architecture projects where you want to keep related functionality together.
+This creates a complete context with the specified properties in the entity and HTTP routes for CRUD operations. The context generator is ideal for multi-context architecture projects where you want to keep related functionality together.
 
 **Note:** This generator automatically creates all necessary files and intelligent dependencies. If an entity or repository is missing, it will be created automatically.
 
@@ -286,11 +355,11 @@ stratix g quality --tests --lint
 
 ## Options
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `--path` | Output directory | Auto-detected |
-| `--skip-tests` | Skip test file generation | `false` |
-| `--dry-run` | Preview without creating files | `false` |
+| Option         | Description                    | Default       |
+| -------------- | ------------------------------ | ------------- |
+| `--path`       | Output directory               | Auto-detected |
+| `--skip-tests` | Skip test file generation      | `false`       |
+| `--dry-run`    | Preview without creating files | `false`       |
 
 ## Examples
 

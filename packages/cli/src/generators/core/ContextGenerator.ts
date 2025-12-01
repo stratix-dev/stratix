@@ -14,7 +14,8 @@ const ContextOptionsSchema = z.object({
         name: z.string(),
         type: z.string()
     })).default([]),
-    outputDir: z.string().optional().default('src/contexts')
+    outputDir: z.string().optional().default('src/contexts'),
+    withHttp: z.boolean().optional().default(false)
 });
 
 /**
@@ -126,7 +127,17 @@ export class ContextGenerator extends Generator {
         });
         files.push(...listQueryResult.files);
 
-        // 6. Generate index.ts for the context (barrel export)
+        // 6. Generate HTTP routes if withHttp flag is set
+        if (options.withHttp) {
+            const routesContent = this.generateHttpRoutes(options.name, options.props);
+            files.push({
+                path: path.join(contextPath, 'infrastructure/http', `${options.name}Routes.ts`),
+                content: routesContent,
+                action: 'create'
+            });
+        }
+
+        // 7. Generate index.ts for the context (barrel export)
         const indexContent = this.generateIndexFile(options.name);
         files.push({
             path: path.join(contextPath, 'index.ts'),
@@ -137,6 +148,97 @@ export class ContextGenerator extends Generator {
         logger.info(`Context ${options.name} will be created at: ${contextPath}`);
 
         return { files };
+    }
+
+    /**
+     * Generate HTTP routes file
+     */
+    private generateHttpRoutes(contextName: string, props: Array<{ name: string; type: string }>): string {
+        const entityNameLowercase = contextName.toLowerCase();
+        const propsParams = props.map(p => `body.${p.name}`).join(',\n      ');
+
+        return `import { FastifyHTTPPlugin } from '@stratix/http-fastify';
+import { CommandBus, QueryBus } from '@stratix/core';
+import { Create${contextName}Command } from '../../application/commands/Create${contextName}.js';
+import { Get${contextName}ByIdQuery } from '../../application/queries/Get${contextName}ById.js';
+import { List${contextName}sQuery } from '../../application/queries/List${contextName}s.js';
+
+/**
+ * Register HTTP routes for ${contextName} context
+ * 
+ * @param http - Fastify HTTP plugin instance
+ * @param commandBus - Command bus for executing commands
+ * @param queryBus - Query bus for executing queries
+ */
+export function register${contextName}Routes(
+  http: FastifyHTTPPlugin,
+  commandBus: CommandBus,
+  queryBus: QueryBus
+): void {
+  const basePath = '/${entityNameLowercase}s';
+
+  // POST /${entityNameLowercase}s - Create ${contextName}
+  http.post(basePath, async (request) => {
+    const body = request.body as any;
+    
+    const command = new Create${contextName}Command(
+      ${propsParams}
+    );
+    
+    const result = await commandBus.dispatch(command);
+    
+    if (result.isFailure) {
+      return {
+        statusCode: 400,
+        body: { error: result.error.message }
+      };
+    }
+    
+    return {
+      statusCode: 201,
+      body: result.value
+    };
+  });
+
+  // GET /${entityNameLowercase}s/:id - Get ${contextName} by ID
+  http.get(\`\${basePath}/:id\`, async (request) => {
+    const { id } = request.params as { id: string };
+    
+    const query = new Get${contextName}ByIdQuery(id);
+    const result = await queryBus.execute(query);
+    
+    if (result.isFailure) {
+      return {
+        statusCode: 404,
+        body: { error: 'Not found' }
+      };
+    }
+    
+    return {
+      statusCode: 200,
+      body: result.value
+    };
+  });
+
+  // GET /${entityNameLowercase}s - List all ${contextName}s
+  http.get(basePath, async (request) => {
+    const query = new List${contextName}sQuery();
+    const result = await queryBus.execute(query);
+    
+    if (result.isFailure) {
+      return {
+        statusCode: 500,
+        body: { error: result.error.message }
+      };
+    }
+    
+    return {
+      statusCode: 200,
+      body: result.value || []
+    };
+  });
+}
+`;
     }
 
     /**

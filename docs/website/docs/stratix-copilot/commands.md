@@ -314,6 +314,6 @@ Stratix Copilot understands your project:
 
 ## Next Steps
 
-- [Examples](./examples.md) - Real-world usage examples
-- [Troubleshooting](./troubleshooting.md) - Common issues
-- [Best Practices](./best-practices.md) - Tips for effective use
+- [Overview](./overview.md) - What Stratix Copilot can do
+- [Installation](./installation.md) - Set up the VS Code extension
+- [Usage](./usage.md) - Daily workflows and prompts

@@ -305,5 +305,5 @@ Copilot shows source references - review them for deeper understanding.
 ## Next Steps
 
 - [Commands Reference](./commands.md) - Complete command list
-- [Examples](./examples.md) - Real-world usage examples
-- [Troubleshooting](./troubleshooting.md) - Common issues and solutions
+- [Installation](./installation.md) - Setup and updates
+- [Overview](./overview.md) - Capabilities and knowledge base behavior

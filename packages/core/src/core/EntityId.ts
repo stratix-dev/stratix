@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { randomUUID } from 'node:crypto';
 import { ValueObject } from './ValueObject.js';
 

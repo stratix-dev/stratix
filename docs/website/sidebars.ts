@@ -130,7 +130,6 @@ const sidebars: SidebarsConfig = {
       collapsed: true,
       items: [
         'libraries/libraries-overview',
-        'libraries/error-handling',
       ],
     },
 

@@ -10,10 +10,10 @@ Libraries are **pure utility packages** that provide reusable functions, classes
 
 ## Libraries vs Plugins vs Providers
 
-| Aspect        | Libraries 📚                       | Plugins 🔌                                  | Providers 🔧                        |
+| Aspect        | Libraries                         | Plugins                                    | Providers                          |
 | ------------- | --------------------------------- | ------------------------------------------ | ---------------------------------- |
 | **Purpose**   | Provide utility functions/classes | Extend application with external resources | Implement core interfaces          |
-| **Lifecycle** | No                                | Yes (initialize → start → stop)            | No                                 |
+| **Lifecycle** | No                                | Yes (initialize -> start -> stop)          | No                                 |
 | **State**     | Stateless                         | Stateful                                   | Can be stateful                    |
 | **Usage**     | Direct import                     | Via runtime plugin system                  | Direct instantiation               |
 | **Examples**  | Utility functions, helpers        | PostgresPlugin, FastifyHTTPPlugin          | AnthropicProvider, AwilixContainer |

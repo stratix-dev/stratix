@@ -255,6 +255,6 @@ app.post('/users', (req, res) => {
 
 ## Next Steps
 
-- **[Error Handling](../libraries/error-handling)** - Handle validation errors
+- **Error Handling** - Map validation failures to `DomainError`/`RuntimeError`
 - **[Value Objects](../core-concepts/domain-modeling)** - Use validation in VOs
 - **[CQRS](../core-concepts/cqrs)** - Validate commands and queries

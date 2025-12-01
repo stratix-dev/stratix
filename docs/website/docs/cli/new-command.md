@@ -34,13 +34,39 @@ stratix new my-app --structure single-context --pm pnpm --skip-install
 
 ## Options
 
-| Option | Alias | Description | Default |
-|--------|-------|-------------|---------|
-| `--structure` | `-s` | Project structure | `single-context` |
-| `--package-manager` | `--pm` | Package manager | `npm` |
-| `--skip-install` | | Skip dependency installation | `false` |
-| `--skip-git` | | Skip git initialization | `false` |
-| `--directory` | `-d` | Target directory | `<project-name>` |
+| Option                        | Alias  | Description                             | Default          |
+| ----------------------------- | ------ | --------------------------------------- | ---------------- |
+| `--structure <type>`          | `-s`   | Project structure                       | `single-context` |
+| `--package-manager <manager>` | `--pm` | Package manager to use                  | `npm`            |
+| `--with <extensions>`         |        | Extensions to install (comma-separated) | -                |
+| `--skip-install`              |        | Skip dependency installation            | `false`          |
+| `--skip-git`                  |        | Skip git initialization                 | `false`          |
+| `--directory`                 | `-d`   | Target directory                        | `<project-name>` |
+
+### Extension Names
+
+When using `--with`, you can specify any of these extension names (comma-separated):
+
+**Production:**
+- `http` - Fastify HTTP server
+- `validation` - Zod schema validation
+- `auth` - JWT authentication & RBAC
+
+**Database & Infrastructure:**
+- `postgres` - PostgreSQL integration
+- `mongodb` - MongoDB integration
+- `redis` - Redis caching
+- `rabbitmq` - RabbitMQ messaging
+- `opentelemetry` - Observability
+
+**AI Providers:**
+- `ai-openai` - OpenAI LLM provider
+- `ai-anthropic` - Anthropic Claude provider
+
+**Configuration:**
+- `config-env` - Environment variable configuration
+- `config-file` - File-based configuration (JSON/YAML)
+- `config-composite` - Composite configuration provider
 
 ## Structures
 
@@ -118,30 +144,43 @@ my-app/
 
 ## Examples
 
-### Create with pnpm
+### Basic Usage
 
 ```bash
+# Interactive mode (recommended for beginners)
+stratix new
+
+# Non-interactive with defaults
+stratix new my-app
+
+# Specify package manager
 stratix new my-app --pm pnpm
 ```
 
-### Create without installing
+### With Extensions
 
 ```bash
-stratix new my-app --skip-install
-cd my-app
-pnpm install
+# Create project with HTTP plugin
+stratix new my-api --with http
+
+# Create project with multiple extensions
+stratix new my-app --with http,postgres,validation
+
+# Create project with AI capabilities
+stratix new ai-service --with http,ai-openai,postgres
 ```
 
-### Create in specific directory
+### Advanced Options
 
 ```bash
-stratix new my-app --directory ./projects/my-app
-```
+# Multi-context structure with extensions
+stratix new enterprise-app --structure multi-context --with http,postgres,redis
 
-### Create multi-context project
+# Skip git and installation
+stratix new my-app --no-git --skip-install
 
-```bash
-stratix new my-microservices --structure multi-context
+# Complete custom setup
+stratix new my-service --pm yarn --structure multi-context --with http,validation,auth
 ```
 
 ## What Gets Created

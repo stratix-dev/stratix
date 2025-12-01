@@ -185,6 +185,6 @@ This removes:
 
 ## Next Steps
 
+- [Overview](./overview.md) - Capabilities and requirements
 - [Usage Guide](./usage.md) - Learn how to use Stratix Copilot
 - [Commands Reference](./commands.md) - Complete command list
-- [Examples](./examples.md) - Real-world usage examples

@@ -615,6 +615,5 @@ DX Helpers have **zero runtime overhead**:
 
 - Explore [Core Concepts](./architecture-overview.md)
 - Learn about [CQRS](./cqrs.md)
-- Check out [Testing Guide](../getting-started/testing.md)
+- Start with the [Quick Start](../getting-started/quick-start.md)
 - Browse [API Reference](https://stratix-dev.github.io/stratix/api/)
-

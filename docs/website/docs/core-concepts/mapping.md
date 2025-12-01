@@ -401,5 +401,5 @@ describe('UserMapper', () => {
 ## Next Steps
 
 - **[Domain Modeling](../core-concepts/domain-modeling)** - Learn about entities and value objects
-- **[Repositories](../core-concepts/architecture-overview#repositories)** - Use mappers in repositories
+- **[Domain Layer](../core-concepts/architecture-overview#1-domain-layer-core)** - Use mappers in repositories
 - **[Database Plugins](../database/database-overview)** - Integrate with databases

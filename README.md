@@ -33,17 +33,15 @@ Production-ready from day one with type safety, dependency injection, AI agents 
 ## Quick Start
 
 ```bash
-# Install CLI
+# 1. Create project with HTTP
 npm install -g @stratix/cli
+stratix new my-app --with http
 
-# Create new project
-stratix new my-app
-
-# Generate context
+# 2. Generate context with HTTP routes
 cd my-app
-stratix generate context Products --props "name:string,price:number,stock:number"
+stratix generate context Product --props "name:string,price:number,stock:number" --with-http
 
-# Start developing
+# 3. Run
 npm run dev
 ```
 
@@ -54,8 +52,11 @@ npm run dev
 - Domain, Application, and Infrastructure layers
 - CQRS commands and queries with handlers
 - Repository pattern with in-memory implementation
+- **HTTP routes (POST, GET, GET/:id)** - automatically generated
 - Type-safe entity IDs and Result pattern
 - Production-ready project structure
+
+**All in 3 commands and ~2 minutes!**
 
 ## Available Packages
 

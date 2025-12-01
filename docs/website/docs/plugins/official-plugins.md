@@ -156,7 +156,7 @@ stratix add auth
 
 - **[AI Providers](../providers/ai-providers)** - Anthropic, OpenAI (LLM providers)
 - **[DI Providers](../providers/di-providers)** - Awilix (dependency injection)
-- **[Error Handling](../libraries/error-handling)** - Structured error classes
+- **Error Handling** - Use `DomainError`/`RuntimeError` patterns from core/runtime
 - **[Validation](../providers/validation-providers)** - Zod schema validation
 - **[Mappers](../core-concepts/mapping)** - Domain-persistence mapping (now part of Core)
 
