@@ -50,10 +50,6 @@ const EXTENSIONS: Record<string, ExtensionInfo> = {
     package: '@stratix/mappers',
     description: 'Entity to DTO mapping utilities',
   },
-  errors: {
-    package: '@stratix/errors',
-    description: 'Structured error handling',
-  },
   opentelemetry: {
     package: '@stratix/obs-opentelemetry',
     description: 'OpenTelemetry observability',
@@ -266,7 +262,7 @@ export function createAddCommand(): Command {
       console.log(chalk.blue.bold('\nAvailable Stratix Extensions\n'));
 
       console.log(chalk.yellow.bold('Production Extensions:'));
-      ['http', 'validation', 'mappers', 'auth', 'errors'].forEach(
+      ['http', 'validation', 'mappers', 'auth'].forEach(
         (name) => {
           const ext = EXTENSIONS[name];
           console.log(

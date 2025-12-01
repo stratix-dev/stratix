@@ -98,7 +98,6 @@ npm run dev
 ### Libraries 📚
 *Pure utility functions and classes (zero external dependencies)*
 
-- [**@stratix/errors**](https://www.npmjs.com/package/@stratix/errors) - Structured error handling with domain-specific error classes
 - [**@stratix/mappers**](https://www.npmjs.com/package/@stratix/mappers) - Entity-to-DTO mapping utilities
 
 ### Development Tools

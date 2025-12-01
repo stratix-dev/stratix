@@ -16,7 +16,7 @@ Libraries are **pure utility packages** that provide reusable functions, classes
 | **Lifecycle** | No                                | Yes (initialize → start → stop)            | No                                 |
 | **State**     | Stateless                         | Stateful                                   | Can be stateful                    |
 | **Usage**     | Direct import                     | Via runtime plugin system                  | Direct instantiation               |
-| **Examples**  | @stratix/errors                   | PostgresPlugin, FastifyHTTPPlugin          | AnthropicProvider, AwilixContainer |
+| **Examples**  | Utility functions, helpers        | PostgresPlugin, FastifyHTTPPlugin          | AnthropicProvider, AwilixContainer |
 
 ## When to Use Libraries
 
@@ -30,17 +30,11 @@ Use libraries when you need:
 
 ## Available Libraries
 
-### Error Handling
+Currently, there are no standalone library packages in Stratix. Utility functions and classes are provided directly by `@stratix/core` and `@stratix/runtime`.
 
-**[@stratix/errors](./error-handling)** - Structured error classes for consistent error handling
-
-```typescript
-import { NotFoundError, BadRequestError } from '@stratix/errors';
-
-throw new NotFoundError('User not found');
-```
-
-[Learn more →](./error-handling)
+For error handling, use:
+- **`DomainError`** from `@stratix/core` - For business rule violations
+- **`RuntimeError`** from `@stratix/runtime` - For runtime errors
 
 ---
 
@@ -145,5 +139,4 @@ export { capitalize, slugify } from './utils.js';
 
 ## Next Steps
 
-- **[Error Handling](./error-handling)** - Learn about structured error classes
 - **[Validation](../providers/validation-providers)** - Learn about schema validation
