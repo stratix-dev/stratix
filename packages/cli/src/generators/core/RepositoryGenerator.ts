@@ -13,6 +13,8 @@ const RepositoryOptionsSchema = z.object({
     entityName: z.string().min(1, 'Entity name is required'),
     outputDir: z.string().optional().default('src/domain/repositories'),
     implOutputDir: z.string().optional().default('src/infrastructure/repositories'),
+    entityDir: z.string().optional().default('src/domain/entities'),
+    ensureEntity: z.boolean().optional().default(true),
     generateImpl: z.boolean().optional().default(true)
 });
 
@@ -69,10 +71,10 @@ export class RepositoryGenerator extends Generator {
         const files: GeneratedFile[] = [];
 
         // Check if entity exists
-        const entityPath = path.join(context.projectRoot, 'src/domain/entities', `${options.entityName}.ts`);
+        const entityPath = path.join(context.projectRoot, options.entityDir, `${options.entityName}.ts`);
         const entityExists = await fileSystem.exists(entityPath);
 
-        if (!entityExists) {
+        if (!entityExists && options.ensureEntity) {
             logger.warn(`Entity ${options.entityName} does not exist. Creating it first...`);
 
             // Load entity generator
