@@ -78,6 +78,8 @@ export class ContextGenerator extends Generator {
                 entityName: options.name,
                 outputDir: path.join(contextPath, 'domain/repositories'),
                 implOutputDir: path.join(contextPath, 'infrastructure/repositories'),
+                entityDir: path.join(contextPath, 'domain/entities'),
+                ensureEntity: false,
                 generateImpl: true
             }
         });
@@ -109,7 +111,9 @@ export class ContextGenerator extends Generator {
                 props: [{ name: 'id', type: 'string' }],
                 output: options.name,
                 outputDir: path.join(contextPath, 'application/queries'),
-                generateHandler: true
+                generateHandler: true,
+                entityDir: path.join(contextPath, 'domain/entities'),
+                ensureEntity: false
             }
         });
         files.push(...getQueryResult.files);
@@ -122,7 +126,9 @@ export class ContextGenerator extends Generator {
                 props: [],
                 output: 'any', // Use 'any' for arrays to avoid creating invalid entity
                 outputDir: path.join(contextPath, 'application/queries'),
-                generateHandler: true
+                generateHandler: true,
+                entityDir: path.join(contextPath, 'domain/entities'),
+                ensureEntity: false
             }
         });
         files.push(...listQueryResult.files);

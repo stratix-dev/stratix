@@ -17,6 +17,8 @@ const QueryOptionsSchema = z.object({
     })).default([]),
     output: z.string().default('any'),
     outputDir: z.string().optional().default('src/application/queries'),
+    entityDir: z.string().optional().default('src/domain/entities'),
+    ensureEntity: z.boolean().optional().default(true),
     generateHandler: z.boolean().optional().default(true)
 });
 
@@ -75,8 +77,8 @@ export class QueryGenerator extends Generator {
         const files: GeneratedFile[] = [];
 
         // Check if entity exists (if output is not 'any')
-        if (options.output !== 'any') {
-            const entityPath = path.join(context.projectRoot, 'src/domain/entities', `${options.output}.ts`);
+        if (options.output !== 'any' && options.ensureEntity) {
+            const entityPath = path.join(context.projectRoot, options.entityDir, `${options.output}.ts`);
             const entityExists = await fileSystem.exists(entityPath);
 
             if (!entityExists) {
