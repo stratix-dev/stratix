@@ -80,6 +80,30 @@ new FastifyHTTPPlugin({
 })
 ```
 
+#### Class-based routes
+
+`FastifyHTTPPlugin` can register routes as classes, letting you inject services and reuse logic.
+
+```typescript
+import { FastifyHTTPPlugin, BaseRoute } from '@stratix/http-fastify'
+
+class GetHealthRoute extends BaseRoute {
+  constructor(private readonly buildInfo: BuildInfo) {
+    super('GET', '/health')
+  }
+
+  async handle() {
+    return {
+      statusCode: 200,
+      body: { status: 'ok', version: this.buildInfo.version }
+    }
+  }
+}
+
+const httpPlugin = new FastifyHTTPPlugin()
+httpPlugin.routeClass(GetHealthRoute) // resolved via the DI container when available
+```
+
 ### Database Plugin
 
 ```typescript

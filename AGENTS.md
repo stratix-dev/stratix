@@ -29,3 +29,7 @@
 - Commit messages follow Conventional Commits (`feat:`, `fix:`, `chore:`, etc.), imperative mood, optional scopes (`fix(runtime): handle lifecycle errors`).
 - PRs should short description of changes.
 - Keep diffs small and focused; include tests or justify missing coverage when behavior changes.
+
+## Documentation Guidelines
+- The documentation does not go in the README.md
+- The documentation goes in docs/website in the docusaurus documentation.

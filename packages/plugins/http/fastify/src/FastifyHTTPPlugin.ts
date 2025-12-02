@@ -4,11 +4,22 @@ import type {
   HealthCheckResult,
   PluginMetadata,
   HealthStatus,
+  Container,
 } from '@stratix/core';
 import Fastify, { type FastifyInstance, type FastifyRequest, type FastifyReply } from 'fastify';
 import cors from '@fastify/cors';
-import type { FastifyHTTPPluginOptions, RouteConfig, HttpRequest } from './types.js';
+import type {
+  FastifyHTTPPluginOptions,
+  RouteClass,
+  RouteClassConstructor,
+  RouteConfig,
+  HttpRequest,
+} from './types.js';
 import { isHttpError } from './errors.js';
+
+type RouteClassEntry =
+  | { type: 'instance'; instance: RouteClass }
+  | { type: 'constructor'; constructor: RouteClassConstructor; instance?: RouteClass };
 
 export class FastifyHTTPPlugin implements Plugin {
   public readonly metadata: PluginMetadata = {
@@ -20,10 +31,13 @@ export class FastifyHTTPPlugin implements Plugin {
 
   private server?: FastifyInstance;
   private routes: RouteConfig[] = [];
+  private routeClasses: RouteClassEntry[] = [];
+  private container?: Container;
 
   constructor(private readonly options: FastifyHTTPPluginOptions = {}) { }
 
   async initialize(context: PluginContext): Promise<void> {
+    this.container = context.container;
 
     this.server = Fastify({
       trustProxy: this.options.trustProxy || false,
@@ -94,6 +108,18 @@ export class FastifyHTTPPlugin implements Plugin {
     }
   }
 
+  public routeClass<TBody = unknown, TQuery = unknown, TParams = unknown>(
+    route: RouteClass<TBody, TQuery, TParams> | RouteClassConstructor<TBody, TQuery, TParams>
+  ): void {
+    const entry = this.normalizeRouteClass(route);
+    this.routeClasses.push(entry);
+
+    if (this.server) {
+      const routeConfig = this.createRouteConfigFromClass(entry);
+      this.registerRoute(routeConfig);
+    }
+  }
+
   public get<TQuery = unknown, TParams = unknown>(
     path: string,
     handler: RouteConfig<unknown, TQuery, TParams>['handler']
@@ -135,6 +161,11 @@ export class FastifyHTTPPlugin implements Plugin {
     for (const route of this.routes) {
       this.registerRoute(route);
     }
+
+    for (const routeClass of this.routeClasses) {
+      const routeConfig = this.createRouteConfigFromClass(routeClass);
+      this.registerRoute(routeConfig);
+    }
   }
 
   private registerRoute(config: RouteConfig): void {
@@ -165,6 +196,50 @@ export class FastifyHTTPPlugin implements Plugin {
       },
       ...config.options,
     });
+  }
+
+  private createRouteConfigFromClass(routeClass: RouteClassEntry): RouteConfig {
+    const instance = this.instantiateRouteClass(routeClass);
+
+    return {
+      method: instance.method,
+      path: instance.path,
+      options: instance.options,
+      schema: instance.schema,
+      handler: (request) => instance.handle(request),
+    };
+  }
+
+  private instantiateRouteClass(routeClass: RouteClassEntry): RouteClass {
+    if (routeClass.type === 'instance') {
+      return routeClass.instance;
+    }
+
+    if (!routeClass.instance) {
+      routeClass.instance = this.createRouteClassInstance(routeClass.constructor);
+    }
+
+    return routeClass.instance;
+  }
+
+  private createRouteClassInstance(
+    routeConstructor: RouteClassConstructor
+  ): RouteClass {
+    if (this.container?.has(routeConstructor)) {
+      return this.container.resolve(routeConstructor);
+    }
+
+    return new routeConstructor();
+  }
+
+  private normalizeRouteClass(
+    route: RouteClass | RouteClassConstructor
+  ): RouteClassEntry {
+    if (typeof route === 'function') {
+      return { type: 'constructor', constructor: route };
+    }
+
+    return { type: 'instance', instance: route };
   }
 
   private mapRequest<TBody = unknown, TQuery = unknown, TParams = unknown>(

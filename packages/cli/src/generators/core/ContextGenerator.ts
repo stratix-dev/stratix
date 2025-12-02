@@ -157,11 +157,89 @@ export class ContextGenerator extends Generator {
         const entityNameLowercase = contextName.toLowerCase();
         const propsParams = props.map(p => `body.${p.name}`).join(',\n      ');
 
-        return `import { FastifyHTTPPlugin } from '@stratix/http-fastify';
+        return `import { FastifyHTTPPlugin, BaseRoute } from '@stratix/http-fastify';
 import { CommandBus, QueryBus } from '@stratix/core';
 import { Create${contextName}Command } from '../../application/commands/Create${contextName}.js';
 import { Get${contextName}ByIdQuery } from '../../application/queries/Get${contextName}ById.js';
 import { List${contextName}sQuery } from '../../application/queries/List${contextName}s.js';
+
+const basePath = '/${entityNameLowercase}s';
+
+class Create${contextName}Route extends BaseRoute<any> {
+  constructor(private readonly commandBus: CommandBus) {
+    super('POST', basePath);
+  }
+
+  async handle(request) {
+    const body = request.body as any;
+
+    const command = new Create${contextName}Command(
+      ${propsParams}
+    );
+
+    const result = await this.commandBus.dispatch(command);
+
+    if (result.isFailure) {
+      return {
+        statusCode: 400,
+        body: { error: result.error.message }
+      };
+    }
+
+    return {
+      statusCode: 201,
+      body: result.value
+    };
+  }
+}
+
+class Get${contextName}ByIdRoute extends BaseRoute<unknown, unknown, { id: string }> {
+  constructor(private readonly queryBus: QueryBus) {
+    super('GET', \`\${basePath}/:id\`);
+  }
+
+  async handle(request) {
+    const { id } = request.params as { id: string };
+
+    const query = new Get${contextName}ByIdQuery(id);
+    const result = await this.queryBus.execute(query);
+
+    if (result.isFailure) {
+      return {
+        statusCode: 404,
+        body: { error: 'Not found' }
+      };
+    }
+
+    return {
+      statusCode: 200,
+      body: result.value
+    };
+  }
+}
+
+class List${contextName}sRoute extends BaseRoute {
+  constructor(private readonly queryBus: QueryBus) {
+    super('GET', basePath);
+  }
+
+  async handle() {
+    const query = new List${contextName}sQuery();
+    const result = await this.queryBus.execute(query);
+
+    if (result.isFailure) {
+      return {
+        statusCode: 500,
+        body: { error: result.error.message }
+      };
+    }
+
+    return {
+      statusCode: 200,
+      body: result.value || []
+    };
+  }
+}
 
 /**
  * Register HTTP routes for ${contextName} context
@@ -175,68 +253,9 @@ export function register${contextName}Routes(
   commandBus: CommandBus,
   queryBus: QueryBus
 ): void {
-  const basePath = '/${entityNameLowercase}s';
-
-  // POST /${entityNameLowercase}s - Create ${contextName}
-  http.post(basePath, async (request) => {
-    const body = request.body as any;
-    
-    const command = new Create${contextName}Command(
-      ${propsParams}
-    );
-    
-    const result = await commandBus.dispatch(command);
-    
-    if (result.isFailure) {
-      return {
-        statusCode: 400,
-        body: { error: result.error.message }
-      };
-    }
-    
-    return {
-      statusCode: 201,
-      body: result.value
-    };
-  });
-
-  // GET /${entityNameLowercase}s/:id - Get ${contextName} by ID
-  http.get(\`\${basePath}/:id\`, async (request) => {
-    const { id } = request.params as { id: string };
-    
-    const query = new Get${contextName}ByIdQuery(id);
-    const result = await queryBus.execute(query);
-    
-    if (result.isFailure) {
-      return {
-        statusCode: 404,
-        body: { error: 'Not found' }
-      };
-    }
-    
-    return {
-      statusCode: 200,
-      body: result.value
-    };
-  });
-
-  // GET /${entityNameLowercase}s - List all ${contextName}s
-  http.get(basePath, async (request) => {
-    const query = new List${contextName}sQuery();
-    const result = await queryBus.execute(query);
-    
-    if (result.isFailure) {
-      return {
-        statusCode: 500,
-        body: { error: result.error.message }
-      };
-    }
-    
-    return {
-      statusCode: 200,
-      body: result.value || []
-    };
-  });
+  http.routeClass(new Create${contextName}Route(commandBus));
+  http.routeClass(new Get${contextName}ByIdRoute(queryBus));
+  http.routeClass(new List${contextName}sRoute(queryBus));
 }
 `;
     }
