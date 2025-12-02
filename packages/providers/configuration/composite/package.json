@@ -1,6 +1,6 @@
 {
   "name": "@stratix/config-composite",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "Composite configuration provider for Stratix (combines multiple providers)",
   "type": "module",
   "main": "./dist/index.js",
