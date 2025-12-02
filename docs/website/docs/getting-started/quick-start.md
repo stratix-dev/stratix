@@ -88,16 +88,27 @@ src/contexts/product/
 Update `src/index.ts` to register the routes:
 
 ```typescript
-import { ApplicationBuilder } from '@stratix/runtime';
+import { ApplicationBuilder, InMemoryCommandBus, InMemoryQueryBus, ConsoleLogger } from '@stratix/runtime';
 import { AwilixContainer } from '@stratix/di-awilix';
-import { ConsoleLogger, InMemoryCommandBus, InMemoryQueryBus } from '@stratix/core';
 import { FastifyHTTPPlugin } from '@stratix/http-fastify';
-import { registerProductRoutes } from './contexts/product/infrastructure/http/ProductRoutes.js';
+import {
+  CreateProduct,
+  CreateProductHandler,
+  GetProductById,
+  GetProductByIdHandler,
+  ListProducts,
+  ListProductsHandler,
+  registerProductRoutes,
+} from './contexts/product/index.js';
 
 async function bootstrap() {
-  // Create buses
   const commandBus = new InMemoryCommandBus();
   const queryBus = new InMemoryQueryBus();
+
+  // Register handlers so buses can resolve commands/queries
+  commandBus.register(CreateProduct, new CreateProductHandler());
+  queryBus.register(GetProductById, new GetProductByIdHandler());
+  queryBus.register(ListProducts, new ListProductsHandler());
   
   // Create HTTP plugin
   const httpPlugin = new FastifyHTTPPlugin({ port: 3000 });
