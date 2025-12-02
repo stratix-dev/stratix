@@ -10,7 +10,7 @@ Production-ready from day one with type safety, dependency injection, AI agents 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3+-blue.svg)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
-[![Version](https://img.shields.io/badge/version-0.7.5-orange.svg)](https://github.com/stratix-dev/stratix)
+[![Version](https://img.shields.io/badge/version-0.7.6-orange.svg)](https://github.com/stratix-dev/stratix)
 
 [Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix)
 

@@ -144,7 +144,7 @@ export class ContextGenerator extends Generator {
         }
 
         // 7. Generate index.ts for the context (barrel export)
-        const indexContent = this.generateIndexFile(options.name);
+        const indexContent = this.generateIndexFile(options.name, options.withHttp);
         files.push({
             path: path.join(contextPath, 'index.ts'),
             content: indexContent,
@@ -270,7 +270,11 @@ export function register${contextName}Routes(
     /**
      * Generate index.ts barrel export
      */
-    private generateIndexFile(contextName: string): string {
+    private generateIndexFile(contextName: string, withHttp?: boolean): string {
+        const httpExport = withHttp
+            ? `\n// HTTP\nexport * from './infrastructure/http/${contextName}Routes.js';\n`
+            : '';
+
         return `// ${contextName} Context - Barrel Exports
 
 // Domain
@@ -288,8 +292,7 @@ export * from './application/queries/List${contextName}s.js';
 export * from './application/queries/List${contextName}sHandler.js';
 
 // Infrastructure
-export * from './infrastructure/repositories/InMemory${contextName}Repository.js';
-`;
+export * from './infrastructure/repositories/InMemory${contextName}Repository.js';${httpExport}`;
     }
 
     /**

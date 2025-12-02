@@ -23,16 +23,16 @@ export const packageJsonTemplate = (data: ProjectTemplateData): string => `{
     "format": "prettier --write \\"src/**/*.ts\\""
   },
   "dependencies": {
-    "@stratix/core": "^0.7.5",
-    "@stratix/runtime": "^0.7.5",
-    "@stratix/di-awilix": "^0.7.5"
+    "@stratix/core": "^0.7.6",
+    "@stratix/runtime": "^0.7.6",
+    "@stratix/di-awilix": "^0.7.6"
   },
   "devDependencies": {
-    "@stratix/cli": "^0.7.5",
+    "@stratix/cli": "^0.7.6",
     "@types/node": "^20.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.0.0",
-    "@typescript-eslint/parser": "^8.0.0",
-    "eslint": "^9.18.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.0",
     "prettier": "^3.4.2",
     "typescript": "^5.7.2",
     "tsx": "^4.19.2",
@@ -238,14 +238,13 @@ export const stratixCliTypesTemplate = (): string => `declare module '@stratix/c
  * Generates ESLint configuration.
  */
 export const eslintConfigTemplate = (): string => `{
+  "root": true,
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    "plugin:@typescript-eslint/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "project": "./tsconfig.json",
     "ecmaVersion": 2022,
     "sourceType": "module"
   },
@@ -253,8 +252,9 @@ export const eslintConfigTemplate = (): string => `{
   "rules": {
     "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
     "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/explicit-module-boundary-types": "off"
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/require-await": "off"
   },
   "ignorePatterns": ["dist", "node_modules"]
 }
