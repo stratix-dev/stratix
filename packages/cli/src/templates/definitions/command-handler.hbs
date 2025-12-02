@@ -3,7 +3,7 @@ import { Success, Failure, type Result } from '@stratix/core';
 import { {{pascalCase name}} } from './{{pascalCase name}}.js';
 
 export class {{pascalCase name}}Handler implements CommandHandler<{{pascalCase name}}, Result<void, Error>> {
-  async handle(command: {{pascalCase name}}): Promise<Result<void, Error>> {
+  async handle(_command: {{pascalCase name}}): Promise<Result<void, Error>> {
     try {
       // TODO: Implement command logic
       // Access command parameters: command.data

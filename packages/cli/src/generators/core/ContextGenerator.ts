@@ -155,29 +155,28 @@ export class ContextGenerator extends Generator {
      */
     private generateHttpRoutes(contextName: string, props: Array<{ name: string; type: string }>): string {
         const entityNameLowercase = contextName.toLowerCase();
-        const propsObject = props.map(p => `${p.name}: body.${p.name}`).join(',\n      ');
+        const propsObject = props.map(p => `${p.name}: request.body.${p.name}`).join(',\n      ');
 
-        return `import { FastifyHTTPPlugin, BaseRoute } from '@stratix/http-fastify';
-import { CommandBus, QueryBus } from '@stratix/core';
-import { Create${contextName} } from '../../application/commands/Create${contextName}.js';
+        return `import { FastifyHTTPPlugin, type HttpRequest, type HttpResponse } from '@stratix/http-fastify';
+import type { CommandBus, QueryBus, Result } from '@stratix/core';
+import { Create${contextName}, type Create${contextName}Command } from '../../application/commands/Create${contextName}.js';
 import { Get${contextName}ById } from '../../application/queries/Get${contextName}ById.js';
 import { List${contextName}s } from '../../application/queries/List${contextName}s.js';
 
 const basePath = '/${entityNameLowercase}s';
+type ${contextName}Params = { id: string };
 
-class Create${contextName}Route extends BaseRoute<any> {
-  constructor(private readonly commandBus: CommandBus) {
-    super('POST', basePath);
-  }
+class Create${contextName}Route {
+  readonly method = 'POST';
+  readonly path = basePath;
 
-  async handle(request) {
-    const body = request.body as any;
+  constructor(private readonly commandBus: CommandBus) {}
 
+  async handle(request: HttpRequest<Create${contextName}Command>): Promise<HttpResponse> {
     const command = new Create${contextName}({
       ${propsObject}
     });
-
-    const result = await this.commandBus.dispatch(command);
+    const result = await this.commandBus.dispatch<Result<unknown, Error>>(command);
 
     if (result.isFailure) {
       return {
@@ -193,16 +192,17 @@ class Create${contextName}Route extends BaseRoute<any> {
   }
 }
 
-class Get${contextName}ByIdRoute extends BaseRoute<unknown, unknown, { id: string }> {
-  constructor(private readonly queryBus: QueryBus) {
-    super('GET', \`\${basePath}/:id\`);
-  }
+class Get${contextName}ByIdRoute {
+  readonly method = 'GET';
+  readonly path = \`\${basePath}/:id\`;
 
-  async handle(request) {
-    const { id } = request.params as { id: string };
+  constructor(private readonly queryBus: QueryBus) {}
+
+  async handle(request: HttpRequest<unknown, unknown, ${contextName}Params>): Promise<HttpResponse> {
+    const { id } = request.params as ${contextName}Params;
 
     const query = new Get${contextName}ById({ id });
-    const result = await this.queryBus.execute(query);
+    const result = await this.queryBus.execute<Result<unknown, Error>>(query);
 
     if (result.isFailure) {
       return {
@@ -218,14 +218,15 @@ class Get${contextName}ByIdRoute extends BaseRoute<unknown, unknown, { id: strin
   }
 }
 
-class List${contextName}sRoute extends BaseRoute {
-  constructor(private readonly queryBus: QueryBus) {
-    super('GET', basePath);
-  }
+class List${contextName}sRoute {
+  readonly method = 'GET';
+  readonly path = basePath;
 
-  async handle() {
+  constructor(private readonly queryBus: QueryBus) {}
+
+  async handle(): Promise<HttpResponse> {
     const query = new List${contextName}s({});
-    const result = await this.queryBus.execute(query);
+    const result = await this.queryBus.execute<Result<unknown, Error>>(query);
 
     if (result.isFailure) {
       return {
