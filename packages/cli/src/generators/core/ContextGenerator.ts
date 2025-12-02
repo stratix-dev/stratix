@@ -155,13 +155,13 @@ export class ContextGenerator extends Generator {
      */
     private generateHttpRoutes(contextName: string, props: Array<{ name: string; type: string }>): string {
         const entityNameLowercase = contextName.toLowerCase();
-        const propsParams = props.map(p => `body.${p.name}`).join(',\n      ');
+        const propsObject = props.map(p => `${p.name}: body.${p.name}`).join(',\n      ');
 
         return `import { FastifyHTTPPlugin, BaseRoute } from '@stratix/http-fastify';
 import { CommandBus, QueryBus } from '@stratix/core';
-import { Create${contextName}Command } from '../../application/commands/Create${contextName}.js';
-import { Get${contextName}ByIdQuery } from '../../application/queries/Get${contextName}ById.js';
-import { List${contextName}sQuery } from '../../application/queries/List${contextName}s.js';
+import { Create${contextName} } from '../../application/commands/Create${contextName}.js';
+import { Get${contextName}ById } from '../../application/queries/Get${contextName}ById.js';
+import { List${contextName}s } from '../../application/queries/List${contextName}s.js';
 
 const basePath = '/${entityNameLowercase}s';
 
@@ -173,9 +173,9 @@ class Create${contextName}Route extends BaseRoute<any> {
   async handle(request) {
     const body = request.body as any;
 
-    const command = new Create${contextName}Command(
-      ${propsParams}
-    );
+    const command = new Create${contextName}({
+      ${propsObject}
+    });
 
     const result = await this.commandBus.dispatch(command);
 
@@ -201,7 +201,7 @@ class Get${contextName}ByIdRoute extends BaseRoute<unknown, unknown, { id: strin
   async handle(request) {
     const { id } = request.params as { id: string };
 
-    const query = new Get${contextName}ByIdQuery(id);
+    const query = new Get${contextName}ById({ id });
     const result = await this.queryBus.execute(query);
 
     if (result.isFailure) {
@@ -224,7 +224,7 @@ class List${contextName}sRoute extends BaseRoute {
   }
 
   async handle() {
-    const query = new List${contextName}sQuery();
+    const query = new List${contextName}s({});
     const result = await this.queryBus.execute(query);
 
     if (result.isFailure) {

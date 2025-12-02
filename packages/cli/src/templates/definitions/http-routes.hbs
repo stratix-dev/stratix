@@ -1,8 +1,8 @@
 import { FastifyHTTPPlugin, BaseRoute } from '@stratix/http-fastify';
 import { CommandBus, QueryBus } from '@stratix/core';
-import { Create{{entityName}}Command } from '../../application/commands/Create{{entityName}}.js';
-import { Get{{entityName}}ByIdQuery } from '../../application/queries/Get{{entityName}}ById.js';
-import { List{{entityName}}sQuery } from '../../application/queries/List{{entityName}}s.js';
+import { Create{{entityName}} } from '../../application/commands/Create{{entityName}}.js';
+import { Get{{entityName}}ById } from '../../application/queries/Get{{entityName}}ById.js';
+import { List{{entityName}}s } from '../../application/queries/List{{entityName}}s.js';
 
 const basePath = '/{{entityNameLowercase}}s';
 
@@ -14,11 +14,11 @@ class Create{{entityName}}Route extends BaseRoute<any> {
   async handle(request) {
     const body = request.body as any;
 
-    const command = new Create{{entityName}}Command(
+    const command = new Create{{entityName}}({
       {{#each props}}
-      body.{{name}}{{#unless @last}},{{/unless}}
+      {{name}}: body.{{name}}{{#unless @last}},{{/unless}}
       {{/each}}
-    );
+    });
 
     const result = await this.commandBus.dispatch(command);
 
@@ -43,7 +43,7 @@ class Get{{entityName}}ByIdRoute extends BaseRoute<unknown, unknown, { id: strin
 
   async handle(request) {
     const { id } = request.params as { id: string };
-    const query = new Get{{entityName}}ByIdQuery(id);
+    const query = new Get{{entityName}}ById({ id });
     const result = await this.queryBus.execute(query);
 
     if (result.isFailure) {
@@ -66,7 +66,7 @@ class List{{entityName}}sRoute extends BaseRoute {
   }
 
   async handle() {
-    const query = new List{{entityName}}sQuery();
+    const query = new List{{entityName}}s({});
     const result = await this.queryBus.execute(query);
 
     if (result.isFailure) {

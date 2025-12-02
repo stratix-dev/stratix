@@ -218,8 +218,10 @@ Generate a complete context for multi-context architecture projects:
 ```bash
 stratix generate context Order
 stratix g context Product --props '[{"name":"name","type":"string"},{"name":"price","type":"number"}]'
-stratix g context User --props "email:string,name:string" --with-http
+stratix g context User --props '[{"name":"email","type":"string"},{"name":"name","type":"string"}]' --with-http
 ```
+
+> Props are provided as a JSON array of `{ name, type }` objects.
 
 **Generated files:**
 - `order/domain/entities/Order.ts` - Entity/Aggregate root
@@ -265,7 +267,7 @@ src/contexts/order/
 Use `--with-http` to automatically generate HTTP routes:
 
 ```bash
-stratix g context Product --props "name:string,price:number" --with-http
+stratix g context Product --props '[{"name":"name","type":"string"},{"name":"price","type":"number"}]' --with-http
 ```
 
 **Generated routes include:**

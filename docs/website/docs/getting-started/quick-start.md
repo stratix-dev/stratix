@@ -23,10 +23,10 @@ A REST API for managing products with:
 
 ## Step 1: Create Project with HTTP
 
-Create a new Stratix project with the HTTP plugin pre-installed:
+Create un proyecto multi-context con el plugin HTTP preinstalado:
 
 ```bash
-stratix new product-api --with http
+stratix new product-api --structure multi-context --with http
 cd product-api
 ```
 
@@ -42,9 +42,12 @@ cd product-api
 
 Generate a complete Product context with HTTP routes:
 
+> The `context` generator assumes a multi-context project structure (created with `--structure multi-context`).
+> Props are passed as a JSON array of `{ name, type }` objects.
+
 ```bash
 stratix generate context Product \
-  --props "name:string,price:number,stock:number" \
+  --props '[{"name":"name","type":"string"},{"name":"price","type":"number"},{"name":"stock","type":"number"}]' \
   --with-http
 ```
 
@@ -260,8 +263,8 @@ Install the [Stratix Copilot VS Code extension](https://marketplace.visualstudio
 For larger applications, generate multiple contexts:
 
 ```bash
-stratix generate context Order --props "userId:string,total:number" --with-http
-stratix generate context User --props "email:string,name:string" --with-http
+stratix generate context Order --props '[{"name":"userId","type":"string"},{"name":"total","type":"number"}]' --with-http
+stratix generate context User --props '[{"name":"email","type":"string"},{"name":"name","type":"string"}]' --with-http
 ```
 
 ### Dry Run
@@ -269,7 +272,7 @@ stratix generate context User --props "email:string,name:string" --with-http
 Preview what will be generated without creating files:
 
 ```bash
-stratix generate context Product --props "name:string" --with-http --dry-run
+stratix generate context Product --props '[{"name":"name","type":"string"}]' --with-http --dry-run
 ```
 
 ---
