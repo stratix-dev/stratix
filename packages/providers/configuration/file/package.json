@@ -1,6 +1,6 @@
 {
   "name": "@stratix/config-file",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "description": "File-based configuration provider for Stratix (JSON, YAML)",
   "type": "module",
   "main": "./dist/index.js",

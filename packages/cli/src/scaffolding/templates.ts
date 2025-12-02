@@ -23,12 +23,12 @@ export const packageJsonTemplate = (data: ProjectTemplateData): string => `{
     "format": "prettier --write \\"src/**/*.ts\\""
   },
   "dependencies": {
-    "@stratix/core": "^0.7.5",
-    "@stratix/runtime": "^0.7.5",
-    "@stratix/di-awilix": "^0.7.5"
+    "@stratix/core": "^0.7.6",
+    "@stratix/runtime": "^0.7.6",
+    "@stratix/di-awilix": "^0.7.6"
   },
   "devDependencies": {
-    "@stratix/cli": "^0.7.5",
+    "@stratix/cli": "^0.7.6",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
