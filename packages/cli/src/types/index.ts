@@ -2,6 +2,7 @@ export interface NewCommandOptions {
   pm?: 'npm' | 'pnpm' | 'yarn';
   structure?: 'single-context' | 'multi-context';
   git?: boolean;
+  with?: string;
 }
 
 export interface GenerateCommandOptions {

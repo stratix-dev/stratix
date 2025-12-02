@@ -2,7 +2,8 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
 import { execSync } from 'child_process';
-import { existsSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
+import path from 'path';
 
 interface ExtensionInfo {
   package: string;
@@ -50,10 +51,6 @@ const EXTENSIONS: Record<string, ExtensionInfo> = {
     package: '@stratix/mappers',
     description: 'Entity to DTO mapping utilities',
   },
-  errors: {
-    package: '@stratix/errors',
-    description: 'Structured error handling',
-  },
   opentelemetry: {
     package: '@stratix/obs-opentelemetry',
     description: 'OpenTelemetry observability',
@@ -85,7 +82,7 @@ const EXTENSIONS: Record<string, ExtensionInfo> = {
   },
 };
 
-function detectPackageManager(): string {
+function detectPackageManager(): 'npm' | 'pnpm' | 'yarn' {
   if (existsSync('pnpm-lock.yaml')) return 'pnpm';
   if (existsSync('yarn.lock')) return 'yarn';
   if (existsSync('package-lock.json')) return 'npm';
@@ -174,6 +171,60 @@ function showConfigNextSteps(extensionName: string, packageName: string): void {
 }
 
 /**
+ * Install a Stratix extension programmatically
+ * 
+ * @param extensionName - Name of the extension (e.g., 'http', 'postgres')
+ * @param packageManager - Package manager to use
+ * @param projectPath - Path to the project directory
+ * @param skipInstall - Whether to skip actual installation
+ */
+export async function installExtension(
+  extensionName: string,
+  packageManager: 'npm' | 'pnpm' | 'yarn',
+  projectPath: string,
+  skipInstall: boolean = false
+): Promise<void> {
+  const extension = EXTENSIONS[extensionName];
+
+  if (!extension) {
+    throw new Error(`Unknown extension: ${extensionName}`);
+  }
+
+  if (skipInstall) {
+    // Just add to package.json without installing
+    const packageJsonPath = path.join(projectPath, 'package.json');
+    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
+
+    if (!packageJson.dependencies) {
+      packageJson.dependencies = {};
+    }
+
+    packageJson.dependencies[extension.package] = 'latest';
+
+    if (extension.dependencies) {
+      for (const dep of extension.dependencies) {
+        packageJson.dependencies[dep] = 'latest';
+      }
+    }
+
+    writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
+    return;
+  }
+
+  const packages = [extension.package];
+  if (extension.dependencies) {
+    packages.push(...extension.dependencies);
+  }
+
+  const installCmd = getInstallCommand(packageManager, packages);
+
+  execSync(installCmd, {
+    stdio: 'inherit',
+    cwd: projectPath,
+  });
+}
+
+/**
  * Creates the 'add' command for installing Stratix extensions.
  *
  * Installs plugins with their dependencies automatically.
@@ -197,7 +248,7 @@ export function createAddCommand(): Command {
     .description('Add Stratix extensions to your project')
     .argument('<extension>', 'Extension name (e.g., postgres, redis, http)')
     .option('--dev', 'Install as dev dependency')
-    .action((extensionName: string, options: { dev?: boolean }) => {
+    .action(async (extensionName: string) => {
       const extension = EXTENSIONS[extensionName];
 
       if (!extension) {
@@ -216,19 +267,7 @@ export function createAddCommand(): Command {
 
       try {
         const pm = detectPackageManager();
-        const packages = [extension.package];
-
-        if (extension.dependencies) {
-          packages.push(...extension.dependencies);
-        }
-
-        const installCmd = getInstallCommand(pm, packages);
-        const devFlag = options.dev ? ' --save-dev' : '';
-
-        execSync(`${installCmd}${devFlag}`, {
-          stdio: 'inherit',
-          cwd: process.cwd(),
-        });
+        await installExtension(extensionName, pm, process.cwd(), false);
 
         spinner.succeed(
           chalk.green(`Installed ${chalk.cyan(extension.package)}`)
@@ -266,7 +305,7 @@ export function createAddCommand(): Command {
       console.log(chalk.blue.bold('\nAvailable Stratix Extensions\n'));
 
       console.log(chalk.yellow.bold('Production Extensions:'));
-      ['http', 'validation', 'mappers', 'auth', 'errors'].forEach(
+      ['http', 'validation', 'mappers', 'auth'].forEach(
         (name) => {
           const ext = EXTENSIONS[name];
           console.log(

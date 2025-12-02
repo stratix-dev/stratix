@@ -1,0 +1,101 @@
+import { FastifyHTTPPlugin, BaseRoute } from '@stratix/http-fastify';
+import { CommandBus, QueryBus } from '@stratix/core';
+import { Create{{entityName}}Command } from '../../application/commands/Create{{entityName}}.js';
+import { Get{{entityName}}ByIdQuery } from '../../application/queries/Get{{entityName}}ById.js';
+import { List{{entityName}}sQuery } from '../../application/queries/List{{entityName}}s.js';
+
+const basePath = '/{{entityNameLowercase}}s';
+
+class Create{{entityName}}Route extends BaseRoute<any> {
+  constructor(private readonly commandBus: CommandBus) {
+    super('POST', basePath);
+  }
+
+  async handle(request) {
+    const body = request.body as any;
+
+    const command = new Create{{entityName}}Command(
+      {{#each props}}
+      body.{{name}}{{#unless @last}},{{/unless}}
+      {{/each}}
+    );
+
+    const result = await this.commandBus.dispatch(command);
+
+    if (result.isFailure) {
+      return {
+        statusCode: 400,
+        body: { error: result.error.message }
+      };
+    }
+
+    return {
+      statusCode: 201,
+      body: result.value
+    };
+  }
+}
+
+class Get{{entityName}}ByIdRoute extends BaseRoute<unknown, unknown, { id: string }> {
+  constructor(private readonly queryBus: QueryBus) {
+    super('GET', `${basePath}/:id`);
+  }
+
+  async handle(request) {
+    const { id } = request.params as { id: string };
+    const query = new Get{{entityName}}ByIdQuery(id);
+    const result = await this.queryBus.execute(query);
+
+    if (result.isFailure) {
+      return {
+        statusCode: 404,
+        body: { error: 'Not found' }
+      };
+    }
+
+    return {
+      statusCode: 200,
+      body: result.value
+    };
+  }
+}
+
+class List{{entityName}}sRoute extends BaseRoute {
+  constructor(private readonly queryBus: QueryBus) {
+    super('GET', basePath);
+  }
+
+  async handle() {
+    const query = new List{{entityName}}sQuery();
+    const result = await this.queryBus.execute(query);
+
+    if (result.isFailure) {
+      return {
+        statusCode: 500,
+        body: { error: result.error.message }
+      };
+    }
+
+    return {
+      statusCode: 200,
+      body: result.value || []
+    };
+  }
+}
+
+/**
+ * Register HTTP routes for {{entityName}} context using class-based routes.
+ *
+ * @param http - Fastify HTTP plugin instance
+ * @param commandBus - Command bus for executing commands
+ * @param queryBus - Query bus for executing queries
+ */
+export function register{{entityName}}Routes(
+  http: FastifyHTTPPlugin,
+  commandBus: CommandBus,
+  queryBus: QueryBus
+): void {
+  http.routeClass(new Create{{entityName}}Route(commandBus));
+  http.routeClass(new Get{{entityName}}ByIdRoute(queryBus));
+  http.routeClass(new List{{entityName}}sRoute(queryBus));
+}

@@ -34,6 +34,32 @@ export interface RouteHandler<TBody = unknown, TQuery = unknown, TParams = unkno
   (request: HttpRequest<TBody, TQuery, TParams>): Promise<HttpResponse>;
 }
 
+export interface RouteClass<TBody = unknown, TQuery = unknown, TParams = unknown> {
+  method: HttpMethod;
+  path: string;
+  options?: RouteShorthandOptions;
+  schema?: RouteSchema<TBody, TQuery, TParams>;
+  handle(request: HttpRequest<TBody, TQuery, TParams>): Promise<HttpResponse>;
+}
+
+export type RouteClassConstructor<
+  TBody = unknown,
+  TQuery = unknown,
+  TParams = unknown
+> = new (...args: unknown[]) => RouteClass<TBody, TQuery, TParams>;
+
+export abstract class BaseRoute<TBody = unknown, TQuery = unknown, TParams = unknown>
+implements RouteClass<TBody, TQuery, TParams> {
+  constructor(
+    public readonly method: HttpMethod,
+    public readonly path: string,
+    public readonly options?: RouteShorthandOptions,
+    public readonly schema?: RouteSchema<TBody, TQuery, TParams>,
+  ) { }
+
+  abstract handle(request: HttpRequest<TBody, TQuery, TParams>): Promise<HttpResponse>;
+}
+
 export interface HttpRequest<TBody = unknown, TQuery = unknown, TParams = unknown> {
   body: TBody;
   query: TQuery;

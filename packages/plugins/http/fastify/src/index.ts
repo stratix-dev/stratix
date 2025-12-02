@@ -9,4 +9,7 @@ export type {
   HttpResponse,
   FastifyHTTPPluginOptions,
   HttpError,
+  RouteClass,
+  RouteClassConstructor,
+  BaseRoute,
 } from './types.js';

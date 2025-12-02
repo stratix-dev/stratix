@@ -316,6 +316,7 @@ export function createGenerateCommand(): Command {
     .command('context <name>')
     .description('Generate a complete context with domain, application, and infrastructure layers')
     .option('--props <props>', 'Properties as JSON array: [{"name":"name","type":"string"}]')
+    .option('--with-http', 'Generate HTTP routes for this context')
     .option('--dry-run', 'Preview generated files without writing')
     .action(async (name: string, options: any) => {
       try {
@@ -332,7 +333,8 @@ export function createGenerateCommand(): Command {
           projectRoot: process.cwd(),
           options: {
             name,
-            props
+            props,
+            withHttp: options.withHttp || false
           }
         };
 

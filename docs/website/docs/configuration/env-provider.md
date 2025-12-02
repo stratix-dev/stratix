@@ -548,7 +548,7 @@ const config = new EnvConfigProvider({
 
 ## API Reference
 
-See [ConfigProvider API](./api-reference) for complete method documentation.
+See the [ConfigProvider API](https://stratix-dev.github.io/stratix/api/) for complete method documentation and type signatures.
 
 ## Next Steps
 

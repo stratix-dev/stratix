@@ -1,182 +1,95 @@
 ---
 sidebar_position: 3
 title: Quick Start
-description: Build your first Stratix application in 5 minutes
+description: Build your first Stratix application in 2 minutes
 ---
 
 # Quick Start
 
-Build a complete CRUD API with Stratix in just 5 minutes. This tutorial will guide you through creating a simple product management system.
+Build a complete CRUD API with Stratix in just **2 minutes**. This tutorial will guide you through creating a product management system with zero manual code.
 
 ## What You'll Build
 
 A REST API for managing products with:
-- Domain entities and value objects
+- Domain entities and repositories
 - CQRS commands and queries
-- HTTP endpoints
-- In-memory repository
+- HTTP endpoints (POST, GET, GET/:id)
 - Type-safe error handling
+- In-memory storage
 
-## Step 1: Create a New Project
+**All generated automatically** - no manual coding required!
+
+---
+
+## Step 1: Create Project with HTTP
+
+Create a new Stratix project with the HTTP plugin pre-installed:
 
 ```bash
-# Create a new project
-stratix new product-api --pm pnpm --structure single-context
-
-# Navigate to the project
+stratix new product-api --with http
 cd product-api
 ```
 
-## Step 2: Add HTTP Extension
+**What this does:**
+- Creates a new Stratix project
+- Installs `@stratix/http-fastify` and dependencies
+- Sets up TypeScript, ESLint, and Prettier
+- Initializes git repository
+
+---
+
+## Step 2: Generate Context with HTTP Routes
+
+Generate a complete Product context with HTTP routes:
 
 ```bash
-# Install the Fastify HTTP plugin
-stratix add http
+stratix generate context Product \
+  --props "name:string,price:number,stock:number" \
+  --with-http
 ```
 
-This installs `@stratix/http-fastify` and required dependencies like `fastify`.
+**What this generates:**
+- ✅ `Product` entity (aggregate root)
+- ✅ `ProductRepository` interface
+- ✅ `InMemoryProductRepository` implementation
+- ✅ `CreateProductCommand` + handler
+- ✅ `GetProductByIdQuery` + handler
+- ✅ `ListProductsQuery` + handler
+- ✅ **HTTP routes** (POST, GET, GET/:id)
 
-## Step 3: Generate Domain Entity
-
-```bash
-# Generate a Product entity
-stratix generate entity Product --props '[
-  {"name":"id","type":"string"},
-  {"name":"name","type":"string"},
-  {"name":"price","type":"number"},
-  {"name":"stock","type":"number"}
-]'
+**Generated structure:**
+```
+src/contexts/product/
+├── domain/
+│   ├── entities/Product.ts
+│   └── repositories/ProductRepository.ts
+├── application/
+│   ├── commands/
+│   │   ├── CreateProduct.ts
+│   │   └── CreateProductHandler.ts
+│   └── queries/
+│       ├── GetProductById.ts
+│       ├── GetProductByIdHandler.ts
+│       ├── ListProducts.ts
+│       └── ListProductsHandler.ts
+├── infrastructure/
+│   ├── repositories/InMemoryProductRepository.ts
+│   └── http/ProductRoutes.ts  ← Generated with --with-http
+└── index.ts
 ```
 
-This creates:
-- `src/domain/entities/Product.ts` - The Product entity
-- Type-safe entity with validation
+---
 
-**Tip**: Use [Stratix Copilot](https://marketplace.visualstudio.com/items?itemName=stratix.stratix-copilot-rag) to generate code directly in VS Code with `@stratix /entity Product with name, price, and stock`
+## Step 3: Configure and Run
 
-## Step 4: Generate Repository
-
-```bash
-# Generate repository for Product
-stratix generate repository Product
-```
-
-This creates:
-- `src/domain/repositories/IProductRepository.ts` - Repository interface
-- `src/infrastructure/repositories/InMemoryProductRepository.ts` - In-memory implementation
-
-## Step 5: Generate Commands
-
-```bash
-# Create Product command
-stratix generate command CreateProduct --props '[
-  {"name":"name","type":"string"},
-  {"name":"price","type":"number"},
-  {"name":"stock","type":"number"}
-]'
-
-# Update Product command
-stratix generate command UpdateProduct --props '[
-  {"name":"id","type":"string"},
-  {"name":"name","type":"string"},
-  {"name":"price","type":"number"},
-  {"name":"stock","type":"number"}
-]'
-
-# Delete Product command
-stratix generate command DeleteProduct --props '[
-  {"name":"id","type":"string"}
-]'
-```
-
-This creates commands and their handlers in:
-- `src/application/commands/` - Command definitions
-- `src/application/handlers/` - Command handlers
-
-## Step 6: Generate Queries
-
-```bash
-# Get Product by ID query
-stratix generate query GetProductById --props '[
-  {"name":"id","type":"string"}
-]' --return-type "Product"
-
-# List all Products query
-stratix generate query ListProducts --return-type "Product[]"
-```
-
-This creates queries and their handlers.
-
-## Step 7: Create HTTP Routes
-
-Create `src/infrastructure/http/ProductRoutes.ts`:
-
-```typescript
-import { FastifyHTTPPlugin, HttpErrorImpl } from '@stratix/http-fastify';
-import { CommandBus, QueryBus } from '@stratix/core';
-import { CreateProductCommand } from '../../application/commands/CreateProduct';
-import { GetProductByIdQuery } from '../../application/queries/GetProductById';
-import { ListProductsQuery } from '../../application/queries/ListProducts';
-
-export function registerProductRoutes(
-  http: FastifyHTTPPlugin,
-  commandBus: CommandBus,
-  queryBus: QueryBus
-) {
-  // Create product
-  http.post('/products', async (request) => {
-    const { name, price, stock } = request.body;
-    
-    const result = await commandBus.dispatch(
-      new CreateProductCommand(name, price, stock)
-    );
-    
-    if (result.isFailure) {
-      throw HttpErrorImpl.badRequest(result.error.message);
-    }
-    
-    return { statusCode: 201, body: result.value };
-  });
-
-  // Get product by ID
-  http.get('/products/:id', async (request) => {
-    const { id } = request.params;
-    
-    const result = await queryBus.execute(
-      new GetProductByIdQuery(id)
-    );
-    
-    if (result.isFailure) {
-      throw HttpErrorImpl.notFound('Product not found');
-    }
-    
-    return { body: result.value };
-  });
-
-  // List all products
-  http.get('/products', async (request) => {
-    const result = await queryBus.execute(new ListProductsQuery());
-    
-    if (result.isFailure) {
-      throw HttpErrorImpl.internalServerError(result.error.message);
-    }
-    
-    return { body: result.value };
-  });
-}
-```
-
-## Step 8: Configure the Application
-
-Update `src/index.ts`:
+Update `src/index.ts` to register the routes:
 
 ```typescript
 import { ApplicationBuilder } from '@stratix/runtime';
 import { AwilixContainer } from '@stratix/di-awilix';
-import { ConsoleLogger } from '@stratix/core';
+import { ConsoleLogger, InMemoryCommandBus, InMemoryQueryBus } from '@stratix/core';
 import { FastifyHTTPPlugin } from '@stratix/http-fastify';
-import { InMemoryCommandBus, InMemoryQueryBus } from '@stratix/core';
-import { registerProductRoutes } from './infrastructure/http/ProductRoutes';
+import { registerProductRoutes } from './contexts/product/infrastructure/http/ProductRoutes.js';
 
 async function bootstrap() {
   // Create buses
@@ -205,14 +118,10 @@ async function bootstrap() {
 bootstrap().catch(console.error);
 ```
 
-## Step 9: Build and Run
+**Run the server:**
 
 ```bash
-# Build the project
-pnpm build
-
-# Run the server
-pnpm start
+npm run dev
 ```
 
 You should see:
@@ -220,7 +129,9 @@ You should see:
 Server running on http://localhost:3000
 ```
 
-## Step 10: Test Your API
+---
+
+## Test Your API
 
 ### Create a Product
 
@@ -232,6 +143,16 @@ curl -X POST http://localhost:3000/products \
     "price": 999.99,
     "stock": 10
   }'
+```
+
+**Response:**
+```json
+{
+  "id": "...",
+  "name": "Laptop",
+  "price": 999.99,
+  "stock": 10
+}
 ```
 
 ### Get All Products
@@ -246,62 +167,112 @@ curl http://localhost:3000/products
 curl http://localhost:3000/products/{id}
 ```
 
+---
+
 ## What You've Learned
 
 Congratulations! You've just built a complete CRUD API with:
 
 - **Domain-Driven Design** - Entities and repositories
 - **CQRS Pattern** - Commands and queries with handlers
-- **HTTP Server** - Fastify integration
+- **HTTP Server** - Fastify integration with routes
 - **Type Safety** - Full TypeScript support
 - **Result Pattern** - Explicit error handling
 - **Clean Architecture** - Separation of concerns
+
+**All in 3 commands and ~2 minutes!** 🚀
+
+---
+
+## Comparison: Before vs After
+
+| Aspect          | Old Quickstart | New Quickstart |
+| --------------- | -------------- | -------------- |
+| **Steps**       | 10             | 3              |
+| **Time**        | 15-20 minutes  | 2 minutes      |
+| **Manual code** | 150 lines      | 26 lines       |
+| **Commands**    | 13             | 3              |
+
+---
 
 ## Next Steps
 
 Now that you've built your first application, explore:
 
 1. **[Project Structure](./project-structure)** - Understand the project organization
-2. **[Core Concepts](../core-concepts/architecture-overview)** - Learn about Stratix architecture and patterns
+2. **[Core Concepts](../core-concepts/architecture-overview)** - Learn about Stratix architecture
 3. **[AI Agents](../ai-agents/ai-agents-overview)** - Build AI-powered features
+
+---
 
 ## Add More Features
 
-### Add Validation
-
-```bash
-stratix add validation
-```
-
-This installs `@stratix/validation-zod`. Then add Zod schemas to validate requests.
-
 ### Add Database
+
+Replace in-memory storage with PostgreSQL:
 
 ```bash
 stratix add postgres
 ```
 
-This installs `@stratix/db-postgres`. Replace the in-memory repository with PostgreSQL.
+Then update your repository implementation to use PostgreSQL instead of in-memory storage.
 
-### Add AI Agent
+### Add Validation
+
+Add Zod-based validation:
 
 ```bash
-stratix add ai-openai
+stratix add validation
 ```
 
-This installs `@stratix/ai-openai`. Create an AI agent for product recommendations.
+Then add schemas to validate request bodies.
 
 ### Add Authentication
+
+Protect your endpoints with JWT:
 
 ```bash
 stratix add auth
 ```
 
-This installs `@stratix/auth`. Protect your endpoints with JWT authentication.
+### Add AI Agent
 
-## Full Example
+Create an AI agent for product recommendations:
 
-The complete code for this tutorial is available in the [examples directory](https://github.com/stratix-dev/stratix/tree/main/examples/quick-start).
+```bash
+stratix add ai-openai
+```
+
+---
+
+## Tips
+
+### Use Stratix Copilot
+
+Install the [Stratix Copilot VS Code extension](https://marketplace.visualstudio.com/items?itemName=stratix.stratix-copilot-rag) for AI-powered code generation:
+
+```
+@stratix /entity Product with name, price, and stock
+```
+
+### Multiple Contexts
+
+For larger applications, generate multiple contexts:
+
+```bash
+stratix generate context Order --props "userId:string,total:number" --with-http
+stratix generate context User --props "email:string,name:string" --with-http
+```
+
+### Dry Run
+
+Preview what will be generated without creating files:
+
+```bash
+stratix generate context Product --props "name:string" --with-http --dry-run
+```
+
+---
 
 ## Getting Help
 

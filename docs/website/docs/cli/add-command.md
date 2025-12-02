@@ -92,9 +92,6 @@ stratix add validation
 
 # Auth (installs @stratix/auth)
 stratix add auth
-
-# Errors (installs @stratix/errors)
-stratix add errors
 ```
 
 ### Observability

@@ -10,7 +10,7 @@ Production-ready from day one with type safety, dependency injection, AI agents 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3+-blue.svg)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
-[![Version](https://img.shields.io/badge/version-0.7.1-orange.svg)](https://github.com/stratix-dev/stratix)
+[![Version](https://img.shields.io/badge/version-0.7.2-orange.svg)](https://github.com/stratix-dev/stratix)
 
 [Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix)
 
@@ -33,17 +33,15 @@ Production-ready from day one with type safety, dependency injection, AI agents 
 ## Quick Start
 
 ```bash
-# Install CLI
+# 1. Create project with HTTP
 npm install -g @stratix/cli
+stratix new my-app --with http
 
-# Create new project
-stratix new my-app
-
-# Generate context
+# 2. Generate context with HTTP routes
 cd my-app
-stratix generate context Products --props "name:string,price:number,stock:number"
+stratix generate context Product --props "name:string,price:number,stock:number" --with-http
 
-# Start developing
+# 3. Run
 npm run dev
 ```
 
@@ -54,8 +52,11 @@ npm run dev
 - Domain, Application, and Infrastructure layers
 - CQRS commands and queries with handlers
 - Repository pattern with in-memory implementation
+- **HTTP routes (POST, GET, GET/:id)** - automatically generated
 - Type-safe entity IDs and Result pattern
 - Production-ready project structure
+
+**All in 3 commands and ~2 minutes!**
 
 ## Available Packages
 
@@ -98,7 +99,6 @@ npm run dev
 ### Libraries 📚
 *Pure utility functions and classes (zero external dependencies)*
 
-- [**@stratix/errors**](https://www.npmjs.com/package/@stratix/errors) - Structured error handling with domain-specific error classes
 - [**@stratix/mappers**](https://www.npmjs.com/package/@stratix/mappers) - Entity-to-DTO mapping utilities
 
 ### Development Tools

@@ -418,6 +418,6 @@ const size = secrets.getCacheSize();
 
 ## Next Steps
 
-- **[Configuration Management](./configuration)** - Manage application configuration
+- **[Configuration Overview](../configuration/overview)** - Manage application configuration
 - **[Environment Setup](../getting-started/installation)** - Set up your development environment
-- **[Runtime Overview](./runtime-overview)** - Learn about the runtime system
+- **[Architecture Overview](./architecture-overview)** - Learn how Stratix layers interact
