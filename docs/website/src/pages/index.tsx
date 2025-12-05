@@ -29,12 +29,12 @@ function HomepageHeader() {
             </div>
 
             <p className={styles.heroSubtitle}>
-              AI-First TypeScript Framework for Enterprise Applications
+              Agentic TypeScript Framework with an end-to-end ecosystem
             </p>
 
             <p className={styles.heroDescription}>
-              Build scalable, maintainable applications with AI agents as first-class citizens.
-              Start with a modular monolith, scale to microservices when needed.
+              Build and operate AI agents as first-class domain entities with plugins for HTTP, databases,
+              messaging, observability, and security. Go from idea to production with the Stratix CLI and Copilot.
             </p>
 
             <div className={styles.buttons}>

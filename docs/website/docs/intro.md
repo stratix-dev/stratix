@@ -9,7 +9,7 @@ sidebar_position: 1
 >
 > Stratix is currently in **active development** and **NOT ready for production use**. The API is unstable and may change significantly without notice. Use at your own risk for experimental projects only.
 
-**Stratix** is an AI-first, modular, scalable, and enterprise-ready TypeScript framework for building modern applications.
+**Stratix** is an **agentic application framework**: AI-native, modular, and backed by an end-to-end ecosystem to build, ship, and operate complete applications.
 
 ## New: Stratix Copilot
 
@@ -30,7 +30,8 @@ sidebar_position: 1
 
 ## Key Features
 
-- **AI-First** - AI agents as domain entities + Stratix Copilot VS Code extension
-- **Modular** - Portable contexts for monoliths or microservices
-- **Enterprise-Ready** - DDD, CQRS, Hexagonal Architecture
-- **Developer Experience** - Powerful CLI, Copilot integration, and comprehensive docs
+- **Agentic by Design** - AI agents as domain entities with orchestration, memory, and evaluation
+- **End-to-End Ecosystem** - Official plugins for HTTP, databases, messaging, observability, and security
+- **Production-Grade Architecture** - DDD, CQRS, hexagonal architecture, and Result pattern
+- **Shipping & Operations** - Stratix CLI, code generation, health-checked lifecycles, and Copilot integration
+- **Flexible Deployment** - Works as modular monolith or microservices without changing domain code

@@ -11,38 +11,33 @@ description: Introduction to Stratix - An AI-first, modular, scalable, and enter
 >
 > Stratix is currently in **active development** and **NOT ready for production use**. The API is unstable and may change significantly without notice. Use at your own risk for experimental projects only.
 
-**Stratix** is a modern TypeScript framework designed for building **scalable, maintainable, and production-ready applications** with **AI agents as first-class citizens**.
+**Stratix** is an **agentic application framework** for TypeScript that lets you design, ship, and operate AI agents and full applications with a single end-to-end ecosystem.
 
 
 ## Why Stratix?
 
-Stratix combines proven enterprise patterns with cutting-edge AI capabilities to help you build applications that are:
+Stratix combines proven enterprise patterns with agentic capabilities so you can build applications that are:
 
-### AI-First
-- **AI Agents as Domain Entities** - Treat AI agents like any other domain object
-- **Production-Ready AI Patterns** - Built-in orchestration, memory management, and execution tracing
-- **Multiple LLM Providers** - OpenAI, Anthropic, and custom providers out of the box
-- **Agent Testing** - Comprehensive testing utilities for AI agents
+### Agentic by design
+- **AI agents as domain entities** with orchestration, memory, and execution tracing built in
+- **Multiple LLM providers** out of the box (OpenAI, Anthropic, custom) with consistent interfaces
+- **Agent testing and evaluation** tools to keep behavior predictable
 
-### Modular & Scalable
-- **Context System** - Portable domain contexts that work in monoliths or microservices
-- **Plugin Architecture** - Extensible system with lifecycle management and health checks
-- **Dependency Injection** - Clean, testable code with automatic dependency resolution
-- **CQRS Pattern** - Command Query Responsibility Segregation for scalable architectures
+### End-to-end ecosystem
+- **Official plugins** for HTTP, databases, messaging, observability, and security
+- **Context system** that keeps your modules portable between monoliths and microservices
+- **Lifecycle-managed infrastructure** (init → start → stop) with health checks
 
-### Enterprise-Ready
-- **Domain-Driven Design** - Entity, AggregateRoot, ValueObject, and Repository patterns
-- **Hexagonal Architecture** - Clean separation of concerns with ports and adapters
-- **Result Pattern** - Explicit error handling without exceptions
-- **Type Safety** - Full TypeScript strict mode with phantom types
-- **Production Extensions** - HTTP, validation, authentication, observability
+### Production foundations
+- **DDD + CQRS + Hexagonal** architecture baked into the primitives
+- **Result pattern and type safety** (strict TS, phantom types) to avoid implicit failures
+- **Built-in extensions** for validation, authentication, and mapping
 
-### Developer Experience
-- **Powerful CLI** - Scaffold projects and generate code in seconds
-- **AI-Powered Copilot** - [VS Code extension](https://marketplace.visualstudio.com/items?itemName=stratix.stratix-copilot-rag) with framework knowledge
-- **13 Official Plugins** - Database, messaging, HTTP, AI, and utility plugins
-- **Comprehensive Testing** - Built-in testing utilities and mocks
-- **Complete Documentation** - Guides, tutorials, and API reference
+### Delivery and operations
+- **Stratix CLI** for scaffolding, code generation, and plugin install
+- **Stratix Copilot** VS Code extension with framework knowledge
+- **Comprehensive testing utilities** for agents, plugins, and domains
+- **Observability hooks** for tracing, metrics, and cost tracking
 
 ## Key Features
 

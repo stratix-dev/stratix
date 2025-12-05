@@ -1,14 +1,170 @@
 ---
 sidebar_position: 3
 title: Quick Start
-description: Build your first Stratix application in 2 minutes
+description: Build your first Stratix agent or API in minutes
 ---
 
 # Quick Start
 
+Pick your path:
+- **AI Agent end-to-end (5 minutes)** – recommended to see the agent + ecosystem flow
+- **CRUD API (2 minutes)** – fast baseline for REST and CQRS
+
+## Quick Start: AI Agent end-to-end (5 minutes)
+
+Build and expose an AI agent with HTTP and OpenAI in a few commands.
+
+### What You'll Build
+- An AI agent (`SupportAgent`) with OpenAI provider
+- HTTP endpoint `POST /support` that routes to the agent
+- Type-safe result handling and logging
+
+### Step 1: Create project with HTTP + OpenAI
+
+```bash
+stratix new support-agent --structure multi-context --with http
+cd support-agent
+stratix add ai-openai
+```
+
+**What this does:**
+- Creates a new Stratix project with Fastify HTTP plugin
+- Installs `@stratix/ai-openai` and dependencies
+- Sets up TypeScript, ESLint, and Prettier
+
+### Step 2: Add an AI agent and route
+
+Create `src/contexts/support/SupportAgent.ts`:
+
+```typescript
+import { AIAgent, AgentResult, AgentVersionFactory, AgentCapabilities, EntityId } from '@stratix/core';
+import { OpenAIProvider } from '@stratix/ai-openai';
+
+export class SupportAgent extends AIAgent<string, string> {
+  readonly name = 'Support Agent';
+  readonly description = 'Helpful customer support agent';
+  readonly version = AgentVersionFactory.create('1.0.0');
+  readonly capabilities = [AgentCapabilities.CUSTOMER_SUPPORT];
+  readonly model = {
+    provider: 'openai',
+    model: 'gpt-4o',
+    temperature: 0.7,
+    maxTokens: 2000,
+  };
+
+  constructor(
+    private readonly llmProvider: OpenAIProvider,
+    id = EntityId.create<'AIAgent'>(),
+    createdAt = new Date(),
+    updatedAt = new Date()
+  ) {
+    super(id, createdAt, updatedAt);
+  }
+
+  protected async execute(input: string): Promise<AgentResult<string>> {
+    const response = await this.llmProvider.chat({
+      model: this.model.model,
+      messages: [
+        { role: 'system', content: 'You are a helpful customer support agent.', timestamp: new Date() },
+        { role: 'user', content: input, timestamp: new Date() },
+      ],
+      temperature: this.model.temperature,
+      maxTokens: this.model.maxTokens,
+    });
+
+    return AgentResult.success(response.content, {
+      model: this.model.model,
+      duration: 0,
+      totalTokens: response.usage.totalTokens,
+    });
+  }
+}
+```
+
+Create `src/contexts/support/http/SupportRoutes.ts`:
+
+```typescript
+import { FastifyHTTPPlugin } from '@stratix/http-fastify';
+import { SupportAgent } from '../SupportAgent.js';
+
+export function registerSupportRoutes(http: FastifyHTTPPlugin, agent: SupportAgent): void {
+  http.post('/support', async (request) => {
+    const { message } = request.body as { message: string };
+    const result = await agent.executeWithEvents(message);
+
+    if (result.isFailure()) {
+      return { statusCode: 400, body: { error: result.error?.message || 'Unknown error' } };
+    }
+
+    return { statusCode: 200, body: { reply: result.data, metadata: result.metadata } };
+  });
+}
+```
+
+Update `src/index.ts`:
+
+```typescript
+import { ApplicationBuilder, ConsoleLogger } from '@stratix/runtime';
+import { AwilixContainer } from '@stratix/di-awilix';
+import { FastifyHTTPPlugin } from '@stratix/http-fastify';
+import { OpenAIProvider } from '@stratix/ai-openai';
+import { SupportAgent } from './contexts/support/SupportAgent.js';
+import { registerSupportRoutes } from './contexts/support/http/SupportRoutes.js';
+
+async function bootstrap() {
+  const http = new FastifyHTTPPlugin({ port: 3000 });
+  const openai = new OpenAIProvider({ apiKey: process.env.OPENAI_API_KEY! });
+  const agent = new SupportAgent(openai);
+
+  registerSupportRoutes(http, agent);
+
+  const app = await ApplicationBuilder.create()
+    .useContainer(new AwilixContainer())
+    .useLogger(new ConsoleLogger())
+    .usePlugin(http)
+    .build();
+
+  await app.start();
+  console.log('Server running on http://localhost:3000');
+
+  process.on('SIGINT', async () => {
+    await app.stop();
+    process.exit(0);
+  });
+}
+
+bootstrap().catch(console.error);
+```
+
+### Step 3: Run and test
+
+Set your OpenAI API key:
+
+```bash
+export OPENAI_API_KEY="your-api-key-here"
+```
+
+Run the server:
+
+```bash
+npm run dev
+```
+
+Call the agent:
+
+```bash
+curl -X POST http://localhost:3000/support \
+  -H "Content-Type: application/json" \
+  -d '{"message": "How do I reset my password?"}'
+```
+
+---
+
+## Quick Start: CRUD API (2 minutes)
+
 Build a complete CRUD API with Stratix in just **2 minutes**. This tutorial will guide you through creating a product management system with zero manual code.
 
-## What You'll Build
+### What You'll Build
 
 A REST API for managing products with:
 - Domain entities and repositories
@@ -23,7 +179,7 @@ A REST API for managing products with:
 
 ## Step 1: Create Project with HTTP
 
-Create un proyecto multi-context con el plugin HTTP preinstalado:
+Create a multi-context project with the HTTP plugin preinstalled:
 
 ```bash
 stratix new product-api --structure multi-context --with http
@@ -194,18 +350,7 @@ Congratulations! You've just built a complete CRUD API with:
 - **Result Pattern** - Explicit error handling
 - **Clean Architecture** - Separation of concerns
 
-**All in 3 commands and ~2 minutes!** 🚀
-
----
-
-## Comparison: Before vs After
-
-| Aspect          | Old Quickstart | New Quickstart |
-| --------------- | -------------- | -------------- |
-| **Steps**       | 10             | 3              |
-| **Time**        | 15-20 minutes  | 2 minutes      |
-| **Manual code** | 150 lines      | 26 lines       |
-| **Commands**    | 13             | 3              |
+**All in 3 commands and ~2 minutes!**
 
 ---
 
@@ -216,6 +361,7 @@ Now that you've built your first application, explore:
 1. **[Project Structure](./project-structure)** - Understand the project organization
 2. **[Core Concepts](../core-concepts/architecture-overview)** - Learn about Stratix architecture
 3. **[AI Agents](../ai-agents/ai-agents-overview)** - Build AI-powered features
+4. **[Official Plugins](../plugins/official-plugins)** - Use the ecosystem for HTTP, data, messaging, and observability
 
 ---
 

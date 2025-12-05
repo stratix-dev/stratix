@@ -6,7 +6,7 @@ import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
   title: 'Stratix',
-  tagline: 'AI-First TypeScript Framework for Enterprise Applications - Modular, Scalable, Production-Ready',
+  tagline: 'Agentic Application Framework: AI-native and end-to-end ecosystem from idea to production',
   favicon: 'img/favicon.png',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future

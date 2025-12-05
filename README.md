@@ -30,21 +30,6 @@ Production-ready from day one with type safety, dependency injection, AI agents 
 - **Production Extensions** - HTTP, validation, authentication, error handling
 - **Code Generation** - CLI for scaffolding projects, contexts, entities, commands, and queries
 
-## Quick Start
-
-```bash
-# 1. Create project with HTTP
-npm install -g @stratix/cli
-stratix new my-app --with http
-
-# 2. Generate context with HTTP routes
-cd my-app
-stratix generate context Product --props "name:string,price:number,stock:number" --with-http
-
-# 3. Run
-npm run dev
-```
-
 **What you get:**
 
 - Complete TypeScript project with strict mode
