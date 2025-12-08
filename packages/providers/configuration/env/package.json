@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@stratix/core": "workspace:^",
-    "dotenv": "^16.4.5"
+    "dotenv": "^17.2.3"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
