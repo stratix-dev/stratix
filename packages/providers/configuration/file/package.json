@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@stratix/core": "workspace:^",
-    "js-yaml": "^4.1.0",
+    "js-yaml": "^4.1.1",
     "chokidar": "^4.0.3"
   },
   "devDependencies": {
