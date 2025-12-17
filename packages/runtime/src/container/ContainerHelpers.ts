@@ -1,4 +1,6 @@
-import type { Container, Command, CommandHandler, Query, QueryHandler, ServiceLifetime } from '@stratix/core';
+import type { Command, CommandHandler, Query, QueryHandler } from '@stratix/core';
+import type { AwilixContainer } from '../di/awilix.js';
+import { asFunction, asValue, asClass } from '../di/awilix.js';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -14,16 +16,16 @@ export interface CommandRegistration {
    * The command type (class).
    */
   commandType: new (...args: any[]) => Command;
-  
+
   /**
-   * The handler instance or factory function.
+   * The handler instance or class.
    */
-  handler: CommandHandler<any, any> | (() => CommandHandler<any, any>);
-  
+  handler: CommandHandler<any, any> | (new (...args: any[]) => CommandHandler<any, any>);
+
   /**
-   * Service lifetime (default: TRANSIENT).
+   * Whether to register as singleton (default: false, uses transient).
    */
-  lifetime?: ServiceLifetime;
+  singleton?: boolean;
 }
 
 /**
@@ -34,36 +36,36 @@ export interface QueryRegistration {
    * The query type (class).
    */
   queryType: new (...args: any[]) => Query;
-  
+
   /**
-   * The handler instance or factory function.
+   * The handler instance or class.
    */
-  handler: QueryHandler<any, any> | (() => QueryHandler<any, any>);
-  
+  handler: QueryHandler<any, any> | (new (...args: any[]) => QueryHandler<any, any>);
+
   /**
-   * Service lifetime (default: TRANSIENT).
+   * Whether to register as singleton (default: false, uses transient).
    */
-  lifetime?: ServiceLifetime;
+  singleton?: boolean;
 }
 
 /**
- * Helpers for common DI container operations.
+ * Helpers for common DI container operations using Awilix.
  *
  * Simplifies registration of commands, queries, and common services
- * in the dependency injection container.
+ * following Stratix patterns.
  *
  * @example
  * ```typescript
- * const container = new AwilixContainer();
+ * import { createContainer } from '@stratix/runtime';
+ * import { ContainerHelpers } from '@stratix/runtime';
+ *
+ * const container = createContainer();
  *
  * // Register multiple commands at once
  * ContainerHelpers.registerCommands(container, commandBus, [
- *   { commandType: CreateProductCommand, handler: new CreateProductHandler(repo) },
- *   { commandType: UpdateProductCommand, handler: new UpdateProductHandler(repo) }
+ *   { commandType: CreateProductCommand, handler: CreateProductHandler },
+ *   { commandType: UpdateProductCommand, handler: UpdateProductHandler }
  * ]);
- *
- * // Register default infrastructure
- * ContainerHelpers.registerDefaults(container);
  * ```
  */
 export class ContainerHelpers {
@@ -73,26 +75,27 @@ export class ContainerHelpers {
    * Registers common services like command bus, query bus, event bus, and logger
    * with sensible defaults for development and testing.
    *
-   * @param container - The DI container
+   * @param container - The Awilix DI container
    * @param options - Optional configuration for default services
    *
    * @example
    * ```typescript
-   * const container = new AwilixContainer();
+   * import { createContainer } from '@stratix/runtime';
+   * const container = createContainer();
    * ContainerHelpers.registerDefaults(container, {
-   *   logLevel: 'debug',
-   *   useInMemoryBuses: true
+   *   useInMemoryBuses: true,
+   *   logger: new ConsoleLogger()
    * });
    * ```
    */
   static registerDefaults(
-    container: Container,
+    container: AwilixContainer,
     options: {
       /**
        * Whether to use in-memory buses (default: true).
        */
       useInMemoryBuses?: boolean;
-      
+
       /**
        * Custom logger instance.
        */
@@ -105,38 +108,25 @@ export class ContainerHelpers {
     if (useInMemoryBuses) {
       // Note: Actual bus implementations would be imported and registered here
       // For now, this is a placeholder showing the pattern
-      container.register(
-        'commandBus',
-        () => {
-          // Would return new InMemoryCommandBus()
-          throw new Error('InMemoryCommandBus not available in this context');
-        },
-        { lifetime: 'SINGLETON' as ServiceLifetime }
-      );
+      container.register({
+        commandBus: asFunction(() => {
+          throw new Error('InMemoryCommandBus not available in this context. Import from messaging package.');
+        }).singleton(),
 
-      container.register(
-        'queryBus',
-        () => {
-          // Would return new InMemoryQueryBus()
-          throw new Error('InMemoryQueryBus not available in this context');
-        },
-        { lifetime: 'SINGLETON' as ServiceLifetime }
-      );
+        queryBus: asFunction(() => {
+          throw new Error('InMemoryQueryBus not available in this context. Import from messaging package.');
+        }).singleton(),
 
-      container.register(
-        'eventBus',
-        () => {
-          // Would return new InMemoryEventBus()
-          throw new Error('InMemoryEventBus not available in this context');
-        },
-        { lifetime: 'SINGLETON' as ServiceLifetime }
-      );
+        eventBus: asFunction(() => {
+          throw new Error('InMemoryEventBus not available in this context. Import from messaging package.');
+        }).singleton()
+      });
     }
 
     // Register logger
     if (logger) {
-      container.register('logger', () => logger, {
-        lifetime: 'SINGLETON' as ServiceLifetime,
+      container.register({
+        logger: asValue(logger)
       });
     }
   }
@@ -144,9 +134,9 @@ export class ContainerHelpers {
   /**
    * Registers multiple commands and their handlers with the command bus.
    *
-   * Simplifies bulk registration of command handlers.
+   * Simplifies bulk registration of command handlers following Stratix patterns.
    *
-   * @param container - The DI container
+   * @param container - The Awilix DI container
    * @param commandBus - The command bus instance
    * @param registrations - Array of command registrations
    *
@@ -155,31 +145,42 @@ export class ContainerHelpers {
    * ContainerHelpers.registerCommands(container, commandBus, [
    *   {
    *     commandType: CreateProductCommand,
-   *     handler: new CreateProductHandler(productRepo),
-   *     lifetime: ServiceLifetime.TRANSIENT
+   *     handler: CreateProductHandler, // Class for auto-wiring
+   *     singleton: false
    *   },
    *   {
    *     commandType: UpdateProductCommand,
-   *     handler: () => new UpdateProductHandler(productRepo)
+   *     handler: new UpdateProductHandler(repo), // Instance
+   *     singleton: true
    *   }
    * ]);
    * ```
    */
   static registerCommands(
-    container: Container,
+    container: AwilixContainer,
     commandBus: { register: (commandType: any, handler: any) => void },
     registrations: CommandRegistration[]
   ): void {
     for (const registration of registrations) {
-      const { commandType, handler, lifetime = 'TRANSIENT' as ServiceLifetime } = registration;
+      const { commandType, handler, singleton = false } = registration;
 
       // Register handler in container
       const handlerKey = `commandHandler:${commandType.name}`;
-      const handlerFactory = typeof handler === 'function' && handler.constructor.name === 'Function'
-        ? handler
-        : () => handler;
 
-      container.register(handlerKey, handlerFactory as () => any, { lifetime });
+      // Check if handler is a class or instance
+      if (typeof handler === 'function' && handler.prototype) {
+        // It's a class - use asClass for auto-wiring
+        container.register({
+          [handlerKey]: singleton
+            ? asClass(handler as any).singleton()
+            : asClass(handler as any).transient()
+        });
+      } else {
+        // It's an instance - use asValue
+        container.register({
+          [handlerKey]: asValue(handler)
+        });
+      }
 
       // Register with command bus
       const resolvedHandler = container.resolve(handlerKey);
@@ -190,9 +191,9 @@ export class ContainerHelpers {
   /**
    * Registers multiple queries and their handlers with the query bus.
    *
-   * Simplifies bulk registration of query handlers.
+   * Simplifies bulk registration of query handlers following Stratix patterns.
    *
-   * @param container - The DI container
+   * @param container - The Awilix DI container
    * @param queryBus - The query bus instance
    * @param registrations - Array of query registrations
    *
@@ -201,31 +202,41 @@ export class ContainerHelpers {
    * ContainerHelpers.registerQueries(container, queryBus, [
    *   {
    *     queryType: GetProductByIdQuery,
-   *     handler: new GetProductByIdHandler(productRepo),
-   *     lifetime: ServiceLifetime.SINGLETON
+   *     handler: GetProductByIdHandler, // Class for auto-wiring
+   *     singleton: true
    *   },
    *   {
    *     queryType: ListProductsQuery,
-   *     handler: () => new ListProductsHandler(productRepo)
+   *     handler: new ListProductsHandler(repo) // Instance
    *   }
    * ]);
    * ```
    */
   static registerQueries(
-    container: Container,
+    container: AwilixContainer,
     queryBus: { register: (queryType: any, handler: any) => void },
     registrations: QueryRegistration[]
   ): void {
     for (const registration of registrations) {
-      const { queryType, handler, lifetime = 'TRANSIENT' as ServiceLifetime } = registration;
+      const { queryType, handler, singleton = false } = registration;
 
       // Register handler in container
       const handlerKey = `queryHandler:${queryType.name}`;
-      const handlerFactory = typeof handler === 'function' && handler.constructor.name === 'Function'
-        ? handler
-        : () => handler;
 
-      container.register(handlerKey, handlerFactory as () => any, { lifetime });
+      // Check if handler is a class or instance
+      if (typeof handler === 'function' && handler.prototype) {
+        // It's a class - use asClass for auto-wiring
+        container.register({
+          [handlerKey]: singleton
+            ? asClass(handler as any).singleton()
+            : asClass(handler as any).transient()
+        });
+      } else {
+        // It's an instance - use asValue
+        container.register({
+          [handlerKey]: asValue(handler)
+        });
+      }
 
       // Register with query bus
       const resolvedHandler = container.resolve(handlerKey);
@@ -236,53 +247,90 @@ export class ContainerHelpers {
   /**
    * Registers a repository in the container with a specific token.
    *
-   * @param container - The DI container
+   * @param container - The Awilix DI container
    * @param token - The registration token (e.g., 'productRepository')
-   * @param repository - The repository instance or factory
+   * @param repository - The repository instance, class, or factory
    * @param options - Registration options
    *
    * @example
    * ```typescript
+   * // Register instance
    * ContainerHelpers.registerRepository(
    *   container,
    *   'productRepository',
-   *   new InMemoryProductRepository(),
-   *   { singleton: true }
+   *   new InMemoryProductRepository()
+   * );
+   *
+   * // Register class (with auto-wiring)
+   * ContainerHelpers.registerRepository(
+   *   container,
+   *   'userRepository',
+   *   PostgresUserRepository
+   * );
+   *
+   * // Register factory
+   * ContainerHelpers.registerRepository(
+   *   container,
+   *   'orderRepository',
+   *   () => new InMemoryOrderRepository(),
+   *   { singleton: false }
    * );
    * ```
    */
   static registerRepository(
-    container: Container,
+    container: AwilixContainer,
     token: string,
-    repository: any | (() => any),
+    repository: any | (() => any) | (new (...args: any[]) => any),
     options: { singleton?: boolean } = {}
   ): void {
     const { singleton = true } = options;
-    const factory = typeof repository === 'function' ? repository : () => repository;
-    const lifetime = singleton ? ('SINGLETON' as ServiceLifetime) : ('TRANSIENT' as ServiceLifetime);
 
-    container.register(token, factory, { lifetime });
+    // Determine type of repository
+    if (typeof repository === 'function') {
+      // Could be a class or factory function
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (repository.prototype && repository.prototype.constructor === repository) {
+        // It's a class
+        container.register({
+          [token]: singleton
+            ? asClass(repository).singleton()
+            : asClass(repository).transient()
+        });
+      } else {
+        // It's a factory function
+        container.register({
+          [token]: singleton
+            ? asFunction(repository).singleton()
+            : asFunction(repository).transient()
+        });
+      }
+    } else {
+      // It's an instance
+      container.register({
+        [token]: asValue(repository)
+      });
+    }
   }
 
   /**
    * Registers multiple repositories at once.
    *
-   * @param container - The DI container
-   * @param repositories - Map of token to repository
+   * @param container - The Awilix DI container
+   * @param repositories - Map of token to repository (instance, class, or factory)
    * @param options - Default registration options
    *
    * @example
    * ```typescript
    * ContainerHelpers.registerRepositories(container, {
    *   productRepository: new InMemoryProductRepository(),
-   *   userRepository: new InMemoryUserRepository(),
-   *   orderRepository: () => new InMemoryOrderRepository()
+   *   userRepository: PostgresUserRepository, // Class
+   *   orderRepository: () => new InMemoryOrderRepository() // Factory
    * });
    * ```
    */
   static registerRepositories(
-    container: Container,
-    repositories: Record<string, any | (() => any)>,
+    container: AwilixContainer,
+    repositories: Record<string, any | (() => any) | (new (...args: any[]) => any)>,
     options: { singleton?: boolean } = {}
   ): void {
     for (const [token, repository] of Object.entries(repositories)) {

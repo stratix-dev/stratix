@@ -1,98 +1,57 @@
-import { Token } from './Token.js';
-import { Factory } from './Factory.js';
-import { RegisterOptions } from './RegisterOptions.js';
-
 /**
- * Dependency injection container interface.
+ * Minimal dependency injection container interface.
  *
- * Manages service registration, resolution, and lifecycle.
+ * Defines the core contract that any DI container must implement.
+ * Implementation-agnostic - works with any DI library.
  *
  * @example
  * ```typescript
- * // Register services
- * container.register('logger', () => new ConsoleLogger(), {
- *   lifetime: ServiceLifetime.SINGLETON
- * });
- *
- * container.register('userService', (context) => {
- *   const logger = context.resolve<Logger>('logger');
- *   return new UserService(logger);
- * });
- *
  * // Resolve services
+ * const logger = container.resolve<Logger>('logger');
  * const userService = container.resolve<UserService>('userService');
  *
- * // Create scopes
+ * // Create scopes for request-scoped services
  * const scope = container.createScope();
- * const scopedService = scope.resolve<ScopedService>('scopedService');
+ * const requestContext = scope.resolve<RequestContext>('requestContext');
+ * await scope.dispose();
  * ```
  */
 export interface Container {
   /**
-   * Registers a service in the container.
-   *
-   * @template T - The type of service to register
-   * @param token - The token identifying the service
-   * @param factory - Factory function that creates the service
-   * @param options - Registration options (lifetime, etc.)
-   *
-   * @example
-   * ```typescript
-   * container.register('database', () => new PostgresDatabase(), {
-   *   lifetime: ServiceLifetime.SINGLETON
-   * });
-   * ```
-   */
-  register<T>(token: Token<T>, factory: Factory<T>, options?: RegisterOptions): void;
-
-  /**
    * Resolves a service from the container.
    *
    * @template T - The type of service to resolve
-   * @param token - The token identifying the service
+   * @param token - The service identifier (string or symbol)
    * @returns The resolved service instance
    * @throws Error if the service is not registered
    *
    * @example
    * ```typescript
    * const logger = container.resolve<Logger>('logger');
-   * const userService = container.resolve(UserService);
+   * const cache = container.resolve<Cache>(Symbol.for('cache'));
    * ```
    */
-  resolve<T>(token: Token<T>): T;
-
-  /**
-   * Checks if a service is registered in the container.
-   *
-   * @template T - The type of service to check
-   * @param token - The token identifying the service
-   * @returns true if the service is registered, false otherwise
-   *
-   * @example
-   * ```typescript
-   * if (container.has('logger')) {
-   *   const logger = container.resolve<Logger>('logger');
-   * }
-   * ```
-   */
-  has<T>(token: Token<T>): boolean;
+  resolve<T>(token: string | symbol): T;
 
   /**
    * Creates a new scope for scoped services.
    *
    * Scoped services will have the same instance within a scope,
    * but different instances across different scopes.
+   * Useful for request-scoped dependencies in web applications.
    *
    * @returns A new container scope
    *
    * @example
    * ```typescript
-   * const scope1 = container.createScope();
-   * const scope2 = container.createScope();
+   * const scope = container.createScope();
+   * const service1 = scope.resolve<ScopedService>('scopedService');
+   * const service2 = scope.resolve<ScopedService>('scopedService');
+   * // service1 === service2 (same scope)
    *
-   * const service1 = scope1.resolve<ScopedService>('scopedService');
-   * const service2 = scope2.resolve<ScopedService>('scopedService');
-   * // service1 !== service2 (different scopes)
+   * const scope2 = container.createScope();
+   * const service3 = scope2.resolve<ScopedService>('scopedService');
+   * // service3 !== service1 (different scope)
    * ```
    */
   createScope(): Container;
@@ -100,139 +59,17 @@ export interface Container {
   /**
    * Disposes the container and all disposable services.
    *
-   * Services implementing IDisposable will have their dispose() method called.
+   * Services implementing dispose() or Symbol.asyncDispose will have
+   * their disposal methods called.
+   *
+   * @returns Promise that resolves when all services are disposed
    *
    * @example
    * ```typescript
-   * await container.dispose();
+   * const scope = container.createScope();
+   * // Use scope...
+   * await scope.dispose(); // Clean up resources
    * ```
    */
   dispose(): Promise<void>;
-
-  // ========================================
-  // CONVENIENCE API
-  // ========================================
-
-  /**
-   * Registers a singleton value or factory.
-   *
-   * Singletons are created once and reused for all resolutions.
-   *
-   * @template T - The type of service to register
-   * @param token - The token identifying the service
-   * @param value - The value or factory function
-   *
-   * @example
-   * ```typescript
-   * // Register a value
-   * container.singleton('config', { port: 3000 });
-   *
-   * // Register a factory
-   * container.singleton('logger', () => new Logger());
-   * ```
-   */
-  singleton<T>(token: Token<T>, value: T | (() => T)): void;
-
-  /**
-   * Registers a scoped factory.
-   *
-   * Scoped services are created once per scope and reused within that scope.
-   *
-   * @template T - The type of service to register
-   * @param token - The token identifying the service
-   * @param factory - Factory function that creates the service
-   *
-   * @example
-   * ```typescript
-   * container.scoped('requestContext', () => new RequestContext());
-   * ```
-   */
-  scoped<T>(token: Token<T>, factory: () => T): void;
-
-  /**
-   * Registers a transient factory.
-   *
-   * Transient services are created every time they are resolved.
-   *
-   * @template T - The type of service to register
-   * @param token - The token identifying the service
-   * @param factory - Factory function that creates the service
-   *
-   * @example
-   * ```typescript
-   * container.transient('requestId', () => uuid());
-   * ```
-   */
-  transient<T>(token: Token<T>, factory: () => T): void;
-
-  /**
-   * Registers a class as a singleton with auto-wiring.
-   *
-   * Dependencies are automatically resolved based on constructor parameter names.
-   *
-   * @template T - The type of service to register
-   * @param classType - The class constructor
-   * @param options - Registration options
-   *
-   * @example
-   * ```typescript
-   * // Auto-wiring based on parameter names (PROXY mode - default)
-   * class UserService {
-   *   constructor(
-   *     private userRepository: UserRepository,
-   *     private eventBus: EventBus
-   *   ) {}
-   * }
-   *
-   * container.registerClass(UserService);
-   *
-   * // With custom token
-   * container.registerClass(UserService, { token: 'userService' });
-   *
-   * // With CLASSIC injection mode
-   * container.registerClass(UserService, { injectionMode: 'CLASSIC' });
-   * ```
-   */
-  registerClass<T>(
-    classType: new (...args: unknown[]) => T,
-    options?: {
-      token?: Token<T>;
-      lifetime?: RegisterOptions['lifetime'];
-      injectionMode?: 'PROXY' | 'CLASSIC';
-    }
-  ): void;
-
-  /**
-   * Registers multiple services at once.
-   *
-   * @param services - Object mapping tokens to values, factories, or classes
-   *
-   * @example
-   * ```typescript
-   * container.registerAll({
-   *   config: appConfig,
-   *   logger: () => new Logger(),
-   *   database: () => new Database()
-   * });
-   * ```
-   */
-  registerAll(services: Record<string, unknown>): void;
-
-  /**
-   * Tries to resolve a service, returns undefined if not found.
-   *
-   * @template T - The type of service to resolve
-   * @param token - The token identifying the service
-   * @returns The resolved service instance or undefined
-   *
-   * @example
-   * ```typescript
-   * const logger = container.tryResolve<Logger>('logger');
-   * if (logger) {
-   *   logger.info('Service found');
-   * }
-   * ```
-   */
-  tryResolve<T>(token: Token<T>): T | undefined;
 }
-

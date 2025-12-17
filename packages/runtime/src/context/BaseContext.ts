@@ -8,8 +8,9 @@ import {
   ContextMetadata,
   HealthCheckResult,
   HealthStatus,
-  ServiceLifetime,
 } from '@stratix/core';
+import type { AwilixContainer } from '../di/awilix.js';
+import { asValue } from '../di/awilix.js';
 
 /**
  * Base implementation for contexts.
@@ -178,11 +179,15 @@ export abstract class BaseContext implements Context {
   async initialize(config: ContextConfig): Promise<void> {
     this.config = config;
 
+    // Cast to AwilixContainer for registration
+    const container = config.container as unknown as AwilixContainer;
+
     // 1. Register repositories first (other things depend on them)
     const repositories = this.getRepositories();
     for (const repo of repositories) {
-      config.container.register(repo.token, () => repo.instance, {
-        lifetime: repo.singleton !== false ? ServiceLifetime.SINGLETON : ServiceLifetime.TRANSIENT,
+      // Register using Awilix directly
+      container.register({
+        [repo.token]: asValue(repo.instance)
       });
     }
 

@@ -7,15 +7,13 @@
   "author": "P. Andrés Carvajal <causticrez@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "pnpm -r --filter '!website' --sort --workspace-concurrency=1 build",
-    "build:fast": "pnpm -r --filter '!website' --sort build",
+    "build": "pnpm -r --sort --workspace-concurrency=1 build",
+    "build:fast": "pnpm -r --sort build",
     "test": "pnpm -r test",
-    "typecheck": "pnpm -r --filter '!website' typecheck",
+    "typecheck": "pnpm -r typecheck",
     "lint": "pnpm -r lint",
     "format": "prettier --write \"packages/**/src/**/*.ts\"",
-    "clean": "pnpm -r clean && rm -rf node_modules",
-    "docs:api": "bash scripts/generate-api-docs.sh",
-    "docs:serve": "cd docs/api && python3 -m http.server 8080"
+    "clean": "pnpm -r clean && rm -rf node_modules"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

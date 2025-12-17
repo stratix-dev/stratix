@@ -125,12 +125,37 @@ jobs:
       - name: Check build artifacts
         run: |
           echo "Checking build artifacts..."
-          for pkg in packages/*/dist; do
-            if [ -d "$pkg" ]; then
-              echo "✓ $pkg exists"
+          # Check core packages
+          for pkg in packages/core packages/runtime packages/testing; do
+            if [ -d "$pkg/dist" ]; then
+              echo "✓ $pkg/dist exists"
             else
-              echo "✗ $pkg missing"
+              echo "✗ $pkg/dist missing"
               exit 1
+            fi
+          done
+          
+          # Check AI providers
+          for pkg in packages/ai/providers/*; do
+            if [ -d "$pkg/dist" ]; then
+              echo "✓ $pkg/dist exists"
+            else
+              echo "✗ $pkg/dist missing"
+              exit 1
+            fi
+          done
+          
+          # Check provider packages
+          for category in packages/providers/*; do
+            if [ -d "$category" ]; then
+              for pkg in "$category"/*; do
+                if [ -d "$pkg/dist" ]; then
+                  echo "✓ $pkg/dist exists"
+                else
+                  echo "✗ $pkg/dist missing"
+                  exit 1
+                fi
+              done
             fi
           done
         continue-on-error: false
@@ -139,5 +164,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: packages/*/dist
+          path: |
+            packages/core/dist
+            packages/runtime/dist
+            packages/testing/dist
+            packages/ai/providers/*/dist
+            packages/providers/*/*/dist
           retention-days: 7

@@ -1,3 +1,9 @@
+// ========================================
+// DEPENDENCY INJECTION (Awilix)
+// ========================================
+// Re-export Awilix - Built-in DI container for Stratix
+export * from './di/awilix.js';
+
 // Builder
 export { ApplicationBuilder } from './builder/ApplicationBuilder.js';
 export type { ApplicationBuilderOptions } from './builder/ApplicationBuilder.js';

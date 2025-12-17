@@ -79,19 +79,22 @@ jobs:
           # Verify core packages
           verify_package "packages/core"
           verify_package "packages/runtime"
-          verify_package "packages/cli"
           verify_package "packages/testing"
 
-          # Verify plugin packages
-          for category in packages/plugins/*; do
-            if [ -d "$category" ]; then
-              for plugin in "$category"/*; do
-                if [ -d "$plugin" ]; then
-                  verify_package "$plugin"
-                fi
-              done
-            fi
-          done
+          # Verify AI providers
+          verify_package "packages/ai/providers/anthropic"
+          verify_package "packages/ai/providers/openai"
+
+          # Verify configuration providers
+          verify_package "packages/providers/configuration/composite"
+          verify_package "packages/providers/configuration/env"
+          verify_package "packages/providers/configuration/file"
+
+          # Verify DI providers
+          verify_package "packages/providers/di/awilix"
+
+          # Verify validation providers
+          verify_package "packages/providers/validation/zod"
 
       - name: Publish packages
         run: |
@@ -170,42 +173,24 @@ jobs:
           # 2. Runtime (depends on core)
           publish_package "packages/runtime" || true
 
-          # 3. Plugins (depend on core and/or runtime)
-          # Database plugins
-          publish_package "packages/plugins/database/postgres" || true
-          publish_package "packages/plugins/database/mongodb" || true
-          publish_package "packages/plugins/database/redis" || true
-
-          # HTTP plugins
-          publish_package "packages/plugins/http/client" || true
-          publish_package "packages/plugins/http/fastify" || true
-
-          # Messaging plugins
-          publish_package "packages/plugins/messaging/rabbitmq" || true
-
-          # Observability plugins
-          publish_package "packages/plugins/observability/opentelemetry" || true
-
-          # Utility plugins
-          publish_package "packages/libraries/errors" || true
-          
-          # Security plugins
-          publish_package "packages/plugins/security/auth" || true
-
-          # Providers
+          # 3. Providers
+          # DI provider
           publish_package "packages/providers/di/awilix" || true
-          publish_package "packages/providers/ai/openai" || true
-          publish_package "packages/providers/ai/anthropic" || true
+
+          # AI providers
+          publish_package "packages/ai/providers/anthropic" || true
+          publish_package "packages/ai/providers/openai" || true
+
+          # Validation providers
           publish_package "packages/providers/validation/zod" || true
+
+          # Configuration providers
           publish_package "packages/providers/configuration/composite" || true
           publish_package "packages/providers/configuration/env" || true
           publish_package "packages/providers/configuration/file" || true
 
-          # 4. Testing utilities (depend on core, runtime, di)
+          # 4. Testing utilities (depend on core, runtime)
           publish_package "packages/testing" || true
-
-          # 5. CLI tools (depend on core)
-          publish_package "packages/cli" || true
 
           echo ""
           echo "========================================="
@@ -260,37 +245,16 @@ jobs:
           add_to_summary "packages/runtime"
 
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Database Plugins" >> $GITHUB_STEP_SUMMARY
-          add_to_summary "packages/plugins/database/postgres"
-          add_to_summary "packages/plugins/database/mongodb"
-          add_to_summary "packages/plugins/database/redis"
+          echo "### AI Providers" >> $GITHUB_STEP_SUMMARY
+          add_to_summary "packages/ai/providers/anthropic"
+          add_to_summary "packages/ai/providers/openai"
 
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### HTTP Plugins" >> $GITHUB_STEP_SUMMARY
-          add_to_summary "packages/plugins/http/client"
-          add_to_summary "packages/plugins/http/fastify"
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Messaging Plugins" >> $GITHUB_STEP_SUMMARY
-          add_to_summary "packages/plugins/messaging/rabbitmq"
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Observability Plugins" >> $GITHUB_STEP_SUMMARY
-          add_to_summary "packages/plugins/observability/opentelemetry"
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Utility Plugins" >> $GITHUB_STEP_SUMMARY
-          add_to_summary "packages/libraries/errors"
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Security Plugins" >> $GITHUB_STEP_SUMMARY
-          add_to_summary "packages/plugins/security/auth"
-
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Providers" >> $GITHUB_STEP_SUMMARY
+          echo "### DI Providers" >> $GITHUB_STEP_SUMMARY
           add_to_summary "packages/providers/di/awilix"
-          add_to_summary "packages/providers/ai/openai"
-          add_to_summary "packages/providers/ai/anthropic"
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Validation Providers" >> $GITHUB_STEP_SUMMARY
           add_to_summary "packages/providers/validation/zod"
           
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -300,9 +264,8 @@ jobs:
           add_to_summary "packages/providers/configuration/file"
 
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Tools" >> $GITHUB_STEP_SUMMARY
+          echo "### Testing" >> $GITHUB_STEP_SUMMARY
           add_to_summary "packages/testing"
-          add_to_summary "packages/cli"
 
       - name: Notify on failure
         if: failure()

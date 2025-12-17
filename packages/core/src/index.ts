@@ -71,12 +71,7 @@ export type { SpecificationResult } from './patterns/Specification.js';
 // ========================================
 
 // Container (Dependency Injection)
-export type { Token } from './container/Token.js';
-export type { Factory } from './container/Factory.js';
-export type { ResolutionContext } from './container/ResolutionContext.js';
-export type { RegisterOptions } from './container/RegisterOptions.js';
 export type { Container } from './container/Container.js';
-export { ServiceLifetime } from './container/ServiceLifetime.js';
 
 // Messaging (CQRS)
 export type { Command } from './messaging/Command.js';

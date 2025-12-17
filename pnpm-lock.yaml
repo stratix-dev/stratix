@@ -431,13 +431,16 @@ importers:
       '@stratix/core':
         specifier: workspace:^
         version: link:../../../core
-      awilix:
-        specifier: ^10.0.2
-        version: 10.0.2
+      '@stratix/runtime':
+        specifier: workspace:^
+        version: link:../../../runtime
     devDependencies:
       '@types/node':
         specifier: ^20.10.0
         version: 20.19.24
+      awilix:
+        specifier: ^10.0.2
+        version: 10.0.2
       typescript:
         specifier: ^5.3.3
         version: 5.9.3
@@ -469,6 +472,9 @@ importers:
       '@stratix/core':
         specifier: workspace:^
         version: link:../core
+      awilix:
+        specifier: ^10.0.2
+        version: 10.0.2
     devDependencies:
       '@types/node':
         specifier: ^20.0.0
@@ -488,7 +494,7 @@ importers:
       '@stratix/core':
         specifier: workspace:^
         version: link:../core
-      '@stratix/di-awilix':
+      '@stratix/di':
         specifier: workspace:^
         version: link:../providers/di/awilix
       '@stratix/runtime':

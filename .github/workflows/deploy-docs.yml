@@ -1,16 +1,19 @@
-name: Deploy Docusaurus to GitHub Pages
+# DISABLED: docs/website directory does not exist
+# This workflow will be re-enabled when documentation structure is set up
+name: Deploy Docusaurus to GitHub Pages (DISABLED)
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'docs/website/**'
-      - 'packages/*/src/**/*.ts'
-      - 'typedoc.json'
-      - 'typedoc-theme.css'
-      - '.github/workflows/deploy-docs.yml'
+  # Disabled - uncomment when docs/website is ready
   workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'docs/website/**'
+  #     - 'packages/*/src/**/*.ts'
+  #     - 'typedoc.json'
+  #     - 'typedoc-theme.css'
+  #     - '.github/workflows/deploy-docs.yml'
 
 permissions:
   contents: read

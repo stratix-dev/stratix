@@ -1,7 +1,6 @@
-import { Application, ApplicationBuilder } from '@stratix/runtime';
-import { AwilixContainer } from '@stratix/di-awilix';
-import { ConsoleLogger } from '@stratix/runtime';
-import type { Plugin, Logger, Container } from '@stratix/core';
+import { Application, ApplicationBuilder, ConsoleLogger, createContainer } from '@stratix/runtime';
+import type { AwilixContainer } from '@stratix/runtime';
+import type { Plugin, Logger } from '@stratix/core';
 import { LogLevel } from '@stratix/core';
 
 /**
@@ -22,7 +21,7 @@ import { LogLevel } from '@stratix/core';
  */
 export class TestApplication {
   private builder: ApplicationBuilder;
-  private testContainer?: Container;
+  private testContainer?: AwilixContainer;
   private testLogger?: Logger;
 
   private constructor() {
@@ -44,7 +43,7 @@ export class TestApplication {
    * - Console Logger (error level only)
    */
   useInMemoryDefaults(): this {
-    this.testContainer = new AwilixContainer();
+    this.testContainer = createContainer();
     this.testLogger = new ConsoleLogger({ level: LogLevel.ERROR });
 
     this.builder.useContainer(this.testContainer).useLogger(this.testLogger);
@@ -55,7 +54,7 @@ export class TestApplication {
   /**
    * Set a custom container
    */
-  useContainer(container: Container): this {
+  useContainer(container: AwilixContainer): this {
     this.builder.useContainer(container);
     return this;
   }
