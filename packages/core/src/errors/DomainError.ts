@@ -8,6 +8,8 @@
  * ```typescript
  * throw new DomainError('INVALID_EMAIL', 'Email format is invalid');
  * ```
+ *
+ * @category Domain Primitives
  */
 export class DomainError extends Error {
   /**

@@ -23,6 +23,8 @@
  *   }
  * }
  * ```
+ *
+ * @category AI Agents
  */
 export interface AgentMemory {
   /**

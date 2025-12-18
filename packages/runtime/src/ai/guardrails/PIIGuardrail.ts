@@ -8,6 +8,7 @@ import type {
 
 /**
  * Configuration for PII detection
+ * @category AI Agents
  */
 export interface PIIGuardrailConfig {
   /**

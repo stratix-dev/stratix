@@ -19,6 +19,8 @@ import { Command } from './Command.js';
  *   }
  * }
  * ```
+ *
+ * @category Messaging (CQRS)
  */
 export interface CommandHandler<TCommand extends Command, TResult = void> {
   /**

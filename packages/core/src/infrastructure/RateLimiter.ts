@@ -1,5 +1,6 @@
 /**
  * Result of a rate limit check
+ * @category Infrastructure
  */
 export interface RateLimitResult {
   /**

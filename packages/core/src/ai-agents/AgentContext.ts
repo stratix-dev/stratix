@@ -16,6 +16,8 @@ import type { AgentMessage, AgentCost } from './types.js';
  * context.addMessage({ role: 'user', content: 'Hello', timestamp: new Date() });
  * context.recordCost({ provider: 'openai', model: 'gpt-4', inputTokens: 100, outputTokens: 50, cost: 0.05 });
  * ```
+ *
+ * @category AI Agents
  */
 export class AgentContext {
   public readonly userId?: string;

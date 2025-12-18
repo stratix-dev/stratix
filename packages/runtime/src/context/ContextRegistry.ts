@@ -6,6 +6,7 @@ import { DuplicatePluginError } from '../errors/RuntimeError.js';
  * Registry for managing contexts and their dependencies.
  *
  * Maintains the dependency graph and provides contexts in initialization order.
+ * @category Runtime & Application
  *
  * @example
  * ```typescript

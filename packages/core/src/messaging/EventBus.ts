@@ -17,6 +17,8 @@ import { EventHandler } from './EventHandler.js';
  *   new UserCreatedEvent('user-123', 'user@example.com')
  * );
  * ```
+ *
+ * @category Messaging (CQRS)
  */
 export interface EventBus {
   /**

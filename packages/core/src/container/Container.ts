@@ -15,6 +15,8 @@
  * const requestContext = scope.resolve<RequestContext>('requestContext');
  * await scope.dispose();
  * ```
+ *
+ * @category Dependency Injection
  */
 export interface Container {
   /**

@@ -16,5 +16,7 @@
  *   status: OrderStatus;
  * }
  * ```
+ *
+ * @category Messaging (CQRS)
  */
 export interface Command {}

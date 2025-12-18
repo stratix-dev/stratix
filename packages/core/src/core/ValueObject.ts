@@ -20,6 +20,8 @@
  * const email2 = new Email('user@example.com');
  * console.log(email1.equals(email2)); // true
  * ```
+ *
+ * @category Domain Primitives
  */
 export abstract class ValueObject {
   /**

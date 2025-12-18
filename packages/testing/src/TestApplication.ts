@@ -18,6 +18,8 @@ import { LogLevel } from '@stratix/core';
  * // Run tests
  * await app.stop();
  * ```
+ *
+ * @category Testing
  */
 export class TestApplication {
   private builder: ApplicationBuilder;

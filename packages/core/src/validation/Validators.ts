@@ -5,6 +5,7 @@ import { DomainError } from '../errors/DomainError.js';
  * Common validators for value objects and domain entities.
  *
  * These validators are reusable, composable, and return Results for type-safe error handling.
+ * @category Validation
  *
  * @example
  * ```typescript

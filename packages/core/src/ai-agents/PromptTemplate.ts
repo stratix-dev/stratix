@@ -4,6 +4,7 @@ import { Result } from '../result/Result.js';
  * Variable definition for prompt templates
  *
  * Defines the type, requirements, and validation for template variables.
+ * @category AI Agents
  *
  * @example
  * ```typescript

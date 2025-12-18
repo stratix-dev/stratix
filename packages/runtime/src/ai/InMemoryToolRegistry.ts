@@ -12,6 +12,7 @@ import type {
  *
  * Provides fast, synchronous tool management with metadata and search capabilities.
  * Suitable for development, testing, and single-instance deployments.
+ * @category AI Agents
  *
  * @example
  * ```typescript

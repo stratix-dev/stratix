@@ -1,5 +1,6 @@
 /**
  * Metadata describing a plugin.
+ * @category Runtime & Application
  *
  * @example
  * ```typescript

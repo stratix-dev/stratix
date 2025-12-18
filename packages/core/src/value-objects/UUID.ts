@@ -19,6 +19,8 @@ import { randomUUID } from 'crypto';
  *   console.log(result.value.value);
  * }
  * ```
+ *
+ * @category Value Objects
  */
 export class UUID extends ValueObject {
   private static readonly UUID_REGEX =

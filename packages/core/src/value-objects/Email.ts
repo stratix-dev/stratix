@@ -17,6 +17,8 @@ import { DomainError } from '../errors/DomainError.js';
  *   console.log(email.localPart); // "user"
  * }
  * ```
+ *
+ * @category Value Objects
  */
 export class Email extends ValueObject {
   private static readonly EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

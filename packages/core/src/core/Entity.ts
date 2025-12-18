@@ -25,6 +25,8 @@ import { EntityId } from './EntityId.js';
  *   }
  * }
  * ```
+ *
+ * @category Domain Primitives
  */
 export abstract class Entity<T extends string> {
   protected constructor(

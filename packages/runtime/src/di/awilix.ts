@@ -3,6 +3,7 @@
  *
  * Stratix uses Awilix as its official DI container implementation.
  * All Awilix features are available directly to developers.
+ * @category Dependency Injection
  *
  * @see https://github.com/jeffijoe/awilix
  *

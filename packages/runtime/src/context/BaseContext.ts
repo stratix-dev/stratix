@@ -49,59 +49,13 @@ import { asValue } from '../di/awilix.js';
  *         name: 'CreateProduct',
  *         commandType: CreateProductCommand,
  *         handler: new CreateProductHandler(this.productRepository)
- *       },
- *       {
- *         name: 'UpdateProduct',
- *         commandType: UpdateProductCommand,
- *         handler: new UpdateProductHandler(this.productRepository)
  *       }
  *     ];
- *   }
- *
- *   getQueries(): ContextQueryDefinition[] {
- *     return [
- *       {
- *         name: 'GetProductById',
- *         queryType: GetProductByIdQuery,
- *         handler: new GetProductByIdHandler(this.productRepository)
- *       },
- *       {
- *         name: 'ListProducts',
- *         queryType: ListProductsQuery,
- *         handler: new ListProductsHandler(this.productRepository)
- *       }
- *     ];
- *   }
- *
- *   getEventHandlers(): ContextEventHandlerDefinition[] {
- *     return [
- *       {
- *         eventName: 'ProductCreated',
- *         eventType: ProductCreatedEvent,
- *         handler: new ProductCreatedHandler()
- *       }
- *     ];
- *   }
- *
- *   getRepositories(): ContextRepositoryDefinition[] {
- *     return [
- *       {
- *         token: 'productRepository',
- *         instance: new InMemoryProductRepository(),
- *         singleton: true
- *       }
- *     ];
- *   }
- *
- *   async initialize(config: ContextConfig): Promise<void> {
- *     // Repositories are registered first, so we can resolve them
- *     this.productRepository = config.container.resolve<ProductRepository>('productRepository');
- *
- *     // Call super to register all commands, queries, events
- *     await super.initialize(config);
  *   }
  * }
  * ```
+ *
+ * @category Runtime & Application
  */
 export abstract class BaseContext implements Context {
   /**

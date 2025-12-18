@@ -40,6 +40,8 @@ import { HealthCheckResult } from '../infrastructure/HealthCheck.js';
  *   }
  * }
  * ```
+ *
+ * @category Runtime & Application
  */
 export interface Plugin {
   /**

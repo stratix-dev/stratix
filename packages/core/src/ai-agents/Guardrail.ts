@@ -1,5 +1,6 @@
 /**
  * Severity level for guardrail violations
+ * @category AI Agents
  */
 export enum GuardrailSeverity {
   /**

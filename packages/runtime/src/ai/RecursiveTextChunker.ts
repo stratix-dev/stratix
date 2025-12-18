@@ -16,6 +16,7 @@ import type {
  * 2. Single newlines
  * 3. Sentences (. ! ?)
  * 4. Words (spaces)
+ * @category AI Agents
  *
  * @example
  * ```typescript

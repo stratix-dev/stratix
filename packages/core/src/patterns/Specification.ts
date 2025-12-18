@@ -32,6 +32,8 @@
  *   // Process loan application
  * }
  * ```
+ *
+ * @category Patterns
  */
 export abstract class Specification<T> {
   /**

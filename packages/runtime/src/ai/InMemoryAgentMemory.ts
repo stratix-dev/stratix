@@ -3,6 +3,7 @@ import type { AgentMemory } from '@stratix/core';
 /**
  * Simple in-memory implementation of AgentMemory.
  * Suitable for development and testing. For production, use a persistent implementation.
+ * @category AI Agents
  */
 export class InMemoryAgentMemory implements AgentMemory {
   private shortTermMemory = new Map<string, unknown>();

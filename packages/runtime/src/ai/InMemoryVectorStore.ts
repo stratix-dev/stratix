@@ -15,6 +15,7 @@ import type { LLMProvider } from '@stratix/core';
  *
  * For production use with large datasets, consider using persistent vector stores
  * like Pinecone, Weaviate, or Chroma.
+ * @category AI Agents
  *
  * @example
  * ```typescript

@@ -11,6 +11,7 @@ import type {
  *
  * Stores execution records in memory for auditing and analytics.
  * For production use, consider a database-backed implementation.
+ * @category AI Agents
  *
  * @example
  * ```typescript

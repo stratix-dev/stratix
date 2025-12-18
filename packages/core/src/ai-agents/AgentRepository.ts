@@ -18,6 +18,8 @@ import type { AgentId, AgentCapability } from './types.js';
  *   }
  * }
  * ```
+ *
+ * @category AI Agents
  */
 export interface AgentRepository {
   /**

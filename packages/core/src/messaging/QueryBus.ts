@@ -16,6 +16,8 @@ import { QueryHandler } from './QueryHandler.js';
  *   new GetUserQuery('user-123')
  * );
  * ```
+ *
+ * @category Messaging (CQRS)
  */
 export interface QueryBus {
   /**

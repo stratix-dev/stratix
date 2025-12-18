@@ -26,6 +26,7 @@ interface BucketState {
  * - Per-key rate limiting
  * - Blocking mechanism for abuse prevention
  * - In-memory storage (suitable for single-instance deployments)
+ * @category Infrastructure
  *
  * @example
  * ```typescript

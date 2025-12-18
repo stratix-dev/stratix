@@ -11,6 +11,7 @@ import type {
  * Standard implementation of guardrail chain.
  *
  * Executes multiple guardrails in sequence or parallel and aggregates results.
+ * @category AI Agents
  *
  * @example
  * ```typescript

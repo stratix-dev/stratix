@@ -57,6 +57,8 @@ import type {
  *   }
  * }
  * ```
+ *
+ * @category AI Agents
  */
 export abstract class AIAgent<TInput, TOutput> extends AggregateRoot<'AIAgent'> {
   /**

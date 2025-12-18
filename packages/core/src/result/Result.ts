@@ -23,6 +23,8 @@
  *   console.error(result.error.message);
  * }
  * ```
+ *
+ * @category Result Pattern
  */
 export type Result<T, E extends Error = Error> = Success<T> | Failure<E>;
 
@@ -30,6 +32,7 @@ export type Result<T, E extends Error = Error> = Success<T> | Failure<E>;
  * Represents a successful result.
  *
  * @template T - The type of the success value
+ * @category Result Pattern
  */
 export class Success<T> {
   readonly isSuccess = true as const;
@@ -89,6 +92,7 @@ export class Success<T> {
  * Represents a failed result.
  *
  * @template E - The type of the error (must extend Error)
+ * @category Result Pattern
  */
 export class Failure<E extends Error> {
   readonly isSuccess = false as const;

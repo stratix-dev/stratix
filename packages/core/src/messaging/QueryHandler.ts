@@ -17,6 +17,8 @@ import { Query } from './Query.js';
  *   }
  * }
  * ```
+ *
+ * @category Messaging (CQRS)
  */
 export interface QueryHandler<TQuery extends Query, TResult = unknown> {
   /**

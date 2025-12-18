@@ -64,24 +64,9 @@ npm run dev
 - [**@stratix/core**](https://www.npmjs.com/package/@stratix/core) - Domain primitives, abstractions, and default implementations (zero dependencies)
 - [**@stratix/runtime**](https://www.npmjs.com/package/@stratix/runtime) - Application builder, plugin registry, lifecycle management, and in-memory implementations
 
-### Plugins 🔌
-*Manage external resources with lifecycle (initialize → start → stop)*
-
-#### Database Plugins
-- [**@stratix/db-postgres**](https://www.npmjs.com/package/@stratix/db-postgres) - PostgreSQL integration with repository patterns
-- [**@stratix/db-mongodb**](https://www.npmjs.com/package/@stratix/db-mongodb) - MongoDB integration with aggregations and pagination
-- [**@stratix/db-redis**](https://www.npmjs.com/package/@stratix/db-redis) - Redis caching, rate limiting, and distributed locks
-
 #### HTTP Plugins
 - [**@stratix/http-fastify**](https://www.npmjs.com/package/@stratix/http-fastify) - Fastify HTTP server integration
 - [**@stratix/http-client**](https://www.npmjs.com/package/@stratix/http-client) - Type-safe HTTP client with Axios, retries, and circuit breaker
-
-#### Messaging & Observability
-- [**@stratix/msg-rabbitmq**](https://www.npmjs.com/package/@stratix/msg-rabbitmq) - RabbitMQ message broker with RPC and priority queues
-- [**@stratix/obs-opentelemetry**](https://www.npmjs.com/package/@stratix/obs-opentelemetry) - OpenTelemetry observability integration
-
-#### Security Plugins
-- [**@stratix/auth**](https://www.npmjs.com/package/@stratix/auth) - JWT authentication and RBAC authorization
 
 ### Providers 🔧
 *Implement core interfaces (AI, DI, Validation)*
@@ -105,12 +90,23 @@ npm run dev
 - [**@stratix/cli**](https://www.npmjs.com/package/@stratix/cli) - Code generation and project scaffolding
 - [**@stratix/testing**](https://www.npmjs.com/package/@stratix/testing) - Testing utilities and mocks
 
-### VS Code Extension
-- [**stratix-copilot**](https://marketplace.visualstudio.com/items?itemName=stratix.stratix-copilot-rag) - GitHub Copilot extension with Stratix framework knowledge
-
 ## Documentation
 
-Complete documentation is available at [stratix-dev.github.io/stratix](https://stratix-dev.github.io/stratix/)
+📚 **[API Documentation](https://stratix-dev.github.io/stratix/)** - Complete API reference generated with TypeDoc
+
+📖 **[DOCUMENTATION.md](./DOCUMENTATION.md)** - Contributing to documentation guide
+
+The documentation is automatically generated from JSDoc comments in the source code and published to GitHub Pages.
+
+### Generating Documentation Locally
+
+```bash
+# Generate documentation
+pnpm docs
+
+# Open in browser
+open docs/index.html
+```
 
 ## Contributing
 

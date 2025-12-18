@@ -1,5 +1,6 @@
 /**
  * Represents a document with its content and metadata
+ * @category AI Agents
  */
 export interface Document {
   /**

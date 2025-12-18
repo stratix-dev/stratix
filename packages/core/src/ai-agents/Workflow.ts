@@ -2,6 +2,7 @@ import type { Result } from '../result/Result.js';
 
 /**
  * Retry policy for workflow steps
+ * @category AI Agents
  */
 export interface RetryPolicy {
   /**

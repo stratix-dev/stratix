@@ -53,6 +53,8 @@ export interface ApplicationBuilderOptions {
  *
  * await app.start();
  * ```
+ *
+ * @category Runtime & Application
  */
 export class ApplicationBuilder {
   private container?: AwilixContainer;

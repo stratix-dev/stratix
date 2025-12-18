@@ -13,6 +13,8 @@ import { CountryRegistry, type CountryInfo } from './CountryRegistry.js';
  * const eur = Currency.EUR;
  * const mxn = Currency.fromCode('MXN');
  * ```
+ *
+ * @category Value Objects
  */
 export class Currency extends ValueObject {
   private static readonly CURRENCY_CACHE = new Map<string, Currency>();

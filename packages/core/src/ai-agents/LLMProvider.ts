@@ -67,6 +67,7 @@ export interface EmbeddingResponse {
  * Interface for LLM (Large Language Model) providers.
  *
  * Implementations provide access to AI models like GPT-4, Claude, etc.
+ * @category AI Agents
  *
  * @example
  * ```typescript

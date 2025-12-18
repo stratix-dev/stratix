@@ -25,6 +25,7 @@ export enum LifecyclePhase {
  * Handles initialization, startup, and shutdown in the correct order:
  * 1. Plugins (infrastructure)
  * 2. Contexts (domain logic)
+ * @category Runtime & Application
  *
  * @example
  * ```typescript

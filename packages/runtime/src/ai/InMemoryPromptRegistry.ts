@@ -9,6 +9,7 @@ import type { PromptTemplate, PromptRegistry } from '@stratix/core/ai-agents';
  * - Model filtering
  *
  * Suitable for development, testing, and applications that don't need persistence.
+ * @category AI Agents
  *
  * @example
  * ```typescript

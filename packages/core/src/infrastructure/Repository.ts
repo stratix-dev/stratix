@@ -26,6 +26,8 @@
  *   findByEmail(email: string): Promise<User | null>;
  * }
  * ```
+ *
+ * @category Infrastructure
  */
 export interface Repository<T, ID = string> {
   /**

@@ -9,6 +9,7 @@ import { Success, Failure, type Result } from '@stratix/core';
 
 /**
  * Configuration for creating a Handlebars prompt template
+ * @category AI Agents
  */
 export interface HandlebarsPromptTemplateConfig {
   /**

@@ -2,6 +2,7 @@
  * Secrets Provider Interface
  * 
  * Defines the contract for retrieving secrets from a secure storage.
+ * @category Infrastructure
  */
 export interface SecretsProvider {
     /**

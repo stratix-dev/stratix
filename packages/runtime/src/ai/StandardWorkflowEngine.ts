@@ -21,6 +21,7 @@ import { randomUUID } from 'crypto';
 
 /**
  * Configuration for StandardWorkflowEngine
+ * @category AI Agents
  */
 export interface StandardWorkflowEngineConfig {
   /**

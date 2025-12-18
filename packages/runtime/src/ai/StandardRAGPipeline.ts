@@ -17,6 +17,7 @@ import type {
  * 1. Ingest: Chunk documents and store with embeddings
  * 2. Retrieve: Find relevant documents using vector search
  * 3. Generate: Create responses augmented with retrieved context
+ * @category AI Agents
  *
  * @example
  * ```typescript

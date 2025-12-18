@@ -19,6 +19,7 @@ export interface AddressProps {
  *
  * Address is immutable and validates required fields.
  * Provides formatting and comparison capabilities.
+ * @category Value Objects
  *
  * @example
  * ```typescript
