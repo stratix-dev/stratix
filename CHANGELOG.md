@@ -254,7 +254,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `@stratix/impl-ai-agents` → `@stratix/ai-agents` (deprecated, functionality in core)
   - `@stratix/ext-ai-agents-openai` → `@stratix/ai-openai`
   - `@stratix/ext-ai-agents-anthropic` → `@stratix/ai-anthropic`
-  - `@stratix/impl-di-awilix` → `@stratix/di-awilix`
+  - `@stratix/impl-di-awilix` → `@stratix/di`
   - `@stratix/ext-postgres` → `@stratix/db-postgres`
   - `@stratix/ext-mongodb` → `@stratix/db-mongodb`
   - `@stratix/ext-redis` → `@stratix/db-redis`
@@ -284,7 +284,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Priority queues
   - Delayed/scheduled messages
   - Advanced routing (topic, headers)
-- **@stratix/di-awilix**:
+- **@stratix/di**:
   - Comprehensive test suite
   - Simplified registration API with `register.scoped()`, `register.singleton()`, `register.transient()`
   - Injection modes (PROXY, CLASSIC)

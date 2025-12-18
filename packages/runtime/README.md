@@ -65,7 +65,7 @@ npm install @stratix/core @stratix/runtime
 **Plugins:**
 - [`@stratix/db-postgres`](https://www.npmjs.com/package/@stratix/db-postgres) - PostgreSQL integration
 - [`@stratix/http-fastify`](https://www.npmjs.com/package/@stratix/http-fastify) - Fastify HTTP server
-- [`@stratix/di-awilix`](https://www.npmjs.com/package/@stratix/di-awilix) - Dependency injection
+- [`@stratix/di`](https://www.npmjs.com/package/@stratix/di) - Dependency injection
 
 [View all plugins](https://stratix-dev.github.io/stratix/docs/plugins/official-plugins)
 
