@@ -39,7 +39,8 @@
   },
   "dependencies": {
     "@stratix/core": "workspace:^",
-    "awilix": "^10.0.2"
+    "awilix": "^10.0.2",
+    "handlebars": "^4.7.8"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

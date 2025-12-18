@@ -92,6 +92,12 @@ export type { Repository } from './infrastructure/Repository.js';
 export type { UnitOfWork } from './infrastructure/UnitOfWork.js';
 export { HealthStatus } from './infrastructure/HealthCheck.js';
 export type { HealthCheckResult, HealthCheck } from './infrastructure/HealthCheck.js';
+export type {
+  RateLimiter,
+  RateLimitResult,
+  RateLimitConfig,
+} from './infrastructure/RateLimiter.js';
+export { RateLimitExceededError } from './infrastructure/RateLimiter.js';
 
 // Plugin System
 export type { PluginMetadata } from './plugin/PluginMetadata.js';
