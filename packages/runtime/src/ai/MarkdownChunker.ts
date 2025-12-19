@@ -50,7 +50,7 @@ export class MarkdownChunker implements DocumentChunker {
     }
   }
 
-  async chunk(document: Document): Promise<ChunkResult> {
+  chunk(document: Document): Promise<ChunkResult> {
     const sections = this.extractSections(document.content);
     const chunks: Document[] = [];
     let currentChunk = '';
@@ -135,10 +135,10 @@ export class MarkdownChunker implements DocumentChunker {
       },
     }));
 
-    return {
+    return Promise.resolve({
       chunks: updatedChunks,
       originalMetadata: document.metadata,
-    };
+    });
   }
 
   async chunkMany(documents: Document[]): Promise<ChunkResult[]> {

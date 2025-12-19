@@ -90,7 +90,7 @@ export class PIIGuardrail implements Guardrail {
     this.enabled = config.enabled ?? true;
   }
 
-  async evaluate(context: GuardrailContext): Promise<GuardrailResult> {
+  evaluate(context: GuardrailContext): Promise<GuardrailResult> {
     const violations: GuardrailViolation[] = [];
 
     // Check each enabled PII type
@@ -116,7 +116,7 @@ export class PIIGuardrail implements Guardrail {
     }
 
     if (violations.length > 0) {
-      return {
+      return Promise.resolve({
         passed: false,
         severity: this.severity,
         reason: `Detected ${violations.length} potential PII violation(s)`,
@@ -125,10 +125,10 @@ export class PIIGuardrail implements Guardrail {
         metadata: {
           piiTypes: [...new Set(violations.map((v) => v.type))],
         },
-      };
+      });
     }
 
-    return { passed: true };
+    return Promise.resolve({ passed: true });
   }
 
   /**

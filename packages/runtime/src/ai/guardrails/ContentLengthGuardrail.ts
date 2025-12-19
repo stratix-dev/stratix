@@ -100,7 +100,7 @@ export class ContentLengthGuardrail implements Guardrail {
     }
   }
 
-  async evaluate(context: GuardrailContext): Promise<GuardrailResult> {
+  evaluate(context: GuardrailContext): Promise<GuardrailResult> {
     const charCount = context.content.length;
     const wordCount = this.countWords(context.content);
 
@@ -149,7 +149,7 @@ export class ContentLengthGuardrail implements Guardrail {
     if (violations.length > 0) {
       const reasons = violations.map((v) => v.description);
 
-      return {
+      return Promise.resolve({
         passed: false,
         severity: this.severity,
         reason: reasons.join('; '),
@@ -165,10 +165,10 @@ export class ContentLengthGuardrail implements Guardrail {
             maxWords: this.maxWords,
           },
         },
-      };
+      });
     }
 
-    return {
+    return Promise.resolve({
       passed: true,
       metadata: {
         charCount,
@@ -180,7 +180,7 @@ export class ContentLengthGuardrail implements Guardrail {
           maxWords: this.maxWords,
         },
       },
-    };
+    });
   }
 
   /**

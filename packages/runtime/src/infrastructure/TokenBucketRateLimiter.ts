@@ -126,19 +126,19 @@ export class TokenBucketRateLimiter implements RateLimiter {
     };
   }
 
-  async check(key: string): Promise<RateLimitResult> {
+  check(key: string): Promise<RateLimitResult> {
     const bucket = this.getBucket(key);
 
     // Check if blocked
     if (bucket.blockedUntil && Date.now() < bucket.blockedUntil) {
-      return {
+      return Promise.resolve({
         allowed: false,
         remaining: 0,
         limit: this.config.maxRequests,
         resetIn: bucket.blockedUntil - Date.now(),
         resetAt: new Date(bucket.blockedUntil),
         retryAfter: bucket.blockedUntil - Date.now(),
-      };
+      });
     }
 
     // Refill tokens
@@ -146,10 +146,10 @@ export class TokenBucketRateLimiter implements RateLimiter {
 
     // Check if we have enough tokens
     const allowed = bucket.tokens >= 1;
-    return this.createResult(bucket, allowed);
+    return Promise.resolve(this.createResult(bucket, allowed));
   }
 
-  async consume(key: string, tokens: number = 1): Promise<RateLimitResult> {
+  consume(key: string, tokens: number = 1): Promise<RateLimitResult> {
     if (tokens < 0) {
       throw new Error('Tokens must be positive');
     }
@@ -181,10 +181,10 @@ export class TokenBucketRateLimiter implements RateLimiter {
     // Consume tokens
     bucket.tokens -= tokens;
 
-    return this.createResult(bucket, true);
+    return Promise.resolve(this.createResult(bucket, true));
   }
 
-  async reset(key: string): Promise<void> {
+  reset(key: string): Promise<void> {
     const fullKey = this.getKey(key);
     const bucket = this.buckets.get(fullKey);
 
@@ -193,30 +193,32 @@ export class TokenBucketRateLimiter implements RateLimiter {
       bucket.lastRefill = Date.now();
       delete bucket.blockedUntil;
     }
+    return Promise.resolve();
   }
 
-  async get(key: string): Promise<RateLimitResult | null> {
+  get(key: string): Promise<RateLimitResult | null> {
     const fullKey = this.getKey(key);
     const bucket = this.buckets.get(fullKey);
 
     if (!bucket) {
-      return null;
+      return Promise.resolve(null);
     }
 
     // Don't modify the bucket, just return current state
     const tempBucket = { ...bucket };
     this.refillTokens(tempBucket);
 
-    return this.createResult(tempBucket, tempBucket.tokens >= 1);
+    return Promise.resolve(this.createResult(tempBucket, tempBucket.tokens >= 1));
   }
 
-  async block(key: string, durationMs: number): Promise<void> {
+  block(key: string, durationMs: number): Promise<void> {
     const bucket = this.getBucket(key);
     bucket.blockedUntil = Date.now() + durationMs;
     bucket.tokens = 0;
+    return Promise.resolve();
   }
 
-  async unblock(key: string): Promise<void> {
+  unblock(key: string): Promise<void> {
     const fullKey = this.getKey(key);
     const bucket = this.buckets.get(fullKey);
 
@@ -226,17 +228,18 @@ export class TokenBucketRateLimiter implements RateLimiter {
       bucket.tokens = this.config.maxRequests;
       bucket.lastRefill = Date.now();
     }
+    return Promise.resolve();
   }
 
-  async isBlocked(key: string): Promise<boolean> {
+  isBlocked(key: string): Promise<boolean> {
     const fullKey = this.getKey(key);
     const bucket = this.buckets.get(fullKey);
 
     if (!bucket || !bucket.blockedUntil) {
-      return false;
+      return Promise.resolve(false);
     }
 
-    return Date.now() < bucket.blockedUntil;
+    return Promise.resolve(Date.now() < bucket.blockedUntil);
   }
 
   /**

@@ -44,7 +44,7 @@ export class InMemoryToolRegistry implements ToolRegistry {
   private tools: Map<string, AgentTool<unknown, unknown>> = new Map();
   private metadata: Map<string, ToolMetadata> = new Map();
 
-  async register(
+  register(
     tool: AgentTool<unknown, unknown>,
     metadata?: Partial<ToolMetadata>
   ): Promise<void> {
@@ -66,32 +66,33 @@ export class InMemoryToolRegistry implements ToolRegistry {
     };
 
     this.metadata.set(name, fullMetadata);
+    return Promise.resolve();
   }
 
-  async unregister(name: string): Promise<boolean> {
+  unregister(name: string): Promise<boolean> {
     const existed = this.tools.has(name);
     this.tools.delete(name);
     this.metadata.delete(name);
-    return existed;
+    return Promise.resolve(existed);
   }
 
-  async get(name: string): Promise<AgentTool<unknown, unknown> | null> {
-    return this.tools.get(name) ?? null;
+  get(name: string): Promise<AgentTool<unknown, unknown> | null> {
+    return Promise.resolve(this.tools.get(name) ?? null);
   }
 
-  async has(name: string): Promise<boolean> {
-    return this.tools.has(name);
+  has(name: string): Promise<boolean> {
+    return Promise.resolve(this.tools.has(name));
   }
 
-  async listAll(): Promise<AgentTool<unknown, unknown>[]> {
-    return Array.from(this.tools.values());
+  listAll(): Promise<AgentTool<unknown, unknown>[]> {
+    return Promise.resolve(Array.from(this.tools.values()));
   }
 
-  async getMetadata(name: string): Promise<ToolMetadata | null> {
-    return this.metadata.get(name) ?? null;
+  getMetadata(name: string): Promise<ToolMetadata | null> {
+    return Promise.resolve(this.metadata.get(name) ?? null);
   }
 
-  async search(options: ToolSearchOptions): Promise<ToolSearchResult[]> {
+  search(options: ToolSearchOptions): Promise<ToolSearchResult[]> {
     const results: ToolSearchResult[] = [];
 
     for (const [name, tool] of this.tools.entries()) {
@@ -152,43 +153,43 @@ export class InMemoryToolRegistry implements ToolRegistry {
 
     // Apply limit
     if (options.limit && options.limit > 0) {
-      return results.slice(0, options.limit);
+      return Promise.resolve(results.slice(0, options.limit));
     }
 
-    return results;
+    return Promise.resolve(results);
   }
 
-  async getDefinitions(names?: string[]): Promise<ToolDefinition[]> {
+  getDefinitions(names?: string[]): Promise<ToolDefinition[]> {
     const toolsToInclude = names
       ? names
           .map((name) => this.tools.get(name))
           .filter((tool): tool is AgentTool<unknown, unknown> => tool !== undefined)
       : Array.from(this.tools.values());
 
-    return toolsToInclude.map((tool) => tool.getDefinition());
+    return Promise.resolve(toolsToInclude.map((tool) => tool.getDefinition()));
   }
 
-  async listCategories(): Promise<string[]> {
+  listCategories(): Promise<string[]> {
     const categories = new Set<string>();
     for (const meta of this.metadata.values()) {
       if (meta.category) {
         categories.add(meta.category);
       }
     }
-    return Array.from(categories).sort();
+    return Promise.resolve(Array.from(categories).sort());
   }
 
-  async listTags(): Promise<string[]> {
+  listTags(): Promise<string[]> {
     const tags = new Set<string>();
     for (const meta of this.metadata.values()) {
       if (meta.tags) {
         meta.tags.forEach((tag) => tags.add(tag));
       }
     }
-    return Array.from(tags).sort();
+    return Promise.resolve(Array.from(tags).sort());
   }
 
-  async getByCategory(category: string): Promise<AgentTool<unknown, unknown>[]> {
+  getByCategory(category: string): Promise<AgentTool<unknown, unknown>[]> {
     const results: AgentTool<unknown, unknown>[] = [];
     for (const [name, tool] of this.tools.entries()) {
       const meta = this.metadata.get(name)!;
@@ -196,10 +197,10 @@ export class InMemoryToolRegistry implements ToolRegistry {
         results.push(tool);
       }
     }
-    return results;
+    return Promise.resolve(results);
   }
 
-  async getByTag(tag: string): Promise<AgentTool<unknown, unknown>[]> {
+  getByTag(tag: string): Promise<AgentTool<unknown, unknown>[]> {
     const results: AgentTool<unknown, unknown>[] = [];
     for (const [name, tool] of this.tools.entries()) {
       const meta = this.metadata.get(name)!;
@@ -207,15 +208,16 @@ export class InMemoryToolRegistry implements ToolRegistry {
         results.push(tool);
       }
     }
-    return results;
+    return Promise.resolve(results);
   }
 
-  async clear(): Promise<void> {
+  clear(): Promise<void> {
     this.tools.clear();
     this.metadata.clear();
+    return Promise.resolve();
   }
 
-  async count(): Promise<number> {
-    return this.tools.size;
+  count(): Promise<number> {
+    return Promise.resolve(this.tools.size);
   }
 }

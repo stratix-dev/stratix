@@ -92,9 +92,9 @@ export class StandardWorkflowEngine implements WorkflowEngine {
   constructor(config: StandardWorkflowEngineConfig = {}) {
     this.agentOrchestrator = config.agentOrchestrator;
     this.toolRegistry = config.toolRegistry;
-    this.ragPipelines = config.ragPipelines || new Map();
+    this.ragPipelines = config.ragPipelines || new Map<string, RAGPipeline>();
     this.humanHandler = config.humanHandler;
-    this.expressionEvaluator = config.expressionEvaluator || this.defaultExpressionEvaluator;
+    this.expressionEvaluator = config.expressionEvaluator || this.defaultExpressionEvaluator.bind(this);
     this.executions = new Map();
   }
 
@@ -151,17 +151,17 @@ export class StandardWorkflowEngine implements WorkflowEngine {
   /**
    * Resume a paused workflow
    */
-  async resume(
+  resume(
     executionId: string,
     input?: Record<string, unknown>
   ): Promise<Result<WorkflowExecution, Error>> {
     const execution = this.executions.get(executionId);
     if (!execution) {
-      return new Failure(new Error(`Execution not found: ${executionId}`));
+      return Promise.resolve(new Failure(new Error(`Execution not found: ${executionId}`)));
     }
 
     if (execution.status !== 'paused') {
-      return new Failure(new Error(`Execution is not paused: ${execution.status}`));
+      return Promise.resolve(new Failure(new Error(`Execution is not paused: ${execution.status}`)));
     }
 
     // Update status to running with merged input
@@ -172,20 +172,20 @@ export class StandardWorkflowEngine implements WorkflowEngine {
     };
 
     this.executions.set(executionId, resumedExecution);
-    return new Success(resumedExecution);
+    return Promise.resolve(new Success(resumedExecution));
   }
 
   /**
    * Pause a running workflow
    */
-  async pause(executionId: string): Promise<Result<void, Error>> {
+  pause(executionId: string): Promise<Result<void, Error>> {
     const execution = this.executions.get(executionId);
     if (!execution) {
-      return new Failure(new Error(`Execution not found: ${executionId}`));
+      return Promise.resolve(new Failure(new Error(`Execution not found: ${executionId}`)));
     }
 
     if (execution.status !== 'running') {
-      return new Failure(new Error(`Execution is not running: ${execution.status}`));
+      return Promise.resolve(new Failure(new Error(`Execution is not running: ${execution.status}`)));
     }
 
     const pausedExecution: WorkflowExecution = {
@@ -194,22 +194,22 @@ export class StandardWorkflowEngine implements WorkflowEngine {
     };
 
     this.executions.set(executionId, pausedExecution);
-    return new Success(undefined);
+    return Promise.resolve(new Success(undefined));
   }
 
   /**
    * Cancel a running workflow
    */
-  async cancel(executionId: string): Promise<Result<void, Error>> {
+  cancel(executionId: string): Promise<Result<void, Error>> {
     const execution = this.executions.get(executionId);
     if (!execution) {
-      return new Failure(new Error(`Execution not found: ${executionId}`));
+      return Promise.resolve(new Failure(new Error(`Execution not found: ${executionId}`)));
     }
 
     if (execution.status !== 'running' && execution.status !== 'paused') {
-      return new Failure(
+      return Promise.resolve(new Failure(
         new Error(`Cannot cancel execution with status: ${execution.status}`)
-      );
+      ));
     }
 
     const cancelledExecution: WorkflowExecution = {
@@ -219,32 +219,32 @@ export class StandardWorkflowEngine implements WorkflowEngine {
     };
 
     this.executions.set(executionId, cancelledExecution);
-    return new Success(undefined);
+    return Promise.resolve(new Success(undefined));
   }
 
   /**
    * Get execution status
    */
-  async getExecution(executionId: string): Promise<WorkflowExecution | undefined> {
-    return this.executions.get(executionId);
+  getExecution(executionId: string): Promise<WorkflowExecution | undefined> {
+    return Promise.resolve(this.executions.get(executionId));
   }
 
   /**
    * List active executions
    */
-  async listActive(): Promise<WorkflowExecution[]> {
-    return Array.from(this.executions.values()).filter(
+  listActive(): Promise<WorkflowExecution[]> {
+    return Promise.resolve(Array.from(this.executions.values()).filter(
       (e) => e.status === 'running' || e.status === 'paused'
-    );
+    ));
   }
 
   /**
    * List all executions for a workflow
    */
-  async listExecutions(workflowId: string): Promise<WorkflowExecution[]> {
-    return Array.from(this.executions.values()).filter(
+  listExecutions(workflowId: string): Promise<WorkflowExecution[]> {
+    return Promise.resolve(Array.from(this.executions.values()).filter(
       (e) => e.workflowId === workflowId
-    );
+    ));
   }
 
   /**
@@ -369,7 +369,7 @@ export class StandardWorkflowEngine implements WorkflowEngine {
   /**
    * Execute an agent step
    */
-  private async executeAgentStep(
+  private executeAgentStep(
     step: AgentStep,
     execution: WorkflowExecution
   ): Promise<unknown> {
@@ -379,7 +379,7 @@ export class StandardWorkflowEngine implements WorkflowEngine {
 
     const input = this.resolveStepInput(step.input, execution.variables);
     // In a real implementation, would call agentOrchestrator.execute()
-    return { agentOutput: input };
+    return Promise.resolve({ agentOutput: input });
   }
 
   /**
@@ -458,8 +458,11 @@ export class StandardWorkflowEngine implements WorkflowEngine {
       throw new Error('Loop collection must be an array');
     }
 
-    const maxIterations = step.maxIterations || collection.length;
-    const iterations = Math.min(collection.length, maxIterations);
+    // Type assertion after Array.isArray check
+    const typedCollection = collection as unknown[];
+
+    const maxIterations = step.maxIterations || typedCollection.length;
+    const iterations = Math.min(typedCollection.length, maxIterations);
 
     for (let i = 0; i < iterations; i++) {
       // Update execution with current item variable
@@ -468,7 +471,7 @@ export class StandardWorkflowEngine implements WorkflowEngine {
         ...currentExecution,
         variables: {
           ...currentExecution.variables,
-          [step.itemVariable]: collection[i],
+          [step.itemVariable]: typedCollection[i],
         },
       };
       this.executions.set(execution.id, updatedExecution);
@@ -519,7 +522,7 @@ export class StandardWorkflowEngine implements WorkflowEngine {
   /**
    * Execute a transform step
    */
-  private async executeTransformStep(
+  private executeTransformStep(
     step: TransformStep,
     execution: WorkflowExecution
   ): Promise<unknown> {
@@ -532,7 +535,7 @@ export class StandardWorkflowEngine implements WorkflowEngine {
     };
 
     const result = this.expressionEvaluator(step.expression, tempVariables);
-    return result;
+    return Promise.resolve(result);
   }
 
   /**

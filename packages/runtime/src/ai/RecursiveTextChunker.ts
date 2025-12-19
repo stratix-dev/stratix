@@ -62,7 +62,7 @@ export class RecursiveTextChunker implements DocumentChunker {
     }
   }
 
-  async chunk(document: Document): Promise<ChunkResult> {
+  chunk(document: Document): Promise<ChunkResult> {
     const chunks = this.splitText(document.content);
     const minSize = this.config.minChunkSize ?? 0;
 
@@ -81,10 +81,10 @@ export class RecursiveTextChunker implements DocumentChunker {
       },
     }));
 
-    return {
+    return Promise.resolve({
       chunks: chunkDocuments,
       originalMetadata: document.metadata,
-    };
+    });
   }
 
   async chunkMany(documents: Document[]): Promise<ChunkResult[]> {

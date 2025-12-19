@@ -154,7 +154,7 @@ export class PromptInjectionGuardrail implements Guardrail {
     this.customPatterns = config.customPatterns || [];
   }
 
-  async evaluate(context: GuardrailContext): Promise<GuardrailResult> {
+  evaluate(context: GuardrailContext): Promise<GuardrailResult> {
     const violations: GuardrailViolation[] = [];
 
     // Check built-in patterns
@@ -198,7 +198,7 @@ export class PromptInjectionGuardrail implements Guardrail {
     if (violations.length > 0) {
       const highestConfidence = Math.max(...violations.map((v) => v.confidence || 0));
 
-      return {
+      return Promise.resolve({
         passed: false,
         severity: this.severity,
         reason: `Detected ${violations.length} potential prompt injection attempt(s)`,
@@ -209,9 +209,9 @@ export class PromptInjectionGuardrail implements Guardrail {
           injectionTypes: [...new Set(violations.map((v) => v.type))],
           highestConfidence,
         },
-      };
+      });
     }
 
-    return { passed: true };
+    return Promise.resolve({ passed: true });
   }
 }

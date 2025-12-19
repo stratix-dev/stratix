@@ -117,8 +117,8 @@ export class InMemoryVectorStore implements VectorStore {
     return results;
   }
 
-  async get(id: string): Promise<Document | null> {
-    return this.documents.get(id) ?? null;
+  get(id: string): Promise<Document | null> {
+    return Promise.resolve(this.documents.get(id) ?? null);
   }
 
   async update(id: string, document: Partial<Document>): Promise<boolean> {
@@ -150,11 +150,11 @@ export class InMemoryVectorStore implements VectorStore {
     return true;
   }
 
-  async delete(id: string): Promise<boolean> {
-    return this.documents.delete(id);
+  delete(id: string): Promise<boolean> {
+    return Promise.resolve(this.documents.delete(id));
   }
 
-  async deleteMany(filter: MetadataFilter): Promise<number> {
+  deleteMany(filter: MetadataFilter): Promise<number> {
     let deleted = 0;
 
     for (const [id, doc] of this.documents.entries()) {
@@ -164,18 +164,19 @@ export class InMemoryVectorStore implements VectorStore {
       }
     }
 
-    return deleted;
+    return Promise.resolve(deleted);
   }
 
-  async count(): Promise<number> {
-    return this.documents.size;
+  count(): Promise<number> {
+    return Promise.resolve(this.documents.size);
   }
 
-  async clear(): Promise<void> {
+  clear(): Promise<void> {
     this.documents.clear();
+    return Promise.resolve();
   }
 
-  async listAll(filter?: MetadataFilter): Promise<Document[]> {
+  listAll(filter?: MetadataFilter): Promise<Document[]> {
     const results: Document[] = [];
 
     for (const doc of this.documents.values()) {
@@ -184,7 +185,7 @@ export class InMemoryVectorStore implements VectorStore {
       }
     }
 
-    return results;
+    return Promise.resolve(results);
   }
 
   /**

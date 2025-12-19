@@ -48,7 +48,7 @@ export class InMemorySpan implements AISpan {
       console.warn('Cannot set attribute on ended span');
       return;
     }
-    (this.attributes as Record<string, string | number | boolean>)[key] = value;
+    (this.attributes)[key] = value;
   }
 
   setAttributes(attributes: Record<string, string | number | boolean>): void {
@@ -56,7 +56,7 @@ export class InMemorySpan implements AISpan {
       console.warn('Cannot set attributes on ended span');
       return;
     }
-    Object.assign(this.attributes as Record<string, string | number | boolean>, attributes);
+    Object.assign(this.attributes, attributes);
   }
 
   recordException(error: Error): void {
@@ -380,7 +380,7 @@ export class InMemoryTelemetry implements AITelemetry {
  * Console exporter for debugging
  */
 export class ConsoleExporter implements TelemetryExporter {
-  async exportSpan(span: AISpan): Promise<void> {
+  exportSpan(span: AISpan): Promise<void> {
     console.log('[Telemetry Span]', {
       id: span.id,
       name: span.name,
@@ -389,10 +389,12 @@ export class ConsoleExporter implements TelemetryExporter {
       durationMs: span.durationMs,
       attributes: span.attributes,
     });
+    return Promise.resolve();
   }
 
-  async exportMetrics(metrics: unknown): Promise<void> {
+  exportMetrics(metrics: unknown): Promise<void> {
     console.log('[Telemetry Metrics]', metrics);
+    return Promise.resolve();
   }
 
   async flush(): Promise<void> {

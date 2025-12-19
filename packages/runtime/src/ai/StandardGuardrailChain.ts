@@ -3,6 +3,7 @@ import type {
   GuardrailChainConfig,
   GuardrailChainResult,
   GuardrailContext,
+  GuardrailResult,
   Guardrail,
   GuardrailSeverity,
 } from '@stratix/core';
@@ -43,7 +44,7 @@ export class StandardGuardrailChain implements GuardrailChain {
 
   async execute(context: GuardrailContext): Promise<GuardrailChainResult> {
     const startTime = Date.now();
-    const results: Array<{ guardrail: string; result: any }> = [];
+    const results: Array<{ guardrail: string; result: GuardrailResult }> = [];
     let highestSeverity: GuardrailSeverity | undefined;
     let totalViolations = 0;
 
@@ -56,11 +57,11 @@ export class StandardGuardrailChain implements GuardrailChain {
         this.executeGuardrail(guardrail, context)
       );
 
-      const parallelResults = await Promise.all(promises);
+      const parallelResults: GuardrailResult[] = await Promise.all(promises);
 
       for (let i = 0; i < enabledGuardrails.length; i++) {
         const guardrail = enabledGuardrails[i];
-        const result = parallelResults[i];
+        const result: GuardrailResult = parallelResults[i];
 
         results.push({
           guardrail: guardrail.name,
@@ -82,7 +83,7 @@ export class StandardGuardrailChain implements GuardrailChain {
     } else {
       // Execute in sequence
       for (const guardrail of enabledGuardrails) {
-        const result = await this.executeGuardrail(guardrail, context);
+        const result: GuardrailResult = await this.executeGuardrail(guardrail, context);
 
         results.push({
           guardrail: guardrail.name,
@@ -140,7 +141,7 @@ export class StandardGuardrailChain implements GuardrailChain {
   private async executeGuardrail(
     guardrail: Guardrail,
     context: GuardrailContext
-  ): Promise<any> {
+  ): Promise<GuardrailResult> {
     try {
       return await guardrail.evaluate(context);
     } catch (error) {

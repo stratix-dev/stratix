@@ -192,7 +192,7 @@ export class TopicFilterGuardrail implements Guardrail {
     }
   }
 
-  async evaluate(context: GuardrailContext): Promise<GuardrailResult> {
+  evaluate(context: GuardrailContext): Promise<GuardrailResult> {
     const contentLower = context.content.toLowerCase();
     const detectedTopics = this.detectTopics(contentLower);
 
@@ -202,7 +202,7 @@ export class TopicFilterGuardrail implements Guardrail {
     );
 
     if (forbiddenDetected.length > 0) {
-      return {
+      return Promise.resolve({
         passed: false,
         severity: this.severity,
         reason: `Content contains forbidden topic(s): ${forbiddenDetected.join(', ')}`,
@@ -217,7 +217,7 @@ export class TopicFilterGuardrail implements Guardrail {
           forbiddenTopics: forbiddenDetected,
           allDetectedTopics: detectedTopics,
         },
-      };
+      });
     }
 
     // Check allowed topics (if specified)
@@ -227,7 +227,7 @@ export class TopicFilterGuardrail implements Guardrail {
       );
 
       if (allowedDetected.length === 0) {
-        return {
+        return Promise.resolve({
           passed: false,
           severity: this.severity,
           reason: 'Content does not match any allowed topics',
@@ -244,16 +244,16 @@ export class TopicFilterGuardrail implements Guardrail {
             allowedTopics: [...this.allowedTopics],
             detectedTopics,
           },
-        };
+        });
       }
     }
 
-    return {
+    return Promise.resolve({
       passed: true,
       metadata: {
         detectedTopics,
       },
-    };
+    });
   }
 
   /**
