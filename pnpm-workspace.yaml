@@ -5,7 +5,7 @@ packages:
   - 'packages/testing'
   # AI
   - 'packages/ai/providers/*'
-  # Providers 
+  # Providers
   - 'packages/providers/di/*'
   - 'packages/providers/validation/*'
-  - 'packages/providers/configuration/*'
+  - 'packages/providers/config'

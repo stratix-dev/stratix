@@ -1,7 +1,7 @@
 {
-  "name": "@stratix/config-env",
+  "name": "@stratix/config",
   "version": "0.8.0",
-  "description": "Environment-based configuration provider for Stratix",
+  "description": "Configuration providers for Stratix (env, file, composite)",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -9,6 +9,18 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./env": {
+      "import": "./dist/env/index.js",
+      "types": "./dist/env/index.d.ts"
+    },
+    "./file": {
+      "import": "./dist/file/index.js",
+      "types": "./dist/file/index.d.ts"
+    },
+    "./composite": {
+      "import": "./dist/composite/index.js",
+      "types": "./dist/composite/index.d.ts"
     }
   },
   "files": [
@@ -19,7 +31,7 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run || exit 0",
+    "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint src --ignore-pattern '**/*.test.ts' --ignore-pattern '**/__tests__/**'",
     "clean": "rm -rf dist"
@@ -30,20 +42,26 @@
     "config",
     "environment",
     "env",
-    "dotenv"
+    "file",
+    "yaml",
+    "json",
+    "composite"
   ],
   "author": "Stratix Team",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/stratix-dev/stratix.git",
-    "directory": "packages/providers/configuration/env"
+    "directory": "packages/providers/config"
   },
   "dependencies": {
     "@stratix/core": "workspace:^",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "js-yaml": "^4.1.0",
+    "chokidar": "^4.0.3"
   },
   "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.10.2",
     "typescript": "^5.7.2",
     "vitest": "^3.0.4"

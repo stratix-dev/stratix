@@ -121,7 +121,7 @@ export class ApplicationBuilder {
    *
    * @example
    * ```typescript
-   * import { EnvConfigProvider } from '@stratix/config-env';
+   * import { EnvConfigProvider } from '@stratix/config/env';
    *
    * builder.useConfig(new EnvConfigProvider({
    *   prefix: 'APP_',
@@ -131,9 +131,9 @@ export class ApplicationBuilder {
    *
    * @example
    * ```typescript
-   * import { CompositeConfigProvider } from '@stratix/config-composite';
-   * import { EnvConfigProvider } from '@stratix/config-env';
-   * import { FileConfigProvider } from '@stratix/config-file';
+   * import { CompositeConfigProvider } from '@stratix/config/composite';
+   * import { EnvConfigProvider } from '@stratix/config/env';
+   * import { FileConfigProvider } from '@stratix/config/file';
    *
    * builder.useConfig(new CompositeConfigProvider({
    *   providers: [

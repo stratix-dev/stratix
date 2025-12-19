@@ -87,16 +87,16 @@ export class EnvConfigProvider implements ConfigProvider {
     }
   }
 
-  async get<T = unknown>(key: string, defaultValue?: T): Promise<T | undefined> {
+  get<T = unknown>(key: string, defaultValue?: T): Promise<T | undefined> {
     // Check cache first
     if (this.cache?.has(key)) {
-      return this.cache.get(key) as T;
+      return Promise.resolve(this.cache.get(key) as T);
     }
 
     try {
       const value = this.getRawValue(key);
       if (value === undefined) {
-        return defaultValue;
+        return Promise.resolve(defaultValue);
       }
 
       const transformed = this.transformValue(key, value) as T;
@@ -106,12 +106,12 @@ export class EnvConfigProvider implements ConfigProvider {
         this.cache.set(key, transformed);
       }
 
-      return transformed;
+      return Promise.resolve(transformed);
     } catch (error) {
       if (defaultValue !== undefined) {
-        return defaultValue;
+        return Promise.resolve(defaultValue);
       }
-      throw error;
+      return Promise.reject(error);
     }
   }
 
@@ -164,12 +164,12 @@ export class EnvConfigProvider implements ConfigProvider {
     return current as T;
   }
 
-  async has(key: string): Promise<boolean> {
+  has(key: string): Promise<boolean> {
     const value = this.getRawValue(key);
-    return value !== undefined;
+    return Promise.resolve(value !== undefined);
   }
 
-  async reload(): Promise<void> {
+  reload(): Promise<void> {
     // Clear cache
     this.cache?.clear();
     this.cachedConfig = null;
@@ -178,6 +178,8 @@ export class EnvConfigProvider implements ConfigProvider {
     if (this.loadDotenv) {
       dotenvConfig({ path: '.env', override: true });
     }
+
+    return Promise.resolve();
   }
 
   private getRawValue(key: string): string | undefined {
