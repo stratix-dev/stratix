@@ -151,7 +151,7 @@ export class TokenBucketRateLimiter implements RateLimiter {
 
   consume(key: string, tokens: number = 1): Promise<RateLimitResult> {
     if (tokens < 0) {
-      throw new Error('Tokens must be positive');
+      return Promise.reject(new Error('Tokens must be positive'));
     }
 
     const bucket = this.getBucket(key);
@@ -166,7 +166,9 @@ export class TokenBucketRateLimiter implements RateLimiter {
         resetAt: new Date(bucket.blockedUntil),
         retryAfter: bucket.blockedUntil - Date.now(),
       };
-      throw new RateLimitExceededError('Rate limit exceeded (blocked)', result);
+      return Promise.reject(
+        new RateLimitExceededError('Rate limit exceeded (blocked)', result)
+      );
     }
 
     // Refill tokens
@@ -175,7 +177,9 @@ export class TokenBucketRateLimiter implements RateLimiter {
     // Check if we have enough tokens
     if (bucket.tokens < tokens) {
       const result = this.createResult(bucket, false);
-      throw new RateLimitExceededError('Rate limit exceeded', result);
+      return Promise.reject(
+        new RateLimitExceededError('Rate limit exceeded', result)
+      );
     }
 
     // Consume tokens

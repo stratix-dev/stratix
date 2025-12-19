@@ -51,7 +51,7 @@ export class InMemoryToolRegistry implements ToolRegistry {
     const name = tool.name;
 
     if (this.tools.has(name)) {
-      throw new Error(`Tool '${name}' is already registered`);
+      return Promise.reject(new Error(`Tool '${name}' is already registered`));
     }
 
     this.tools.set(name, tool);
