@@ -261,7 +261,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `@stratix/ext-rabbitmq` → `@stratix/msg-rabbitmq`
   - `@stratix/ext-opentelemetry` → `@stratix/obs-opentelemetry`
   - `@stratix/ext-http-fastify` → `@stratix/http-fastify`
-  - `@stratix/ext-validation-zod` → `@stratix/validation-zod`
+  - `@stratix/ext-validation-zod` → `@stratix/validation`
 - Removed version comments in classes for simplicity
 
 ### Added

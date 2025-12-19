@@ -1,11 +1,11 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
 
-# @stratix/validation-zod
+# @stratix/validation
 
 **🔧 Provider** | Schema validation with Zod for Stratix applications
 
-[![npm version](https://img.shields.io/npm/v/@stratix/validation-zod.svg)](https://www.npmjs.com/package/@stratix/validation-zod)
+[![npm version](https://img.shields.io/npm/v/@stratix/validation.svg)](https://www.npmjs.com/package/@stratix/validation)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 [Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
@@ -18,7 +18,7 @@
 
 ## About This Package
 
-`@stratix/validation-zod` is a validation plugin for the Stratix framework.
+`@stratix/validation` is a validation plugin for the Stratix framework.
 
 Zod-based schema validation for Stratix applications
 
@@ -45,7 +45,7 @@ stratix add validation
 
 **Manual installation:**
 ```bash
-npm install @stratix/validation-zod
+npm install @stratix/validation
 ```
 
 ## Related Packages

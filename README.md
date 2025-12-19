@@ -79,7 +79,7 @@ npm run dev
 - [**@stratix/di**](https://www.npmjs.com/package/@stratix/di) - Awilix dependency injection container
 
 #### Validation Providers
-- [**@stratix/validation-zod**](https://www.npmjs.com/package/@stratix/validation-zod) - Zod-based schema validation
+- [**@stratix/validation**](https://www.npmjs.com/package/@stratix/validation) - Zod-based schema validation
 
 ### Libraries 📚
 *Pure utility functions and classes (zero external dependencies)*

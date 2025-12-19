@@ -10,7 +10,7 @@
 | Runtime | `@stratix/runtime` | Core |
 | Testing | `@stratix/testing` | Core |
 | DI (Awilix) | `@stratix/di` | Provider |
-| Validation (Zod) | `@stratix/validation-zod` | Provider |
+| Validation (Zod) | `@stratix/validation` | Provider |
 | Config Env | `@stratix/config-env` | Provider |
 | Config File | `@stratix/config-file` | Provider |
 | Config Composite | `@stratix/config-composite` | Provider |
@@ -34,7 +34,7 @@
 
 | Flag | Descripción |
 |------|-------------|
-| `--with-validation` | Agregar `@stratix/validation-zod` |
+| `--with-validation` | Agregar `@stratix/validation` |
 | `--with-config` | Agregar `@stratix/config-env` |
 | `--with-ai openai` | Agregar `@stratix/ai-openai` |
 | `--with-ai anthropic` | Agregar `@stratix/ai-anthropic` |
