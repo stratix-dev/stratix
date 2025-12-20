@@ -134,7 +134,7 @@ jobs:
               exit 1
             fi
           done
-          
+
           # Check AI providers
           for pkg in packages/ai/providers/*; do
             if [ -d "$pkg/dist" ]; then
@@ -144,18 +144,25 @@ jobs:
               exit 1
             fi
           done
-          
-          # Check provider packages
+
+          # Check provider packages (handle both consolidated packages and categories)
           for category in packages/providers/*; do
             if [ -d "$category" ]; then
-              for pkg in "$category"/*; do
-                if [ -d "$pkg/dist" ]; then
-                  echo "✓ $pkg/dist exists"
-                else
-                  echo "✗ $pkg/dist missing"
-                  exit 1
-                fi
-              done
+              # Check if this is a package (has package.json and dist) or a category
+              if [ -f "$category/package.json" ] && [ -d "$category/dist" ]; then
+                # This is a consolidated package
+                echo "✓ $category/dist exists"
+              else
+                # This is a category, check packages inside
+                for pkg in "$category"/*; do
+                  if [ -d "$pkg/dist" ]; then
+                    echo "✓ $pkg/dist exists"
+                  else
+                    echo "✗ $pkg/dist missing"
+                    exit 1
+                  fi
+                done
+              fi
             fi
           done
         continue-on-error: false
