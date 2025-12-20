@@ -8,6 +8,7 @@ import type { Logger } from '../infrastructure/Logger.js';
  * - Access the DI container to resolve dependencies
  * - Access the logger for logging
  * - Access configuration specific to the context
+ * @category Runtime & Application
  */
 export interface ContextConfig {
   /**

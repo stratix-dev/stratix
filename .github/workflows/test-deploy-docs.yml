@@ -1,13 +1,17 @@
-name: Test Docusaurus Build
+# DISABLED: docs/website directory does not exist
+# This workflow will be re-enabled when documentation structure is set up
+name: Test Docusaurus Build (DISABLED)
 
 on:
-  pull_request:
-    branches:
-      - main
-      - dev
-    paths:
-      - 'docs/website/**'
-      - '.github/workflows/test-deploy-docs.yml'
+  # Disabled - uncomment when docs/website is ready
+  workflow_dispatch:
+  # pull_request:
+  #   branches:
+  #     - main
+  #     - dev
+  #   paths:
+  #     - 'docs/website/**'
+  #     - '.github/workflows/test-deploy-docs.yml'
 
 jobs:
   test-build:

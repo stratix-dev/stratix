@@ -10,6 +10,7 @@ import { ValueObject } from './ValueObject.js';
  * preventing common bugs like passing a UserId where an OrderId is expected.
  *
  * @template T - Phantom type representing the entity type (e.g., 'User', 'Order')
+ * @category Domain Primitives
  *
  * @example
  * ```typescript

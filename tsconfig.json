@@ -7,7 +7,6 @@
   },
   "include": [
     "packages/*/src/**/*.ts",
-    "examples/*/src/**/*.ts"
   ],
   "exclude": [
     "node_modules",

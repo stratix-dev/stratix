@@ -5,6 +5,7 @@ import type { Event, EventBus, EventHandler } from '@stratix/core';
  *
  * Provides a simple, synchronous event bus with pub/sub capabilities.
  * Each event type can have multiple subscribers.
+ * @category Messaging (CQRS)
  *
  * @example
  * ```typescript

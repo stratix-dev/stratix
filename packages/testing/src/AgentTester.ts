@@ -49,6 +49,8 @@ export interface TestResult<TOutput> {
 /**
  * Agent tester utility for testing AI agents with deterministic responses.
  *
+ * @category Testing
+ *
  * @example
  * ```typescript
  * import { AgentTester } from '@stratix/testing';

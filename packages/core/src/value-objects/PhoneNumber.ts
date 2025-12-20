@@ -18,6 +18,8 @@ import { CountryCallingCodeRegistry } from './CountryCallingCode.js';
  *   console.log(phone.countryCode); // "+1"
  * }
  * ```
+ *
+ * @category Value Objects
  */
 export class PhoneNumber extends ValueObject {
   private static readonly E164_REGEX = /^\+[1-9]\d{1,14}$/;

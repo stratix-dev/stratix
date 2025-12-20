@@ -1,5 +1,6 @@
 import type { Plugin, PluginContext, Context, Container, Logger } from '@stratix/core';
-import { ServiceLifetime } from '@stratix/core';
+import type { AwilixContainer } from '../di/awilix.js';
+import { asValue } from '../di/awilix.js';
 import { PluginRegistry } from '../registry/PluginRegistry.js';
 import { ContextRegistry } from '../context/ContextRegistry.js';
 import { DefaultContextConfig } from '../context/DefaultContextConfig.js';
@@ -24,6 +25,7 @@ export enum LifecyclePhase {
  * Handles initialization, startup, and shutdown in the correct order:
  * 1. Plugins (infrastructure)
  * 2. Contexts (domain logic)
+ * @category Runtime & Application
  *
  * @example
  * ```typescript
@@ -288,11 +290,14 @@ export class LifecycleManager {
     try {
       this.contextPhases.set(name, LifecyclePhase.INITIALIZING);
 
+      // Cast to AwilixContainer for registration
+      const awilixContainer = container as unknown as AwilixContainer;
+
       // Register repositories first
       const repositories = context.getRepositories?.() || [];
       for (const repo of repositories) {
-        container.register(repo.token, () => repo.instance, {
-          lifetime: repo.singleton !== false ? ServiceLifetime.SINGLETON : ServiceLifetime.TRANSIENT,
+        awilixContainer.register({
+          [repo.token]: asValue(repo.instance)
         });
       }
 

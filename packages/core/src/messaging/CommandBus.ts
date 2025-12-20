@@ -16,6 +16,8 @@ import { CommandHandler } from './CommandHandler.js';
  *   new CreateUserCommand('user@example.com', 'John Doe')
  * );
  * ```
+ *
+ * @category Messaging (CQRS)
  */
 export interface CommandBus {
   /**

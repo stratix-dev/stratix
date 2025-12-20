@@ -1,7 +1,7 @@
 {
-  "name": "@stratix/di-awilix",
-  "version": "0.7.6",
-  "description": "Awilix dependency injection container implementation for Stratix",
+  "name": "@stratix/di",
+  "version": "0.8.0",
+  "description": "Stratix DI utilities - Patterns, auto-registration, and helpers for DDD/CQRS",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -20,24 +20,32 @@
     "stratix",
     "di",
     "dependency-injection",
-    "ioc",
-    "awilix"
+    "ddd",
+    "cqrs",
+    "patterns",
+    "auto-registration",
+    "awilix",
+    "utilities"
   ],
   "author": "P. Andrés Carvajal <causticrez@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "awilix": "^10.0.2",
-    "@stratix/core": "workspace:^"
+    "@stratix/core": "workspace:^",
+    "@stratix/runtime": "workspace:^"
+  },
+  "peerDependencies": {
+    "awilix": "^10.0.2"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
     "typescript": "^5.3.3",
-    "vitest": "^1.6.1"
+    "vitest": "^1.6.1",
+    "awilix": "^10.0.2"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/stratix-dev/stratix.git",
-    "directory": "packages/plugins/di/awilix"
+    "directory": "packages/providers/di"
   },
   "homepage": "https://stratix-dev.github.io/stratix/",
   "bugs": {

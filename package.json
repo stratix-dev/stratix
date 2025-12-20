@@ -1,21 +1,23 @@
 {
   "name": "stratix",
-  "version": "0.7.6",
+  "version": "0.8.0",
   "private": true,
   "type": "module",
   "description": "Modern TypeScript framework with Domain-Driven Design, hexagonal architecture, and native AI agent support",
   "author": "P. Andrés Carvajal <causticrez@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "pnpm -r --filter '!website' --sort --workspace-concurrency=1 build",
-    "build:fast": "pnpm -r --filter '!website' --sort build",
+    "build": "pnpm -r --sort --workspace-concurrency=1 build",
+    "build:fast": "pnpm -r --sort build",
     "test": "pnpm -r test",
-    "typecheck": "pnpm -r --filter '!website' typecheck",
+    "typecheck": "pnpm -r typecheck",
     "lint": "pnpm -r lint",
     "format": "prettier --write \"packages/**/src/**/*.ts\"",
     "clean": "pnpm -r clean && rm -rf node_modules",
-    "docs:api": "bash scripts/generate-api-docs.sh",
-    "docs:serve": "cd docs/api && python3 -m http.server 8080"
+    "docs": "typedoc",
+    "docs:watch": "typedoc --watch",
+    "docs:json": "typedoc --json api/api.json",
+    "docs:analyze": "node scripts/analyze-docs.js"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

@@ -52,6 +52,7 @@ export interface ConsoleLoggerOptions {
  * Console-based logger implementation.
  *
  * Provides colored, formatted console output with configurable log levels.
+ * @category Infrastructure
  *
  * @example
  * ```typescript

@@ -12,6 +12,7 @@ interface GraphNode {
  * Dependency graph for topological sorting of plugins.
  *
  * Ensures plugins are initialized in the correct order based on their dependencies.
+ * @category Runtime & Application
  *
  * @example
  * ```typescript

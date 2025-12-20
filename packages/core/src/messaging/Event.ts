@@ -19,5 +19,7 @@
  *   occurredAt: Date;
  * }
  * ```
+ *
+ * @category Messaging (CQRS)
  */
 export interface Event {}

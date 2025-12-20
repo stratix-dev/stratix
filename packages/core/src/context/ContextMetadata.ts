@@ -1,5 +1,6 @@
 /**
  * Metadata describing a context.
+ * @category Runtime & Application
  *
  * @example
  * ```typescript

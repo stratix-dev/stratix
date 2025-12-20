@@ -6,6 +6,7 @@ import type { AgentRepository } from '@stratix/core';
  *
  * Suitable for development, testing, and small-scale deployments.
  * For production use with persistence, consider a database-backed implementation.
+ * @category AI Agents
  *
  * @example
  * ```typescript

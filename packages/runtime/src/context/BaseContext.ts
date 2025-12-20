@@ -8,8 +8,9 @@ import {
   ContextMetadata,
   HealthCheckResult,
   HealthStatus,
-  ServiceLifetime,
 } from '@stratix/core';
+import type { AwilixContainer } from '../di/awilix.js';
+import { asValue } from '../di/awilix.js';
 
 /**
  * Base implementation for contexts.
@@ -48,59 +49,13 @@ import {
  *         name: 'CreateProduct',
  *         commandType: CreateProductCommand,
  *         handler: new CreateProductHandler(this.productRepository)
- *       },
- *       {
- *         name: 'UpdateProduct',
- *         commandType: UpdateProductCommand,
- *         handler: new UpdateProductHandler(this.productRepository)
  *       }
  *     ];
- *   }
- *
- *   getQueries(): ContextQueryDefinition[] {
- *     return [
- *       {
- *         name: 'GetProductById',
- *         queryType: GetProductByIdQuery,
- *         handler: new GetProductByIdHandler(this.productRepository)
- *       },
- *       {
- *         name: 'ListProducts',
- *         queryType: ListProductsQuery,
- *         handler: new ListProductsHandler(this.productRepository)
- *       }
- *     ];
- *   }
- *
- *   getEventHandlers(): ContextEventHandlerDefinition[] {
- *     return [
- *       {
- *         eventName: 'ProductCreated',
- *         eventType: ProductCreatedEvent,
- *         handler: new ProductCreatedHandler()
- *       }
- *     ];
- *   }
- *
- *   getRepositories(): ContextRepositoryDefinition[] {
- *     return [
- *       {
- *         token: 'productRepository',
- *         instance: new InMemoryProductRepository(),
- *         singleton: true
- *       }
- *     ];
- *   }
- *
- *   async initialize(config: ContextConfig): Promise<void> {
- *     // Repositories are registered first, so we can resolve them
- *     this.productRepository = config.container.resolve<ProductRepository>('productRepository');
- *
- *     // Call super to register all commands, queries, events
- *     await super.initialize(config);
  *   }
  * }
  * ```
+ *
+ * @category Runtime & Application
  */
 export abstract class BaseContext implements Context {
   /**
@@ -178,11 +133,15 @@ export abstract class BaseContext implements Context {
   async initialize(config: ContextConfig): Promise<void> {
     this.config = config;
 
+    // Cast to AwilixContainer for registration
+    const container = config.container as unknown as AwilixContainer;
+
     // 1. Register repositories first (other things depend on them)
     const repositories = this.getRepositories();
     for (const repo of repositories) {
-      config.container.register(repo.token, () => repo.instance, {
-        lifetime: repo.singleton !== false ? ServiceLifetime.SINGLETON : ServiceLifetime.TRANSIENT,
+      // Register using Awilix directly
+      container.register({
+        [repo.token]: asValue(repo.instance)
       });
     }
 

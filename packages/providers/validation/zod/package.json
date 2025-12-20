@@ -1,6 +1,6 @@
 {
-  "name": "@stratix/validation-zod",
-  "version": "0.7.6",
+  "name": "@stratix/validation",
+  "version": "0.8.0",
   "description": "Zod-based input validation for Stratix framework",
   "type": "module",
   "main": "./dist/index.js",
@@ -36,7 +36,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/stratix-dev/stratix.git",
-    "directory": "packages/plugins/utilities/validation-zod"
+    "directory": "packages/providers/validation/zod"
   },
   "dependencies": {
     "zod": "^3.24.1",

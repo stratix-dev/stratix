@@ -14,6 +14,7 @@ import type {
 
 /**
  * Configuration options for the orchestrator
+ * @category AI Agents
  */
 export interface OrchestratorOptions {
   /**

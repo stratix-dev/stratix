@@ -33,6 +33,8 @@ import { DomainEvent } from './DomainEvent.js';
  * const events = order.pullDomainEvents();
  * await eventBus.publish(events);
  * ```
+ *
+ * @category Domain Primitives
  */
 export abstract class AggregateRoot<T extends string> extends Entity<T> {
   private _domainEvents: DomainEvent[] = [];

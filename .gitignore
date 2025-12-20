@@ -40,6 +40,7 @@ coverage/
 tools/verdaccio/storage/
 
 # Docs
+docs/
 docs/tmp/
 AGENTS.md
 

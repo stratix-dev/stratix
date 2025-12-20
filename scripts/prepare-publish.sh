@@ -21,8 +21,8 @@ find packages -name "package.json" -type f | while read -r file; do
     # Replace @stratix/runtime
     sed -i '' 's/"@stratix\/runtime": "workspace:\^"/"@stratix\/runtime": "^'"$VERSION"'"/g' "$file"
     
-    # Replace @stratix/di-awilix
-    sed -i '' 's/"@stratix\/di-awilix": "workspace:\^"/"@stratix\/di-awilix": "^'"$VERSION"'"/g' "$file"
+    # Replace @stratix/di
+    sed -i '' 's/"@stratix\/di": "workspace:\^"/"@stratix\/di": "^'"$VERSION"'"/g' "$file"
   fi
 done
 

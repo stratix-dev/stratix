@@ -71,12 +71,7 @@ export type { SpecificationResult } from './patterns/Specification.js';
 // ========================================
 
 // Container (Dependency Injection)
-export type { Token } from './container/Token.js';
-export type { Factory } from './container/Factory.js';
-export type { ResolutionContext } from './container/ResolutionContext.js';
-export type { RegisterOptions } from './container/RegisterOptions.js';
 export type { Container } from './container/Container.js';
-export { ServiceLifetime } from './container/ServiceLifetime.js';
 
 // Messaging (CQRS)
 export type { Command } from './messaging/Command.js';
@@ -97,6 +92,12 @@ export type { Repository } from './infrastructure/Repository.js';
 export type { UnitOfWork } from './infrastructure/UnitOfWork.js';
 export { HealthStatus } from './infrastructure/HealthCheck.js';
 export type { HealthCheckResult, HealthCheck } from './infrastructure/HealthCheck.js';
+export type {
+  RateLimiter,
+  RateLimitResult,
+  RateLimitConfig,
+} from './infrastructure/RateLimiter.js';
+export { RateLimitExceededError } from './infrastructure/RateLimiter.js';
 
 // Plugin System
 export type { PluginMetadata } from './plugin/PluginMetadata.js';

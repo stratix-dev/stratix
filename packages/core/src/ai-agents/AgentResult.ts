@@ -20,6 +20,8 @@ import type { ExecutionTrace } from './ExecutionTrace.js';
  *   { model: "gpt-4", stage: "execution" }
  * );
  * ```
+ *
+ * @category AI Agents
  */
 export class AgentResult<T> {
   private constructor(

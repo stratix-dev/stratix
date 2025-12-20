@@ -8,6 +8,7 @@ import type { AgentContext } from './AgentContext.js';
  *
  * The orchestrator manages agent registration, execution, and coordination
  * between multiple agents.
+ * @category AI Agents
  *
  * @example
  * ```typescript

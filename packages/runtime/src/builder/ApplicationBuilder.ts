@@ -1,5 +1,6 @@
-import type { Container, Logger, Plugin, Context, ConfigProvider } from '@stratix/core';
-import { ServiceLifetime } from '@stratix/core';
+import type { Logger, Plugin, Context, ConfigProvider } from '@stratix/core';
+import type { AwilixContainer } from '../di/awilix.js';
+import { asValue } from '../di/awilix.js';
 import { PluginRegistry } from '../registry/PluginRegistry.js';
 import { ContextRegistry } from '../context/ContextRegistry.js';
 import { LifecycleManager } from '../lifecycle/LifecycleManager.js';
@@ -11,10 +12,10 @@ import { Application } from './Application.js';
  */
 export interface ApplicationBuilderOptions {
   /**
-   * The dependency injection container.
+   * The dependency injection container (Awilix).
    * Must be provided before building.
    */
-  container?: Container;
+  container?: AwilixContainer;
 
   /**
    * The logger instance.
@@ -52,9 +53,11 @@ export interface ApplicationBuilderOptions {
  *
  * await app.start();
  * ```
+ *
+ * @category Runtime & Application
  */
 export class ApplicationBuilder {
-  private container?: Container;
+  private container?: AwilixContainer;
   private logger?: Logger;
   private config?: ConfigProvider;
   private pluginRegistry = new PluginRegistry();
@@ -76,15 +79,17 @@ export class ApplicationBuilder {
   /**
    * Sets the dependency injection container.
    *
-   * @param container - The container to use
+   * @param container - The Awilix container to use
    * @returns This builder for chaining
    *
    * @example
    * ```typescript
-   * builder.useContainer(new AwilixContainer());
+   * import { createContainer } from '@stratix/runtime';
+   * const container = createContainer();
+   * builder.useContainer(container);
    * ```
    */
-  useContainer(container: Container): this {
+  useContainer(container: AwilixContainer): this {
     this.container = container;
     return this;
   }
@@ -116,7 +121,7 @@ export class ApplicationBuilder {
    *
    * @example
    * ```typescript
-   * import { EnvConfigProvider } from '@stratix/config-env';
+   * import { EnvConfigProvider } from '@stratix/config/env';
    *
    * builder.useConfig(new EnvConfigProvider({
    *   prefix: 'APP_',
@@ -126,9 +131,9 @@ export class ApplicationBuilder {
    *
    * @example
    * ```typescript
-   * import { CompositeConfigProvider } from '@stratix/config-composite';
-   * import { EnvConfigProvider } from '@stratix/config-env';
-   * import { FileConfigProvider } from '@stratix/config-file';
+   * import { CompositeConfigProvider } from '@stratix/config/composite';
+   * import { EnvConfigProvider } from '@stratix/config/env';
+   * import { FileConfigProvider } from '@stratix/config/file';
    *
    * builder.useConfig(new CompositeConfigProvider({
    *   providers: [
@@ -284,7 +289,9 @@ export class ApplicationBuilder {
 
     // Register config provider in container if provided
     if (this.config) {
-      this.container.register('config', () => this.config, { lifetime: ServiceLifetime.SINGLETON });
+      this.container.register({
+        config: asValue(this.config)
+      });
     }
 
     const lifecycleManager = new LifecycleManager(this.pluginRegistry, this.contextRegistry);

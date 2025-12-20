@@ -72,7 +72,7 @@ yarn add @stratix/core
 **Plugins:**
 - [`@stratix/db-postgres`](https://www.npmjs.com/package/@stratix/db-postgres) - PostgreSQL integration
 - [`@stratix/http-fastify`](https://www.npmjs.com/package/@stratix/http-fastify) - Fastify HTTP server
-- [`@stratix/validation-zod`](https://www.npmjs.com/package/@stratix/validation-zod) - Schema validation
+- [`@stratix/validation`](https://www.npmjs.com/package/@stratix/validation) - Schema validation
 
 [View all plugins](https://stratix-dev.github.io/stratix/docs/plugins/official-plugins)
 

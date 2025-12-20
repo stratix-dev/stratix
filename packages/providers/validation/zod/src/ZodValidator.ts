@@ -9,7 +9,7 @@ import type { Validator, ValidationResult, ValidationError, Schema } from './typ
  * @example
  * ```typescript
  * import { z } from 'zod';
- * import { ZodValidator } from '@stratix/validation-zod';
+ * import { ZodValidator } from '@stratix/validation';
  *
  * const userSchema = z.object({
  *   name: z.string().min(2),

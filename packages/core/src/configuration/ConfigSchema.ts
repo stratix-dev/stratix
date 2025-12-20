@@ -20,6 +20,7 @@ export interface ValidationError {
 
 /**
  * Validation result
+ * @category Configuration
  */
 export interface ValidationResult<T> {
   /**

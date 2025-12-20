@@ -12,6 +12,8 @@
  *   // All operations committed together
  * });
  * ```
+ *
+ * @category Infrastructure
  */
 export interface UnitOfWork {
   /**

@@ -19,6 +19,8 @@ import { LifecycleManager, LifecyclePhase } from '../lifecycle/LifecycleManager.
  * // Application running
  * await app.stop();
  * ```
+ *
+ * @category Runtime & Application
  */
 export class Application {
   constructor(

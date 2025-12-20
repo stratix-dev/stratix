@@ -1,5 +1,6 @@
 /**
  * Status of a health check.
+ * @category Infrastructure
  */
 export enum HealthStatus {
   /**

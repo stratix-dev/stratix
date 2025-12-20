@@ -5,6 +5,7 @@ import type { Query, QueryBus, QueryHandler } from '@stratix/core';
  *
  * Provides a simple, synchronous query bus for handling queries.
  * Each query type can have only one handler.
+ * @category Messaging (CQRS)
  *
  * @example
  * ```typescript

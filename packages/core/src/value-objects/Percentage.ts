@@ -17,6 +17,8 @@ import { DomainError } from '../errors/DomainError.js';
  *   console.log(pct.format()); // "25%"
  * }
  * ```
+ *
+ * @category Value Objects
  */
 export class Percentage extends ValueObject {
   private constructor(readonly value: number) {

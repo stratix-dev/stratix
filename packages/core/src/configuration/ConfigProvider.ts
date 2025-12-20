@@ -28,6 +28,7 @@ export interface ConfigChange {
  *
  * Defines the contract for retrieving application configuration
  * from various sources with type safety and validation.
+ * @category Configuration
  *
  * @example
  * ```typescript

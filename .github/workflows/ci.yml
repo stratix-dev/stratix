@@ -52,10 +52,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm -r --filter '!website' --sort --workspace-concurrency=1 build
+        run: pnpm -r --sort --workspace-concurrency=1 build
 
       - name: Type check all packages
-        run: pnpm -r --filter '!website' typecheck
+        run: pnpm -r typecheck
 
   test:
     name: Test (Node ${{ matrix.node-version }} on ${{ matrix.os }})
@@ -84,7 +84,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm -r --filter '!website' --sort --workspace-concurrency=1 build
+        run: pnpm -r --sort --workspace-concurrency=1 build
 
       - name: Run tests
         run: pnpm test
@@ -120,17 +120,49 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build all packages
-        run: pnpm -r --filter '!website' --sort --workspace-concurrency=1 build
+        run: pnpm -r --sort --workspace-concurrency=1 build
 
       - name: Check build artifacts
         run: |
           echo "Checking build artifacts..."
-          for pkg in packages/*/dist; do
-            if [ -d "$pkg" ]; then
-              echo "✓ $pkg exists"
+          # Check core packages
+          for pkg in packages/core packages/runtime packages/testing; do
+            if [ -d "$pkg/dist" ]; then
+              echo "✓ $pkg/dist exists"
             else
-              echo "✗ $pkg missing"
+              echo "✗ $pkg/dist missing"
               exit 1
+            fi
+          done
+
+          # Check AI providers
+          for pkg in packages/ai/providers/*; do
+            if [ -d "$pkg/dist" ]; then
+              echo "✓ $pkg/dist exists"
+            else
+              echo "✗ $pkg/dist missing"
+              exit 1
+            fi
+          done
+
+          # Check provider packages (handle both consolidated packages and categories)
+          for category in packages/providers/*; do
+            if [ -d "$category" ]; then
+              # Check if this is a package (has package.json and dist) or a category
+              if [ -f "$category/package.json" ] && [ -d "$category/dist" ]; then
+                # This is a consolidated package
+                echo "✓ $category/dist exists"
+              else
+                # This is a category, check packages inside
+                for pkg in "$category"/*; do
+                  if [ -d "$pkg/dist" ]; then
+                    echo "✓ $pkg/dist exists"
+                  else
+                    echo "✗ $pkg/dist missing"
+                    exit 1
+                  fi
+                done
+              fi
             fi
           done
         continue-on-error: false
@@ -139,5 +171,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: packages/*/dist
+          path: |
+            packages/core/dist
+            packages/runtime/dist
+            packages/testing/dist
+            packages/ai/providers/*/dist
+            packages/providers/*/*/dist
           retention-days: 7

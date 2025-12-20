@@ -9,6 +9,7 @@ import type { Entity, Repository } from '@stratix/core';
  * Useful for development, testing, and prototyping.
  *
  * @template TEntity - The entity type this repository manages
+ * @category Infrastructure
  *
  * @example
  * ```typescript

@@ -108,21 +108,6 @@ try {
   console.error(`\n✗ Failed to update README.md:`, error.message);
 }
 
-// Update versions in CLI templates
-try {
-  const templatesPath = resolve(process.cwd(), 'packages/cli/src/scaffolding/templates.ts');
-  let templatesContent = readFileSync(templatesPath, 'utf8');
-
-  // Update all Stratix package versions in templates
-  const versionRegex = /@stratix\/([\w-]+)": "\^[\d.]+"/g;
-  templatesContent = templatesContent.replace(versionRegex, `@stratix/$1": "^${NEW_VERSION}"`);
-
-  writeFileSync(templatesPath, templatesContent, 'utf8');
-  console.log(`✓ Updated versions in CLI templates to ^${NEW_VERSION}`);
-} catch (error) {
-  console.error(`✗ Failed to update CLI templates:`, error.message);
-}
-
 console.log(`\nSummary:`);
 console.log(`  Updated: ${updated} packages`);
 console.log(`  Skipped: ${skipped} packages`);

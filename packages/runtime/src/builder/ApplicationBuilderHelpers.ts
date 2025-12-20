@@ -3,8 +3,8 @@ import { InMemoryCommandBus } from '../messaging/InMemoryCommandBus.js';
 import { InMemoryQueryBus } from '../messaging/InMemoryQueryBus.js';
 import { InMemoryEventBus } from '../messaging/InMemoryEventBus.js';
 import { ConsoleLogger } from '../infrastructure/ConsoleLogger.js';
-import type { Container } from '@stratix/core';
-import { ServiceLifetime } from '@stratix/core';
+import type { AwilixContainer } from '../di/awilix.js';
+import { asClass, asValue } from '../di/awilix.js';
 
 /**
  * Helper functions for creating ApplicationBuilder instances with sensible defaults.
@@ -14,7 +14,10 @@ import { ServiceLifetime } from '@stratix/core';
  *
  * @example
  * ```typescript
- * // Quick setup for development
+ * import { createContainer } from '@stratix/runtime';
+ * import { ApplicationBuilderHelpers } from '@stratix/runtime';
+ *
+ * const container = createContainer();
  * const app = await ApplicationBuilderHelpers.createWithDefaults(container)
  *   .usePlugin(new PostgresPlugin())
  *   .build();
@@ -30,42 +33,29 @@ export class ApplicationBuilderHelpers {
      * - InMemoryEventBus
      * - ConsoleLogger
      *
-     * @param container - The DI container to use
+     * @param container - The Awilix DI container to use
      * @returns ApplicationBuilder with defaults configured
      *
      * @example
      * ```typescript
-     * import { AwilixContainer } from '@stratix/di-awilix';
+     * import { createContainer, ApplicationBuilderHelpers } from '@stratix/runtime';
      *
-     * const container = new AwilixContainer();
+     * const container = createContainer();
      * const app = await ApplicationBuilderHelpers.createWithDefaults(container)
      *   .usePlugin(new MyPlugin())
      *   .build();
      * ```
      */
-    static createWithDefaults(container: Container): ApplicationBuilder {
+    static createWithDefaults(container: AwilixContainer): ApplicationBuilder {
         const logger = new ConsoleLogger();
 
-        // Register default messaging infrastructure
-        container.register(
-            'commandBus',
-            () => new InMemoryCommandBus(),
-            { lifetime: ServiceLifetime.SINGLETON }
-        );
-
-        container.register(
-            'queryBus',
-            () => new InMemoryQueryBus(),
-            { lifetime: ServiceLifetime.SINGLETON }
-        );
-
-        container.register(
-            'eventBus',
-            () => new InMemoryEventBus(),
-            { lifetime: ServiceLifetime.SINGLETON }
-        );
-
-        container.register('logger', () => logger, { lifetime: ServiceLifetime.SINGLETON });
+        // Register default messaging infrastructure using Awilix
+        container.register({
+            commandBus: asClass(InMemoryCommandBus).singleton(),
+            queryBus: asClass(InMemoryQueryBus).singleton(),
+            eventBus: asClass(InMemoryEventBus).singleton(),
+            logger: asValue(logger)
+        });
 
         return ApplicationBuilder.create()
             .useContainer(container)
@@ -79,16 +69,18 @@ export class ApplicationBuilderHelpers {
      * - Reduced log level
      * - In-memory implementations for all infrastructure
      *
-     * @param container - The DI container to use
+     * @param container - The Awilix DI container to use
      * @returns ApplicationBuilder configured for testing
      *
      * @example
      * ```typescript
+     * import { createContainer, ApplicationBuilderHelpers } from '@stratix/runtime';
+     *
      * describe('My Integration Tests', () => {
      *   let app: Application;
      *
      *   beforeEach(async () => {
-     *     const container = new AwilixContainer();
+     *     const container = createContainer();
      *     app = await ApplicationBuilderHelpers.createForTesting(container)
      *       .useContext(new MyModule())
      *       .build();
@@ -101,30 +93,17 @@ export class ApplicationBuilderHelpers {
      * });
      * ```
      */
-    static createForTesting(container: Container): ApplicationBuilder {
+    static createForTesting(container: AwilixContainer): ApplicationBuilder {
         // For testing, we want minimal logging
         const logger = new ConsoleLogger();
 
-        // Register in-memory implementations
-        container.register(
-            'commandBus',
-            () => new InMemoryCommandBus(),
-            { lifetime: ServiceLifetime.SINGLETON }
-        );
-
-        container.register(
-            'queryBus',
-            () => new InMemoryQueryBus(),
-            { lifetime: ServiceLifetime.SINGLETON }
-        );
-
-        container.register(
-            'eventBus',
-            () => new InMemoryEventBus(),
-            { lifetime: ServiceLifetime.SINGLETON }
-        );
-
-        container.register('logger', () => logger, { lifetime: ServiceLifetime.SINGLETON });
+        // Register in-memory implementations using Awilix
+        container.register({
+            commandBus: asClass(InMemoryCommandBus).singleton(),
+            queryBus: asClass(InMemoryQueryBus).singleton(),
+            eventBus: asClass(InMemoryEventBus).singleton(),
+            logger: asValue(logger)
+        });
 
         return ApplicationBuilder.create()
             .useContainer(container)

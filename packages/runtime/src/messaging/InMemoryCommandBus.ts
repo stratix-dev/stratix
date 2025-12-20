@@ -5,6 +5,7 @@ import type { Command, CommandBus, CommandHandler } from '@stratix/core';
  *
  * Provides a simple, synchronous command bus for handling commands.
  * Each command type can have only one handler.
+ * @category Messaging (CQRS)
  *
  * @example
  * ```typescript

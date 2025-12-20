@@ -22,6 +22,8 @@ import { Event } from './Event.js';
  *   }
  * }
  * ```
+ *
+ * @category Messaging (CQRS)
  */
 export interface EventHandler<TEvent extends Event> {
   /**

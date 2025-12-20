@@ -1,45 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { ApplicationBuilderHelpers } from '../ApplicationBuilderHelpers.js';
-import type { Container } from '@stratix/core';
-
-// Mock container for testing
-class MockContainer implements Container {
-    private services = new Map<string, any>();
-
-    register(name: string, factory: (context: any) => any, _options?: any): void {
-        this.services.set(name, factory(this));
-    }
-
-    resolve(name: string): any {
-        return this.services.get(name);
-    }
-
-    has(name: string): boolean {
-        return this.services.has(name);
-    }
-
-    createScope(): Container {
-        return this;
-    }
-
-    dispose(): Promise<void> {
-        return Promise.resolve();
-    }
-
-    singleton<T>(_token: string, _value: T | (() => T)): void { }
-    scoped<T>(_token: string, _factory: () => T): void { }
-    transient<T>(_token: string, _factory: () => T): void { }
-    registerClass<T>(_classType: new (...args: unknown[]) => T, _options?: any): void { }
-    registerAll(_services: Record<string, unknown>): void { }
-    tryResolve<T>(_token: string): T | undefined {
-        return undefined;
-    }
-}
+import { createContainer } from '../../di/awilix.js';
 
 describe('ApplicationBuilderHelpers', () => {
     describe('createWithDefaults', () => {
         it('should create ApplicationBuilder with container and logger', () => {
-            const container = new MockContainer();
+            const container = createContainer();
             const builder = ApplicationBuilderHelpers.createWithDefaults(container);
 
             expect(builder).toBeDefined();
@@ -48,7 +14,7 @@ describe('ApplicationBuilderHelpers', () => {
         });
 
         it('should register commandBus in container', () => {
-            const container = new MockContainer();
+            const container = createContainer();
             ApplicationBuilderHelpers.createWithDefaults(container);
 
             const commandBus = container.resolve('commandBus');
@@ -56,7 +22,7 @@ describe('ApplicationBuilderHelpers', () => {
         });
 
         it('should register queryBus in container', () => {
-            const container = new MockContainer();
+            const container = createContainer();
             ApplicationBuilderHelpers.createWithDefaults(container);
 
             const queryBus = container.resolve('queryBus');
@@ -64,7 +30,7 @@ describe('ApplicationBuilderHelpers', () => {
         });
 
         it('should register eventBus in container', () => {
-            const container = new MockContainer();
+            const container = createContainer();
             ApplicationBuilderHelpers.createWithDefaults(container);
 
             const eventBus = container.resolve('eventBus');
@@ -72,7 +38,7 @@ describe('ApplicationBuilderHelpers', () => {
         });
 
         it('should register logger in container', () => {
-            const container = new MockContainer();
+            const container = createContainer();
             ApplicationBuilderHelpers.createWithDefaults(container);
 
             const logger = container.resolve('logger');
@@ -80,7 +46,7 @@ describe('ApplicationBuilderHelpers', () => {
         });
 
         it('should return builder that can build application', async () => {
-            const container = new MockContainer();
+            const container = createContainer();
             const builder = ApplicationBuilderHelpers.createWithDefaults(container);
 
             const app = await builder.build();
@@ -88,7 +54,7 @@ describe('ApplicationBuilderHelpers', () => {
         });
 
         it('should allow chaining with plugins', () => {
-            const container = new MockContainer();
+            const container = createContainer();
             const builder = ApplicationBuilderHelpers.createWithDefaults(container);
 
             // Should be able to chain
@@ -99,7 +65,7 @@ describe('ApplicationBuilderHelpers', () => {
 
     describe('createForTesting', () => {
         it('should create ApplicationBuilder with container and logger', () => {
-            const container = new MockContainer();
+            const container = createContainer();
             const builder = ApplicationBuilderHelpers.createForTesting(container);
 
             expect(builder).toBeDefined();
@@ -108,7 +74,7 @@ describe('ApplicationBuilderHelpers', () => {
         });
 
         it('should register commandBus in container', () => {
-            const container = new MockContainer();
+            const container = createContainer();
             ApplicationBuilderHelpers.createForTesting(container);
 
             const commandBus = container.resolve('commandBus');
@@ -116,7 +82,7 @@ describe('ApplicationBuilderHelpers', () => {
         });
 
         it('should register queryBus in container', () => {
-            const container = new MockContainer();
+            const container = createContainer();
             ApplicationBuilderHelpers.createForTesting(container);
 
             const queryBus = container.resolve('queryBus');
@@ -124,7 +90,7 @@ describe('ApplicationBuilderHelpers', () => {
         });
 
         it('should register eventBus in container', () => {
-            const container = new MockContainer();
+            const container = createContainer();
             ApplicationBuilderHelpers.createForTesting(container);
 
             const eventBus = container.resolve('eventBus');
@@ -132,7 +98,7 @@ describe('ApplicationBuilderHelpers', () => {
         });
 
         it('should register logger in container', () => {
-            const container = new MockContainer();
+            const container = createContainer();
             ApplicationBuilderHelpers.createForTesting(container);
 
             const logger = container.resolve('logger');
@@ -140,7 +106,7 @@ describe('ApplicationBuilderHelpers', () => {
         });
 
         it('should return builder that can build application', async () => {
-            const container = new MockContainer();
+            const container = createContainer();
             const builder = ApplicationBuilderHelpers.createForTesting(container);
 
             const app = await builder.build();
@@ -148,7 +114,7 @@ describe('ApplicationBuilderHelpers', () => {
         });
 
         it('should be suitable for test setup', async () => {
-            const container = new MockContainer();
+            const container = createContainer();
             // Simulate test setup
             const builder = ApplicationBuilderHelpers.createForTesting(container);
             const app = await builder.build();
@@ -163,8 +129,8 @@ describe('ApplicationBuilderHelpers', () => {
 
     describe('comparison', () => {
         it('should create different logger instances', () => {
-            const container1 = new MockContainer();
-            const container2 = new MockContainer();
+            const container1 = createContainer();
+            const container2 = createContainer();
 
             ApplicationBuilderHelpers.createWithDefaults(container1);
             ApplicationBuilderHelpers.createForTesting(container2);

@@ -1,11 +1,11 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
 
-# @stratix/di-awilix
+# @stratix/di
 
 **🔧 Provider** | Awilix dependency injection container for Stratix
 
-[![npm version](https://img.shields.io/npm/v/@stratix/di-awilix.svg)](https://www.npmjs.com/package/@stratix/di-awilix)
+[![npm version](https://img.shields.io/npm/v/@stratix/di.svg)](https://www.npmjs.com/package/@stratix/di)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 [Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix/docs/getting-started/quick-start)
@@ -19,7 +19,7 @@
 
 ## About This Package
 
-`@stratix/di-awilix` is a dependency injection plugin for the Stratix framework.
+`@stratix/di` is a dependency injection plugin for the Stratix framework.
 
 Awilix dependency injection container for Stratix
 
@@ -46,7 +46,7 @@ stratix add di
 
 **Manual installation:**
 ```bash
-npm install @stratix/di-awilix
+npm install @stratix/di
 ```
 
 ## Related Packages

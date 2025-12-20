@@ -24,6 +24,8 @@ import { CountryRegistry, type CountryInfo } from './CountryRegistry.js';
  *   console.log(finalPrice.value.format()); // "$289.97"
  * }
  * ```
+ *
+ * @category Value Objects
  */
 export class Money extends ValueObject {
   private constructor(

@@ -9,6 +9,8 @@ import { LogLevel } from './LogLevel.js';
  * logger.error('Failed to process order', { orderId: '456', error });
  * logger.debug('Processing request', { method: 'POST', path: '/api/users' });
  * ```
+ *
+ * @category Infrastructure
  */
 export interface Logger {
   /**

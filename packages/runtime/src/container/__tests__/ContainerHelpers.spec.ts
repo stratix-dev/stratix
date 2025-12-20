@@ -1,49 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ContainerHelpers, CommandRegistration, QueryRegistration } from '../ContainerHelpers.js';
-import type { Container, Command, Query, CommandHandler, QueryHandler } from '@stratix/core';
-
-// Mock container
-class MockContainer implements Container {
-    private services = new Map<string, { factory: (context: any) => any; options: any }>();
-
-    register(name: string, factory: (context: any) => any, options?: any): void {
-        this.services.set(name, { factory, options });
-    }
-
-    resolve<T>(name: string): T {
-        const service = this.services.get(name);
-        if (!service) {
-            throw new Error(`Service ${name} not found`);
-        }
-        return service.factory(this) as T;
-    }
-
-    has(name: string): boolean {
-        return this.services.has(name);
-    }
-
-    createScope(): Container {
-        return this;
-    }
-
-    dispose(): Promise<void> {
-        return Promise.resolve();
-    }
-
-    singleton<T>(_token: string, _value: T | (() => T)): void { }
-    scoped<T>(_token: string, _factory: () => T): void { }
-    transient<T>(_token: string, _factory: () => T): void { }
-    registerClass<T>(_classType: new (...args: unknown[]) => T, _options?: any): void { }
-    registerAll(_services: Record<string, unknown>): void { }
-    tryResolve<T>(_token: string): T | undefined {
-        return undefined;
-    }
-
-    // Helper for tests
-    getRegistration(name: string) {
-        return this.services.get(name);
-    }
-}
+import type { Command, Query, CommandHandler, QueryHandler } from '@stratix/core';
+import { createContainer, type AwilixContainer } from '../../di/awilix.js';
 
 // Test fixtures
 class TestCommand implements Command { }
@@ -69,10 +27,10 @@ const anotherQueryHandler: QueryHandler<AnotherQuery, number> = {
 };
 
 describe('ContainerHelpers', () => {
-    let container: MockContainer;
+    let container: AwilixContainer;
 
     beforeEach(() => {
-        container = new MockContainer();
+        container = createContainer();
     });
 
     describe('registerDefaults', () => {
@@ -85,9 +43,9 @@ describe('ContainerHelpers', () => {
                 });
             }).not.toThrow();
 
-            expect(container.has('commandBus')).toBe(true);
-            expect(container.has('queryBus')).toBe(true);
-            expect(container.has('eventBus')).toBe(true);
+            expect(container.hasRegistration('commandBus')).toBe(true);
+            expect(container.hasRegistration('queryBus')).toBe(true);
+            expect(container.hasRegistration('eventBus')).toBe(true);
         });
 
         it('should register custom logger', () => {
@@ -98,7 +56,7 @@ describe('ContainerHelpers', () => {
                 logger: customLogger,
             });
 
-            expect(container.has('logger')).toBe(true);
+            expect(container.hasRegistration('logger')).toBe(true);
             const logger = container.resolve('logger');
             expect(logger).toBe(customLogger);
         });
@@ -108,9 +66,9 @@ describe('ContainerHelpers', () => {
                 useInMemoryBuses: false,
             });
 
-            expect(container.has('commandBus')).toBe(false);
-            expect(container.has('queryBus')).toBe(false);
-            expect(container.has('eventBus')).toBe(false);
+            expect(container.hasRegistration('commandBus')).toBe(false);
+            expect(container.hasRegistration('queryBus')).toBe(false);
+            expect(container.hasRegistration('eventBus')).toBe(false);
         });
     });
 
@@ -129,7 +87,7 @@ describe('ContainerHelpers', () => {
 
             ContainerHelpers.registerCommands(container, mockBus, registrations);
 
-            expect(container.has('commandHandler:TestCommand')).toBe(true);
+            expect(container.hasRegistration('commandHandler:TestCommand')).toBe(true);
             expect(mockBus.register).toHaveBeenCalledWith(
                 TestCommand,
                 expect.any(Object)
@@ -154,28 +112,31 @@ describe('ContainerHelpers', () => {
 
             ContainerHelpers.registerCommands(container, mockBus, registrations);
 
-            expect(container.has('commandHandler:TestCommand')).toBe(true);
-            expect(container.has('commandHandler:AnotherCommand')).toBe(true);
+            expect(container.hasRegistration('commandHandler:TestCommand')).toBe(true);
+            expect(container.hasRegistration('commandHandler:AnotherCommand')).toBe(true);
             expect(mockBus.register).toHaveBeenCalledTimes(2);
         });
 
-        it('should support handler factory functions', () => {
+        it('should support handler classes', () => {
             const mockBus = {
                 register: vi.fn(),
             };
 
-            const handlerFactory = () => testCommandHandler;
+            // Create a handler class for auto-wiring
+            class TestCommandHandler implements CommandHandler<TestCommand, void> {
+                async handle(): Promise<void> { }
+            }
 
             const registrations: CommandRegistration[] = [
                 {
                     commandType: TestCommand,
-                    handler: handlerFactory,
+                    handler: TestCommandHandler,
                 },
             ];
 
             ContainerHelpers.registerCommands(container, mockBus, registrations);
 
-            expect(container.has('commandHandler:TestCommand')).toBe(true);
+            expect(container.hasRegistration('commandHandler:TestCommand')).toBe(true);
         });
     });
 
@@ -194,7 +155,7 @@ describe('ContainerHelpers', () => {
 
             ContainerHelpers.registerQueries(container, mockBus, registrations);
 
-            expect(container.has('queryHandler:TestQuery')).toBe(true);
+            expect(container.hasRegistration('queryHandler:TestQuery')).toBe(true);
             expect(mockBus.register).toHaveBeenCalledWith(TestQuery, expect.any(Object));
         });
 
@@ -216,28 +177,33 @@ describe('ContainerHelpers', () => {
 
             ContainerHelpers.registerQueries(container, mockBus, registrations);
 
-            expect(container.has('queryHandler:TestQuery')).toBe(true);
-            expect(container.has('queryHandler:AnotherQuery')).toBe(true);
+            expect(container.hasRegistration('queryHandler:TestQuery')).toBe(true);
+            expect(container.hasRegistration('queryHandler:AnotherQuery')).toBe(true);
             expect(mockBus.register).toHaveBeenCalledTimes(2);
         });
 
-        it('should support handler factory functions', () => {
+        it('should support handler classes', () => {
             const mockBus = {
                 register: vi.fn(),
             };
 
-            const handlerFactory = () => testQueryHandler;
+            // Create a handler class for auto-wiring
+            class TestQueryHandler implements QueryHandler<TestQuery, string> {
+                async handle(): Promise<string> {
+                    return 'result';
+                }
+            }
 
             const registrations: QueryRegistration[] = [
                 {
                     queryType: TestQuery,
-                    handler: handlerFactory,
+                    handler: TestQueryHandler,
                 },
             ];
 
             ContainerHelpers.registerQueries(container, mockBus, registrations);
 
-            expect(container.has('queryHandler:TestQuery')).toBe(true);
+            expect(container.hasRegistration('queryHandler:TestQuery')).toBe(true);
         });
     });
 
@@ -247,20 +213,26 @@ describe('ContainerHelpers', () => {
 
             ContainerHelpers.registerRepository(container, 'productRepository', repo);
 
-            expect(container.has('productRepository')).toBe(true);
-            const registration = container.getRegistration('productRepository');
-            expect(registration?.options.lifetime).toBe('SINGLETON');
+            expect(container.hasRegistration('productRepository')).toBe(true);
+
+            // Verify singleton behavior - same instance
+            const resolved1 = container.resolve('productRepository');
+            const resolved2 = container.resolve('productRepository');
+            expect(resolved1).toBe(resolved2);
         });
 
         it('should register repository as transient when specified', () => {
-            const repo = { findById: vi.fn() };
+            // Use a factory so we can verify different instances
+            const repoFactory = () => ({ findById: vi.fn() });
 
-            ContainerHelpers.registerRepository(container, 'productRepository', repo, {
+            ContainerHelpers.registerRepository(container, 'productRepository', repoFactory, {
                 singleton: false,
             });
 
-            const registration = container.getRegistration('productRepository');
-            expect(registration?.options.lifetime).toBe('TRANSIENT');
+            // Verify transient behavior - different instances
+            const resolved1 = container.resolve<any>('productRepository');
+            const resolved2 = container.resolve<any>('productRepository');
+            expect(resolved1).not.toBe(resolved2);
         });
 
         it('should support repository factory functions', () => {
@@ -272,7 +244,7 @@ describe('ContainerHelpers', () => {
                 repoFactory
             );
 
-            expect(container.has('productRepository')).toBe(true);
+            expect(container.hasRegistration('productRepository')).toBe(true);
             const repo = container.resolve<{ findById: any }>('productRepository');
             expect(repo).toBeDefined();
             expect(repo.findById).toBeDefined();
@@ -289,26 +261,29 @@ describe('ContainerHelpers', () => {
 
             ContainerHelpers.registerRepositories(container, repos);
 
-            expect(container.has('productRepository')).toBe(true);
-            expect(container.has('userRepository')).toBe(true);
-            expect(container.has('orderRepository')).toBe(true);
+            expect(container.hasRegistration('productRepository')).toBe(true);
+            expect(container.hasRegistration('userRepository')).toBe(true);
+            expect(container.hasRegistration('orderRepository')).toBe(true);
         });
 
         it('should apply default options to all repositories', () => {
             const repos = {
-                productRepository: { findById: vi.fn() },
-                userRepository: { findById: vi.fn() },
+                productRepository: () => ({ findById: vi.fn() }),
+                userRepository: () => ({ findById: vi.fn() }),
             };
 
             ContainerHelpers.registerRepositories(container, repos, {
                 singleton: false,
             });
 
-            const productReg = container.getRegistration('productRepository');
-            const userReg = container.getRegistration('userRepository');
+            // Verify transient behavior - different instances
+            const productRepo1 = container.resolve('productRepository');
+            const productRepo2 = container.resolve('productRepository');
+            expect(productRepo1).not.toBe(productRepo2);
 
-            expect(productReg?.options.lifetime).toBe('TRANSIENT');
-            expect(userReg?.options.lifetime).toBe('TRANSIENT');
+            const userRepo1 = container.resolve('userRepository');
+            const userRepo2 = container.resolve('userRepository');
+            expect(userRepo1).not.toBe(userRepo2);
         });
 
         it('should support factory functions in bulk registration', () => {
@@ -356,11 +331,11 @@ describe('ContainerHelpers', () => {
             ]);
 
             // Verify everything is registered
-            expect(container.has('logger')).toBe(true);
-            expect(container.has('productRepository')).toBe(true);
-            expect(container.has('userRepository')).toBe(true);
-            expect(container.has('commandHandler:TestCommand')).toBe(true);
-            expect(container.has('queryHandler:TestQuery')).toBe(true);
+            expect(container.hasRegistration('logger')).toBe(true);
+            expect(container.hasRegistration('productRepository')).toBe(true);
+            expect(container.hasRegistration('userRepository')).toBe(true);
+            expect(container.hasRegistration('commandHandler:TestCommand')).toBe(true);
+            expect(container.hasRegistration('queryHandler:TestQuery')).toBe(true);
         });
     });
 });

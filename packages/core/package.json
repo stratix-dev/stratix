@@ -1,7 +1,7 @@
 {
   "name": "@stratix/core",
-  "version": "0.7.6",
-  "description": "Stratix core - DDD primitives, abstractions, and interfaces",
+  "version": "0.8.0",
+  "description": "Stratix core - DDD primitives, pure abstractions, and interfaces",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -9,6 +9,14 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./ai-agents": {
+      "import": "./dist/ai-agents/index.js",
+      "types": "./dist/ai-agents/index.d.ts"
+    },
+    "./result": {
+      "import": "./dist/result/index.js",
+      "types": "./dist/result/index.d.ts"
     }
   },
   "scripts": {
