@@ -85,10 +85,8 @@ jobs:
           verify_package "packages/ai/providers/anthropic"
           verify_package "packages/ai/providers/openai"
 
-          # Verify configuration providers
-          verify_package "packages/providers/configuration/composite"
-          verify_package "packages/providers/configuration/env"
-          verify_package "packages/providers/configuration/file"
+          # Verify configuration provider
+          verify_package "packages/providers/config"
 
           # Verify DI providers
           verify_package "packages/providers/di/awilix"
@@ -184,10 +182,8 @@ jobs:
           # Validation providers
           publish_package "packages/providers/validation/zod" || true
 
-          # Configuration providers
-          publish_package "packages/providers/configuration/composite" || true
-          publish_package "packages/providers/configuration/env" || true
-          publish_package "packages/providers/configuration/file" || true
+          # Configuration provider
+          publish_package "packages/providers/config" || true
 
           # 4. Testing utilities (depend on core, runtime)
           publish_package "packages/testing" || true
@@ -258,10 +254,8 @@ jobs:
           add_to_summary "packages/providers/validation/zod"
           
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Configuration Providers" >> $GITHUB_STEP_SUMMARY
-          add_to_summary "packages/providers/configuration/composite"
-          add_to_summary "packages/providers/configuration/env"
-          add_to_summary "packages/providers/configuration/file"
+          echo "### Configuration Provider" >> $GITHUB_STEP_SUMMARY
+          add_to_summary "packages/providers/config"
 
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Testing" >> $GITHUB_STEP_SUMMARY
