@@ -3,115 +3,29 @@
 
 # Stratix
 
-**Build scalable, maintainable applications with Domain-Driven Design, hexagonal architecture, and CQRS.**
+**AI-First TypeScript Framework for Enterprise Applications**
 
-Production-ready from day one with type safety, dependency injection, AI agents as first-class citizens, and enterprise patterns.
-
+[![npm version](https://img.shields.io/npm/v/@stratix/stratix.svg)](https://www.npmjs.com/package/@stratix/stratix)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3+-blue.svg)](https://www.typescriptlang.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
-[![Version](https://img.shields.io/badge/version-0.8.0-orange.svg)](https://github.com/stratix-dev/stratix)
 
-[Documentation](https://stratix-dev.github.io/stratix/) | [Getting Started](https://stratix-dev.github.io/stratix)
+[Documentation](https://stratix-dev.github.io/docs/)
 
 </div>
 
-> **Pre-release Notice**: Stratix is in active development. The API may change until version 1.0.0.
+## ⚠️ Pre-Release Warning
 
-## Features
+**This is a pre-release version of Stratix.**
 
-- **Plugin Architecture** - Extensible plugin system with lifecycle management and health checks
-- **Context System** - Portable domain contexts that work in monoliths or microservices
-- **Domain Modeling** - Entity, AggregateRoot, ValueObject, and Repository patterns built-in
-- **Result Pattern** - Explicit error handling without exceptions
-- **CQRS** - Command and Query Responsibility Segregation with dedicated buses
-- **AI Agents** - AI agents as first-class domain entities with production patterns
-- **Type Safety** - Full TypeScript strict mode with phantom types
-- **Production Extensions** - HTTP, validation, authentication, error handling
-- **Code Generation** - CLI for scaffolding projects, contexts, entities, commands, and queries
+This package is under active development and should be considered unstable. The API may change significantly between versions without prior notice. Features may be added, modified, or removed entirely. This package may also be deprecated or discontinued in future releases.
 
-## Quick Start
-
-```bash
-# 1. Create project with HTTP
-npm install -g @stratix/cli
-stratix new my-app --with http
-
-# 2. Generate context with HTTP routes
-cd my-app
-stratix generate context Product --props "name:string,price:number,stock:number" --with-http
-
-# 3. Run
-npm run dev
-```
-
-**What you get:**
-
-- Complete TypeScript project with strict mode
-- ESLint and Prettier configured
-- Domain, Application, and Infrastructure layers
-- CQRS commands and queries with handlers
-- Repository pattern with in-memory implementation
-- **HTTP routes (POST, GET, GET/:id)** - automatically generated
-- Type-safe entity IDs and Result pattern
-- Production-ready project structure
-
-**All in 3 commands and ~2 minutes!**
-
-## Available Packages
-
-### Core Packages
-- [**@stratix/core**](https://www.npmjs.com/package/@stratix/core) - Domain primitives, abstractions, and default implementations (zero dependencies)
-- [**@stratix/runtime**](https://www.npmjs.com/package/@stratix/runtime) - Application builder, plugin registry, lifecycle management, and in-memory implementations
-
-#### HTTP Plugins
-- [**@stratix/http-fastify**](https://www.npmjs.com/package/@stratix/http-fastify) - Fastify HTTP server integration
-- [**@stratix/http-client**](https://www.npmjs.com/package/@stratix/http-client) - Type-safe HTTP client with Axios, retries, and circuit breaker
-
-### Providers 🔧
-*Implement core interfaces (AI, DI, Validation)*
-
-#### AI Providers
-- [**@stratix/ai-openai**](https://www.npmjs.com/package/@stratix/ai-openai) - OpenAI LLM provider for AI agents
-- [**@stratix/ai-anthropic**](https://www.npmjs.com/package/@stratix/ai-anthropic) - Anthropic Claude provider for AI agents
-
-#### Dependency Injection Providers
-- [**@stratix/di**](https://www.npmjs.com/package/@stratix/di) - Awilix dependency injection container
-
-#### Validation Providers
-- [**@stratix/validation**](https://www.npmjs.com/package/@stratix/validation) - Zod-based schema validation
-
-### Libraries 📚
-*Pure utility functions and classes (zero external dependencies)*
-
-- [**@stratix/mappers**](https://www.npmjs.com/package/@stratix/mappers) - Entity-to-DTO mapping utilities
-
-### Development Tools
-- [**@stratix/cli**](https://www.npmjs.com/package/@stratix/cli) - Code generation and project scaffolding
-- [**@stratix/testing**](https://www.npmjs.com/package/@stratix/testing) - Testing utilities and mocks
-
-## Documentation
-
-📚 **[API Documentation](https://stratix-dev.github.io/stratix/)** - Complete API reference generated with TypeDoc
-
-📖 **[DOCUMENTATION.md](./DOCUMENTATION.md)** - Contributing to documentation guide
-
-The documentation is automatically generated from JSDoc comments in the source code and published to GitHub Pages.
-
-### Generating Documentation Locally
-
-```bash
-# Generate documentation
-pnpm docs
-
-# Open in browser
-open docs/index.html
-```
-
-## Contributing
-
-Contributions are welcome!
+**Stable versions will be available starting from version 1.0.0.** Not recommended for production use. Use at your own risk.
 
 ## License
 
-MIT License - see [LICENSE](./LICENSE) file for details.
+MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) for details.
+
+<div align="center">
+
+**[Stratix Framework](https://stratix-dev.github.io/stratix/)** - Build better software with proven patterns
+
+</div>

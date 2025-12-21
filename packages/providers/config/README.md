@@ -1,11 +1,11 @@
 <div align="center">
   <img src="https://raw.githubusercontent.com/stratix-dev/stratix/main/public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
 
-# @stratix/ai-anthropic
+# @stratix/config
 
-**Anthropic Claude LLM provider for Stratix AI agents**
+**Config utilities for stratix projects**
 
-[![npm version](https://img.shields.io/npm/v/@stratix/ai-anthropic.svg)](https://www.npmjs.com/package/@stratix/ai-anthropic)
+[![npm version](https://img.shields.io/npm/v/@stratix/config.svg)](https://www.npmjs.com/package/@stratix/config)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 [Documentation](https://stratix-dev.github.io/docs/)
@@ -17,7 +17,7 @@
 
 ## ⚠️ Pre-Release Warning
 
-**This is a pre-release version of @stratix/ai-anthropic.**
+**This is a pre-release version of @stratix/config.**
 
 This package is under active development and should be considered unstable. The API may change significantly between versions without prior notice. Features may be added, modified, or removed entirely. This package may also be deprecated or discontinued in future releases.
 
@@ -25,8 +25,7 @@ This package is under active development and should be considered unstable. The 
 
 ## About This Package
 
-`@stratix/ai-anthropic` This provider enables Stratix AI agents to use Anthropic's Claude models (Opus, Sonnet, Haiku) for chat completion, streaming, and tool calling.
-
+`@stratix/config` Config utilities for stratix projects.
 
 ## About Stratix
 
@@ -43,7 +42,7 @@ Stratix is an AI-first TypeScript framework combining Domain-Driven Design, Hexa
 
 **Installation:**
 ```bash
-npm install @stratix/ai-anthropic
+npm install @stratix/config
 ```
 
 ## License
