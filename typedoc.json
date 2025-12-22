@@ -6,7 +6,10 @@
     "packages/runtime/src/index.ts",
     "packages/testing/src/index.ts",
     "packages/ai/providers/anthropic/src/index.ts",
-    "packages/ai/providers/openai/src/index.ts"
+    "packages/ai/providers/openai/src/index.ts",
+    "packages/providers/config/src/index.ts",
+    "packages/providers/di/awilix/src/index.ts",
+    "packages/providers/validation/zod/src/index.ts"
   ],
   "entryPointStrategy": "expand",
   "out": "api",
