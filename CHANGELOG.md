@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added TypeDoc configuration (`typedoc.json`)
   - Created `tsconfig.docs.json` for documentation generation
   - Added `DOCUMENTATION.md` with contribution guidelines and standards (300+ lines)
-  - New documentation scripts: `pnpm docs`, `pnpm docs:watch`, `pnpm docs:json`, `pnpm docs:analyze`
+  - New documentation scripts: `pnpm api`, `pnpm api:watch`, `pnpm api:json`, `pnpm api:analyze`
   - Created `scripts/analyze-docs.js` for automated coverage analysis
   - GitHub Actions workflow for automatic documentation deployment to GitHub Pages
   - Added `@category` tags to **81 files** with public APIs for organized navigation:

@@ -58,25 +58,25 @@ else
 fi
 
 # 5. Verificar que existe el script de docs
-if grep -q '"docs"' package.json; then
-    echo -e "${GREEN}✅${NC} Script 'pnpm docs' configurado"
+if grep -q '"api": "typedoc"' package.json; then
+    echo -e "${GREEN}✅${NC} Script 'pnpm api' configurado"
 else
-    echo -e "${RED}❌${NC} Script 'pnpm docs' NO configurado"
+    echo -e "${RED}❌${NC} Script 'pnpm api' NO configurado"
     exit 1
 fi
 
 # 6. Generar documentación de prueba
 echo ""
 echo -e "${BLUE}📖 Generando documentación de prueba...${NC}"
-if pnpm docs > /dev/null 2>&1; then
+if pnpm api > /dev/null 2>&1; then
     echo -e "${GREEN}✅${NC} Documentación generada exitosamente"
     
     # Contar páginas generadas
-    PAGE_COUNT=$(find docs -name "*.html" 2>/dev/null | wc -l | tr -d ' ')
+    PAGE_COUNT=$(find api -name "*.html" 2>/dev/null | wc -l | tr -d ' ')
     echo -e "   ${GREEN}→${NC} ${PAGE_COUNT} páginas HTML generadas"
 else
     echo -e "${RED}❌${NC} Error al generar documentación"
-    echo "   Ejecuta 'pnpm docs' manualmente para ver el error"
+    echo "   Ejecuta 'pnpm api' manualmente para ver el error"
     exit 1
 fi
 

@@ -14,10 +14,10 @@
     "lint": "pnpm -r lint",
     "format": "prettier --write \"packages/**/src/**/*.ts\"",
     "clean": "pnpm -r clean && rm -rf node_modules",
-    "docs": "typedoc",
-    "docs:watch": "typedoc --watch",
-    "docs:json": "typedoc --json api/api.json",
-    "docs:analyze": "node scripts/analyze-docs.js"
+    "api": "typedoc",
+    "api:watch": "typedoc --watch",
+    "api:json": "typedoc --json api/api.json",
+    "api:analyze": "node scripts/analyze-docs.js"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -26,12 +26,17 @@
     "@vitest/coverage-v8": "^1.6.1",
     "eslint": "^8.0.0",
     "prettier": "^3.0.0",
-    "typedoc": "^0.25.0",
-    "typescript": "^5.3.0",
+    "typedoc": "^0.27.0",
+    "typescript": "^5.7.2",
     "vitest": "^1.0.0"
   },
   "engines": {
     "node": ">=18.0.0"
   },
-  "packageManager": "pnpm@9.15.0"
+  "packageManager": "pnpm@9.15.0",
+  "pnpm": {
+    "overrides": {
+      "typescript": "5.7.2"
+    }
+  }
 }

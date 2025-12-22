@@ -146,20 +146,27 @@ jobs:
           done
 
           # Check provider packages (handle both consolidated packages and categories)
-          for category in packages/providers/*; do
-            if [ -d "$category" ]; then
-              # Check if this is a package (has package.json and dist) or a category
-              if [ -f "$category/package.json" ] && [ -d "$category/dist" ]; then
-                # This is a consolidated package
-                echo "✓ $category/dist exists"
+          for item in packages/providers/*; do
+            if [ -d "$item" ]; then
+              # Check if this is a package (has package.json) or a category directory
+              if [ -f "$item/package.json" ]; then
+                # This is a consolidated package like packages/providers/config
+                if [ -d "$item/dist" ]; then
+                  echo "✓ $item/dist exists"
+                else
+                  echo "✗ $item/dist missing"
+                  exit 1
+                fi
               else
-                # This is a category, check packages inside
-                for pkg in "$category"/*; do
-                  if [ -d "$pkg/dist" ]; then
-                    echo "✓ $pkg/dist exists"
-                  else
-                    echo "✗ $pkg/dist missing"
-                    exit 1
+                # This is a category directory (di, validation), check packages inside
+                for pkg in "$item"/*; do
+                  if [ -d "$pkg" ] && [ -f "$pkg/package.json" ]; then
+                    if [ -d "$pkg/dist" ]; then
+                      echo "✓ $pkg/dist exists"
+                    else
+                      echo "✗ $pkg/dist missing"
+                      exit 1
+                    fi
                   fi
                 done
               fi
