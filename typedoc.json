@@ -9,7 +9,7 @@
     "packages/ai/providers/openai/src/index.ts"
   ],
   "entryPointStrategy": "expand",
-  "out": "docs",
+  "out": "api",
   "readme": "README.md",
   "tsconfig": "./tsconfig.docs.json",
   "excludePrivate": true,

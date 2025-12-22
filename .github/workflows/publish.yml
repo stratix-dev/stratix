@@ -145,7 +145,7 @@ jobs:
             echo "🚀 Publishing $pkg_name@$pkg_version..."
 
             # Publish to npm with error handling
-            if npm publish --access public 2>&1; then
+            if npm publish --access public --no-browser 2>&1; then
               echo "✅ Successfully published $pkg_name@$pkg_version"
               PUBLISHED_PACKAGES+=("$pkg_name@$pkg_version")
               cd "$original_dir"
