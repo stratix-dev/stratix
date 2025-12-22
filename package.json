@@ -14,10 +14,10 @@
     "lint": "pnpm -r lint",
     "format": "prettier --write \"packages/**/src/**/*.ts\"",
     "clean": "pnpm -r clean && rm -rf node_modules",
-    "docs": "typedoc",
-    "docs:watch": "typedoc --watch",
-    "docs:json": "typedoc --json api/api.json",
-    "docs:analyze": "node scripts/analyze-docs.js"
+    "api": "typedoc",
+    "api:watch": "typedoc --watch",
+    "api:json": "typedoc --json api/api.json",
+    "api:analyze": "node scripts/analyze-docs.js"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -26,7 +26,7 @@
     "@vitest/coverage-v8": "^1.6.1",
     "eslint": "^8.0.0",
     "prettier": "^3.0.0",
-    "typedoc": "^0.25.0",
+    "typedoc": "^0.27.0",
     "typescript": "^5.3.0",
     "vitest": "^1.0.0"
   },
