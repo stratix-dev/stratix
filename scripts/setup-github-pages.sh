@@ -72,7 +72,7 @@ if pnpm api > /dev/null 2>&1; then
     echo -e "${GREEN}✅${NC} Documentación generada exitosamente"
     
     # Contar páginas generadas
-    PAGE_COUNT=$(find docs -name "*.html" 2>/dev/null | wc -l | tr -d ' ')
+    PAGE_COUNT=$(find api -name "*.html" 2>/dev/null | wc -l | tr -d ' ')
     echo -e "   ${GREEN}→${NC} ${PAGE_COUNT} páginas HTML generadas"
 else
     echo -e "${RED}❌${NC} Error al generar documentación"

@@ -59,7 +59,7 @@ jobs:
         run: pnpm build
 
       - name: Generate API documentation
-        run: pnpm docs:api
+        run: pnpm api
 
       - name: Install dependencies (website)
         working-directory: docs/website
@@ -72,7 +72,7 @@ jobs:
       - name: Copy API docs to website build
         run: |
           mkdir -p docs/website/build/api
-          cp -r docs/api/* docs/website/build/api/
+          cp -r api/* docs/website/build/api/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
