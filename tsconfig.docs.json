@@ -14,8 +14,10 @@
   },
   "include": [
     "packages/*/src/**/*",
-    "packages/*/providers/*/src/**/*",
-    "packages/ai/providers/*/src/**/*"
+    "packages/ai/providers/*/src/**/*",
+    "packages/providers/config/src/**/*",
+    "packages/providers/di/*/src/**/*",
+    "packages/providers/validation/*/src/**/*"
   ],
   "exclude": [
     "**/__tests__/**",
