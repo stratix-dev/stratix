@@ -6,7 +6,7 @@
  * Base error class for all agent-related errors
  */
 export abstract class AgentError extends Error {
-    constructor(
+    protected constructor(
         message: string,
         public readonly code: string,
         public readonly metadata?: Record<string, unknown>

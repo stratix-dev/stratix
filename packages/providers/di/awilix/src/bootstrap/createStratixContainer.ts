@@ -35,7 +35,6 @@ export interface StratixContainerOptions {
  * This function is useful when you want to express intent that you're creating
  * a Stratix-specific container, but functionally it's identical to createContainer().
  *
- * @param options - Configuration options
  * @returns Configured Awilix container
  *
  * @example Basic usage
@@ -61,6 +60,7 @@ export interface StratixContainerOptions {
  * // Buses are pre-registered, ready to use
  * const commandBus = container.resolve('commandBus');
  * ```
+ * @param _options
  */
 export function createStratixContainer(
   _options: StratixContainerOptions = {}

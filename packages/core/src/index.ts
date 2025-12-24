@@ -13,10 +13,8 @@ export { DomainService } from './core/DomainService.js';
 export type { DomainServiceMethod, AsyncDomainServiceMethod } from './core/DomainService.js';
 
 // Result Pattern
-export type { Result } from './result/Result.js';
-export { Success, Failure, ResultUtils } from './result/Result.js';
-export { Results } from './result/helpers.js';
-export { AsyncResults } from './result/AsyncResults.js';
+export * from './result/index.js';
+export { ResultUtils } from './result/Result.js';
 
 // Validation
 export { Validators } from './validation/Validators.js';
@@ -32,19 +30,7 @@ export { Mapper } from './mapping/Mapper.js';
 export * from './security/SecretsProvider.js';
 
 // Configuration
-export type { ConfigProvider, ConfigChange } from './configuration/ConfigProvider.js';
-export type {
-  ConfigSchema,
-  ConfigProviderOptions,
-  ValidationResult,
-  ValidationError,
-} from './configuration/ConfigSchema.js';
-export {
-  ConfigError,
-  ConfigNotFoundError,
-  ConfigValidationError,
-  ConfigParseError,
-} from './configuration/ConfigError.js';
+export * from './configuration/index.js';
 
 // Value Objects
 export { Currency } from './value-objects/Currency.js';
@@ -119,39 +105,5 @@ export type {
 // AI AGENTS
 // ========================================
 
-// Re-export everything from ai-agents
+// Re-export everything from ai-agents module
 export * from './ai-agents/index.js';
-
-// Also export types from ai-agents/types.ts explicitly
-export type {
-  AgentId,
-  AgentVersion,
-  AgentCapability,
-  AgentMessage,
-  TokenUsage,
-  ToolCall,
-} from './ai-agents/types.js';
-
-// Export AgentCapabilities constant
-export { AgentCapabilities } from './ai-agents/types.js';
-
-// Export AI Agent primitives
-export { AIAgent } from './ai-agents/AIAgent.js';
-export { AgentContext } from './ai-agents/AgentContext.js';
-export { AgentResult } from './ai-agents/AgentResult.js';
-export { ExecutionTrace } from './ai-agents/ExecutionTrace.js';
-export type { StreamableAgent } from './ai-agents/StreamableAgent.js';
-export type { AgentMemory } from './ai-agents/AgentMemory.js';
-export type * as AgentEvents from './ai-agents/events.js';
-
-// AI Agent Errors
-export {
-  AgentError,
-  AgentExecutionError,
-  AgentBudgetExceededError,
-  AgentTimeoutError,
-  AgentToolError,
-  AgentValidationError,
-  AgentConfigurationError,
-  LLMProviderError,
-} from './ai-agents/errors.js';
