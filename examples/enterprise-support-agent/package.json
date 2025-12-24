@@ -1,0 +1,36 @@
+{
+  "name": "enterprise-support-agent-example",
+  "version": "1.0.0",
+  "description": "Enterprise-grade customer support agent example using Stratix framework",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "tsx example-usage.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "stratix",
+    "ai",
+    "agent",
+    "customer-support",
+    "enterprise",
+    "ddd",
+    "cqrs",
+    "hexagonal-architecture"
+  ],
+  "dependencies": {
+    "@stratix/core": "workspace:*",
+    "@stratix/ai-openai": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.68",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
