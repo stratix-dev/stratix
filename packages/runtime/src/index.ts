@@ -45,6 +45,19 @@ export { RecursiveTextChunker } from './ai/RecursiveTextChunker.js';
 export { MarkdownChunker } from './ai/MarkdownChunker.js';
 export { StandardRAGPipeline } from './ai/StandardRAGPipeline.js';
 
+// Prompt Templates
+export { HandlebarsPromptTemplate } from './ai/HandlebarsPromptTemplate.js';
+export type { HandlebarsPromptTemplateConfig } from './ai/HandlebarsPromptTemplate.js';
+export { InMemoryPromptRegistry } from './ai/InMemoryPromptRegistry.js';
+
+// Telemetry
+export { InMemoryTelemetry, InMemorySpan, ConsoleExporter } from './ai/InMemoryTelemetry.js';
+
+// Workflows
+export { StandardWorkflowEngine } from './ai/StandardWorkflowEngine.js';
+export type { StandardWorkflowEngineConfig } from './ai/StandardWorkflowEngine.js';
+export { WorkflowBuilder } from './ai/WorkflowBuilder.js';
+
 // Guardrails
 export { StandardGuardrailChain } from './ai/StandardGuardrailChain.js';
 export { PIIGuardrail, PromptInjectionGuardrail, TopicFilterGuardrail, ContentLengthGuardrail } from './ai/guardrails/index.js';
