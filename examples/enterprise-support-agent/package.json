@@ -21,8 +21,9 @@
     "hexagonal-architecture"
   ],
   "dependencies": {
-    "@stratix/core": "workspace:*",
-    "@stratix/ai-openai": "workspace:*"
+    "@stratix/core": "0.8.2",
+    "@stratix/ai-openai": "0.8.2",
+    "@stratix/runtime": "0.8.2"
   },
   "devDependencies": {
     "@types/node": "^18.19.68",

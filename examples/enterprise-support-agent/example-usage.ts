@@ -60,7 +60,7 @@ async function main() {
   const agent = context.getAgent();
 
   console.log('Available tools:');
-  const tools = await context.getToolRegistry().listTools();
+  const tools = await context.getToolRegistry().listAll();
   tools.forEach(tool => console.log(`  - ${tool.name}: ${tool.description}`));
   console.log('');
 

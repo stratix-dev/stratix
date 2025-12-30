@@ -1,5 +1,5 @@
 import type { Context, ContextMetadata, ContextCommandDefinition, ContextQueryDefinition, LLMProvider } from '@stratix/core';
-import { EntityId, InMemoryToolRegistry } from '@stratix/core';
+import { EntityId } from '@stratix/core';
 import { EnterpriseSupportAgent } from './domain/EnterpriseAgent.js';
 import { HandleSupportRequestHandler, type HandleSupportRequestCommand } from './application/commands/HandleSupportRequest.js';
 import { GetTicketDetailsHandler, type GetTicketDetailsQuery } from './application/queries/GetTicketDetails.js';
@@ -8,6 +8,7 @@ import { InMemoryTicketRepository } from './infrastructure/repositories/TicketRe
 import { QueryKnowledgeBaseTool } from './infrastructure/tools/QueryKnowledgeBaseTool.js';
 import { CheckOrderStatusTool } from './infrastructure/tools/CheckOrderStatusTool.js';
 import { CreateSupportTicketTool } from './infrastructure/tools/CreateSupportTicketTool.js';
+import { InMemoryToolRegistry } from '@stratix/runtime';
 
 /**
  * Enterprise Support Bounded Context
@@ -50,9 +51,9 @@ export class EnterpriseSupportContext implements Context {
     this.createTicketTool = new CreateSupportTicketTool();
 
     // Register tools
-    this.toolRegistry.registerTool(this.knowledgeBaseTool);
-    this.toolRegistry.registerTool(this.orderStatusTool);
-    this.toolRegistry.registerTool(this.createTicketTool);
+    this.toolRegistry.register(this.knowledgeBaseTool);
+    this.toolRegistry.register(this.orderStatusTool);
+    this.toolRegistry.register(this.createTicketTool);
 
     // Create the enterprise support agent with tools
     this.agent = new EnterpriseSupportAgent(

@@ -1,8 +1,7 @@
-import type {
+import {
   Guardrail,
-  GuardrailContext,
-  GuardrailResult,
-  GuardrailViolation,
+  type GuardrailContext,
+  type GuardrailResult,
   GuardrailSeverity,
 } from '@stratix/core';
 
@@ -63,13 +62,24 @@ export interface PIIGuardrailConfig {
  * console.log(result.violations?.length); // 2
  * ```
  */
-export class PIIGuardrail implements Guardrail {
-  readonly name = 'pii-detection';
-  readonly description = 'Detects personally identifiable information in content';
+export class PIIGuardrail extends Guardrail<string> {
   readonly enabled: boolean;
 
   private readonly detectTypes: Set<string>;
-  private readonly severity: GuardrailSeverity;
+  private readonly guardrailSeverity: GuardrailSeverity;
+
+  get name(): string {
+    return 'pii-detection';
+  }
+
+  get severity(): GuardrailSeverity {
+    return this.guardrailSeverity;
+  }
+
+  get description(): string {
+    const types = Array.from(this.detectTypes).join(', ');
+    return `Detects personally identifiable information in content (${types})`;
+  }
 
   // PII detection patterns
   private readonly patterns = {
@@ -83,15 +93,16 @@ export class PIIGuardrail implements Guardrail {
   };
 
   constructor(config: PIIGuardrailConfig = {}) {
+    super();
     this.detectTypes = new Set(
       config.detectTypes || ['ssn', 'email', 'phone', 'credit_card']
     );
-    this.severity = config.severity || ('error' as GuardrailSeverity);
+    this.guardrailSeverity = config.severity || GuardrailSeverity.ERROR;
     this.enabled = config.enabled ?? true;
   }
 
-  evaluate(context: GuardrailContext): Promise<GuardrailResult> {
-    const violations: GuardrailViolation[] = [];
+  check(content: string, _context?: GuardrailContext): Promise<GuardrailResult> {
+    const detectedPII: Array<{ type: string; value: string; start: number; end: number; confidence: number }> = [];
 
     // Check each enabled PII type
     for (const type of this.detectTypes) {
@@ -99,36 +110,39 @@ export class PIIGuardrail implements Guardrail {
 
       if (!pattern) continue;
 
-      const matches = [...context.content.matchAll(pattern)];
+      const matches = Array.from(content.matchAll(pattern));
 
       for (const match of matches) {
-        violations.push({
+        const matchedText = match[0] ?? '';
+        const matchIndex = match.index ?? 0;
+        detectedPII.push({
           type: `pii:${type}`,
-          description: `Potential ${type.replace('_', ' ')} detected`,
-          location: {
-            start: match.index || 0,
-            end: (match.index || 0) + match[0].length,
-          },
-          severity: this.severity,
-          confidence: this.calculateConfidence(type, match[0]),
+          value: matchedText,
+          start: matchIndex,
+          end: matchIndex + matchedText.length,
+          confidence: this.calculateConfidence(type, matchedText),
         });
       }
     }
 
-    if (violations.length > 0) {
-      return Promise.resolve({
-        passed: false,
-        severity: this.severity,
-        reason: `Detected ${violations.length} potential PII violation(s)`,
-        violations,
-        remediation: 'Remove or redact personally identifiable information before proceeding',
-        metadata: {
-          piiTypes: [...new Set(violations.map((v) => v.type))],
-        },
-      });
+    if (detectedPII.length > 0) {
+      const piiTypes = [...new Set(detectedPII.map((d) => d.type.replace('pii:', '')))];
+
+      return Promise.resolve(
+        this.fail(
+          `Detected PII (${piiTypes.join(', ')}) in content`,
+          {
+            piiTypes,
+            totalMatches: detectedPII.length,
+            violations: detectedPII,
+            remediation:
+              'Remove or redact PII before processing. Consider anonymization or tokenization.',
+          }
+        )
+      );
     }
 
-    return Promise.resolve({ passed: true });
+    return Promise.resolve(this.pass('No PII detected'));
   }
 
   /**

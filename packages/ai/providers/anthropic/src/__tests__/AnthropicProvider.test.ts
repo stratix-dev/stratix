@@ -35,9 +35,103 @@ describe('AnthropicProvider', () => {
         'claude-haiku-4-5-20251001',
       ]);
     });
+
+    it('should have correct capabilities', () => {
+      const provider = new AnthropicProvider({
+        apiKey: 'test-api-key',
+        models: [{ name: 'claude-sonnet-4-5-20250929' }],
+      });
+
+      expect(provider.capabilities).toEqual({
+        toolCalling: true,
+        streaming: true,
+        embeddings: false,
+        vision: true,
+        structuredOutput: false,
+        maxContextTokens: 200000,
+        maxOutputTokens: 4096,
+      });
+    });
+
+    it('should throw error when no models configured', () => {
+      expect(() => new AnthropicProvider({
+        apiKey: 'test',
+        models: []
+      })).toThrow('AnthropicProvider requires at least one model to be configured');
+    });
   });
 
-  describe('cost calculation', () => {
+  describe('supportsModel', () => {
+    let provider: AnthropicProvider;
+
+    beforeEach(() => {
+      provider = new AnthropicProvider({
+        apiKey: 'test-api-key',
+        models: [
+          { name: 'claude-opus-4-5-20251101' },
+          { name: 'claude-sonnet-4-5-20250929' },
+        ],
+      });
+    });
+
+    it('should return true for configured models', () => {
+      expect(provider.supportsModel('claude-opus-4-5-20251101')).toBe(true);
+      expect(provider.supportsModel('claude-sonnet-4-5-20250929')).toBe(true);
+    });
+
+    it('should return false for unconfigured models', () => {
+      expect(provider.supportsModel('claude-haiku-4-5-20251001')).toBe(false);
+      expect(provider.supportsModel('unknown-model')).toBe(false);
+    });
+  });
+
+  describe('getModelCapabilities', () => {
+    let provider: AnthropicProvider;
+
+    beforeEach(() => {
+      provider = new AnthropicProvider({
+        apiKey: 'test-api-key',
+        models: [{ name: 'claude-sonnet-4-5-20250929' }],
+      });
+    });
+
+    it('should return default capabilities for models without custom capabilities', () => {
+      const capabilities = provider.getModelCapabilities('claude-sonnet-4-5-20250929');
+
+      expect(capabilities).toEqual({
+        toolCalling: true,
+        streaming: true,
+        embeddings: false,
+        vision: true,
+        structuredOutput: false,
+        maxContextTokens: 200000,
+        maxOutputTokens: 4096,
+      });
+    });
+
+    it('should return custom capabilities when configured', () => {
+      const providerWithCustomCaps = new AnthropicProvider({
+        apiKey: 'test',
+        models: [
+          {
+            name: 'claude-opus-4-5-20251101',
+            pricing: { input: 5, output: 25 },
+            capabilities: {
+              maxContextTokens: 200000,
+              maxOutputTokens: 8000,
+            }
+          }
+        ]
+      });
+
+      const capabilities = providerWithCustomCaps.getModelCapabilities('claude-opus-4-5-20251101');
+
+      expect(capabilities?.maxOutputTokens).toBe(8000);
+      expect(capabilities?.toolCalling).toBe(true); // Inherited from default
+    });
+  });
+
+  describe('estimateCost', () => {
     let provider: AnthropicProvider;
 
     beforeEach(() => {
@@ -51,62 +145,42 @@ describe('AnthropicProvider', () => {
       });
     });
 
-    it('should calculate cost for Claude 4.5 Opus', () => {
-      const cost = provider.calculateCost('claude-opus-4-5-20251101', {
-        promptTokens: 1000,
-        completionTokens: 500,
-        totalTokens: 1500,
-      });
+    it('should estimate cost for Claude 4.5 Opus', () => {
+      const cost = provider.estimateCost('claude-opus-4-5-20251101', 1000, 500);
 
       // 1000/1M * 5 + 500/1M * 25 = 0.005 + 0.0125 = 0.0175
       expect(cost).toBeCloseTo(0.0175, 6);
     });
 
-    it('should calculate cost for Claude 4.5 Sonnet', () => {
-      const cost = provider.calculateCost('claude-sonnet-4-5-20250929', {
-        promptTokens: 1000,
-        completionTokens: 500,
-        totalTokens: 1500,
-      });
+    it('should estimate cost for Claude 4.5 Sonnet', () => {
+      const cost = provider.estimateCost('claude-sonnet-4-5-20250929', 1000, 500);
 
       // 1000/1M * 3 + 500/1M * 15 = 0.003 + 0.0075 = 0.0105
       expect(cost).toBeCloseTo(0.0105, 6);
     });
 
-    it('should calculate cost for Claude 4.5 Haiku', () => {
-      const cost = provider.calculateCost('claude-haiku-4-5-20251001', {
-        promptTokens: 1000,
-        completionTokens: 500,
-        totalTokens: 1500,
-      });
+    it('should estimate cost for Claude 4.5 Haiku', () => {
+      const cost = provider.estimateCost('claude-haiku-4-5-20251001', 1000, 500);
 
       // 1000/1M * 1 + 500/1M * 5 = 0.001 + 0.0025 = 0.0035
       expect(cost).toBeCloseTo(0.0035, 6);
     });
 
     it('should return zero for unknown model', () => {
-      const cost = provider.calculateCost('unknown-model', {
-        promptTokens: 1000,
-        completionTokens: 500,
-        totalTokens: 1500,
-      });
+      const cost = provider.estimateCost('unknown-model', 1000, 500);
 
       expect(cost).toBe(0);
     });
 
     it('should handle zero tokens', () => {
-      const cost = provider.calculateCost('claude-sonnet-4-5-20250929', {
-        promptTokens: 0,
-        completionTokens: 0,
-        totalTokens: 0,
-      });
+      const cost = provider.estimateCost('claude-sonnet-4-5-20250929', 0, 0);
 
       expect(cost).toBe(0);
     });
   });
 
   describe('Real-world usage patterns', () => {
-    it('should calculate realistic conversation costs', () => {
+    it('should estimate realistic conversation costs', () => {
       const provider = new AnthropicProvider({
         apiKey: 'test-key',
         models: [
@@ -116,21 +190,13 @@ describe('AnthropicProvider', () => {
       });
 
       // Small query with Haiku
-      const smallCost = provider.calculateCost('claude-haiku-4-5-20251001', {
-        promptTokens: 50,
-        completionTokens: 100,
-        totalTokens: 150,
-      });
+      const smallCost = provider.estimateCost('claude-haiku-4-5-20251001', 50, 100);
 
       // Should be very cheap (0.00055)
       expect(smallCost).toBeLessThan(0.001);
 
       // Large query with Opus
-      const largeCost = provider.calculateCost('claude-opus-4-5-20251101', {
-        promptTokens: 3000,
-        completionTokens: 1000,
-        totalTokens: 4000,
-      });
+      const largeCost = provider.estimateCost('claude-opus-4-5-20251101', 3000, 1000);
 
       // Should be around $0.04 (3000/1M*5 + 1000/1M*25 = 0.015 + 0.025 = 0.04)
       expect(largeCost).toBeGreaterThan(0.03);
@@ -147,15 +213,9 @@ describe('AnthropicProvider', () => {
         ],
       });
 
-      const usage = {
-        promptTokens: 1000,
-        completionTokens: 500,
-        totalTokens: 1500,
-      };
-
-      const opusCost = provider.calculateCost('claude-opus-4-5-20251101', usage);
-      const sonnetCost = provider.calculateCost('claude-sonnet-4-5-20250929', usage);
-      const haikuCost = provider.calculateCost('claude-haiku-4-5-20251001', usage);
+      const opusCost = provider.estimateCost('claude-opus-4-5-20251101', 1000, 500);
+      const sonnetCost = provider.estimateCost('claude-sonnet-4-5-20250929', 1000, 500);
+      const haikuCost = provider.estimateCost('claude-haiku-4-5-20251001', 1000, 500);
 
       // Opus should be most expensive
       expect(opusCost).toBeGreaterThan(sonnetCost);
@@ -182,17 +242,8 @@ describe('AnthropicProvider', () => {
       const avgPromptTokens = 100;
       const avgCompletionTokens = 200;
 
-      const haikuCostPerQuery = provider.calculateCost('claude-haiku-4-5-20251001', {
-        promptTokens: avgPromptTokens,
-        completionTokens: avgCompletionTokens,
-        totalTokens: avgPromptTokens + avgCompletionTokens,
-      });
-
-      const sonnetCostPerQuery = provider.calculateCost('claude-sonnet-4-5-20250929', {
-        promptTokens: avgPromptTokens,
-        completionTokens: avgCompletionTokens,
-        totalTokens: avgPromptTokens + avgCompletionTokens,
-      });
+      const haikuCostPerQuery = provider.estimateCost('claude-haiku-4-5-20251001', avgPromptTokens, avgCompletionTokens);
+      const sonnetCostPerQuery = provider.estimateCost('claude-sonnet-4-5-20250929', avgPromptTokens, avgCompletionTokens);
 
       const haikuTotal = haikuCostPerQuery * queries;
       const sonnetTotal = sonnetCostPerQuery * queries;
@@ -218,24 +269,16 @@ describe('AnthropicProvider', () => {
       const avgPromptTokens = 150;
       const avgCompletionTokens = 300;
 
-      const usage = {
-        promptTokens: avgPromptTokens,
-        completionTokens: avgCompletionTokens,
-        totalTokens: avgPromptTokens + avgCompletionTokens,
-      };
-
       // Haiku tier (fast, simple responses)
-      const haikuDailyCost =
-        provider.calculateCost('claude-haiku-4-5-20251001', usage) * dailyQueries;
+      const haikuDailyCost = provider.estimateCost('claude-haiku-4-5-20251001', avgPromptTokens, avgCompletionTokens) * dailyQueries;
       const haikuMonthlyCost = haikuDailyCost * 30;
 
       // Sonnet tier (balanced)
-      const sonnetDailyCost =
-        provider.calculateCost('claude-sonnet-4-5-20250929', usage) * dailyQueries;
+      const sonnetDailyCost = provider.estimateCost('claude-sonnet-4-5-20250929', avgPromptTokens, avgCompletionTokens) * dailyQueries;
       const sonnetMonthlyCost = sonnetDailyCost * 30;
 
       // Opus tier (complex reasoning)
-      const opusDailyCost = provider.calculateCost('claude-opus-4-5-20251101', usage) * dailyQueries;
+      const opusDailyCost = provider.estimateCost('claude-opus-4-5-20251101', avgPromptTokens, avgCompletionTokens) * dailyQueries;
       const opusMonthlyCost = opusDailyCost * 30;
 
       // Haiku: Very affordable for high volume (150/1M*1 + 300/1M*5)*1000*30 = 0.00165*1000*30 = $49.5
@@ -258,14 +301,8 @@ describe('AnthropicProvider', () => {
         ],
       });
 
-      const usage = {
-        promptTokens: 1000,
-        completionTokens: 500,
-        totalTokens: 1500,
-      };
-
       // Claude 4.5 Opus (comparable to GPT-4)
-      const opusCost = provider.calculateCost('claude-opus-4-5-20251101', usage);
+      const opusCost = provider.estimateCost('claude-opus-4-5-20251101', 1000, 500);
 
       // GPT-4 would be: 1000/1M * 30 + 500/1M * 60 = 0.03 + 0.03 = 0.06
       const gpt4Cost = 0.06;

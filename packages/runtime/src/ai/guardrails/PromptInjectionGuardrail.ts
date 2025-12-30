@@ -1,8 +1,7 @@
-import type {
+import {
   Guardrail,
-  GuardrailContext,
-  GuardrailResult,
-  GuardrailViolation,
+  type GuardrailContext,
+  type GuardrailResult,
   GuardrailSeverity,
 } from '@stratix/core';
 
@@ -56,14 +55,24 @@ export interface PromptInjectionGuardrailConfig {
  * console.log(result.passed); // false
  * ```
  */
-export class PromptInjectionGuardrail implements Guardrail {
-  readonly name = 'prompt-injection-detection';
-  readonly description = 'Detects prompt injection and jailbreak attempts';
+export class PromptInjectionGuardrail extends Guardrail<string> {
   readonly enabled: boolean;
 
-  private readonly severity: GuardrailSeverity;
+  private readonly guardrailSeverity: GuardrailSeverity;
   private readonly minConfidence: number;
   private readonly customPatterns: RegExp[];
+
+  get name(): string {
+    return 'prompt-injection-detection';
+  }
+
+  get severity(): GuardrailSeverity {
+    return this.guardrailSeverity;
+  }
+
+  get description(): string {
+    return 'Detects prompt injection and jailbreak attempts';
+  }
 
   // Detection patterns for common injection techniques
   private readonly injectionPatterns = [
@@ -148,30 +157,30 @@ export class PromptInjectionGuardrail implements Guardrail {
   ];
 
   constructor(config: PromptInjectionGuardrailConfig = {}) {
-    this.severity = config.severity || ('critical' as GuardrailSeverity);
+    super();
+    this.guardrailSeverity = config.severity || GuardrailSeverity.CRITICAL;
     this.minConfidence = config.minConfidence || 0.7;
     this.enabled = config.enabled ?? true;
     this.customPatterns = config.customPatterns || [];
   }
 
-  evaluate(context: GuardrailContext): Promise<GuardrailResult> {
-    const violations: GuardrailViolation[] = [];
+  check(content: string, _context?: GuardrailContext): Promise<GuardrailResult> {
+    const detectedPatterns: Array<{ type: string; text: string; start: number; end: number; confidence: number }> = [];
 
     // Check built-in patterns
     for (const { pattern, type, confidence } of this.injectionPatterns) {
       if (confidence < this.minConfidence) continue;
 
-      const matches = [...context.content.matchAll(pattern)];
+      const matches = Array.from(content.matchAll(pattern));
 
       for (const match of matches) {
-        violations.push({
+        const matchedText = match[0] ?? '';
+        const matchIndex = match.index ?? 0;
+        detectedPatterns.push({
           type: `injection:${type}`,
-          description: `Potential ${type.replace('_', ' ')} detected`,
-          location: {
-            start: match.index || 0,
-            end: (match.index || 0) + match[0].length,
-          },
-          severity: this.severity,
+          text: matchedText,
+          start: matchIndex,
+          end: matchIndex + matchedText.length,
           confidence,
         });
       }
@@ -179,39 +188,39 @@ export class PromptInjectionGuardrail implements Guardrail {
 
     // Check custom patterns
     for (const pattern of this.customPatterns) {
-      const matches = [...context.content.matchAll(pattern)];
+      const matches = Array.from(content.matchAll(pattern));
 
       for (const match of matches) {
-        violations.push({
+        const matchedText = match[0] ?? '';
+        const matchIndex = match.index ?? 0;
+        detectedPatterns.push({
           type: 'injection:custom',
-          description: 'Custom injection pattern detected',
-          location: {
-            start: match.index || 0,
-            end: (match.index || 0) + match[0].length,
-          },
-          severity: this.severity,
+          text: matchedText,
+          start: matchIndex,
+          end: matchIndex + matchedText.length,
           confidence: 0.8,
         });
       }
     }
 
-    if (violations.length > 0) {
-      const highestConfidence = Math.max(...violations.map((v) => v.confidence || 0));
+    if (detectedPatterns.length > 0) {
+      const highestConfidence = Math.max(...detectedPatterns.map((p) => p.confidence));
+      const injectionTypes = [...new Set(detectedPatterns.map((p) => p.type))];
 
-      return Promise.resolve({
-        passed: false,
-        severity: this.severity,
-        reason: `Detected ${violations.length} potential prompt injection attempt(s)`,
-        violations,
-        remediation:
-          'Remove injection patterns or rephrase input without attempting to manipulate the AI system',
-        metadata: {
-          injectionTypes: [...new Set(violations.map((v) => v.type))],
-          highestConfidence,
-        },
-      });
+      return Promise.resolve(
+        this.fail(
+          `Detected ${detectedPatterns.length} potential prompt injection attempt(s)`,
+          {
+            injectionTypes,
+            highestConfidence,
+            violations: detectedPatterns,
+            remediation:
+              'Please rephrase input to avoid instruction-like language. Use natural conversational phrasing.',
+          }
+        )
+      );
     }
 
-    return Promise.resolve({ passed: true });
+    return Promise.resolve(this.pass('No prompt injection detected'));
   }
 }

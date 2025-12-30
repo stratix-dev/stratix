@@ -69,25 +69,25 @@ export class EnterpriseSupportAgent extends AIAgent<SupportRequest, SupportRespo
 
       // Execute any tool calls requested by the LLM
       if (llmResponse.toolCalls && llmResponse.toolCalls.length > 0) {
-        const toolResults = await this.executeTools(llmResponse.toolCalls);
+        const toolResults = await this.executeTools(llmResponse);
 
-        // Add tool results to conversation and get final response
+        // Create context with tool results for second LLM call
+        const toolContext = toolResults.map(r =>
+          `Tool ${r.toolName} returned: ${JSON.stringify(r.result)}`
+        ).join('\n');
+
+        // Add assistant message and tool results
         messages.push({
           role: 'assistant',
-          content: llmResponse.content,
+          content: `I will use the following tools: ${llmResponse.toolCalls.map(c => c.name).join(', ')}`,
           timestamp: new Date(),
-          toolCalls: llmResponse.toolCalls,
         });
 
-        // Add tool results
-        for (const result of toolResults) {
-          messages.push({
-            role: 'tool',
-            content: JSON.stringify(result.result),
-            timestamp: new Date(),
-            toolCallId: result.toolCallId,
-          });
-        }
+        messages.push({
+          role: 'user',
+          content: `Tool Results:\n${toolContext}\n\nBased on these results, provide your final response in JSON format.`,
+          timestamp: new Date(),
+        });
 
         // Get final response after tool execution
         const finalResponse = await this.llmProvider.chat({
@@ -100,7 +100,7 @@ export class EnterpriseSupportAgent extends AIAgent<SupportRequest, SupportRespo
           },
         });
 
-        const response = this.parseResponse(finalResponse.content, input);
+        const response = this.parseResponse(finalResponse.content);
         const duration = Date.now() - startTime;
 
         return AgentResult.success(response, {
@@ -112,7 +112,7 @@ export class EnterpriseSupportAgent extends AIAgent<SupportRequest, SupportRespo
       }
 
       // No tools needed, parse direct response
-      const response = this.parseResponse(llmResponse.content, input);
+      const response = this.parseResponse(llmResponse.content);
       const duration = Date.now() - startTime;
 
       return AgentResult.success(response, {
@@ -237,28 +237,26 @@ Priority Guidelines:
   private async getToolDefinitions() {
     if (!this.toolRegistry) return undefined;
 
-    const tools = await this.toolRegistry.listTools();
-    return tools.map(tool => tool.definition);
+    return await this.toolRegistry.getDefinitions();
   }
 
-  private async executeTools(toolCalls: Array<{ id: string; name: string; arguments: string }>) {
-    if (!this.toolRegistry) return [];
+  private async executeTools(llmResponse: { toolCalls?: Array<{ name: string; arguments: Record<string, unknown> }> }) {
+    if (!this.toolRegistry || !llmResponse.toolCalls) return [];
 
     const results = [];
-    for (const call of toolCalls) {
+    for (const call of llmResponse.toolCalls) {
       try {
-        const tool = await this.toolRegistry.getTool(call.name);
+        const tool = await this.toolRegistry.get(call.name);
         if (tool) {
-          const args = JSON.parse(call.arguments);
-          const result = await tool.execute(args);
+          const result = await tool.execute(call.arguments);
           results.push({
-            toolCallId: call.id,
+            toolName: call.name,
             result,
           });
         }
       } catch (error) {
         results.push({
-          toolCallId: call.id,
+          toolName: call.name,
           result: { error: (error as Error).message },
         });
       }
@@ -267,7 +265,7 @@ Priority Guidelines:
     return results;
   }
 
-  private parseResponse(content: string, input: SupportRequest): SupportResponse {
+  private parseResponse(content: string): SupportResponse {
     const parsed = JSON.parse(content);
 
     return {
@@ -284,7 +282,7 @@ Priority Guidelines:
     };
   }
 
-  private calculateCost(usage: { inputTokens: number; outputTokens: number; totalTokens: number }): number {
+  private calculateCost(usage: { promptTokens: number; completionTokens: number; totalTokens: number }): number {
     if ('calculateCost' in this.llmProvider && typeof this.llmProvider.calculateCost === 'function') {
       return this.llmProvider.calculateCost(this.model.model, usage);
     }
@@ -292,8 +290,8 @@ Priority Guidelines:
   }
 
   private calculateTotalCost(
-    usage1: { inputTokens: number; outputTokens: number; totalTokens: number },
-    usage2: { inputTokens: number; outputTokens: number; totalTokens: number }
+    usage1: { promptTokens: number; completionTokens: number; totalTokens: number },
+    usage2: { promptTokens: number; completionTokens: number; totalTokens: number }
   ): number {
     if ('calculateCost' in this.llmProvider && typeof this.llmProvider.calculateCost === 'function') {
       const cost1 = this.llmProvider.calculateCost(this.model.model, usage1);

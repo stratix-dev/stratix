@@ -1,15 +1,38 @@
-// Guardrail Chain
-export { StandardGuardrailChain } from '../StandardGuardrailChain.js';
+/**
+ * Guardrails for AI agents (runtime implementations).
+ *
+ * This module exports concrete guardrail implementations for production use.
+ * For base guardrail classes, see @stratix/core/ai-agents/guardrails
+ */
 
-// Built-in Guardrails
-export { PIIGuardrail } from './PIIGuardrail.js';
-export type { PIIGuardrailConfig } from './PIIGuardrail.js';
+// Re-export base classes from core
+export {
+  Guardrail,
+  GuardrailSeverity,
+  GuardrailChain,
+  type GuardrailContext,
+  type GuardrailResult,
+  type GuardrailChainConfig,
+  type ChainResult,
+} from '@stratix/core/ai-agents';
 
-export { PromptInjectionGuardrail } from './PromptInjectionGuardrail.js';
-export type { PromptInjectionGuardrailConfig } from './PromptInjectionGuardrail.js';
+// Runtime implementations
+export {
+  ContentLengthGuardrail,
+  type ContentLengthGuardrailConfig,
+} from './ContentLengthGuardrail.js';
 
-export { TopicFilterGuardrail } from './TopicFilterGuardrail.js';
-export type { TopicFilterGuardrailConfig } from './TopicFilterGuardrail.js';
+export {
+  PIIGuardrail,
+  type PIIGuardrailConfig,
+} from './PIIGuardrail.js';
 
-export { ContentLengthGuardrail } from './ContentLengthGuardrail.js';
-export type { ContentLengthGuardrailConfig } from './ContentLengthGuardrail.js';
+export {
+  PromptInjectionGuardrail,
+  type PromptInjectionGuardrailConfig,
+} from './PromptInjectionGuardrail.js';
+
+export {
+  TopicFilterGuardrail,
+  type TopicFilterGuardrailConfig,
+} from './TopicFilterGuardrail.js';

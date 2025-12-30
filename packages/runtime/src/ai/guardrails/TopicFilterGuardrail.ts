@@ -1,7 +1,7 @@
-import type {
+import {
   Guardrail,
-  GuardrailContext,
-  GuardrailResult,
+  type GuardrailContext,
+  type GuardrailResult,
   GuardrailSeverity,
 } from '@stratix/core';
 
@@ -66,16 +66,26 @@ export interface TopicFilterGuardrailConfig {
  * console.log(result.passed); // false (politics is forbidden)
  * ```
  */
-export class TopicFilterGuardrail implements Guardrail {
-  readonly name = 'topic-filter';
-  readonly description = 'Filters content based on allowed or forbidden topics';
+export class TopicFilterGuardrail extends Guardrail<string> {
   readonly enabled: boolean;
 
   private readonly allowedTopics: Set<string> | null;
   private readonly forbiddenTopics: Set<string>;
   private readonly topicKeywords: Map<string, string[]>;
-  private readonly severity: GuardrailSeverity;
+  private readonly guardrailSeverity: GuardrailSeverity;
   private readonly minKeywordMatches: number;
+
+  get name(): string {
+    return 'topic-filter';
+  }
+
+  get severity(): GuardrailSeverity {
+    return this.guardrailSeverity;
+  }
+
+  get description(): string {
+    return 'Filters content based on allowed or forbidden topics';
+  }
 
   // Default topic keywords for common categories
   private readonly defaultTopicKeywords: Record<string, string[]> = {
@@ -166,11 +176,12 @@ export class TopicFilterGuardrail implements Guardrail {
   };
 
   constructor(config: TopicFilterGuardrailConfig = {}) {
+    super();
     this.allowedTopics = config.allowedTopics
       ? new Set(config.allowedTopics)
       : null;
     this.forbiddenTopics = new Set(config.forbiddenTopics || []);
-    this.severity = config.severity || ('warning' as GuardrailSeverity);
+    this.guardrailSeverity = config.severity || GuardrailSeverity.WARNING;
     this.minKeywordMatches = config.minKeywordMatches || 2;
     this.enabled = config.enabled ?? true;
 
@@ -192,8 +203,8 @@ export class TopicFilterGuardrail implements Guardrail {
     }
   }
 
-  evaluate(context: GuardrailContext): Promise<GuardrailResult> {
-    const contentLower = context.content.toLowerCase();
+  check(content: string, _context?: GuardrailContext): Promise<GuardrailResult> {
+    const contentLower = content.toLowerCase();
     const detectedTopics = this.detectTopics(contentLower);
 
     // Check forbidden topics
@@ -202,22 +213,20 @@ export class TopicFilterGuardrail implements Guardrail {
     );
 
     if (forbiddenDetected.length > 0) {
-      return Promise.resolve({
-        passed: false,
-        severity: this.severity,
-        reason: `Content contains forbidden topic(s): ${forbiddenDetected.join(', ')}`,
-        violations: forbiddenDetected.map((topic) => ({
-          type: `topic:forbidden:${topic}`,
-          description: `Forbidden topic "${topic}" detected`,
-          severity: this.severity,
-          confidence: 0.8,
-        })),
-        remediation: `Rephrase content to avoid forbidden topics: ${forbiddenDetected.join(', ')}`,
-        metadata: {
-          forbiddenTopics: forbiddenDetected,
-          allDetectedTopics: detectedTopics,
-        },
-      });
+      return Promise.resolve(
+        this.fail(
+          `Content contains forbidden topic(s): ${forbiddenDetected.join(', ')}`,
+          {
+            forbiddenTopics: forbiddenDetected,
+            allDetectedTopics: detectedTopics,
+            violations: forbiddenDetected.map((topic) => ({
+              type: 'forbidden',
+              topic,
+            })),
+            remediation: `Rephrase content to avoid forbidden topics: ${forbiddenDetected.join(', ')}`,
+          }
+        )
+      );
     }
 
     // Check allowed topics (if specified)
@@ -227,30 +236,28 @@ export class TopicFilterGuardrail implements Guardrail {
       );
 
       if (allowedDetected.length === 0) {
-        return Promise.resolve({
-          passed: false,
-          severity: this.severity,
-          reason: 'Content does not match any allowed topics',
-          violations: [
+        return Promise.resolve(
+          this.fail(
+            'Content does not match any allowed topics',
             {
-              type: 'topic:not_allowed',
-              description: `Expected one of: ${[...this.allowedTopics].join(', ')}`,
-              severity: this.severity,
-              confidence: 0.7,
-            },
-          ],
-          remediation: `Content must relate to allowed topics: ${[...this.allowedTopics].join(', ')}`,
-          metadata: {
-            allowedTopics: [...this.allowedTopics],
-            detectedTopics,
-          },
-        });
+              allowedTopics: [...this.allowedTopics],
+              detectedTopics,
+              remediation: `Content must relate to allowed topics: ${[...this.allowedTopics].join(', ')}`,
+            }
+          )
+        );
       }
     }
 
+    const passResult = this.pass(
+      detectedTopics.length > 0
+        ? `Detected topics: ${detectedTopics.join(', ')}`
+        : 'No topics detected'
+    );
+
     return Promise.resolve({
-      passed: true,
-      metadata: {
+      ...passResult,
+      details: {
         detectedTopics,
       },
     });

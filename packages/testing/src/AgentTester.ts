@@ -1,229 +1,476 @@
-import type { AIAgent, AgentResult, AgentContext } from '@stratix/core';
-import { MockLLMProvider } from './MockLLMProvider.js';
+import type {
+  AIAgent,
+  ExecutionContext,
+  ExecutionResult,
+  ExecutionConfig,
+  AgentLifecycle,
+  ExecutionTrace,
+} from '@stratix/core/ai-agents';
+import { ExecutionEngine } from '@stratix/core/ai-agents';
+import type { MockLLMProvider, MockResponse } from './MockLLMProvider.js';
+
+// ============================================================================
+// Type Definitions
+// ============================================================================
 
 /**
- * Test configuration options
+ * Configuration for AgentTester.
  */
-export interface TestOptions {
+export interface AgentTesterConfig {
   /**
-   * Maximum execution time before timing out (ms)
+   * Default execution timeout in milliseconds.
+   * @default 30000
    */
-  timeout?: number;
+  readonly timeout?: number;
 
   /**
-   * Whether to capture execution traces
+   * Enable execution tracing for debugging.
+   * @default true
    */
-  enableTracing?: boolean;
+  readonly enableTracing?: boolean;
 
   /**
-   * Mock LLM provider to use
+   * Mock LLM provider to use for testing.
+   * If not provided, a new instance will be created.
    */
-  mockProvider?: MockLLMProvider;
+  readonly mockProvider?: MockLLMProvider;
+
+  /**
+   * Default execution context values.
+   * These will be merged with context provided to test() method.
+   */
+  readonly defaultContext?: Partial<{
+    userId: string;
+    environment: 'development' | 'staging' | 'production';
+    metadata: Record<string, unknown>;
+    budget: number;
+  }>;
 }
 
 /**
- * Test result with additional metadata
+ * Test lifecycle hooks extending AgentLifecycle.
+ *
+ * Provides additional test-specific hooks.
+ */
+export interface TestLifecycleHooks extends AgentLifecycle {
+  /**
+   * Called when test starts (before beforeExecute).
+   *
+   * @param agent - The agent being tested
+   * @param input - The test input
+   */
+  onTestStart?<TInput, TOutput>(
+    agent: AIAgent<TInput, TOutput>,
+    input: TInput
+  ): void | Promise<void>;
+
+  /**
+   * Called when test completes (after afterExecute or onError).
+   *
+   * @param result - The test result
+   */
+  onTestComplete?<TOutput>(result: TestResult<TOutput>): void | Promise<void>;
+}
+
+/**
+ * Test execution result with additional test metadata.
+ *
+ * @template TOutput - The output type from the agent
  */
 export interface TestResult<TOutput> {
   /**
-   * The agent result
+   * The execution result from the agent.
    */
-  result: AgentResult<TOutput>;
+  readonly result: ExecutionResult<TOutput>;
 
   /**
-   * Execution duration in milliseconds
+   * Test execution duration in milliseconds.
    */
-  duration: number;
+  readonly duration: number;
 
   /**
-   * Whether the test passed
+   * Whether the test passed based on result success.
    */
-  passed: boolean;
+  readonly passed: boolean;
 
   /**
-   * Error message if test failed
+   * Optional execution trace for debugging.
+   * Only present if tracing is enabled.
    */
-  error?: string;
+  readonly trace?: ExecutionTrace;
+
+  /**
+   * Lifecycle events captured during execution.
+   */
+  readonly lifecycleEvents?: {
+    beforeExecute?: Date;
+    afterExecute?: Date;
+    onError?: { error: Error; timestamp: Date };
+  };
 }
 
 /**
- * Agent tester utility for testing AI agents with deterministic responses.
+ * Configuration for a single test execution.
+ */
+export interface TestExecutionConfig extends ExecutionConfig {
+  /**
+   * Capture execution trace for this test.
+   * Overrides global enableTracing setting.
+   */
+  readonly captureTrace?: boolean;
+}
+
+// ============================================================================
+// AgentTester Class
+// ============================================================================
+
+/**
+ * Test harness for AI agents.
  *
- * @category Testing
+ * Wraps ExecutionEngine with test-friendly utilities:
+ * - Mock provider integration
+ * - Lifecycle event capture
+ * - Execution tracing
+ * - Performance measurement
+ * - Type-safe test assertions
+ *
+ * @template TInput - Agent input type
+ * @template TOutput - Agent output type
  *
  * @example
  * ```typescript
- * import { AgentTester } from '@stratix/testing';
- *
  * describe('MyAgent', () => {
- *   let tester: AgentTester;
+ *   let tester: AgentTester<string, { result: string }>;
  *
  *   beforeEach(() => {
  *     tester = new AgentTester();
- *   });
- *
- *   it('should process input correctly', async () => {
- *     const agent = new MyAgent(...);
- *
  *     tester.setMockResponse({
- *       content: '{"result": "success"}',
+ *       content: JSON.stringify({ result: 'success' }),
  *       usage: { promptTokens: 10, completionTokens: 20, totalTokens: 30 }
  *     });
+ *   });
  *
- *     const result = await tester.test(agent, input);
+ *   it('should process input successfully', async () => {
+ *     const agent = new MyAgent();
+ *     const context = createExecutionContext();
  *
- *     expect(result.passed).toBe(true);
- *     expect(result.result.isSuccess()).toBe(true);
+ *     const { result, duration, passed } = await tester.test(
+ *       agent,
+ *       'test input',
+ *       context
+ *     );
+ *
+ *     expect(passed).toBe(true);
+ *     expect(result.isSuccess()).toBe(true);
+ *     expect(duration).toBeLessThan(5000);
  *   });
  * });
  * ```
  */
-export class AgentTester {
-  private mockProvider: MockLLMProvider;
-  private options: TestOptions;
+export class AgentTester<TInput = unknown, TOutput = unknown> {
+  private readonly engine: ExecutionEngine;
+  private readonly config: AgentTesterConfig & { timeout: number; enableTracing: boolean };
+  private lifecycle?: TestLifecycleHooks;
+  private readonly lifecycleEvents: Map<string, {
+    beforeExecute?: Date;
+    afterExecute?: Date;
+    onError?: { error: Error; timestamp: Date };
+  }>;
 
-  constructor(options: TestOptions = {}) {
-    this.options = {
-      timeout: 30000,
-      enableTracing: true,
-      ...options,
+  /**
+   * Create a new AgentTester.
+   *
+   * @param config - Optional configuration
+   */
+  constructor(config?: AgentTesterConfig) {
+    this.config = {
+      timeout: config?.timeout ?? 30000,
+      enableTracing: config?.enableTracing ?? true,
+      mockProvider: config?.mockProvider,
+      defaultContext: config?.defaultContext ?? {},
     };
 
-    this.mockProvider = options.mockProvider || new MockLLMProvider();
+    this.lifecycleEvents = new Map();
+
+    // Create internal lifecycle that captures events
+    const internalLifecycle: AgentLifecycle = {
+      beforeExecute: async (agent, input, context) => {
+        const key = this.getEventKey(agent.id.value);
+        const events = this.lifecycleEvents.get(key) ?? {};
+        events.beforeExecute = new Date();
+        this.lifecycleEvents.set(key, events);
+
+        // Call user lifecycle
+        if (this.lifecycle?.beforeExecute) {
+          await this.lifecycle.beforeExecute(agent, input, context);
+        }
+      },
+
+      afterExecute: async (agent, result, context) => {
+        const key = this.getEventKey(agent.id.value);
+        const events = this.lifecycleEvents.get(key) ?? {};
+        events.afterExecute = new Date();
+        this.lifecycleEvents.set(key, events);
+
+        // Call user lifecycle
+        if (this.lifecycle?.afterExecute) {
+          await this.lifecycle.afterExecute(agent, result, context);
+        }
+      },
+
+      onError: async (agent, error, context) => {
+        const key = this.getEventKey(agent.id.value);
+        const events = this.lifecycleEvents.get(key) ?? {};
+        events.onError = { error, timestamp: new Date() };
+        this.lifecycleEvents.set(key, events);
+
+        // Call user lifecycle
+        if (this.lifecycle?.onError) {
+          await this.lifecycle.onError(agent, error, context);
+        }
+      },
+    };
+
+    this.engine = new ExecutionEngine(internalLifecycle);
   }
 
   /**
-   * Gets the mock LLM provider
+   * Execute a test for an agent.
+   *
+   * @param agent - The agent to test
+   * @param input - Test input data
+   * @param context - Execution context
+   * @param config - Optional test execution config
+   * @returns Test result with execution data
    */
-  getMockProvider(): MockLLMProvider {
-    return this.mockProvider;
-  }
-
-  /**
-   * Sets a single mock response
-   */
-  setMockResponse(response: Parameters<MockLLMProvider['setResponse']>[0]): void {
-    this.mockProvider.setResponse(response);
-  }
-
-  /**
-   * Sets multiple mock responses
-   */
-  setMockResponses(responses: Parameters<MockLLMProvider['setResponses']>[0]): void {
-    this.mockProvider.setResponses(responses);
-  }
-
-  /**
-   * Tests an agent with the given input
-   */
-  async test<TInput, TOutput>(
+  async test(
     agent: AIAgent<TInput, TOutput>,
     input: TInput,
-    context?: AgentContext
+    context: ExecutionContext,
+    config?: TestExecutionConfig
   ): Promise<TestResult<TOutput>> {
     const startTime = Date.now();
-    let result: AgentResult<TOutput>;
-    let error: string | undefined;
-    let passed = false;
 
-    try {
-      // Execute with timeout
-      result = await this.executeWithTimeout(agent, input, context);
-
-      // Check if successful
-      passed = result.isSuccess();
-      if (!passed) {
-        error = result.error?.message || 'Unknown error';
-      }
-    } catch (err) {
-      result = {
-        success: false,
-        error: err instanceof Error ? err : new Error(String(err)),
-        data: undefined as unknown as TOutput,
-        metadata: {
-          model: 'unknown',
-          duration: Date.now() - startTime,
-        },
-      } as AgentResult<TOutput>;
-
-      error = err instanceof Error ? err.message : String(err);
+    // Call onTestStart hook
+    if (this.lifecycle?.onTestStart) {
+      await this.lifecycle.onTestStart(agent, input);
     }
 
-    const duration = Date.now() - startTime;
+    // Prepare execution config
+    const executionConfig: ExecutionConfig = {
+      timeout: config?.timeout ?? this.config.timeout,
+      retry: config?.retry,
+      metadata: config?.metadata,
+    };
 
-    return {
+    // Clear previous lifecycle events for this agent
+    const key = this.getEventKey(agent.id.value);
+    this.lifecycleEvents.delete(key);
+
+    // Execute agent
+    const result = await this.engine.execute(agent, input, context, executionConfig);
+
+    const duration = Date.now() - startTime;
+    const passed = result.isSuccess();
+
+    // Get lifecycle events
+    const lifecycleEvents = this.lifecycleEvents.get(key);
+
+    // TODO: Implement trace capture
+    const trace: ExecutionTrace | undefined = undefined;
+
+    const testResult: TestResult<TOutput> = {
       result,
       duration,
       passed,
-      error,
+      trace,
+      lifecycleEvents,
     };
-  }
 
-  /**
-   * Executes agent with timeout
-   */
-  private async executeWithTimeout<TInput, TOutput>(
-    agent: AIAgent<TInput, TOutput>,
-    input: TInput,
-    _context?: AgentContext
-  ): Promise<AgentResult<TOutput>> {
-    const timeout = this.options.timeout!;
-
-    return Promise.race([
-      agent.executeWithEvents(input),
-      new Promise<never>((_, reject) => {
-        setTimeout(() => {
-          reject(new Error(`Test timeout after ${timeout}ms`));
-        }, timeout);
-      }),
-    ]);
-  }
-
-  /**
-   * Asserts that the result is successful
-   */
-  assertSuccess<TOutput>(
-    result: TestResult<TOutput>
-  ): asserts result is TestResult<TOutput> & { passed: true } {
-    if (!result.passed) {
-      throw new Error(`Expected success but got failure: ${result.error}`);
+    // Call onTestComplete hook
+    if (this.lifecycle?.onTestComplete) {
+      await this.lifecycle.onTestComplete(testResult);
     }
+
+    return testResult;
+  }
+
+  // === Lifecycle Management ===
+
+  /**
+   * Set test lifecycle hooks.
+   *
+   * @param lifecycle - Lifecycle hooks to use
+   * @returns This tester for chaining
+   */
+  setLifecycle(lifecycle: TestLifecycleHooks): this {
+    this.lifecycle = lifecycle;
+    return this;
   }
 
   /**
-   * Asserts that the result is a failure
+   * Get current lifecycle hooks.
+   *
+   * @returns Current lifecycle or undefined
    */
-  assertFailure<TOutput>(
-    result: TestResult<TOutput>
-  ): asserts result is TestResult<TOutput> & { passed: false } {
-    if (result.passed) {
-      throw new Error('Expected failure but got success');
+  getLifecycle(): TestLifecycleHooks | undefined {
+    return this.lifecycle;
+  }
+
+  // === Mock Provider Management ===
+
+  /**
+   * Get the mock LLM provider.
+   *
+   * @returns Mock provider instance
+   * @throws {Error} If no mock provider configured
+   */
+  getMockProvider(): MockLLMProvider {
+    if (!this.config.mockProvider) {
+      throw new Error('No mock provider configured. Provide one in constructor.');
     }
+    return this.config.mockProvider;
   }
 
   /**
-   * Asserts that execution time is within limits
+   * Set a single mock response.
+   * Convenience method for getMockProvider().setResponse().
+   *
+   * @param response - Mock response to use
+   * @returns This tester for chaining
    */
-  assertDuration<TOutput>(result: TestResult<TOutput>, maxDuration: number): void {
-    if (result.duration > maxDuration) {
-      throw new Error(`Expected duration <= ${maxDuration}ms but got ${result.duration}ms`);
+  setMockResponse(response: MockResponse): this {
+    this.getMockProvider().setResponse(response);
+    return this;
+  }
+
+  /**
+   * Set multiple mock responses in sequence.
+   * Convenience method for getMockProvider().setResponses().
+   *
+   * @param responses - Array of mock responses
+   * @returns This tester for chaining
+   */
+  setMockResponses(responses: MockResponse[]): this {
+    this.getMockProvider().setResponses(responses);
+    return this;
+  }
+
+  // === State Management ===
+
+  /**
+   * Reset tester state.
+   * Clears lifecycle events and mock provider history.
+   *
+   * @returns This tester for chaining
+   */
+  reset(): this {
+    this.lifecycleEvents.clear();
+
+    if (this.config.mockProvider) {
+      this.config.mockProvider.reset();
     }
+
+    return this;
   }
 
-  /**
-   * Asserts that the mock provider was called N times
-   */
-  assertCallCount(expectedCount: number): void {
-    const actualCount = this.mockProvider.getCallCount();
-    if (actualCount !== expectedCount) {
-      throw new Error(`Expected ${expectedCount} calls but got ${actualCount}`);
-    }
-  }
+  // === Utility Methods ===
 
   /**
-   * Resets the tester state
+   * Get unique key for lifecycle events.
+   *
+   * @private
    */
-  reset(): void {
-    this.mockProvider.reset();
+  private getEventKey(agentId: string): string {
+    return `agent-${agentId}`;
   }
+}
+
+/**
+ * Create a test lifecycle that logs events.
+ *
+ * @param logger - Optional logger (defaults to console)
+ * @returns Test lifecycle implementation
+ */
+export function createLoggingLifecycle(logger: Console = console): TestLifecycleHooks {
+  return {
+    async onTestStart(agent, _input) {
+      logger.log(`[Test] Starting test for ${agent.name}`);
+    },
+
+    async beforeExecute(agent, _input, context) {
+      logger.log(`[Test] Before execute: ${agent.name}`, {
+        agentId: agent.id.value,
+        sessionId: context.sessionId,
+      });
+    },
+
+    async afterExecute(agent, result, _context) {
+      logger.log(`[Test] After execute: ${agent.name}`, {
+        success: result.isSuccess(),
+        warnings: result.warnings.length,
+      });
+    },
+
+    async onError(agent, error, _context) {
+      logger.error(`[Test] Error in ${agent.name}:`, error.message);
+    },
+
+    async onTestComplete(result) {
+      logger.log(`[Test] Test completed`, {
+        passed: result.passed,
+        duration: `${result.duration}ms`,
+      });
+    },
+  };
+}
+
+/**
+ * Create a test lifecycle that captures all events.
+ *
+ * Useful for assertions on lifecycle behavior.
+ *
+ * @returns Test lifecycle and captured events
+ */
+export function createCapturingLifecycle(): {
+  lifecycle: TestLifecycleHooks;
+  events: {
+    testStarts: unknown[];
+    beforeExecutes: unknown[];
+    afterExecutes: unknown[];
+    errors: Error[];
+    testCompletes: unknown[];
+  };
+} {
+  const events = {
+    testStarts: [] as unknown[],
+    beforeExecutes: [] as unknown[],
+    afterExecutes: [] as unknown[],
+    errors: [] as Error[],
+    testCompletes: [] as unknown[],
+  };
+
+  const lifecycle: TestLifecycleHooks = {
+    async onTestStart(_agent, input) {
+      events.testStarts.push(input);
+    },
+
+    async beforeExecute(agent, input, context) {
+      events.beforeExecutes.push({ agent, input, context });
+    },
+
+    async afterExecute(agent, result, context) {
+      events.afterExecutes.push({ agent, result, context });
+    },
+
+    async onError(_agent, error, _context) {
+      events.errors.push(error);
+    },
+
+    async onTestComplete(result) {
+      events.testCompletes.push(result);
+    },
+  };
+
+  return { lifecycle, events };
 }

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { TopicFilterGuardrail } from '../guardrails/TopicFilterGuardrail.js';
-import { GuardrailSeverity } from '@stratix/core';
+import { GuardrailSeverity } from '@stratix/core/ai-agents';
 
 describe('TopicFilterGuardrail', () => {
   describe('forbidden topics', () => {
@@ -14,44 +14,44 @@ describe('TopicFilterGuardrail', () => {
     });
 
     it('should block forbidden topic - politics', async () => {
-      const result = await guardrail.evaluate({
-        content: 'What do you think about the recent election and government policies?',
-        contentType: 'input',
+      const result = await guardrail.check(
+        'What do you think about the recent election and government policies?', {
+        type: 'input',
       });
 
       expect(result.passed).toBe(false);
       expect(result.severity).toBe(GuardrailSeverity.ERROR);
-      expect(result.violations).toBeDefined();
-      expect(result.metadata?.forbiddenTopics).toContain('politics');
+      expect(result.details?.violations).toBeDefined();
+      expect(result.details?.forbiddenTopics).toContain('politics');
     });
 
     it('should block forbidden topic - religion', async () => {
-      const result = await guardrail.evaluate({
-        content: 'Can you tell me about different religious beliefs and church practices?',
-        contentType: 'input',
+      const result = await guardrail.check(
+        'Can you tell me about different religious beliefs and church practices?', {
+        type: 'input',
       });
 
       expect(result.passed).toBe(false);
-      expect(result.metadata?.forbiddenTopics).toContain('religion');
+      expect(result.details?.forbiddenTopics).toContain('religion');
     });
 
     it('should allow content without forbidden topics', async () => {
-      const result = await guardrail.evaluate({
-        content: 'I need help with my software installation',
-        contentType: 'input',
+      const result = await guardrail.check(
+        'I need help with my software installation', {
+        type: 'input',
       });
 
       expect(result.passed).toBe(true);
     });
 
     it('should detect multiple forbidden topics', async () => {
-      const result = await guardrail.evaluate({
-        content: 'The election results show political parties divided on religious faith policies',
-        contentType: 'input',
+      const result = await guardrail.check(
+        'The election results show political parties divided on religious faith policies', {
+        type: 'input',
       });
 
       expect(result.passed).toBe(false);
-      expect(result.metadata?.forbiddenTopics.length).toBeGreaterThanOrEqual(1);
+      expect(result.details?.forbiddenTopics.length).toBeGreaterThanOrEqual(1);
     });
   });
 
@@ -70,19 +70,19 @@ describe('TopicFilterGuardrail', () => {
     });
 
     it('should allow content matching allowed topics', async () => {
-      const result = await guardrail.evaluate({
-        content: 'I have an issue with my account, need help to fix this problem',
-        contentType: 'input',
+      const result = await guardrail.check(
+        'I have an issue with my account, need help to fix this problem', {
+        type: 'input',
       });
 
       expect(result.passed).toBe(true);
-      expect(result.metadata?.detectedTopics).toContain('support');
+      expect(result.details?.detectedTopics).toContain('support');
     });
 
     it('should block content not matching allowed topics', async () => {
-      const result = await guardrail.evaluate({
-        content: 'Just a random conversation about weather',
-        contentType: 'input',
+      const result = await guardrail.check(
+        'Just a random conversation about weather', {
+        type: 'input',
       });
 
       expect(result.passed).toBe(false);
@@ -100,13 +100,13 @@ describe('TopicFilterGuardrail', () => {
         minKeywordMatches: 2,
       });
 
-      const result = await guardrail.evaluate({
-        content: 'This is confidential and secret information',
-        contentType: 'input',
+      const result = await guardrail.check(
+        'This is confidential and secret information', {
+        type: 'input',
       });
 
       expect(result.passed).toBe(false);
-      expect(result.metadata?.forbiddenTopics).toContain('sensitive');
+      expect(result.details?.forbiddenTopics).toContain('sensitive');
     });
 
     it('should require minimum keyword matches', async () => {
@@ -118,16 +118,16 @@ describe('TopicFilterGuardrail', () => {
         minKeywordMatches: 3,
       });
 
-      const result1 = await guardrail.evaluate({
-        content: 'Contains word1 and word2',
-        contentType: 'input',
+      const result1 = await guardrail.check(
+        'Contains word1 and word2', {
+        type: 'input',
       });
 
       expect(result1.passed).toBe(true); // Only 2 matches, needs 3
 
-      const result2 = await guardrail.evaluate({
-        content: 'Contains word1, word2, and word3',
-        contentType: 'input',
+      const result2 = await guardrail.check(
+        'Contains word1, word2, and word3', {
+        type: 'input',
       });
 
       expect(result2.passed).toBe(false); // 3 matches
@@ -140,9 +140,9 @@ describe('TopicFilterGuardrail', () => {
         forbiddenTopics: ['politics'],
       });
 
-      const result = await guardrail.evaluate({
-        content: 'The president announced new legislation in congress',
-        contentType: 'input',
+      const result = await guardrail.check(
+        'The president announced new legislation in congress', {
+        type: 'input',
       });
 
       expect(result.passed).toBe(false);
@@ -153,9 +153,9 @@ describe('TopicFilterGuardrail', () => {
         forbiddenTopics: ['violence'],
       });
 
-      const result = await guardrail.evaluate({
-        content: 'Weapons and violence are harmful',
-        contentType: 'input',
+      const result = await guardrail.check(
+        'Weapons and violence are harmful', {
+        type: 'input',
       });
 
       expect(result.passed).toBe(false);
@@ -168,13 +168,13 @@ describe('TopicFilterGuardrail', () => {
         forbiddenTopics: ['politics'],
       });
 
-      const result = await guardrail.evaluate({
-        content: 'The election results show how political parties vote',
-        contentType: 'input',
+      const result = await guardrail.check(
+        'The election results show how political parties vote', {
+        type: 'input',
       });
 
-      expect(result.remediation).toBeDefined();
-      expect(result.remediation).toContain('forbidden topics');
+      expect(result.details?.remediation).toBeDefined();
+      expect(result.details?.remediation).toContain('forbidden topics');
     });
 
     it('should provide remediation for allowed topics', async () => {
@@ -185,13 +185,13 @@ describe('TopicFilterGuardrail', () => {
         },
       });
 
-      const result = await guardrail.evaluate({
-        content: 'Random conversation',
-        contentType: 'input',
+      const result = await guardrail.check(
+        'Random conversation', {
+        type: 'input',
       });
 
-      expect(result.remediation).toBeDefined();
-      expect(result.remediation).toContain('allowed topics');
+      expect(result.details?.remediation).toBeDefined();
+      expect(result.details?.remediation).toContain('allowed topics');
     });
   });
 
@@ -201,9 +201,9 @@ describe('TopicFilterGuardrail', () => {
         forbiddenTopics: ['politics'],
       });
 
-      const result = await guardrail.evaluate({
-        content: '',
-        contentType: 'input',
+      const result = await guardrail.check(
+        '', {
+        type: 'input',
       });
 
       expect(result.passed).toBe(true);
@@ -214,9 +214,9 @@ describe('TopicFilterGuardrail', () => {
         forbiddenTopics: ['politics'],
       });
 
-      const result = await guardrail.evaluate({
-        content: 'Generic content',
-        contentType: 'input',
+      const result = await guardrail.check(
+        'Generic content', {
+        type: 'input',
       });
 
       expect(result.passed).toBe(true);
@@ -227,9 +227,9 @@ describe('TopicFilterGuardrail', () => {
         forbiddenTopics: ['politics'],
       });
 
-      const result = await guardrail.evaluate({
-        content: 'ELECTION and GOVERNMENT news',
-        contentType: 'input',
+      const result = await guardrail.check(
+        'ELECTION and GOVERNMENT news', {
+        type: 'input',
       });
 
       expect(result.passed).toBe(false);
