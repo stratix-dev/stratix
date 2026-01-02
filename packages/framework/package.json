@@ -1,7 +1,7 @@
 {
-  "name": "@stratix/core",
-  "version": "0.8.2",
-  "description": "Stratix core - DDD primitives, pure abstractions, and interfaces",
+  "name": "@stratix/framework",
+  "version": "2.0.0-beta.1",
+  "description": "Stratix framework - Decorator-based DDD framework with CQRS, Event Sourcing, and AI agents",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -9,14 +9,6 @@
     ".": {
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
-    },
-    "./ai-agents": {
-      "import": "./dist/ai-agents/index.js",
-      "types": "./dist/ai-agents/index.d.ts"
-    },
-    "./result": {
-      "import": "./dist/result/index.js",
-      "types": "./dist/result/index.d.ts"
     }
   },
   "scripts": {
@@ -28,29 +20,30 @@
     "clean": "rm -rf dist"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "keywords": [
+    "framework",
     "ddd",
     "domain-driven-design",
-    "entity",
-    "value-object",
-    "aggregate-root",
-    "primitives",
-    "abstractions",
-    "interfaces",
-    "dependency-injection",
     "cqrs",
-    "event-bus",
-    "typescript",
+    "event-sourcing",
     "hexagonal-architecture",
-    "clean-architecture",
+    "decorators",
+    "typescript",
+    "dependency-injection",
     "ai-agents"
   ],
   "author": "P. Andrés Carvajal <causticrez@gmail.com>",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "@stratix/core": "workspace:^",
+    "awilix": "^12.0.5",
+    "reflect-metadata": "^0.2.1"
   },
   "devDependencies": {
     "@types/node": "^25.0.3",
@@ -61,7 +54,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/stratix-dev/stratix.git",
-    "directory": "packages/core"
+    "directory": "packages/framework"
   },
   "homepage": "https://stratix-dev.github.io/stratix/",
   "bugs": {

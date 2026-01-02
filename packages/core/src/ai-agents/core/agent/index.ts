@@ -1,11 +1,9 @@
 /**
  * Core agent primitives.
  *
- * This module contains the fundamental agent classes and types.
+ * This module contains the fundamental agent metadata and configuration types.
  */
 
-export { AIAgent } from './AIAgent.js';
-export { AgentId } from './AgentId.js';
 export {
   AgentVersion,
   AgentMetadata,

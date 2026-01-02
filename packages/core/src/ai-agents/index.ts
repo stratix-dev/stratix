@@ -1,30 +1,26 @@
 /**
- * AI Agents system (v2.0).
+ * AI Agents system (v3.0 - Hexagonal Architecture).
  *
- * This module exports the complete AI agents system including:
- * - Shared types and primitives
- * - Core agent and execution system
- * - LLM provider interfaces
- * - Guardrails
- * - Prompts
- * - Memory
- * - Tools
- * - RAG
- * - Observability
- * - Orchestration
- * - Workflows
- * - Streaming
- *
- * Note: This is the new v2.0 architecture - a complete rewrite.
+ * This module exports the AI agents system with strict DDD/hexagonal architecture:
+ * - Domain layer (AgentSpecification, LLMPort)
+ * - Application layer (AgentService)
+ * - Core primitives (metadata, config)
+ * - Supporting modules (guardrails, prompts, memory, tools, RAG, observability, workflows)
  */
+
+// Domain layer (hexagonal architecture) - PURE DOMAIN
+export * from './domain/index.js';
+
+// Application layer (hexagonal architecture) - ORCHESTRATION
+export * from './application/index.js';
+
+// Core primitives (metadata and configuration types)
+export * from './core/index.js';
 
 // Shared types
 export * from './shared/TokenUsage.js';
 export * from './shared/RetryPolicy.js';
 export * from './shared/ExecutionMetadata.js';
-
-// Core system
-export * from './core/index.js';
 
 // LLM provider interfaces
 export * from './llm/index.js';
@@ -78,17 +74,5 @@ export {
 // Observability
 export * from './observability/index.js';
 
-// Orchestration
-export * from './orchestration/index.js';
-
 // Workflows
 export * from './workflows/index.js';
-
-// Streaming
-export * from './streaming/index.js';
-
-// Domain layer (for hexagonal architecture)
-export * from './domain/index.js';
-
-// Application layer (for hexagonal architecture)
-export * from './application/index.js';

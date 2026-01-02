@@ -96,7 +96,7 @@ Application services orchestrate domain + infrastructure:
 import { AgentService } from '@stratix/core';
 import type { LLMPort, LLMRequest, LLMCompletionResponse } from '@stratix/core';
 
-class CustomerSupportService extends AgentService<string, string> {
+class SupportService extends AgentService<string, string> {
   constructor(llmPort: LLMPort) {  // ← Infrastructure abstraction
     super(llmPort);
   }
@@ -116,7 +116,7 @@ class CustomerSupportService extends AgentService<string, string> {
 
 // Usage
 const llmAdapter = new OpenAILLMAdapter(apiKey);  // Infrastructure
-const service = new CustomerSupportService(llmAdapter);
+const service = new SupportService(llmAdapter);
 const spec = new CustomerSupportAgentSpec(EntityId.create());
 
 const result = await service.execute(spec, 'How do I reset my password?');

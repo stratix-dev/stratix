@@ -1,8 +1,0 @@
-server:
-  port: 4000
-  host: 0.0.0.0
-database:
-  url: postgresql://prod/db
-  poolSize: 50
-features:
-  enableMetrics: true

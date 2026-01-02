@@ -1,11 +1,10 @@
 packages:
   # Core
   - 'packages/core'
-  - 'packages/runtime'
-  - 'packages/testing'
+  - 'packages/framework'
   # AI
   - 'packages/ai/providers/*'
   # Providers
-  - 'packages/providers/di/*'
-  - 'packages/providers/validation/*'
-  - 'packages/providers/config'
+  - 'packages/di/*'
+  # Examples
+  - 'examples/*'

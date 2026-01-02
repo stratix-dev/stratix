@@ -13,30 +13,20 @@
     "typecheck": "pnpm -r typecheck",
     "lint": "pnpm -r lint",
     "format": "prettier --write \"packages/**/src/**/*.ts\"",
-    "clean": "pnpm -r clean && rm -rf node_modules",
-    "api": "typedoc",
-    "api:watch": "typedoc --watch",
-    "api:json": "typedoc --json api/api.json",
-    "api:analyze": "node scripts/analyze-docs.js"
+    "clean": "pnpm -r clean && rm -rf node_modules"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "@vitest/coverage-v8": "^1.6.1",
+    "@types/node": "^25.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.51.0",
+    "@typescript-eslint/parser": "^8.51.0",
+    "@vitest/coverage-v8": "^4.0.16",
     "eslint": "^8.0.0",
-    "prettier": "^3.0.0",
-    "typedoc": "^0.27.0",
-    "typescript": "^5.7.2",
-    "vitest": "^1.0.0"
+    "prettier": "^3.7.4",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.16"
   },
   "engines": {
     "node": ">=18.0.0"
   },
-  "packageManager": "pnpm@9.15.0",
-  "pnpm": {
-    "overrides": {
-      "typescript": "5.7.2"
-    }
-  }
+  "packageManager": "pnpm@10.27.0"
 }

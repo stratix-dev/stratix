@@ -1,7 +1,6 @@
 import { Result, Success, Failure } from '../../result/Result.js';
 import type { AgentSpecification } from '../domain/AgentSpecification.js';
 import type { LLMPort, LLMRequest, LLMCompletionResponse } from '../domain/ports/LLMPort.js';
-import type { ExecutionContext } from '../core/execution/ExecutionContext.js';
 import type { LLMMessage } from '../llm/LLMMessage.js';
 
 /**
@@ -93,7 +92,7 @@ export class AgentServiceError extends Error {
  * }
  *
  * // Application layer
- * class CustomerSupportService extends AgentService<string, string> {
+ * class SupportService extends AgentService<string, string> {
  *   protected prepareRequest(
  *     spec: CustomerSupportSpec,
  *     input: string
@@ -110,7 +109,7 @@ export class AgentServiceError extends Error {
  * }
  *
  * // Usage
- * const service = new CustomerSupportService(llmPort);
+ * const service = new SupportService(llmPort);
  * const result = await service.execute(spec, 'How do I reset my password?');
  * ```
  *
@@ -157,13 +156,13 @@ export abstract class AgentService<TInput, TOutput> {
    *
    * @param spec - Agent specification (domain entity)
    * @param input - Input data for the agent
-   * @param context - Optional execution context
+   * @param metadata - Optional execution metadata (session ID, user ID, etc.)
    * @returns Promise resolving to Result with output or error
    */
   async execute(
     spec: AgentSpecification,
     input: TInput,
-    context?: ExecutionContext
+    metadata?: Record<string, unknown>
   ): Promise<Result<AgentServiceResult<TOutput>, Error>> {
     const startTime = Date.now();
 
@@ -175,7 +174,7 @@ export abstract class AgentService<TInput, TOutput> {
       }
 
       // 2. Prepare LLM request (domain logic)
-      const request = this.prepareRequest(spec, input, context);
+      const request = this.prepareRequest(spec, input, metadata);
 
       // 3. Call LLM (infrastructure)
       const response = await this.llmPort.generate(request);
@@ -215,13 +214,13 @@ export abstract class AgentService<TInput, TOutput> {
    *
    * @param spec - Agent specification
    * @param input - Input data
-   * @param context - Optional execution context
+   * @param metadata - Optional execution metadata
    * @returns Async iterable of output chunks
    */
   async *executeStream(
     spec: AgentSpecification,
     input: TInput,
-    context?: ExecutionContext
+    metadata?: Record<string, unknown>
   ): AsyncIterable<TOutput> {
     // Validate
     const validation = await this.validate(spec, input);
@@ -230,7 +229,7 @@ export abstract class AgentService<TInput, TOutput> {
     }
 
     // Prepare request
-    const request = this.prepareRequest(spec, input, context);
+    const request = this.prepareRequest(spec, input, metadata);
 
     // Stream from LLM
     for await (const chunk of this.llmPort.stream(request)) {
@@ -248,13 +247,13 @@ export abstract class AgentService<TInput, TOutput> {
    *
    * @param spec - Agent specification
    * @param input - Input data
-   * @param context - Optional execution context
+   * @param metadata - Optional execution metadata
    * @returns LLM request object
    */
   protected abstract prepareRequest(
     spec: AgentSpecification,
     input: TInput,
-    context?: ExecutionContext
+    metadata?: Record<string, unknown>
   ): LLMRequest;
 
   /**
@@ -296,10 +295,7 @@ export abstract class AgentService<TInput, TOutput> {
    * @param _input - Input data to validate (unused in default implementation)
    * @returns Result indicating validation success or failure
    */
-  protected validate(
-    _spec: AgentSpecification,
-    _input: TInput
-  ): Promise<Result<void, Error>> {
+  protected validate(_spec: AgentSpecification, _input: TInput): Promise<Result<void, Error>> {
     return Promise.resolve(Success.create(undefined));
   }
 
@@ -313,10 +309,7 @@ export abstract class AgentService<TInput, TOutput> {
    * @param _spec - Agent specification (unused in default implementation)
    * @returns Estimated cost in USD
    */
-  protected estimateCost(
-    response: LLMCompletionResponse,
-    _spec: AgentSpecification
-  ): number {
+  protected estimateCost(response: LLMCompletionResponse, _spec: AgentSpecification): number {
     const inputCostPer1k = 0.03;
     const outputCostPer1k = 0.06;
 
