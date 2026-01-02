@@ -359,7 +359,7 @@ await bootstrap(App);
 ### Dev Dependencies
 - `typescript@^5.7.2` - TypeScript compiler
 - `vitest@^1.0.0` - Test runner
-- `eslint@^8.0.0` - Linting
+- `eslint@^9.39.2` - Linting
 
 ---
 
