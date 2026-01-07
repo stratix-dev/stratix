@@ -460,12 +460,7 @@ Before deploying agents to production:
 
 ## Examples
 
-See the `/examples` directory for complete working example:
-
-- `examples/enterprise-support-agent/example-ddd-pattern.ts` - Complete DDD pattern with:
-  - Domain layer (AgentSpecification)
-  - Application layer (AgentService)
-  - Infrastructure layer (LLMPort adapter)
+Complete working examples demonstrating the DDD pattern with AI agents are planned but not yet available in the repository.
 
 ## Testing
 

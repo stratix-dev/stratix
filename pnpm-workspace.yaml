@@ -1,10 +1,4 @@
 packages:
-  # Core
   - 'packages/core'
   - 'packages/framework'
-  # AI
-  - 'packages/ai/providers/*'
-  # Providers
-  - 'packages/di/*'
-  # Examples
   - 'examples/*'

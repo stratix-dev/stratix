@@ -143,7 +143,7 @@ export interface LLMStreamChunk {
  *   }
  * }
  *
- * // application/services/AgentService.ts (usage)
+ * // docorators/services/AgentService.ts (usage)
  * export class AgentService {
  *   constructor(private readonly llm: LLMPort) {}  // ← Depends on abstraction
  *

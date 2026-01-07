@@ -54,7 +54,7 @@ export class AgentServiceError extends Error {
 /**
  * Application service for executing AI agents.
  *
- * AgentService is an application layer component that:
+ * AgentService is an docorators layer component that:
  * - Orchestrates agent execution using infrastructure (LLMPort)
  * - Handles cross-cutting concerns (timing, error handling)
  * - Coordinates between domain logic and infrastructure
@@ -70,7 +70,7 @@ export class AgentServiceError extends Error {
  *   └── ports/
  *       └── LLMPort.ts                ← Domain defines interface
  *
- * application/
+ * docorators/
  *   └── AgentService.ts               ← This class (orchestration)
  *
  * infrastructure/

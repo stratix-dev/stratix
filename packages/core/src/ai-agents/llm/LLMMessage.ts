@@ -48,7 +48,7 @@ export interface ToolCall {
 }
 
 /**
- * Tool result provided by the application.
+ * Tool result provided by the docorators.
  */
 export interface ToolResult {
   readonly tool_call_id: string;

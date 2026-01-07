@@ -60,7 +60,7 @@ export interface TelemetrySpan {
  */
 export enum SpanKind {
   /**
-   * Internal operation within the application.
+   * Internal operation within the docorators.
    */
   INTERNAL = 'internal',
 

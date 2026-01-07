@@ -1,92 +1,48 @@
-import type { Logger } from '@stratix/core';
-import type { AwilixContainer } from 'awilix';
-import { LifecycleOrchestrator } from './LifecycleOrchestrator.js';
+import { AwilixContainer, createContainer } from 'awilix';
+import { MetadataStorage } from './MetadataStorage.js';
+import { StratixError } from '../errors/StratixError.js';
+import { Error } from '../errors/Error.js';
+import { InMemoryCommandBus } from '../messaging/InMemoryCommandBus.js';
+import { ClassConstructor, CommandBus, Container, EventBus, Logger, QueryBus } from '@stratix/core';
+import { AwilixContainerAdapter } from './AwilixContainerAdapter.js';
+import { InMemoryEventBus } from '../messaging/InMemoryEventBus.js';
+import { InMemoryQueryBus } from '../messaging/InMemoryQueryBus.js';
+import { StratixLogger } from './StratixLogger.js';
 
-/**
- * The Stratix application instance.
- *
- * Manages the application lifecycle (start, stop).
- */
 export class StratixApplication {
-  private isRunning = false;
-  private lifecycleOrchestrator: LifecycleOrchestrator;
+  public readonly container: Container;
+  private readonly awilixContainer: AwilixContainer;
+  private readonly appClass: ClassConstructor;
 
-  constructor(
-    private readonly container: AwilixContainer,
-    private readonly logger: Logger,
-    lifecycleOrchestrator?: LifecycleOrchestrator
-  ) {
-    this.lifecycleOrchestrator = lifecycleOrchestrator || new LifecycleOrchestrator(logger);
+  constructor(appClass: new (...args: any[]) => any) {
+    this.appClass = appClass;
+    this.awilixContainer = createContainer();
+    this.container = new AwilixContainerAdapter(this.awilixContainer);
   }
 
-  /**
-   * Starts the application.
-   *
-   * Executes lifecycle phases:
-   * 1. Initialize (plugins → modules)
-   * 2. Start (plugins → modules)
-   * 3. Ready (modules + plugins notified)
-   */
-  async start(): Promise<void> {
-    if (this.isRunning) {
-      throw new Error('Application is already running');
+  initialize(): void {
+    const appMetadata = MetadataStorage.getAppMetadata(this.appClass);
+
+    if (!appMetadata) {
+      throw new StratixError(Error.RUNTIME_ERROR, 'Application metadata not found');
     }
 
-    this.logger.info('Starting application...');
-
-    // Execute lifecycle phases
-    await this.lifecycleOrchestrator.initialize();
-    await this.lifecycleOrchestrator.start();
-    await this.lifecycleOrchestrator.ready();
-
-    this.isRunning = true;
-    this.logger.info('Application started successfully');
+    this.registerCoreServices();
   }
 
-  /**
-   * Stops the application gracefully.
-   *
-   * Executes lifecycle phases:
-   * 1. Shutdown notification (modules → plugins)
-   * 2. Stop (reverse order: modules → plugins)
-   * 3. Dispose container
-   */
-  async stop(): Promise<void> {
-    if (!this.isRunning) {
-      return;
-    }
-
-    this.logger.info('Stopping application...');
-
-    // Execute lifecycle phases
-    await this.lifecycleOrchestrator.shutdown();
-    await this.lifecycleOrchestrator.stop();
-
-    // Dispose container
+  async shutdown(): Promise<void> {
+    console.log('Shutting down application...');
     await this.container.dispose();
-
-    this.isRunning = false;
-    this.logger.info('Application stopped');
   }
 
-  /**
-   * Gets the DI container.
-   */
-  getContainer(): AwilixContainer {
-    return this.container;
+  private registerCoreServices(): void {
+    this.container.registerClass<Logger>('logger', StratixLogger);
+    this.container.registerClass<EventBus>('eventBus', InMemoryEventBus);
+    this.container.registerClass<CommandBus>('commandBus', InMemoryCommandBus);
+    this.container.registerClass<QueryBus>('queryBus', InMemoryQueryBus);
   }
 
-  /**
-   * Resolves a service from the container.
-   */
-  resolve<T>(token: string): T {
-    return this.container.resolve<T>(token);
-  }
-
-  /**
-   * Gets the lifecycle orchestrator (for testing).
-   */
-  getLifecycleOrchestrator(): LifecycleOrchestrator {
-    return this.lifecycleOrchestrator;
+  resolve<T>(token: string | symbol): T {
+    return this.container.resolve<T>(token as string);
   }
 }

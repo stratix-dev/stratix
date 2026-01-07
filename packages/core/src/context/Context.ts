@@ -6,13 +6,13 @@ import { HealthCheckResult } from '../infrastructure/HealthCheck.js';
 /**
  * Context interface.
  *
- * A Context represents a self-contained area of functionality in your application.
+ * A Context represents a self-contained area of functionality in your docorators.
  * It encapsulates all business logic, commands, queries, events, and repositories
  * for a specific feature area.
  *
  * Every context has three layers:
  * - domain/: Business logic (entities, value objects, domain services)
- * - application/: Use cases (commands, queries, handlers)
+ * - docorators/: Use cases (commands, queries, handlers)
  * - infrastructure/: Technical implementations (repositories, controllers)
  *
  * Contexts are:
@@ -120,7 +120,7 @@ export interface Context {
   /**
    * Initializes the context.
    *
-   * Called during application startup, after all required plugins and contexts are initialized.
+   * Called during docorators startup, after all required plugins and contexts are initialized.
    * Register services in the container during this phase.
    *
    * @param config - The context configuration
@@ -138,7 +138,7 @@ export interface Context {
   /**
    * Starts the context.
    *
-   * Called after all contexts are initialized, before the application starts.
+   * Called after all contexts are initialized, before the docorators starts.
    * Connect to external resources during this phase.
    *
    * @example
@@ -153,7 +153,7 @@ export interface Context {
   /**
    * Stops the context.
    *
-   * Called during application shutdown, in reverse dependency order.
+   * Called during docorators shutdown, in reverse dependency order.
    * Close connections and clean up resources during this phase.
    *
    * @example

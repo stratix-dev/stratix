@@ -23,15 +23,6 @@ export { ValueObjectFactory } from './value-objects/ValueObjectFactory.js';
 // Errors
 export { DomainError } from './errors/DomainError.js';
 
-// Mapping
-export { Mapper } from './mapping/Mapper.js';
-
-// Security
-export * from './security/SecretsProvider.js';
-
-// Configuration
-export * from './configuration/index.js';
-
 // Value Objects
 export { Currency } from './value-objects/Currency.js';
 export { Money } from './value-objects/Money.js';
@@ -48,16 +39,15 @@ export { Address } from './value-objects/Address.js';
 export type { AddressProps } from './value-objects/Address.js';
 export { UUID } from './value-objects/UUID.js';
 
-// Patterns
-export { Specification, fromPredicate } from './patterns/Specification.js';
-export type { SpecificationResult } from './patterns/Specification.js';
-
 // ========================================
 // ABSTRACTIONS & INTERFACES
 // ========================================
 
 // Container (Dependency Injection)
 export type { Container } from './container/Container.js';
+export type { RegistrationOptions } from './container/RegistrationOptions.js';
+export type { Resolver } from './container/Resolver.js';
+export { DependencyLifetime } from './container/DependencyLifetime.js';
 
 // Messaging (CQRS)
 export type { Command } from './messaging/Command.js';
@@ -70,6 +60,8 @@ export type { CommandBus } from './messaging/CommandBus.js';
 export type { QueryBus } from './messaging/QueryBus.js';
 export type { EventBus } from './messaging/EventBus.js';
 export { BaseCommandHandler, BaseQueryHandler } from './messaging/BaseHandlers.js';
+export type { CommandHandlerMetadata } from './messaging/CommandHandlerMetadata.js';
+export type { EventHandlerMetadata } from './messaging/EventHandlerMetadata.js';
 
 // Infrastructure
 export { LogLevel } from './infrastructure/LogLevel.js';
@@ -81,7 +73,7 @@ export type { HealthCheckResult, HealthCheck } from './infrastructure/HealthChec
 export type {
   RateLimiter,
   RateLimitResult,
-  RateLimitConfig,
+  RateLimitConfig
 } from './infrastructure/RateLimiter.js';
 export { RateLimitExceededError } from './infrastructure/RateLimiter.js';
 
@@ -98,9 +90,12 @@ export type {
   ContextCommandDefinition,
   ContextQueryDefinition,
   ContextEventHandlerDefinition,
-  ContextRepositoryDefinition,
+  ContextRepositoryDefinition
 } from './context/definitions.js';
 
+// Types
+export type { ClassConstructor } from './types/ClassConstructor.js';
+export type { Buses } from './types/Buses.js';
 // ========================================
 // AI AGENTS
 // ========================================

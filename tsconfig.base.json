@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ES2024",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "lib": ["ES2022"],
+    "lib": ["ES2024", "Decorators"],
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
@@ -21,7 +21,7 @@
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": false,
-    "emitDecoratorMetadata": false,
+    "emitDecoratorMetadata": false
   },
   "exclude": ["node_modules", "dist"]
 }

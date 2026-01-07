@@ -1,7 +1,7 @@
 /**
  * Application layer for AI agents.
  *
- * This module contains application services that orchestrate
+ * This module contains docorators services that orchestrate
  * domain logic with infrastructure concerns.
  */
 

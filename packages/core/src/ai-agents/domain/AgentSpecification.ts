@@ -18,7 +18,7 @@ export type AgentSpecificationId = EntityId<'AgentSpecification'>;
  *
  * It does NOT:
  * - Make external I/O calls (LLM, database, APIs)
- * - Execute itself (delegated to application layer)
+ * - Execute itself (delegated to docorators layer)
  * - Know about infrastructure concerns
  *
  * This separation allows agents to live in the domain layer while

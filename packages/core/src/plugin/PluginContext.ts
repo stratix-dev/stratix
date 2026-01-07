@@ -4,7 +4,7 @@ import { Logger } from '../infrastructure/Logger.js';
 /**
  * Context provided to plugins during initialization.
  *
- * Allows plugins to register services and access the application container.
+ * Allows plugins to register services and access the docorators container.
  *
  * @example
  * ```typescript

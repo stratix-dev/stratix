@@ -22,4 +22,7 @@
  *
  * @category Messaging (CQRS)
  */
-export interface Event {}
+export interface Event {
+  occurredAt: Date;
+  [key: string]: unknown;
+}
