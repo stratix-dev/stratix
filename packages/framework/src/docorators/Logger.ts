@@ -1,52 +1,23 @@
-import { MetadataStorage } from '../runtime/MetadataStorage.js';
+import { LogLevel, Logger as ILogger } from '@stratix/core';
 import { StratixError } from '../errors/StratixError.js';
 import { Error } from '../errors/Error.js';
-import type { Logger as ILogger } from '@stratix/core';
+import { MetadataStorage } from '../runtime/MetadataStorage.js';
+import { CORE_TOKENS } from '../tokens/CoreTokens.js';
 
-/**
- * Options for @Logger decorator
- */
 export interface LoggerOptions {
   /**
-   * Custom context name for the logger.
-   * If not provided, uses the class name.
+   * Contexto personalizado
+   * @default nombre de la clase
    */
   context?: string;
 
   /**
-   * Minimum log level. Logs below this level will be ignored.
-   * @default 'debug'
+   * Nivel mínimo (ahora SÍ funciona)
+   * @default LogLevel.DEBUG
    */
-  level?: 'debug' | 'info' | 'warn' | 'error' | 'fatal';
+  minLevel?: LogLevel;
 }
 
-/**
- * Property decorator that injects a Logger instance from the DI container.
- *
- * The logger is lazily initialized and includes the class context automatically.
- *
- * @example
- * ```typescript
- * @CommandHandler(CreateUserCommand)
- * export class CreateUserHandler {
- *   @Logger()
- *   private readonly logger!: ILogger;
- *
- *   async execute(command: CreateUserCommand) {
- *     this.logger.info('Creating user', { email: command.email });
- *     // ...
- *   }
- * }
- * ```
- *
- * @example With custom context
- * ```typescript
- * export class OrderService {
- *   @Logger({ context: 'OrderProcessing' })
- *   private readonly logger!: ILogger;
- * }
- * ```
- */
 export function Logger(options?: LoggerOptions) {
   return function (
     _target: unknown,
@@ -61,127 +32,97 @@ export function Logger(options?: LoggerOptions) {
 
     const propertyName = String(context.name);
 
-    // Store metadata for this logger injection
     context.addInitializer(function (this: any) {
       const contextName = options?.context ?? this.constructor.name;
 
+      // Store metadata
       MetadataStorage.addLoggerMetadata(this.constructor, {
         propertyKey: propertyName,
         context: contextName,
-        level: options?.level ?? 'debug',
+        minLevel: options?.minLevel,
         target: this.constructor
       });
 
-      // Initialize a lazy-loaded logger
+      // Define property getter
+      const cacheKey = Symbol(`logger_${propertyName}`);
+
       Object.defineProperty(this, propertyName, {
         get(): ILogger {
-          // Check if logger is already cached
-          const cacheKey = `__logger_${propertyName}`;
+          // Check cache
           if (this[cacheKey]) {
             return this[cacheKey];
           }
 
-          // Get the base logger from DI container
-          const baseLogger = this.getLogger?.() ?? (this.container?.resolve('logger') as ILogger);
-
-          if (!baseLogger) {
-            // Fallback to console if no logger is available
-            console.warn(`[Stratix] No logger found in DI container for ${contextName}`);
-            return createConsoleLogger(contextName);
+          // Resolve base logger (type-safe token)
+          if (!this.container) {
+            console.warn(`[Stratix] No DI container found for ${contextName}`);
+            return createNoopLogger();
           }
 
-          // Create a contextual logger wrapper
-          const contextualLogger = createContextualLogger(baseLogger, contextName);
+          const baseLogger = this.container.resolve(CORE_TOKENS.LOGGER) as ILogger;
 
-          // Cache it
-          Object.defineProperty(this, cacheKey, {
-            value: contextualLogger,
-            writable: false,
-            enumerable: false,
-            configurable: false
-          });
+          // Create child logger with context
+          const logger = baseLogger.child
+            ? baseLogger.child(contextName)
+            : createContextWrapper(baseLogger, contextName);
 
-          return contextualLogger;
+          // Apply minLevel filtering if specified
+          const filtered = options?.minLevel ? createLevelFilter(logger, options.minLevel) : logger;
+
+          // Cache
+          this[cacheKey] = filtered;
+
+          return filtered;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
       });
     });
-
-    // For accessor decorator, return getter/setter
-    if (context.kind === 'accessor') {
-      return {
-        get(this: any): ILogger {
-          const propertyKey = `__logger_${propertyName}`;
-          return this[propertyKey];
-        },
-        set() {
-          throw new StratixError(Error.RUNTIME_ERROR, 'Logger property is read-only');
-        }
-      };
-    }
   };
 }
 
-/**
- * Creates a contextual logger that wraps a base logger with context information
- */
-function createContextualLogger(baseLogger: ILogger, context: string): ILogger {
+// Helper: Wrapper de contexto para loggers sin child()
+function createContextWrapper(logger: ILogger, context: string): ILogger {
   return {
-    debug(message: string, ctx?: Record<string, unknown>): void {
-      baseLogger.debug(message, { ...ctx, context });
-    },
-
-    info(message: string, ctx?: Record<string, unknown>): void {
-      baseLogger.info(message, { ...ctx, context });
-    },
-
-    warn(message: string, ctx?: Record<string, unknown>): void {
-      baseLogger.warn(message, { ...ctx, context });
-    },
-
-    error(message: string, ctx?: Record<string, unknown>): void {
-      baseLogger.error(message, { ...ctx, context });
-    },
-
-    fatal(message: string, ctx?: Record<string, unknown>): void {
-      baseLogger.fatal(message, { ...ctx, context });
-    },
-
-    log(level: any, message: string, ctx?: Record<string, unknown>): void {
-      baseLogger.log(level, message, { ...ctx, context });
-    }
+    debug: (msg, meta) => logger.debug(msg, { ...meta, context }),
+    info: (msg, meta) => logger.info(msg, { ...meta, context }),
+    warn: (msg, meta) => logger.warn(msg, { ...meta, context }),
+    error: (msg, meta) => logger.error(msg, { ...meta, context }),
+    fatal: (msg, meta) => logger.fatal(msg, { ...meta, context }),
+    log: (level, msg, meta) => logger.log(level, msg, { ...meta, context })
   };
 }
 
-/**
- * Fallback console logger when DI container is not available
- */
-function createConsoleLogger(context: string): ILogger {
+// Helper: Filtro de nivel
+function createLevelFilter(logger: ILogger, minLevel: LogLevel): ILogger {
+  const priority: Record<LogLevel, number> = {
+    [LogLevel.DEBUG]: 0,
+    [LogLevel.INFO]: 1,
+    [LogLevel.WARN]: 2,
+    [LogLevel.ERROR]: 3,
+    [LogLevel.FATAL]: 4
+  };
+
+  const shouldLog = (level: LogLevel) => priority[level] >= priority[minLevel];
+
   return {
-    debug(message: string, ctx?: Record<string, unknown>): void {
-      console.debug(`[DEBUG][${context}] ${message}`, ctx ?? {});
-    },
+    debug: (msg, meta) => shouldLog(LogLevel.DEBUG) && logger.debug(msg, meta),
+    info: (msg, meta) => shouldLog(LogLevel.INFO) && logger.info(msg, meta),
+    warn: (msg, meta) => shouldLog(LogLevel.WARN) && logger.warn(msg, meta),
+    error: (msg, meta) => shouldLog(LogLevel.ERROR) && logger.error(msg, meta),
+    fatal: (msg, meta) => shouldLog(LogLevel.FATAL) && logger.fatal(msg, meta),
+    log: (level, msg, meta) => shouldLog(level) && logger.log(level, msg, meta)
+  };
+}
 
-    info(message: string, ctx?: Record<string, unknown>): void {
-      console.info(`[INFO][${context}] ${message}`, ctx ?? {});
-    },
-
-    warn(message: string, ctx?: Record<string, unknown>): void {
-      console.warn(`[WARN][${context}] ${message}`, ctx ?? {});
-    },
-
-    error(message: string, ctx?: Record<string, unknown>): void {
-      console.error(`[ERROR][${context}] ${message}`, ctx ?? {});
-    },
-
-    fatal(message: string, ctx?: Record<string, unknown>): void {
-      console.error(`[FATAL][${context}] ${message}`, ctx ?? {});
-    },
-
-    log(level: any, message: string, ctx?: Record<string, unknown>): void {
-      const prefix = `[${String(level).toUpperCase()}][${context}]`;
-      console.log(`${prefix} ${message}`, ctx ?? {});
-    }
+function createNoopLogger(): ILogger {
+  const noop = () => {};
+  return {
+    debug: noop,
+    info: noop,
+    warn: noop,
+    error: noop,
+    fatal: noop,
+    log: noop
   };
 }

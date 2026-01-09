@@ -91,4 +91,19 @@ export interface Logger {
    * ```
    */
   fatal(message: string, context?: Record<string, unknown>): void;
+
+  /**
+   * Creates a child logger with additional context.
+   * Child loggers inherit configuration from parent.
+   *
+   * @param context - Context to add to all child logs
+   * @returns A new logger instance with inherited context
+   *
+   * @example
+   * ```typescript
+   * const childLogger = logger.child('UserService');
+   * childLogger.info('User created'); // Logs with context: "UserService"
+   * ```
+   */
+  child?(context: string): Logger;
 }

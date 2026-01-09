@@ -63,9 +63,21 @@ export { BaseCommandHandler, BaseQueryHandler } from './messaging/BaseHandlers.j
 export type { CommandHandlerMetadata } from './messaging/CommandHandlerMetadata.js';
 export type { EventHandlerMetadata } from './messaging/EventHandlerMetadata.js';
 
-// Infrastructure
-export { LogLevel } from './infrastructure/LogLevel.js';
-export type { Logger } from './infrastructure/Logger.js';
+// Logging
+export { LogLevel } from './infrastructure/logging/LogLevel.js';
+export type { Logger } from './infrastructure/logging/Logger.js';
+export type { LoggerFactory } from './infrastructure/logging/LoggerFactory.js';
+export type { LoggerConfig } from './infrastructure/logging/LoggerConfig.js';
+export type { LogEntry } from './infrastructure/logging/LogEntry.js';
+export type { LogTransport } from './infrastructure/logging/LogTransport.js';
+export type { SanitizeConfig } from './infrastructure/logging/SanitizeConfig.js';
+
+// Configuration
+export type { ConfigurationSchema } from './infrastructure/configuration/ConfigurationSchema.js';
+export type { ConfigurationProvider } from './infrastructure/configuration/ConfigurationProvider.js';
+export type { ConfigurationSource } from './infrastructure/configuration/ConfigurationSource.js';
+
+// Others
 export type { Repository } from './infrastructure/Repository.js';
 export type { UnitOfWork } from './infrastructure/UnitOfWork.js';
 export { HealthStatus } from './infrastructure/HealthCheck.js';

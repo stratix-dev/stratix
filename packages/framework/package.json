@@ -42,7 +42,8 @@
   },
   "dependencies": {
     "@stratix/core": "workspace:^",
-    "awilix": "^12.0.5"
+    "awilix": "^12.0.5",
+    "yaml": "^2.8.2"
   },
   "devDependencies": {
     "@types/node": "^25.0.3",

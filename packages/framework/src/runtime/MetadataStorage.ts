@@ -22,7 +22,7 @@ export interface StratixAppMetadata {
 export interface LoggerMetadata {
   propertyKey: string;
   context: string;
-  level: 'debug' | 'info' | 'warn' | 'error' | 'fatal';
+  minLevel?: 'debug' | 'info' | 'warn' | 'error' | 'fatal';
   target: Ctor;
 }
 
@@ -106,5 +106,21 @@ export class MetadataStorage {
     // WeakMap doesn't support iteration, so this is a placeholder
     // In practice, you'd track registered classes separately
     return result;
+  }
+
+  static setInjectableMetadata(_target: Ctor, _metadata: any) {
+    // Implementation for setting injectable metadata
+  }
+
+  static setCommandHandlerMetadata(_target: Ctor, _metadata: any) {
+    // Implementation for setting command handler metadata
+  }
+
+  static setQueryHandlerMetadata(_target: Ctor, _metadata: any) {
+    // Implementation for setting query handler metadata
+  }
+
+  static setEventHandlerMetadata(_target: Ctor, _metadata: any) {
+    // Implementation for setting event handler metadata
   }
 }

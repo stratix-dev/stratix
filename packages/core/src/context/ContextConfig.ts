@@ -1,5 +1,5 @@
 import type { Container } from '../container/Container.js';
-import type { Logger } from '../infrastructure/Logger.js';
+import type { Logger } from '../infrastructure/logging/Logger.js';
 
 /**
  * Configuration provided to contexts during initialization.
