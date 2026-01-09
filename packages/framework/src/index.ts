@@ -1,5 +1,48 @@
 // Stratix Framework
+
+// Core decorators
 export { StratixApp, type StratixAppOptions } from './docorators/StratixApp.js';
-export { Logger } from './docorators/Logger.js';
-export type { LoggerOptions } from './docorators/Logger.js';
+export { Logger, type LoggerOptions } from './docorators/Logger.js';
+
+// Handler decorators
+export { CommandHandler, type CommandHandlerOptions } from './docorators/handlers/CommandHandler.js';
+export { QueryHandler, type QueryHandlerOptions } from './docorators/handlers/QueryHandler.js';
+export { EventHandler, type EventHandlerOptions } from './docorators/handlers/EventHandler.js';
+
+// DI decorators
+export { Injectable, type InjectableOptions } from './docorators/di/Injectable.js';
+
+// Runtime
 export { bootstrap } from './runtime/bootstrap.js';
+export { StratixApplication } from './runtime/StratixApplication.js';
+export { MetadataStorage } from './runtime/MetadataStorage.js';
+
+// Metadata types
+export type {
+  StratixAppMetadata,
+  LoggerMetadata,
+  CommandHandlerMetadata,
+  QueryHandlerMetadata,
+  ExtendedEventHandlerMetadata,
+  InjectableMetadata
+} from './runtime/MetadataStorage.js';
+
+// Logging
+export { LoggerBuilder } from './logging/LoggerBuilder.js';
+export { LoggerFactory } from './logging/LoggerFactory.js';
+export { StratixLogger } from './logging/StratixLogger.js';
+export { ConsoleTransport } from './logging/ConsoleTransport.js';
+export { FileTransport } from './logging/FileTransport.js';
+export type { FileTransportOptions } from './logging/FileTransportOptions.js';
+
+// Configuration
+export { ConfigurationManager } from './configuration/ConfigurationManager.js';
+export { YamlConfigurationSource } from './configuration/YamlConfigurationSource.js';
+export { EnvironmentConfigurationSource } from './configuration/EnvironmentConfigurationSource.js';
+
+// Errors
+export { StratixError } from './errors/StratixError.js';
+export { Error } from './errors/Error.js';
+
+// Tokens
+export { CORE_TOKENS } from './tokens/CoreTokens.js';
