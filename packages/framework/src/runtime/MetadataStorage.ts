@@ -9,8 +9,8 @@ import type {
 } from '@stratix/core';
 
 export interface StratixAppMetadata {
-  name?: string;
-  version?: string;
+  name: string;
+  version: string;
   services?: {
     logger?: any;
   };
@@ -142,10 +142,7 @@ export class MetadataStorage {
     return metadata?.commandType as (new (...args: any[]) => T) | undefined;
   }
 
-  // ===========================
   // Query Handler Metadata
-  // ===========================
-
   static setQueryHandlerMetadata(target: Ctor, metadata: QueryHandlerMetadata): void {
     this.queryHandler.set(target, metadata);
   }
