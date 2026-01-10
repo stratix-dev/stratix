@@ -60,8 +60,6 @@ export type { CommandBus } from './messaging/CommandBus.js';
 export type { QueryBus } from './messaging/QueryBus.js';
 export type { EventBus } from './messaging/EventBus.js';
 export { BaseCommandHandler, BaseQueryHandler } from './messaging/BaseHandlers.js';
-export type { CommandHandlerMetadata } from './messaging/CommandHandlerMetadata.js';
-export type { EventHandlerMetadata } from './messaging/EventHandlerMetadata.js';
 
 // Logging
 export { LogLevel } from './infrastructure/logging/LogLevel.js';

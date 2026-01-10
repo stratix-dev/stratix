@@ -1,4 +1,4 @@
-import { MetadataStorage } from '../runtime/MetadataStorage.js';
+import { MetadataStorage, StratixAppMetadata } from '../runtime/MetadataStorage.js';
 import { StratixError } from '../errors/StratixError.js';
 import { Error } from '../errors/Error.js';
 import { ConfigurationSource, Logger, LoggerConfig, LoggerFactory } from '@stratix/core';
@@ -6,26 +6,9 @@ import { ConfigurationSource, Logger, LoggerConfig, LoggerFactory } from '@strat
 export interface StratixAppOptions {
   name?: string;
   version?: string;
-  /**
-   * Configuration sources
-   */
   configuration?: {
-    /**
-     * Configuration sources (loaded in order)
-     * Later sources override earlier ones
-     */
     sources?: ConfigurationSource[];
-
-    /**
-     * Path to YAML config file (shorthand)
-     * @default './config/app.yml'
-     */
     configFile?: string;
-
-    /**
-     * Environment prefix for env vars
-     * @default 'APP_'
-     */
     envPrefix?: string;
   };
   services?: {
@@ -46,7 +29,7 @@ export function StratixApp(options: StratixAppOptions = {}) {
       throw new StratixError(Error.RUNTIME_ERROR, '@StratixApp can only be applied to classes');
     }
 
-    const stratixAppMetadata: StratixAppOptions = {
+    const stratixAppMetadata: StratixAppMetadata = {
       name: options?.name || 'Stratix Application',
       version: options?.version || '1.0.0',
       services: options?.services || {},

@@ -1,5 +1,5 @@
 import { DependencyLifetime } from '@stratix/core';
-import { MetadataStorage } from '../../runtime/MetadataStorage.js';
+import { InjectableMetadata, MetadataStorage } from '../../runtime/MetadataStorage.js';
 
 export interface InjectableOptions {
   name?: string;
@@ -15,9 +15,10 @@ export const Injectable = (options: InjectableOptions = {}) => {
       throw new Error('@Injectable can only be applied to classes');
     }
 
-    const injectableMetadata: InjectableOptions = {
+    const injectableMetadata: InjectableMetadata = {
       name: options?.name ?? target.name,
-      lifetime: options?.lifetime ?? DependencyLifetime.TRANSIENT
+      lifetime: options?.lifetime ?? DependencyLifetime.TRANSIENT,
+      target: target
     };
 
     context.addInitializer(() => {

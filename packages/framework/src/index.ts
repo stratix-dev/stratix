@@ -5,7 +5,10 @@ export { StratixApp, type StratixAppOptions } from './docorators/StratixApp.js';
 export { Logger, type LoggerOptions } from './docorators/Logger.js';
 
 // Handler decorators
-export { CommandHandler, type CommandHandlerOptions } from './docorators/handlers/CommandHandler.js';
+export {
+  CommandHandler,
+  type CommandHandlerOptions
+} from './docorators/handlers/CommandHandler.js';
 export { QueryHandler, type QueryHandlerOptions } from './docorators/handlers/QueryHandler.js';
 export { EventHandler, type EventHandlerOptions } from './docorators/handlers/EventHandler.js';
 
@@ -21,9 +24,7 @@ export { MetadataStorage } from './runtime/MetadataStorage.js';
 export type {
   StratixAppMetadata,
   LoggerMetadata,
-  CommandHandlerMetadata,
   QueryHandlerMetadata,
-  ExtendedEventHandlerMetadata,
   InjectableMetadata
 } from './runtime/MetadataStorage.js';
 

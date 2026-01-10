@@ -1,12 +1,8 @@
 import { Error } from '../../errors/Error.js';
 import { StratixError } from '../../errors/StratixError.js';
-import { MetadataStorage } from '../../runtime/MetadataStorage.js';
+import { CommandHandlerMetadata, MetadataStorage } from '../../runtime/MetadataStorage.js';
 
 export interface CommandHandlerOptions {
-  /**
-   * The name of the command to handle.
-   * If not provided, uses the class name.
-   */
   commandName: string;
 }
 
@@ -21,8 +17,9 @@ export function CommandHandler(options: Options) {
       throw new StratixError(Error.RUNTIME_ERROR, '@CommandHandler can only be applied to classes');
     }
 
-    const commandHandlerMetadata: Options = {
-      commandName: options?.commandName || target.name
+    const commandHandlerMetadata: CommandHandlerMetadata = {
+      commandName: options?.commandName || target.name,
+      commandType: target
     };
 
     context.addInitializer(() => {

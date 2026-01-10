@@ -3,10 +3,6 @@ import { StratixError } from '../../errors/StratixError.js';
 import { MetadataStorage } from '../../runtime/MetadataStorage.js';
 
 export interface QueryHandlerOptions {
-  /**
-   * The name of the query to handle.
-   * If not provided, uses the class name.
-   */
   queryName: string;
 }
 

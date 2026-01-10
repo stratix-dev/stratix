@@ -1,23 +1,28 @@
 import type {
   ContextMetadata,
-  Context,
   PluginMetadata,
   Query,
   Command,
-  EventHandlerMetadata,
-  Plugin,
   ClassConstructor,
-  Event,
-  Buses,
-  DependencyLifetime
+  DependencyLifetime,
+  ConfigurationSource
 } from '@stratix/core';
 
 export interface StratixAppMetadata {
   name?: string;
   version?: string;
-  contexts?: Array<Context>;
-  plugins?: Array<Plugin>;
-  buses?: Array<Buses>;
+  services?: {
+    logger?: any;
+  };
+  configuration?: {
+    sources?: ConfigurationSource[];
+    configFile?: string;
+    envPrefix?: string;
+  };
+  behavior?: {
+    strictMode?: boolean;
+    developmentMode?: boolean;
+  };
 }
 
 export interface LoggerMetadata {
@@ -40,15 +45,16 @@ export interface QueryHandlerMetadata {
 export interface InjectableMetadata {
   name?: string;
   lifetime?: DependencyLifetime;
+  target: Ctor;
 }
 
 /**
  * Extended EventHandlerMetadata for framework use.
  * Includes eventName for reverse lookup in addition to eventType from core.
  */
-export interface ExtendedEventHandlerMetadata<TEvent extends Event = Event>
-  extends EventHandlerMetadata<TEvent> {
+export interface EventHandlerMetadata {
   eventName?: string;
+  target: Ctor;
 }
 
 type Ctor = ClassConstructor;
@@ -72,13 +78,9 @@ export class MetadataStorage {
   private static plugin = new Map<Ctor, PluginMetadata>();
   private static commandHandler = new Map<Ctor, CommandHandlerMetadata>();
   private static queryHandler = new Map<Ctor, QueryHandlerMetadata>();
-  private static eventHandler = new Map<Ctor, ExtendedEventHandlerMetadata>();
+  private static eventHandler = new Map<Ctor, EventHandlerMetadata>();
   private static loggers = new Map<Ctor, LoggerMetadata[]>();
   private static injectable = new Map<Ctor, InjectableMetadata>();
-
-  // ===========================
-  // App Metadata
-  // ===========================
 
   static setAppMetadata(target: Ctor, metadata: StratixAppMetadata): void {
     this.app.set(target, metadata);
@@ -87,10 +89,6 @@ export class MetadataStorage {
   static getAppMetadata(target: Ctor): StratixAppMetadata | undefined {
     return this.app.get(target);
   }
-
-  // ===========================
-  // Plugin Metadata
-  // ===========================
 
   static setPluginMetadata(target: Ctor, metadata: PluginMetadata): void {
     this.plugin.set(target, metadata);
@@ -104,10 +102,6 @@ export class MetadataStorage {
     return new Map(this.plugin);
   }
 
-  // ===========================
-  // Context Metadata
-  // ===========================
-
   static setContextMetadata(target: Ctor, metadata: ContextMetadata): void {
     this.context.set(target, metadata);
   }
@@ -119,10 +113,6 @@ export class MetadataStorage {
   static getAllContexts(): Map<Ctor, ContextMetadata> {
     return new Map(this.context);
   }
-
-  // ===========================
-  // Command Handler Metadata
-  // ===========================
 
   static setCommandHandlerMetadata(target: Ctor, metadata: CommandHandlerMetadata): void {
     this.commandHandler.set(target, metadata);
@@ -145,18 +135,9 @@ export class MetadataStorage {
     return undefined;
   }
 
-  // Legacy method for compatibility
-  static setCommandHandler<T extends Command>(
-    target: Ctor,
-    commandType: new (...args: any[]) => T
-  ): void {
-    this.setCommandHandlerMetadata(target, {
-      commandName: commandType.name,
-      commandType: commandType
-    });
-  }
-
-  static getCommandHandler<T extends Command>(target: Ctor): (new (...args: any[]) => T) | undefined {
+  static getCommandHandler<T extends Command>(
+    target: Ctor
+  ): (new (...args: any[]) => T) | undefined {
     const metadata = this.commandHandler.get(target);
     return metadata?.commandType as (new (...args: any[]) => T) | undefined;
   }
@@ -186,35 +167,21 @@ export class MetadataStorage {
     return undefined;
   }
 
-  // Legacy method for compatibility
-  static setQueryHandler<T extends Query>(target: Ctor, queryType: new (...args: any[]) => T): void {
-    this.setQueryHandlerMetadata(target, {
-      queryName: queryType.name,
-      queryType: queryType
-    });
-  }
-
   static getQueryHandler<T extends Query>(target: Ctor): (new (...args: any[]) => T) | undefined {
     const metadata = this.queryHandler.get(target);
     return metadata?.queryType as (new (...args: any[]) => T) | undefined;
   }
 
-  // ===========================
   // Event Handler Metadata
-  // ===========================
-
-  static setEventHandlerMetadata<TEvent extends Event>(
-    target: Ctor,
-    metadata: ExtendedEventHandlerMetadata<TEvent>
-  ): void {
+  static setEventHandlerMetadata(target: Ctor, metadata: EventHandlerMetadata): void {
     this.eventHandler.set(target, metadata);
   }
 
-  static getEventHandlerMetadata(target: Ctor): ExtendedEventHandlerMetadata | undefined {
+  static getEventHandlerMetadata(target: Ctor): EventHandlerMetadata | undefined {
     return this.eventHandler.get(target);
   }
 
-  static getAllEventHandlers(): Map<Ctor, ExtendedEventHandlerMetadata> {
+  static getAllEventHandlers(): Map<Ctor, EventHandlerMetadata> {
     return new Map(this.eventHandler);
   }
 
@@ -228,20 +195,7 @@ export class MetadataStorage {
     return handlers;
   }
 
-  static getEventHandlersByType(eventType: new (...args: any[]) => Event): Ctor[] {
-    const handlers: Ctor[] = [];
-    for (const [ctor, metadata] of this.eventHandler) {
-      if (metadata.eventType === eventType) {
-        handlers.push(ctor);
-      }
-    }
-    return handlers;
-  }
-
-  // ===========================
   // Logger Metadata
-  // ===========================
-
   static addLoggerMetadata(target: Ctor, metadata: LoggerMetadata): void {
     const existing = this.loggers.get(target) ?? [];
     existing.push(metadata);
@@ -256,10 +210,7 @@ export class MetadataStorage {
     return new Map(this.loggers);
   }
 
-  // ===========================
   // Injectable Metadata
-  // ===========================
-
   static setInjectableMetadata(target: Ctor, metadata: InjectableMetadata): void {
     this.injectable.set(target, metadata);
   }
@@ -272,10 +223,7 @@ export class MetadataStorage {
     return new Map(this.injectable);
   }
 
-  // ===========================
   // Utility Methods
-  // ===========================
-
   /**
    * Clear all metadata. Useful for testing or hot-reload scenarios.
    */
