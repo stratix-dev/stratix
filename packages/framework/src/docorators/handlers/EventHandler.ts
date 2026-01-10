@@ -3,7 +3,7 @@ import { StratixError } from '../../errors/StratixError.js';
 import { EventHandlerMetadata, MetadataStorage } from '../../runtime/MetadataStorage.js';
 
 export interface EventHandlerOptions {
-  eventName?: string;
+  eventName: string;
 }
 
 export function EventHandler(options: EventHandlerOptions) {

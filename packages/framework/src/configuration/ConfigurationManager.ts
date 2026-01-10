@@ -1,15 +1,7 @@
 import { ConfigurationProvider, ConfigurationSource } from '@stratix/core';
 
 export interface ConfigurationManagerOptions {
-  /**
-   * Configuration sources (loaded in order)
-   */
   sources: ConfigurationSource[];
-
-  /**
-   * Enable caching of loaded configuration
-   * @default true
-   */
   cache?: boolean;
 }
 

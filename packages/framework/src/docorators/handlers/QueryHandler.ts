@@ -1,14 +1,12 @@
 import { Error } from '../../errors/Error.js';
 import { StratixError } from '../../errors/StratixError.js';
-import { MetadataStorage } from '../../runtime/MetadataStorage.js';
+import { MetadataStorage, QueryHandlerMetadata } from '../../runtime/MetadataStorage.js';
 
 export interface QueryHandlerOptions {
   queryName: string;
 }
 
-export type Options = QueryHandlerOptions;
-
-export function QueryHandler(options: Options) {
+export function QueryHandler(options: QueryHandlerOptions) {
   return function <T extends new (...args: any[]) => any>(
     target: T,
     context: ClassDecoratorContext
@@ -17,7 +15,7 @@ export function QueryHandler(options: Options) {
       throw new StratixError(Error.RUNTIME_ERROR, '@QueryHandler can only be applied to classes');
     }
 
-    const queryHandlerMetadata: Options = {
+    const queryHandlerMetadata: QueryHandlerMetadata = {
       queryName: options?.queryName ?? target.name
     };
 

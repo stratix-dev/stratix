@@ -1,24 +1,16 @@
-import { StratixApp, bootstrap, Logger } from '@stratix/framework';
-import type { Logger as ILogger } from '@stratix/core';
+import { StratixApp, bootstrap } from '@stratix/framework';
 
-@StratixApp()
-export class UserApp {
-  @Logger()
-  private readonly logger!: ILogger;
-
-  async onApplicationReady(): Promise<void> {
-    this.logger.info('Application is ready');
+@StratixApp({
+  name: 'User Application',
+  version: '1.0.0',
+  configuration: {
+    configFile: 'config.yml'
   }
-}
-
-console.log('User App Loaded');
+})
+export class UserApp {}
 
 async function main() {
   const app = await bootstrap(UserApp);
-  const eventBus = app.container.resolve('commandBus');
-
-  console.log(eventBus);
-
   await app.shutdown();
 }
 

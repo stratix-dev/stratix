@@ -5,20 +5,11 @@ import { MetadataStorage } from '../runtime/MetadataStorage.js';
 import { CORE_TOKENS } from '../tokens/CoreTokens.js';
 
 export interface LoggerOptions {
-  /**
-   * Contexto personalizado
-   * @default nombre de la clase
-   */
   context?: string;
-
-  /**
-   * Nivel mínimo (ahora SÍ funciona)
-   * @default LogLevel.DEBUG
-   */
   minLevel?: LogLevel;
 }
 
-export function Logger(options?: LoggerOptions) {
+export function Logger(options: LoggerOptions = {}) {
   return function (
     _target: unknown,
     context: ClassAccessorDecoratorContext | ClassFieldDecoratorContext
@@ -81,7 +72,7 @@ export function Logger(options?: LoggerOptions) {
   };
 }
 
-// Helper: Wrapper de contexto para loggers sin child()
+// Helper: Wrapper of context for loggers that don't support .child()
 function createContextWrapper(logger: ILogger, context: string): ILogger {
   return {
     debug: (msg, meta) => logger.debug(msg, { ...meta, context }),
@@ -93,7 +84,7 @@ function createContextWrapper(logger: ILogger, context: string): ILogger {
   };
 }
 
-// Helper: Filtro de nivel
+// Helper: Filter logger by minimum level
 function createLevelFilter(logger: ILogger, minLevel: LogLevel): ILogger {
   const priority: Record<LogLevel, number> = {
     [LogLevel.DEBUG]: 0,
