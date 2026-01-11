@@ -1,10 +1,12 @@
-import { StratixApp, bootstrap } from '@stratix/framework';
+import { LoggerBuilder, StratixApp, bootstrap } from '@stratix/framework';
 
 @StratixApp({
   name: 'User Application',
-  version: '1.0.0',
   configuration: {
-    configFile: 'config.yml'
+    configFile: './config.yml'
+  },
+  services: {
+    logger: LoggerBuilder.development()
   }
 })
 export class UserApp {}
