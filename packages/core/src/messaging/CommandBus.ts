@@ -36,7 +36,7 @@ export interface CommandBus {
    * );
    * ```
    */
-  register<TCommand extends Command, TResult = void>(
+  register?<TCommand extends Command, TResult = void>(
     commandType: new (...args: unknown[]) => TCommand,
     handler: CommandHandler<TCommand, TResult>
   ): void;

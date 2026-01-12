@@ -2,7 +2,7 @@ import { LogLevel, Logger as ILogger } from '@stratix/core';
 import { StratixError } from '../errors/StratixError.js';
 import { Error } from '../errors/Error.js';
 import { MetadataStorage } from '../runtime/MetadataStorage.js';
-import { CORE_TOKENS } from '../tokens/CoreTokens.js';
+import { CORE_TOKENS } from '../di/CoreTokens.js';
 
 export interface LoggerOptions {
   context?: string;
@@ -27,7 +27,7 @@ export function Logger(options: LoggerOptions = {}) {
       const contextName = options?.context ?? this.constructor.name;
 
       // Store metadata
-      MetadataStorage.addLoggerMetadata(this.constructor, {
+      MetadataStorage.setLoggerMetadata(this.constructor, {
         propertyKey: propertyName,
         context: contextName,
         minLevel: options?.minLevel,

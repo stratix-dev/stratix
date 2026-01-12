@@ -1,12 +1,12 @@
-import { Error } from '../../errors/Error.js';
-import { StratixError } from '../../errors/StratixError.js';
-import { MetadataStorage, QueryHandlerMetadata } from '../../runtime/MetadataStorage.js';
+import { Error } from '../errors/Error.js';
+import { StratixError } from '../errors/StratixError.js';
+import { MetadataStorage, QueryHandlerMetadata } from '../runtime/MetadataStorage.js';
 
 export interface QueryHandlerOptions {
-  queryName: string;
+  queryName?: string;
 }
 
-export function QueryHandler(options: QueryHandlerOptions) {
+export function QueryHandler(options?: QueryHandlerOptions) {
   return function <T extends new (...args: any[]) => any>(
     target: T,
     context: ClassDecoratorContext

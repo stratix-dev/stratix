@@ -5,14 +5,14 @@ import {
   Logger,
   LoggerConfig
 } from '@stratix/core';
-import { InMemoryCommandBus } from '../messaging/InMemoryCommandBus.js';
-import { InMemoryEventBus } from '../messaging/InMemoryEventBus.js';
-import { InMemoryQueryBus } from '../messaging/InMemoryQueryBus.js';
-import { CORE_TOKENS } from '../tokens/CoreTokens.js';
+import { InMemoryCommandBus } from '../cqrs/InMemoryCommandBus.js';
+import { InMemoryEventBus } from '../cqrs/InMemoryEventBus.js';
+import { InMemoryQueryBus } from '../cqrs/InMemoryQueryBus.js';
+import { CORE_TOKENS } from '../di/CoreTokens.js';
 import { LoggerBuilder } from '../logging/LoggerBuilder.js';
 import { LoggerFactory } from '../logging/LoggerFactory.js';
 import { StratixAppOptions } from '../docorators/StratixApp.js';
-import { AwilixContainerAdapter } from './AwilixContainerAdapter.js';
+import { AwilixContainerAdapter } from '../di/AwilixContainerAdapter.js';
 import { AwilixContainer, createContainer } from 'awilix';
 import { MetadataStorage } from './MetadataStorage.js';
 import { StratixError } from '../errors/StratixError.js';
@@ -30,7 +30,7 @@ export class StratixApplication {
 
   constructor(appClass: new (...args: any[]) => any) {
     this.appClass = appClass;
-    this.awilixContainer = createContainer();
+    this.awilixContainer = createContainer({ strict: true });
     this.container = new AwilixContainerAdapter(this.awilixContainer);
     this.config = null as any; // To be initialized later
   }
@@ -46,6 +46,7 @@ export class StratixApplication {
     await this.initializeConfiguration(metadata);
     await this.registerLogger(metadata);
     this.registerBuses();
+    this.registerHandlers();
   }
 
   async shutdown(): Promise<void> {
@@ -61,6 +62,16 @@ export class StratixApplication {
   resolve<T>(token: string | symbol): T {
     return this.container.resolve<T>(token);
   }
+
+  private registerHandlers(): void {
+    // Register Command Handlers
+    const commandHandlers = MetadataStorage.getAllCommandHandlers();
+    for (const [ctor, _metadata] of commandHandlers) {
+      this.container.registerClass(ctor.name, ctor, { lifetime: DependencyLifetime.SINGLETON });
+    }
+  }
+
+  // Register Query Handlers
 
   private async initializeConfiguration(metadata: StratixAppOptions): Promise<void> {
     const configOptions = metadata.configuration;

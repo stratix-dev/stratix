@@ -1,5 +1,5 @@
 import { DependencyLifetime } from '@stratix/core';
-import { InjectableMetadata, MetadataStorage } from '../../runtime/MetadataStorage.js';
+import { InjectableMetadata, MetadataStorage } from '../runtime/MetadataStorage.js';
 
 export interface InjectableOptions {
   name?: string;

@@ -1,13 +1,12 @@
 import type {
   ContextMetadata,
   PluginMetadata,
-  Query,
-  Command,
-  ClassConstructor,
   DependencyLifetime,
-  ConfigurationSource
+  ConfigurationSource,
+  ClassConstructor
 } from '@stratix/core';
 
+/* Application Metadata */
 export interface StratixAppMetadata {
   name: string;
   version: string;
@@ -24,109 +23,146 @@ export interface StratixAppMetadata {
     developmentMode?: boolean;
   };
 }
-
+/* Dependency Injection Metadata */
+export interface InjectableMetadata {
+  name?: string;
+  lifetime?: DependencyLifetime;
+  target: ClassConstructor;
+}
+/* Logging Metadata */
 export interface LoggerMetadata {
   propertyKey: string;
   context: string;
   minLevel?: 'debug' | 'info' | 'warn' | 'error' | 'fatal';
-  target: Ctor;
+  target: ClassConstructor;
+}
+
+/* CQRS - Commands Metadata */
+export interface CommandMetadata {
+  commandName?: string;
+  target?: ClassConstructor;
 }
 
 export interface CommandHandlerMetadata {
-  commandName: string;
-  commandType?: Ctor;
+  commandName?: string;
+  commandType?: ClassConstructor;
+  target?: ClassConstructor;
 }
 
+/* CQRS - Queries Metadata */
 export interface QueryHandlerMetadata {
-  queryName: string;
-  queryType?: Ctor;
+  queryName?: string;
+  queryType?: ClassConstructor;
 }
 
-export interface InjectableMetadata {
-  name?: string;
-  lifetime?: DependencyLifetime;
-  target: Ctor;
+export interface QueryMetadata {
+  queryName?: string;
+  queryType?: ClassConstructor;
 }
 
-/**
- * Extended EventHandlerMetadata for framework use.
- * Includes eventName for reverse lookup in addition to eventType from core.
- */
+/* CQRS - Events Metadata */
 export interface EventHandlerMetadata {
-  eventName?: string;
-  target: Ctor;
+  eventHandlerName?: string;
+  eventHandlerType: ClassConstructor;
 }
 
-type Ctor = ClassConstructor;
+export interface EventMetadata {
+  eventName?: string;
+  eventType?: ClassConstructor;
+}
 
-/**
- * Centralized metadata storage for decorator-based metadata.
- *
- * Uses Map (not WeakMap) to support:
- * - Auto-discovery of decorated classes
- * - Iteration for bootstrap
- * - Reverse lookups by name
- * - Debugging and introspection
- *
- * Memory management: Class constructors are static assets and persist
- * for the application lifetime, so WeakMap's GC benefits don't apply.
- */
 export class MetadataStorage {
-  // Storage maps (changed from WeakMap to Map for iteration support)
-  private static app = new Map<Ctor, StratixAppMetadata>();
-  private static context = new Map<Ctor, ContextMetadata>();
-  private static plugin = new Map<Ctor, PluginMetadata>();
-  private static commandHandler = new Map<Ctor, CommandHandlerMetadata>();
-  private static queryHandler = new Map<Ctor, QueryHandlerMetadata>();
-  private static eventHandler = new Map<Ctor, EventHandlerMetadata>();
-  private static loggers = new Map<Ctor, LoggerMetadata[]>();
-  private static injectable = new Map<Ctor, InjectableMetadata>();
+  private static app = new Map<ClassConstructor, StratixAppMetadata>();
+  private static context = new Map<ClassConstructor, ContextMetadata>();
+  private static plugin = new Map<ClassConstructor, PluginMetadata>();
+  private static commandHandler = new Map<ClassConstructor, CommandHandlerMetadata>();
+  private static queryHandler = new Map<ClassConstructor, QueryHandlerMetadata>();
+  private static eventHandler = new Map<ClassConstructor, EventHandlerMetadata>();
+  private static loggers = new Map<ClassConstructor, LoggerMetadata[]>();
+  private static injectable = new Map<ClassConstructor, InjectableMetadata>();
+  private static command = new Map<ClassConstructor, CommandMetadata>();
+  private static event = new Map<ClassConstructor, EventMetadata>();
+  private static query = new Map<ClassConstructor, QueryMetadata>();
 
-  static setAppMetadata(target: Ctor, metadata: StratixAppMetadata): void {
+  // App Metadata
+  static setAppMetadata(target: ClassConstructor, metadata: StratixAppMetadata): void {
     this.app.set(target, metadata);
   }
-
-  static getAppMetadata(target: Ctor): StratixAppMetadata | undefined {
+  static getAppMetadata(target: ClassConstructor): StratixAppMetadata | undefined {
     return this.app.get(target);
   }
+  static getAllApps(): Map<ClassConstructor, StratixAppMetadata> {
+    return new Map(this.app);
+  }
+  static getAppMetadataByName(name: string): ClassConstructor | undefined {
+    for (const [ctor, metadata] of this.app) {
+      if (metadata.name === name) {
+        return ctor;
+      }
+    }
+    return undefined;
+  }
 
-  static setPluginMetadata(target: Ctor, metadata: PluginMetadata): void {
+  // Plugin Metadata
+  static setPluginMetadata(target: ClassConstructor, metadata: PluginMetadata): void {
     this.plugin.set(target, metadata);
   }
-
-  static getPluginMetadata(target: Ctor): PluginMetadata | undefined {
+  static getPluginMetadata(target: ClassConstructor): PluginMetadata | undefined {
     return this.plugin.get(target);
   }
-
-  static getAllPlugins(): Map<Ctor, PluginMetadata> {
+  static getAllPlugins(): Map<ClassConstructor, PluginMetadata> {
     return new Map(this.plugin);
   }
+  static getPluginMetadataByName(name: string): ClassConstructor | undefined {
+    for (const [ctor, metadata] of this.plugin) {
+      if (metadata.name === name) {
+        return ctor;
+      }
+    }
+    return undefined;
+  }
 
-  static setContextMetadata(target: Ctor, metadata: ContextMetadata): void {
+  // Context Metadata
+  static setContextMetadata(target: ClassConstructor, metadata: ContextMetadata): void {
     this.context.set(target, metadata);
   }
-
-  static getContextMetadata(target: Ctor): ContextMetadata | undefined {
+  static getContextMetadata(target: ClassConstructor): ContextMetadata | undefined {
     return this.context.get(target);
   }
-
-  static getAllContexts(): Map<Ctor, ContextMetadata> {
+  static getAllContexts(): Map<ClassConstructor, ContextMetadata> {
     return new Map(this.context);
   }
-
-  static setCommandHandlerMetadata(target: Ctor, metadata: CommandHandlerMetadata): void {
-    this.commandHandler.set(target, metadata);
+  static getContextMetadataByName(name: string): ClassConstructor | undefined {
+    for (const [ctor, metadata] of this.context) {
+      if (metadata.name === name) {
+        return ctor;
+      }
+    }
+    return undefined;
   }
 
-  static getCommandHandlerMetadata(target: Ctor): CommandHandlerMetadata | undefined {
+  // Command Handler Metadata
+  static setCommandHandlerMetadata(
+    target: ClassConstructor,
+    metadata: CommandHandlerMetadata
+  ): void {
+    const commandName = metadata.commandName ?? metadata.target?.name;
+    if (!commandName) {
+      throw new Error(
+        `CommandHandler metadata must have a commandName or target with a name defined.`
+      );
+    }
+    this.commandHandler.set(target, metadata);
+  }
+  static getCommandHandlerMetadata(target: ClassConstructor): CommandHandlerMetadata | undefined {
     return this.commandHandler.get(target);
   }
 
-  static getAllCommandHandlers(): Map<Ctor, CommandHandlerMetadata> {
+  static getAllCommandHandlers(): Map<ClassConstructor, CommandHandlerMetadata> {
     return new Map(this.commandHandler);
   }
 
-  static getCommandHandlerByName(commandName: string): Ctor | undefined {
+  static getCommandHandlerByName(commandName: string): ClassConstructor | undefined {
     for (const [ctor, metadata] of this.commandHandler) {
       if (metadata.commandName === commandName) {
         return ctor;
@@ -135,27 +171,17 @@ export class MetadataStorage {
     return undefined;
   }
 
-  static getCommandHandler<T extends Command>(
-    target: Ctor
-  ): (new (...args: any[]) => T) | undefined {
-    const metadata = this.commandHandler.get(target);
-    return metadata?.commandType as (new (...args: any[]) => T) | undefined;
-  }
-
   // Query Handler Metadata
-  static setQueryHandlerMetadata(target: Ctor, metadata: QueryHandlerMetadata): void {
+  static setQueryHandlerMetadata(target: ClassConstructor, metadata: QueryHandlerMetadata): void {
     this.queryHandler.set(target, metadata);
   }
-
-  static getQueryHandlerMetadata(target: Ctor): QueryHandlerMetadata | undefined {
+  static getQueryHandlerMetadata(target: ClassConstructor): QueryHandlerMetadata | undefined {
     return this.queryHandler.get(target);
   }
-
-  static getAllQueryHandlers(): Map<Ctor, QueryHandlerMetadata> {
+  static getAllQueryHandlers(): Map<ClassConstructor, QueryHandlerMetadata> {
     return new Map(this.queryHandler);
   }
-
-  static getQueryHandlerByName(queryName: string): Ctor | undefined {
+  static getQueryHandlerByName(queryName: string): ClassConstructor | undefined {
     for (const [ctor, metadata] of this.queryHandler) {
       if (metadata.queryName === queryName) {
         return ctor;
@@ -164,28 +190,27 @@ export class MetadataStorage {
     return undefined;
   }
 
-  static getQueryHandler<T extends Query>(target: Ctor): (new (...args: any[]) => T) | undefined {
-    const metadata = this.queryHandler.get(target);
-    return metadata?.queryType as (new (...args: any[]) => T) | undefined;
-  }
-
   // Event Handler Metadata
-  static setEventHandlerMetadata(target: Ctor, metadata: EventHandlerMetadata): void {
+  static setEventHandlerMetadata(
+    target: new (...args: any[]) => any,
+    metadata: EventHandlerMetadata
+  ): void {
     this.eventHandler.set(target, metadata);
   }
 
-  static getEventHandlerMetadata(target: Ctor): EventHandlerMetadata | undefined {
+  static getEventHandlerMetadata(target: ClassConstructor): EventHandlerMetadata | undefined {
     return this.eventHandler.get(target);
   }
 
-  static getAllEventHandlers(): Map<Ctor, EventHandlerMetadata> {
+  static getAllEventHandlers(): Map<ClassConstructor, EventHandlerMetadata> {
     return new Map(this.eventHandler);
   }
 
-  static getEventHandlersByName(eventName: string): Ctor[] {
-    const handlers: Ctor[] = [];
+  static getEventHandlersByName(eventName: string): ClassConstructor[] {
+    const handlers: ClassConstructor[] = [];
+
     for (const [ctor, metadata] of this.eventHandler) {
-      if (metadata.eventName === eventName) {
+      if (metadata.eventHandlerName === eventName) {
         handlers.push(ctor);
       }
     }
@@ -193,31 +218,70 @@ export class MetadataStorage {
   }
 
   // Logger Metadata
-  static addLoggerMetadata(target: Ctor, metadata: LoggerMetadata): void {
+  static setLoggerMetadata(target: ClassConstructor, metadata: LoggerMetadata): void {
     const existing = this.loggers.get(target) ?? [];
     existing.push(metadata);
     this.loggers.set(target, existing);
   }
 
-  static getLoggerMetadata(target: Ctor): LoggerMetadata[] | undefined {
+  static getLoggerMetadata(target: ClassConstructor): LoggerMetadata[] | undefined {
     return this.loggers.get(target);
   }
 
-  static getAllLoggerMetadata(): Map<Ctor, LoggerMetadata[]> {
+  static getAllLoggerMetadata(): Map<ClassConstructor, LoggerMetadata[]> {
     return new Map(this.loggers);
   }
 
   // Injectable Metadata
-  static setInjectableMetadata(target: Ctor, metadata: InjectableMetadata): void {
+  static setInjectableMetadata(target: ClassConstructor, metadata: InjectableMetadata): void {
     this.injectable.set(target, metadata);
   }
 
-  static getInjectableMetadata(target: Ctor): InjectableMetadata | undefined {
+  static getInjectableMetadata(target: ClassConstructor): InjectableMetadata | undefined {
     return this.injectable.get(target);
   }
 
-  static getAllInjectables(): Map<Ctor, InjectableMetadata> {
+  static getAllInjectables(): Map<ClassConstructor, InjectableMetadata> {
     return new Map(this.injectable);
+  }
+
+  // CQRS - Command Metadata
+  static setCommandMetadata(target: ClassConstructor, metadata: CommandMetadata): void {
+    this.command.set(target, metadata);
+  }
+
+  static getCommandMetadata(target: ClassConstructor): CommandMetadata | undefined {
+    return this.command.get(target);
+  }
+
+  static getAllCommands(): Map<ClassConstructor, CommandMetadata> {
+    return new Map(this.command);
+  }
+
+  // CQRS - Event Metadata
+  static setEventMetadata(target: ClassConstructor, metadata: EventMetadata): void {
+    this.event.set(target, metadata);
+  }
+
+  static getEventMetadata(target: ClassConstructor): EventMetadata | undefined {
+    return this.event.get(target);
+  }
+
+  static getAllEvents(): Map<ClassConstructor, EventMetadata> {
+    return new Map(this.event);
+  }
+
+  // CQRS - Query Metadata
+  static setQueryMetadata(target: ClassConstructor, metadata: QueryMetadata): void {
+    this.query.set(target, metadata);
+  }
+
+  static getQueryMetadata(target: ClassConstructor): QueryMetadata | undefined {
+    return this.query.get(target);
+  }
+
+  static getAllQueries(): Map<ClassConstructor, QueryMetadata> {
+    return new Map(this.query);
   }
 
   // Utility Methods
@@ -233,6 +297,9 @@ export class MetadataStorage {
     this.eventHandler.clear();
     this.loggers.clear();
     this.injectable.clear();
+    this.command.clear();
+    this.event.clear();
+    this.query.clear();
   }
 
   /**
@@ -247,6 +314,9 @@ export class MetadataStorage {
     eventHandlers: number;
     loggers: number;
     injectables: number;
+    commands: number;
+    events: number;
+    queries: number;
   } {
     return {
       apps: this.app.size,
@@ -256,7 +326,10 @@ export class MetadataStorage {
       queryHandlers: this.queryHandler.size,
       eventHandlers: this.eventHandler.size,
       loggers: this.loggers.size,
-      injectables: this.injectable.size
+      injectables: this.injectable.size,
+      commands: this.command.size,
+      events: this.event.size,
+      queries: this.query.size
     };
   }
 }

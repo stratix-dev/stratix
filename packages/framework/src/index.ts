@@ -4,16 +4,18 @@
 export { StratixApp, type StratixAppOptions } from './docorators/StratixApp.js';
 export { Logger, type LoggerOptions } from './docorators/Logger.js';
 
+// CQRS decorators
+export { Command, type CommandOptions } from './docorators/Command.js';
+export { Query, type QueryOptions } from './docorators/Query.js';
+export { Event, type EventOptions } from './docorators/Event.js';
+
 // Handler decorators
-export {
-  CommandHandler,
-  type CommandHandlerOptions
-} from './docorators/handlers/CommandHandler.js';
-export { QueryHandler, type QueryHandlerOptions } from './docorators/handlers/QueryHandler.js';
-export { EventHandler, type EventHandlerOptions } from './docorators/handlers/EventHandler.js';
+export { CommandHandler, type CommandHandlerOptions } from './docorators/CommandHandler.js';
+export { QueryHandler, type QueryHandlerOptions } from './docorators/QueryHandler.js';
+export { EventHandler, type EventHandlerOptions } from './docorators/EventHandler.js';
 
 // DI decorators
-export { Injectable, type InjectableOptions } from './docorators/di/Injectable.js';
+export { Injectable, type InjectableOptions } from './docorators/Injectable.js';
 
 // Runtime
 export { bootstrap } from './runtime/bootstrap.js';
@@ -46,4 +48,4 @@ export { StratixError } from './errors/StratixError.js';
 export { Error } from './errors/Error.js';
 
 // Tokens
-export { CORE_TOKENS } from './tokens/CoreTokens.js';
+export { CORE_TOKENS } from './di/CoreTokens.js';

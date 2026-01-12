@@ -1,9 +1,11 @@
-import { Error } from '../../errors/Error.js';
-import { StratixError } from '../../errors/StratixError.js';
-import { CommandHandlerMetadata, MetadataStorage } from '../../runtime/MetadataStorage.js';
+import { ClassConstructor } from '@stratix/core';
+import { Error } from '../errors/Error.js';
+import { StratixError } from '../errors/StratixError.js';
+import { CommandHandlerMetadata, MetadataStorage } from '../runtime/MetadataStorage.js';
 
 export interface CommandHandlerOptions {
-  commandName: string;
+  commandName?: string;
+  commandType?: ClassConstructor;
 }
 
 export type Options = CommandHandlerOptions;
@@ -18,8 +20,9 @@ export function CommandHandler(options: Options) {
     }
 
     const commandHandlerMetadata: CommandHandlerMetadata = {
-      commandName: options?.commandName || target.name,
-      commandType: target
+      commandName: options?.commandName ?? options?.commandType?.name,
+      commandType: options?.commandType,
+      target: target
     };
 
     context.addInitializer(() => {

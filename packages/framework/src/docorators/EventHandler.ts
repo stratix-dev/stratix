@@ -1,6 +1,6 @@
-import { Error } from '../../errors/Error.js';
-import { StratixError } from '../../errors/StratixError.js';
-import { EventHandlerMetadata, MetadataStorage } from '../../runtime/MetadataStorage.js';
+import { Error } from '../errors/Error.js';
+import { StratixError } from '../errors/StratixError.js';
+import { EventHandlerMetadata, MetadataStorage } from '../runtime/MetadataStorage.js';
 
 export interface EventHandlerOptions {
   eventName: string;
@@ -16,8 +16,8 @@ export function EventHandler(options: EventHandlerOptions) {
     }
 
     const eventHandlerMetadata: EventHandlerMetadata = {
-      eventName: options.eventName ?? target.name,
-      target: target
+      eventHandlerName: options.eventName ?? target.name,
+      eventHandlerType: target
     };
 
     context.addInitializer(() => {
