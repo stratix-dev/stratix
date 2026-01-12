@@ -1,22 +1,16 @@
 import { MetadataStorage, StratixAppMetadata } from '../runtime/MetadataStorage.js';
 import { StratixError } from '../errors/StratixError.js';
 import { Error } from '../errors/Error.js';
-import { ConfigurationSource, Logger, LoggerConfig, LoggerFactory } from '@stratix/core';
+import { ClassConstructor, ConfigurationSource } from '@stratix/core';
 
 export interface StratixAppOptions {
   name?: string;
   version?: string;
+  contexts?: ClassConstructor[];
   configuration?: {
     sources?: ConfigurationSource[];
     configFile?: string;
     envPrefix?: string;
-  };
-  services?: {
-    logger?: LoggerFactory | LoggerConfig | Logger | false;
-  };
-  behavior?: {
-    strictMode?: boolean;
-    developmentMode?: boolean;
   };
 }
 
@@ -32,9 +26,8 @@ export function StratixApp(options: StratixAppOptions = {}) {
     const stratixAppMetadata: StratixAppMetadata = {
       name: options?.name || 'Stratix Application',
       version: options?.version || '1.0.0',
-      services: options?.services || {},
       configuration: options?.configuration || {},
-      behavior: options?.behavior || {}
+      contexts: options?.contexts || []
     };
 
     context.addInitializer(() => {

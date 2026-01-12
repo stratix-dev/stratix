@@ -1,6 +1,3 @@
-import { Command } from '@stratix/framework';
-
-@Command()
 export class CreateUserCommand {
   constructor(
     public readonly username: string,

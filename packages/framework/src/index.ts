@@ -2,20 +2,12 @@
 
 // Core decorators
 export { StratixApp, type StratixAppOptions } from './docorators/StratixApp.js';
-export { Logger, type LoggerOptions } from './docorators/Logger.js';
-
-// CQRS decorators
-export { Command, type CommandOptions } from './docorators/Command.js';
-export { Query, type QueryOptions } from './docorators/Query.js';
-export { Event, type EventOptions } from './docorators/Event.js';
-
+export { Context, type ContextOptions } from './docorators/Context.js';
 // Handler decorators
 export { CommandHandler, type CommandHandlerOptions } from './docorators/CommandHandler.js';
-export { QueryHandler, type QueryHandlerOptions } from './docorators/QueryHandler.js';
-export { EventHandler, type EventHandlerOptions } from './docorators/EventHandler.js';
 
 // DI decorators
-export { Injectable, type InjectableOptions } from './docorators/Injectable.js';
+/* export { Injectable, type InjectableOptions } from './docorators/Injectable.js'; */
 
 // Runtime
 export { bootstrap } from './runtime/bootstrap.js';
@@ -23,12 +15,7 @@ export { StratixApplication } from './runtime/StratixApplication.js';
 export { MetadataStorage } from './runtime/MetadataStorage.js';
 
 // Metadata types
-export type {
-  StratixAppMetadata,
-  LoggerMetadata,
-  QueryHandlerMetadata,
-  InjectableMetadata
-} from './runtime/MetadataStorage.js';
+export type { StratixAppMetadata } from './runtime/MetadataStorage.js';
 
 // Logging
 export { LoggerBuilder } from './logging/LoggerBuilder.js';
