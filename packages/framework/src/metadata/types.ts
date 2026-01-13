@@ -12,11 +12,11 @@ export interface AppMetadata {
 }
 
 export interface CommandHandlerMetadata {
-  handlerClass?: ClassConstructor;
-  commandClass?: ClassConstructor;
+  handlerClass: ClassConstructor;
+  commandClass: ClassConstructor;
 }
 
 export interface ContextMetadata {
-  contextClass?: ClassConstructor;
+  contextClass: ClassConstructor;
   commandHandlers?: ClassConstructor[];
 }

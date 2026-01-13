@@ -1,21 +1,21 @@
 import { ClassConstructor } from '@stratix/core';
 import { AppMetadata, CommandHandlerMetadata, ContextMetadata } from './types.js';
-import { METADATA_KEYS } from './metadataKeys.js';
+import { METADATA_KEYS, STRATIX_METADATA } from './metadataKeys.js';
 
 export class MetadataReader {
   static getAppMetadata(target: ClassConstructor): AppMetadata {
-    return (target as any)[Symbol.metadata]?.[METADATA_KEYS.APP];
+    return (target as any)[STRATIX_METADATA]?.[METADATA_KEYS.APP];
   }
 
   static getContextMetadata(target: ClassConstructor): ContextMetadata | undefined {
-    return (target as any)[Symbol.metadata]?.[METADATA_KEYS.CONTEXT];
+    return (target as any)[STRATIX_METADATA]?.[METADATA_KEYS.CONTEXT];
   }
 
   static getCommandHandlerMetadata(target: ClassConstructor): CommandHandlerMetadata | undefined {
-    return (target as any)[Symbol.metadata]?.[METADATA_KEYS.COMMAND_HANDLER];
+    return (target as any)[STRATIX_METADATA]?.[METADATA_KEYS.COMMAND_HANDLER];
   }
   static hasMetadata(target: ClassConstructor, key: string): boolean {
-    return (target as any)[Symbol.metadata]?.[key] !== undefined;
+    return (target as any)[STRATIX_METADATA]?.[key] !== undefined;
   }
 
   static isStratixApp(target: ClassConstructor): boolean {

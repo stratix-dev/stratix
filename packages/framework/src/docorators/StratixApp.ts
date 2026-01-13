@@ -23,7 +23,7 @@ export function StratixApp(options: StratixAppOptions = {}) {
       throw new StratixError(Error.RUNTIME_ERROR, '@StratixApp can only be applied to classes');
     }
 
-    MetadataWriter.setAppMetadata(context, {
+    MetadataWriter.setAppMetadata(target, {
       name: options?.name || 'Stratix Application',
       version: options?.version || '1.0.0',
       configuration: options?.configuration || {},

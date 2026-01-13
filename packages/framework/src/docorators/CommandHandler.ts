@@ -16,7 +16,7 @@ export function CommandHandler(options: CommandHandlerOptions) {
       throw new StratixError(Error.RUNTIME_ERROR, '@CommandHandler can only be applied to classes');
     }
 
-    MetadataWriter.setCommandHandlerMetadata(context, {
+    MetadataWriter.setCommandHandlerMetadata(target, {
       handlerClass: target,
       commandClass: options.commandClass
     });

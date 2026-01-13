@@ -14,7 +14,7 @@ export function Context(options: ContextOptions = {}) {
       throw new Error('@Context can only be applied to classes');
     }
 
-    MetadataWriter.setContextMetadata(context, {
+    MetadataWriter.setContextMetadata(target, {
       contextClass: target,
       commandHandlers: options?.commandHandlers || []
     });
