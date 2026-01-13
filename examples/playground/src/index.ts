@@ -11,6 +11,7 @@ import { UserContext } from './user/index.js';
 export class UserApp {}
 
 async function main() {
+  console.log('Execute bootstrap from client app...');
   await bootstrap(UserApp);
 }
 

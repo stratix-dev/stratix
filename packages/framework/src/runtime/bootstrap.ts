@@ -10,7 +10,7 @@ export async function bootstrap(
     throw new Error(`@StratixApp decorator not found on ${appClass.name}`);
   }
 
-  const registry = MetadataRegistry.buildFromApp(appClass);
+  const registry = new MetadataRegistry(appClass);
 
   const app = new StratixApplication(appClass, registry);
   await app.initialize();

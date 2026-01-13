@@ -16,7 +16,7 @@ export class StratixApplication {
 
   constructor(appClass: new (...args: any[]) => any, registry?: MetadataRegistry) {
     this.appClass = appClass;
-    this.registry = registry || MetadataRegistry.buildFromApp(appClass);
+    this.registry = registry || new MetadataRegistry(appClass);
 
     this.awilixContainer = createContainer({ strict: true });
     this.container = new AwilixContainerAdapter(this.awilixContainer);

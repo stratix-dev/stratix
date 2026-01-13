@@ -2,11 +2,11 @@ import { ClassConstructor } from '@stratix/core';
 import { MetadataReader } from '../metadata/MetadataReader.js';
 
 export class MetadataRegistry {
-  static appClass: ClassConstructor;
-  static commandToHandler: Map<ClassConstructor, ClassConstructor> = new Map();
-  static handlerToCommand: Map<ClassConstructor, ClassConstructor> = new Map();
+  public readonly appClass: ClassConstructor;
+  public readonly commandToHandler: Map<ClassConstructor, ClassConstructor> = new Map();
+  public readonly handlerToCommand: Map<ClassConstructor, ClassConstructor> = new Map();
 
-  static buildFromApp(appClass: ClassConstructor): MetadataRegistry {
+  constructor(appClass: ClassConstructor) {
     this.appClass = appClass;
 
     const appMetadata = MetadataReader.getAppMetadata(appClass);
@@ -29,17 +29,11 @@ export class MetadataRegistry {
         if (!handlerMetadata.commandClass || !handlerMetadata.handlerClass) {
           throw new Error(`Invalid command handler metadata for ${handlerClass.name}`);
         }
-        MetadataRegistry.commandToHandler.set(
-          handlerMetadata.commandClass,
-          handlerMetadata.handlerClass
-        );
-        MetadataRegistry.handlerToCommand.set(
-          handlerMetadata.handlerClass,
-          handlerMetadata.commandClass
-        );
+
+        // Usa this. en lugar de MetadataRegistry.
+        this.commandToHandler.set(handlerMetadata.commandClass, handlerMetadata.handlerClass);
+        this.handlerToCommand.set(handlerMetadata.handlerClass, handlerMetadata.commandClass);
       }
     }
-
-    return MetadataRegistry;
   }
 }
