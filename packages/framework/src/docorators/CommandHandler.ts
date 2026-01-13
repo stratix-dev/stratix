@@ -1,15 +1,13 @@
 import { ClassConstructor } from '@stratix/core';
 import { Error } from '../errors/Error.js';
 import { StratixError } from '../errors/StratixError.js';
-import { CommandHandlerMetadata, MetadataStorage } from '../runtime/MetadataStorage.js';
+import { MetadataWriter } from '../metadata/MetadataWriter.js';
 
 export interface CommandHandlerOptions {
-  commandClass?: ClassConstructor;
+  commandClass: ClassConstructor;
 }
 
-export type Options = CommandHandlerOptions;
-
-export function CommandHandler(options: Options) {
+export function CommandHandler(options: CommandHandlerOptions) {
   return function <T extends new (...args: any[]) => any>(
     target: T,
     context: ClassDecoratorContext
@@ -18,13 +16,9 @@ export function CommandHandler(options: Options) {
       throw new StratixError(Error.RUNTIME_ERROR, '@CommandHandler can only be applied to classes');
     }
 
-    const commandHandlerMetadata: CommandHandlerMetadata = {
-      commandClass: options?.commandClass,
-      handlerClass: target
-    };
-
-    context.addInitializer(() => {
-      MetadataStorage.setCommandHandlerMetadata(target, commandHandlerMetadata);
+    MetadataWriter.setCommandHandlerMetadata(context, {
+      handlerClass: target,
+      commandClass: options.commandClass
     });
 
     return target;

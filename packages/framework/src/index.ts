@@ -6,17 +6,11 @@ export { Context, type ContextOptions } from './docorators/Context.js';
 // Handler decorators
 export { CommandHandler, type CommandHandlerOptions } from './docorators/CommandHandler.js';
 
-// DI decorators
-/* export { Injectable, type InjectableOptions } from './docorators/Injectable.js'; */
-
 // Runtime
 export { bootstrap } from './runtime/bootstrap.js';
 export { StratixApplication } from './runtime/StratixApplication.js';
-export { MetadataStorage } from './runtime/MetadataStorage.js';
 
-// Metadata types
-export type { StratixAppMetadata } from './runtime/MetadataStorage.js';
-
+// CQRS
 // Logging
 export { LoggerBuilder } from './logging/LoggerBuilder.js';
 export { LoggerFactory } from './logging/LoggerFactory.js';
@@ -33,6 +27,9 @@ export { EnvironmentConfigurationSource } from './configuration/EnvironmentConfi
 // Errors
 export { StratixError } from './errors/StratixError.js';
 export { Error } from './errors/Error.js';
-
-// Tokens
-export { CORE_TOKENS } from './di/CoreTokens.js';
+// Metadata
+export { MetadataReader } from './metadata/MetadataReader.js';
+export { MetadataWriter } from './metadata/MetadataWriter.js';
+export { MetadataRegistry } from './runtime/MetadataRegistry.js';
+// Types
+export * from './metadata/types.js';

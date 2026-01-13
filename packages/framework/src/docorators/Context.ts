@@ -1,4 +1,5 @@
 import { ClassConstructor } from '@stratix/core';
+import { MetadataWriter } from '../metadata/MetadataWriter.js';
 
 export interface ContextOptions {
   commandHandlers?: ClassConstructor[];
@@ -13,7 +14,10 @@ export function Context(options: ContextOptions = {}) {
       throw new Error('@Context can only be applied to classes');
     }
 
-    // You can add metadata storage logic here if needed
+    MetadataWriter.setContextMetadata(context, {
+      contextClass: target,
+      commandHandlers: options?.commandHandlers || []
+    });
 
     return target;
   };
