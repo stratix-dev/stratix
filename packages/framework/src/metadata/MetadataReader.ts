@@ -14,7 +14,7 @@ export class MetadataReader {
   static getCommandHandlerMetadata(target: ClassConstructor): CommandHandlerMetadata | undefined {
     return (target as any)[STRATIX_METADATA]?.[METADATA_KEYS.COMMAND_HANDLER];
   }
-  static hasMetadata(target: ClassConstructor, key: string): boolean {
+  static hasMetadata(target: ClassConstructor, key: symbol): boolean {
     return (target as any)[STRATIX_METADATA]?.[key] !== undefined;
   }
 

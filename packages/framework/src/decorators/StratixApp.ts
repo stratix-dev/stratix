@@ -1,7 +1,6 @@
-import { StratixError } from '../errors/StratixError.js';
-import { Error } from '../errors/Error.js';
 import { ClassConstructor, ConfigurationSource } from '@stratix/core';
 import { MetadataWriter } from '../metadata/MetadataWriter.js';
+import { DecoratorKindError } from '../errors/DecoratorKindError.js';
 
 export interface StratixAppOptions {
   name?: string;
@@ -20,7 +19,7 @@ export function StratixApp(options: StratixAppOptions = {}) {
     context: ClassDecoratorContext
   ) {
     if (context.kind !== 'class') {
-      throw new StratixError(Error.RUNTIME_ERROR, '@StratixApp can only be applied to classes');
+      throw new DecoratorKindError('StratixApp', 'class', context.kind);
     }
 
     MetadataWriter.setAppMetadata(target, {

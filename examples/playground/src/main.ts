@@ -1,5 +1,5 @@
 import { bootstrap, StratixApp } from '@stratix/framework';
-import { UserContext } from './user/index.js';
+import { UserContext } from './contexts/user/index.js';
 
 @StratixApp({
   name: 'User Application',
@@ -12,7 +12,8 @@ export class UserApp {}
 
 async function main() {
   console.log('Execute bootstrap from client app...');
-  await bootstrap(UserApp);
+  const app = await bootstrap(UserApp);
+  console.log('Application started:', app);
 }
 
 main().catch(console.error);

@@ -1,5 +1,7 @@
 import { ClassConstructor } from '@stratix/core';
 import { MetadataReader } from '../metadata/MetadataReader.js';
+import { DecoratorMissingError } from '../errors/DecoratorMissingError.js';
+import { InvalidMetadataError } from '../errors/InvalidMetadataError.js';
 
 export class MetadataRegistry {
   public readonly appClass: ClassConstructor;
@@ -11,23 +13,26 @@ export class MetadataRegistry {
 
     const appMetadata = MetadataReader.getAppMetadata(appClass);
     if (!appMetadata) {
-      throw new Error(`@StratixApp decorator not found on ${appClass.name}`);
+      throw new DecoratorMissingError('@StratixApp', appClass.name);
     }
 
     for (const contextClass of appMetadata.contexts || []) {
       const contextMetadata = MetadataReader.getContextMetadata(contextClass);
 
       if (!contextMetadata) {
-        throw new Error(`@Context decorator not found on ${contextClass.name}`);
+        throw new DecoratorMissingError('@Context', contextClass.name);
       }
 
       for (const handlerClass of contextMetadata.commandHandlers || []) {
         const handlerMetadata = MetadataReader.getCommandHandlerMetadata(handlerClass);
         if (!handlerMetadata) {
-          throw new Error(`@CommandHandler decorator not found on ${handlerClass.name}`);
+          throw new DecoratorMissingError('@CommandHandler', handlerClass.name);
         }
         if (!handlerMetadata.commandClass || !handlerMetadata.handlerClass) {
-          throw new Error(`Invalid command handler metadata for ${handlerClass.name}`);
+          throw new InvalidMetadataError(
+            'CommandHandler',
+            `Missing commandClass or handlerClass in metadata for ${handlerClass.name}`
+          );
         }
 
         // Usa this. en lugar de MetadataRegistry.

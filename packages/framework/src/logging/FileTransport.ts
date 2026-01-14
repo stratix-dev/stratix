@@ -1,7 +1,14 @@
 import { LogEntry, LogTransport } from '@stratix/core';
 import * as fs from 'fs';
 import path from 'path';
-import { FileTransportOptions } from './FileTransportOptions.js';
+
+export interface FileTransportOptions {
+  filePath: string;
+  maxSize?: number;
+  maxFiles?: number;
+  append?: boolean;
+}
+
 export class FileTransport implements LogTransport {
   readonly name = 'file';
   private writeStream: fs.WriteStream;

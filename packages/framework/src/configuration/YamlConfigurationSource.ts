@@ -1,8 +1,15 @@
 import { ConfigurationSource } from '@stratix/core';
-import { YamlSourceOptions } from './YamlSourceOptions.js';
 import { readFile } from 'fs/promises';
 import { parse } from 'yaml';
 import { resolve } from 'path';
+import { ConfigurationContentError } from '../errors/ConfigurationContentError.js';
+import { ConfigurationLoadError } from '../errors/ConfigurationLoadError.js';
+
+export interface YamlSourceOptions {
+  filePath: string;
+  basePath?: string;
+  encoding?: BufferEncoding;
+}
 
 export class YamlConfigurationSource implements ConfigurationSource {
   readonly name: string;
@@ -25,15 +32,16 @@ export class YamlConfigurationSource implements ConfigurationSource {
       const parsed = parse(content);
 
       if (typeof parsed !== 'object' || parsed === null) {
-        throw new Error(
-          `Invalid YAML content in ${fullPath}: expected object, got ${typeof parsed}`
+        throw new ConfigurationContentError(
+          fullPath,
+          'YAML content must be a mapping/object at the root level.'
         );
       }
 
       return parsed as Record<string, unknown>;
     } catch (error) {
       if (error instanceof Error) {
-        throw new Error(`Failed to load YAML from ${fullPath}: ${error.message}`);
+        throw new ConfigurationLoadError(fullPath, error.message);
       }
       throw error;
     }

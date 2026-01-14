@@ -1,5 +1,10 @@
 import { ConfigurationSource } from '@stratix/core';
-import { EnvironmentSourceOptions } from './EnvironmentSourceOptions.js';
+
+export interface EnvironmentSourceOptions {
+  prefix?: string;
+  separator?: string;
+  lowercase?: boolean;
+}
 
 export class EnvironmentConfigurationSource implements ConfigurationSource {
   readonly name = 'environment';

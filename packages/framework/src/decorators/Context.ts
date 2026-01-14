@@ -1,5 +1,6 @@
 import { ClassConstructor } from '@stratix/core';
 import { MetadataWriter } from '../metadata/MetadataWriter.js';
+import { DecoratorKindError } from '../errors/DecoratorKindError.js';
 
 export interface ContextOptions {
   commandHandlers?: ClassConstructor[];
@@ -11,7 +12,7 @@ export function Context(options: ContextOptions = {}) {
     context: ClassDecoratorContext
   ) {
     if (context.kind !== 'class') {
-      throw new Error('@Context can only be applied to classes');
+      throw new DecoratorKindError('Context', 'class', context.kind);
     }
 
     MetadataWriter.setContextMetadata(target, {
