@@ -18,7 +18,7 @@ export class AwilixContainerAdapter implements Container {
   ) {
     this.awilix.register({
       [this.getTokenKey(token)]: asClass(classConstructor, {
-        lifetime: options?.lifetime
+        lifetime: this.mapLifetime(options?.lifetime)
       })
     });
   }

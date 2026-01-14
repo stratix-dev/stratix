@@ -1,10 +1,11 @@
-import { bootstrap, StratixApp } from '@stratix/framework';
+import { bootstrap, StratixApp, YamlConfigurationSource } from '@stratix/framework';
 import { UserContext } from './contexts/user/index.js';
 
 @StratixApp({
   name: 'User Application',
   configuration: {
-    configFile: './config.yml'
+    sources: [YamlConfigurationSource],
+    configFile: './stratix.config.yml'
   },
   contexts: [UserContext]
 })

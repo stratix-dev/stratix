@@ -10,10 +10,10 @@ export class ConfigurationManager implements ConfigurationProvider {
   private loaded = false;
   private readonly options: Required<ConfigurationManagerOptions>;
 
-  constructor(options: ConfigurationManagerOptions) {
+  constructor(configurationManagerOptions: ConfigurationManagerOptions) {
     this.options = {
-      sources: options.sources,
-      cache: options.cache ?? true
+      sources: configurationManagerOptions.sources,
+      cache: configurationManagerOptions.cache ?? false
     };
   }
 

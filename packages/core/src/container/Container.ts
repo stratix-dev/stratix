@@ -1,4 +1,9 @@
-import { RegistrationOptions } from './RegistrationOptions.js';
+import { DependencyLifetime } from './DependencyLifetime.js';
+
+export interface RegistrationOptions {
+  lifetime?: DependencyLifetime;
+  constructArgs?: any[];
+}
 
 export interface Container {
   resolve<T>(token: string | symbol): T;

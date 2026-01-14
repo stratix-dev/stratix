@@ -15,12 +15,12 @@ export class YamlConfigurationSource implements ConfigurationSource {
   readonly name: string;
   private readonly options: Required<YamlSourceOptions>;
 
-  constructor(options: YamlSourceOptions) {
-    this.name = `yaml:${options.filePath}`;
+  constructor(yamlSourceOptions: YamlSourceOptions) {
+    this.name = `yaml:${yamlSourceOptions.filePath}`;
     this.options = {
-      filePath: options.filePath,
-      basePath: options.basePath ?? process.cwd(),
-      encoding: options.encoding ?? 'utf-8'
+      filePath: yamlSourceOptions.filePath,
+      basePath: yamlSourceOptions.basePath ?? process.cwd(),
+      encoding: yamlSourceOptions.encoding ?? 'utf-8'
     };
   }
 

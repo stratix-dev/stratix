@@ -44,8 +44,7 @@ export { UUID } from './value-objects/UUID.js';
 // ========================================
 
 // Container (Dependency Injection)
-export type { Container } from './container/Container.js';
-export type { RegistrationOptions } from './container/RegistrationOptions.js';
+export type { Container, RegistrationOptions } from './container/Container.js';
 export type { Resolver } from './container/Resolver.js';
 export { DependencyLifetime } from './container/DependencyLifetime.js';
 
