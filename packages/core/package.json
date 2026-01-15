@@ -53,10 +53,10 @@
     "access": "public"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "eslint": "^8.0.0",
-    "typescript": "^5.7.2",
-    "vitest": "^1.0.0"
+    "@types/node": "^25.0.3",
+    "eslint": "^9.39.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.16"
   },
   "repository": {
     "type": "git",
@@ -68,6 +68,6 @@
     "url": "https://github.com/stratix-dev/stratix/issues"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=24.0.0"
   }
 }

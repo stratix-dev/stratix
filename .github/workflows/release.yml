@@ -70,9 +70,9 @@ jobs:
         run: |
           echo "## Packages" > packages.md
           echo "" >> packages.md
-          
-          # Core packages
-          for pkg in packages/core packages/runtime packages/testing; do
+
+          # All packages
+          for pkg in packages/core packages/framework; do
             if [ -f "$pkg/package.json" ]; then
               name=$(node -p "require('./$pkg/package.json').name")
               version=$(node -p "require('./$pkg/package.json').version")
@@ -81,36 +81,6 @@ jobs:
               echo "" >> packages.md
               echo "$description" >> packages.md
               echo "" >> packages.md
-            fi
-          done
-          
-          # AI providers
-          for pkg in packages/ai/providers/*; do
-            if [ -f "$pkg/package.json" ]; then
-              name=$(node -p "require('./$pkg/package.json').name")
-              version=$(node -p "require('./$pkg/package.json').version")
-              description=$(node -p "require('./$pkg/package.json').description || 'No description'")
-              echo "### \`$name@$version\`" >> packages.md
-              echo "" >> packages.md
-              echo "$description" >> packages.md
-              echo "" >> packages.md
-            fi
-          done
-          
-          # Provider packages
-          for category in packages/providers/*; do
-            if [ -d "$category" ]; then
-              for pkg in "$category"/*; do
-                if [ -f "$pkg/package.json" ]; then
-                  name=$(node -p "require('./$pkg/package.json').name")
-                  version=$(node -p "require('./$pkg/package.json').version")
-                  description=$(node -p "require('./$pkg/package.json').description || 'No description'")
-                  echo "### \`$name@$version\`" >> packages.md
-                  echo "" >> packages.md
-                  echo "$description" >> packages.md
-                  echo "" >> packages.md
-                fi
-              done
             fi
           done
 
@@ -131,8 +101,7 @@ jobs:
 
           \`\`\`bash
           npm install @stratix/core@${{ steps.version.outputs.version }}
-          npm install @stratix/runtime@${{ steps.version.outputs.version }}
-          npm install @stratix/testing@${{ steps.version.outputs.version }}
+          npm install @stratix/framework@${{ steps.version.outputs.version }}
           \`\`\`
 
           ## Full Changelog

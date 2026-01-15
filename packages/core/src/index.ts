@@ -23,15 +23,6 @@ export { ValueObjectFactory } from './value-objects/ValueObjectFactory.js';
 // Errors
 export { DomainError } from './errors/DomainError.js';
 
-// Mapping
-export { Mapper } from './mapping/Mapper.js';
-
-// Security
-export * from './security/SecretsProvider.js';
-
-// Configuration
-export * from './configuration/index.js';
-
 // Value Objects
 export { Currency } from './value-objects/Currency.js';
 export { Money } from './value-objects/Money.js';
@@ -48,16 +39,14 @@ export { Address } from './value-objects/Address.js';
 export type { AddressProps } from './value-objects/Address.js';
 export { UUID } from './value-objects/UUID.js';
 
-// Patterns
-export { Specification, fromPredicate } from './patterns/Specification.js';
-export type { SpecificationResult } from './patterns/Specification.js';
-
 // ========================================
 // ABSTRACTIONS & INTERFACES
 // ========================================
 
 // Container (Dependency Injection)
-export type { Container } from './container/Container.js';
+export type { Container, RegistrationOptions } from './container/Container.js';
+export type { Resolver } from './container/Resolver.js';
+export { DependencyLifetime } from './container/DependencyLifetime.js';
 
 // Messaging (CQRS)
 export type { Command } from './messaging/Command.js';
@@ -71,9 +60,21 @@ export type { QueryBus } from './messaging/QueryBus.js';
 export type { EventBus } from './messaging/EventBus.js';
 export { BaseCommandHandler, BaseQueryHandler } from './messaging/BaseHandlers.js';
 
-// Infrastructure
-export { LogLevel } from './infrastructure/LogLevel.js';
-export type { Logger } from './infrastructure/Logger.js';
+// Logging
+export { LogLevel } from './infrastructure/logging/LogLevel.js';
+export type { Logger } from './infrastructure/logging/Logger.js';
+export type { LoggerFactory } from './infrastructure/logging/LoggerFactory.js';
+export type { LoggerConfig } from './infrastructure/logging/LoggerConfig.js';
+export type { LogEntry } from './infrastructure/logging/LogEntry.js';
+export type { LogTransport } from './infrastructure/logging/LogTransport.js';
+export type { SanitizeConfig } from './infrastructure/logging/SanitizeConfig.js';
+
+// Configuration
+export type { ConfigurationSchema } from './infrastructure/configuration/ConfigurationSchema.js';
+export type { ConfigurationProvider } from './infrastructure/configuration/ConfigurationProvider.js';
+export type { ConfigurationSource } from './infrastructure/configuration/ConfigurationSource.js';
+
+// Others
 export type { Repository } from './infrastructure/Repository.js';
 export type { UnitOfWork } from './infrastructure/UnitOfWork.js';
 export { HealthStatus } from './infrastructure/HealthCheck.js';
@@ -81,7 +82,7 @@ export type { HealthCheckResult, HealthCheck } from './infrastructure/HealthChec
 export type {
   RateLimiter,
   RateLimitResult,
-  RateLimitConfig,
+  RateLimitConfig
 } from './infrastructure/RateLimiter.js';
 export { RateLimitExceededError } from './infrastructure/RateLimiter.js';
 
@@ -98,9 +99,12 @@ export type {
   ContextCommandDefinition,
   ContextQueryDefinition,
   ContextEventHandlerDefinition,
-  ContextRepositoryDefinition,
+  ContextRepositoryDefinition
 } from './context/definitions.js';
 
+// Types
+export type { ClassConstructor } from './types/ClassConstructor.js';
+export type { Buses } from './types/Buses.js';
 // ========================================
 // AI AGENTS
 // ========================================

@@ -44,7 +44,7 @@ export interface Repository<T, ID = string> {
    * await repository.save(user);
    * ```
    */
-  save(entity: T): Promise<void>;
+  save?(entity: T): Promise<void>;
 
   /**
    * Finds an entity by its ID.

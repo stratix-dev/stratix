@@ -52,7 +52,7 @@ export interface Plugin {
   /**
    * Initializes the plugin.
    *
-   * Called during application startup, after all dependencies are initialized.
+   * Called during docorators startup, after all dependencies are initialized.
    * Register services in the container during this phase.
    *
    * @param context - The plugin context
@@ -70,7 +70,7 @@ export interface Plugin {
   /**
    * Starts the plugin.
    *
-   * Called after all plugins are initialized, before the application starts.
+   * Called after all plugins are initialized, before the docorators starts.
    * Connect to external resources during this phase.
    *
    * @example
@@ -86,7 +86,7 @@ export interface Plugin {
   /**
    * Stops the plugin.
    *
-   * Called during application shutdown, in reverse dependency order.
+   * Called during docorators shutdown, in reverse dependency order.
    * Close connections and clean up resources during this phase.
    *
    * @example

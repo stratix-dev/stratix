@@ -1,187 +1,78 @@
-// AI Agent
-export { AIAgent } from './AIAgent.js';
-export type { RetryConfig } from './AIAgent.js';
+/**
+ * AI Agents system (v3.0 - Hexagonal Architecture).
+ *
+ * This module exports the AI agents system with strict DDD/hexagonal architecture:
+ * - Domain layer (AgentSpecification, LLMPort)
+ * - Application layer (AgentService)
+ * - Core primitives (metadata, config)
+ * - Supporting modules (guardrails, prompts, memory, tools, RAG, observability, workflows)
+ */
 
-// Agent Context
-export { AgentContext } from './AgentContext.js';
+// Domain layer (hexagonal architecture) - PURE DOMAIN
+export * from './domain/index.js';
 
-// Agent Result
-export { AgentResult } from './AgentResult.js';
+// Application layer (hexagonal architecture) - ORCHESTRATION
+export * from './application/index.js';
 
-// Agent Memory
-export type { AgentMemory } from './AgentMemory.js';
+// Core primitives (metadata and configuration types)
+export * from './core/index.js';
 
-// Execution Trace
-export { ExecutionTrace } from './ExecutionTrace.js';
+// Shared types
+export * from './shared/TokenUsage.js';
+export * from './shared/RetryPolicy.js';
+export * from './shared/ExecutionMetadata.js';
 
-// Streamable Agent
-export type { StreamableAgent, StreamChunk, StreamOptions } from './StreamableAgent.js';
-export { StreamingHelper } from './StreamableAgent.js';
-
-// LLM Provider
-export type {
-  LLMProvider,
-  ChatParams,
-  ChatResponse,
-  ChatChunk,
-  EmbeddingParams,
-  EmbeddingResponse,
-  ToolDefinition,
-  ResponseFormat,
-} from './LLMProvider.js';
-
-// Agent Orchestrator
-export type { AgentOrchestrator } from './AgentOrchestrator.js';
-
-// Agent Repository
-export type { AgentRepository } from './AgentRepository.js';
-
-// Execution Audit Log
-export type {
-  ExecutionAuditLog,
-  AgentExecution,
-  ExecutionFilter,
-  ExecutionStatistics,
-} from './ExecutionAuditLog.js';
-
-// Agent Tool
-export { AgentTool } from './AgentTool.js';
-export type { ToolDefinition as AgentToolDefinition } from './AgentTool.js';
-
-// Tool Registry
-export type {
-  ToolRegistry,
-  ToolMetadata,
-  ToolSearchResult,
-  ToolSearchOptions,
-} from './ToolRegistry.js';
-
-// Vector Store
-export type {
-  VectorStore,
-  Document,
-  DocumentMetadata,
-  VectorSearchQuery,
-  VectorSearchResult,
-  MetadataFilter,
-} from './VectorStore.js';
-
-// Document Chunker
-export type {
-  DocumentChunker,
-  ChunkerConfig,
-  ChunkResult,
-} from './DocumentChunker.js';
-
-// RAG Pipeline
-export type {
-  RAGPipeline,
-  RAGPipelineConfig,
-  RAGPipelineStatistics,
-  IngestOptions,
-  IngestResult,
-  RetrievalOptions,
-  RAGResult,
-} from './RAGPipeline.js';
+// LLM provider interfaces
+export * from './llm/index.js';
 
 // Guardrails
-export type {
-  Guardrail,
-  GuardrailResult,
-  GuardrailViolation,
-  GuardrailContext,
-  GuardrailChain,
-  GuardrailChainConfig,
-  GuardrailChainResult,
-} from './Guardrail.js';
-export { GuardrailSeverity } from './Guardrail.js';
+export * from './guardrails/index.js';
 
-// Prompt Templates
-export type {
-  PromptTemplate,
-  PromptVariable,
-  PromptMetadata,
-  PromptValidationResult,
-  PromptRegistry,
-  PromptLoader,
-} from './PromptTemplate.js';
+// Prompts
+export * from './prompts/index.js';
+
+// Memory
+export * from './memory/index.js';
+
+// Tools (renamed to avoid conflicts)
+export {
+  type ToolResult as AgentToolResult,
+  type ToolContext,
+  Tool,
+  ToolHelpers,
+  ToolRegistry,
+  ToolNotFoundError,
+  ToolConflictError,
+  type ToolExecutionConfig,
+  type ToolCallResult,
+  type BatchExecutionResult,
+  ToolExecutor,
+  TimeoutError,
+} from './tools/index.js';
+
+// RAG (renamed Embedding to RAGEmbedding to avoid conflict)
+export {
+  type Document,
+  DocumentHelpers,
+  type Embedding as RAGEmbedding,
+  type SimilarityResult,
+  EmbeddingHelpers,
+  type VectorStore,
+  type VectorStoreQuery,
+  InMemoryVectorStore,
+  type ChunkingStrategy,
+  type ChunkingConfig,
+  FixedSizeChunking,
+  ParagraphChunking,
+  SentenceChunking,
+  DocumentChunker,
+  type RAGPipelineConfig,
+  type RAGRetrievalResult,
+  RAGPipeline,
+} from './rag/index.js';
+
+// Observability
+export * from './observability/index.js';
 
 // Workflows
-export type {
-  Workflow,
-  WorkflowStep,
-  WorkflowTrigger,
-  WorkflowExecution,
-  WorkflowExecutionStatus,
-  WorkflowEngine,
-  WorkflowRepository,
-  StepInput,
-  RetryPolicy,
-  StepExecutionRecord,
-  AgentStep,
-  ToolStep,
-  ConditionalStep,
-  ParallelStep,
-  LoopStep,
-  HumanInTheLoopStep,
-  RAGStep,
-  TransformStep,
-} from './Workflow.js';
-
-// AI Telemetry
-export type {
-  AITelemetry,
-  AISpan,
-  SpanType,
-  SpanStatus,
-  TraceContext,
-  LLMMetrics,
-  AgentMetrics,
-  RetrievalMetrics,
-  WorkflowMetrics,
-  GuardrailMetrics,
-  ToolMetrics,
-  TelemetryExporter,
-  TelemetryMetrics,
-  TelemetryConfig,
-} from './AITelemetry.js';
-
-// Types and Constants
-export { AgentCapabilities, AgentVersionFactory } from './types.js';
-export type {
-  AgentId,
-  AgentVersion,
-  AgentCapability,
-  ModelConfig,
-  AgentMessage,
-  AgentCost,
-  TokenUsage,
-  AgentExecutionMetadata,
-  ToolCall,
-  ExecutionStep,
-  LLMCall,
-} from './types.js';
-
-// Domain Events
-export type {
-  AIAgentDomainEvent,
-  AgentExecutionStarted,
-  AgentExecutionCompleted,
-  AgentExecutionFailed,
-  AgentToolUsed,
-  AgentContextUpdated,
-  AgentMemoryStored,
-  AIAgentEvent,
-} from './events.js';
-
-// Errors
-export {
-  AgentError,
-  AgentExecutionError,
-  AgentBudgetExceededError,
-  AgentTimeoutError,
-  AgentToolError,
-  AgentValidationError,
-  AgentConfigurationError,
-  LLMProviderError,
-} from './errors.js';
+export * from './workflows/index.js';
