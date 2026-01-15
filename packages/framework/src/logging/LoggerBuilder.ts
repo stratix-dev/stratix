@@ -146,7 +146,9 @@ export class LoggerBuilder {
     if (!this.config.transports) {
       this.config.transports = [];
     }
-    this.config.transports.push(new ConsoleTransport(this.config.format, this.config.colorize));
+    this.config.transports.push(
+      new ConsoleTransport({ colorize: this.config.colorize, format: this.config.format })
+    );
     return this;
   }
 

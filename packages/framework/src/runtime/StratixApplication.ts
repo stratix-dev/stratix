@@ -1,18 +1,12 @@
-import { CommandBus, ConfigurationProvider, DependencyLifetime } from '@stratix/core';
+import { ConfigurationProvider, DependencyLifetime } from '@stratix/core';
 import { AwilixContainerAdapter } from '../di/AwilixContainerAdapter.js';
 import { AwilixContainer, createContainer, InjectionMode } from 'awilix';
 import { MetadataReader } from '../metadata/MetadataReader.js';
 import { MetadataRegistry } from './MetadataRegistry.js';
-import { InMemoryCommandBus, InMemoryCommandBusOptions } from '../cqrs/InMemoryCommandBus.js';
+import { InMemoryCommandBus } from '../cqrs/InMemoryCommandBus.js';
 import { DecoratorMissingError } from '../errors/DecoratorMissingError.js';
-import {
-  ConfigurationManager,
-  ConfigurationManagerOptions
-} from '../configuration/ConfigurationManager.js';
-import {
-  YamlConfigurationSource,
-  YamlSourceOptions
-} from '../configuration/YamlConfigurationSource.js';
+import { ConfigurationManager } from '../configuration/ConfigurationManager.js';
+import { YamlConfigurationSource } from '../configuration/YamlConfigurationSource.js';
 
 export class StratixApplication {
   public config: ConfigurationProvider;
@@ -22,15 +16,20 @@ export class StratixApplication {
   private readonly awilixContainer: AwilixContainer;
   private readonly container: AwilixContainerAdapter;
 
-  constructor(appClass: new (...args: any[]) => any, registry?: MetadataRegistry) {
+  constructor({
+    appClass,
+    registry
+  }: {
+    appClass: new (...args: any[]) => any;
+    registry?: MetadataRegistry;
+  }) {
     if (!registry) {
-      registry = new MetadataRegistry(appClass);
+      registry = new MetadataRegistry({ appClass });
     }
     this.appClass = appClass;
     this.registry = registry;
-
-    this.awilixContainer = createContainer({ strict: true, injectionMode: InjectionMode.CLASSIC });
-    this.container = new AwilixContainerAdapter(this.awilixContainer);
+    this.awilixContainer = createContainer({ strict: true, injectionMode: InjectionMode.PROXY });
+    this.container = new AwilixContainerAdapter({ awilixContainer: this.awilixContainer });
     this.config = null as any; // To be initialized later
   }
 
@@ -45,12 +44,12 @@ export class StratixApplication {
   }
 
   registerBuses(): void {
-    this.container.registerValue<InMemoryCommandBusOptions>('inMemoryCommandBusOptions', {
-      container: this.container,
-      registry: this.registry
-    });
-    this.container.registerClass<CommandBus>('commandBus', InMemoryCommandBus, {
-      lifetime: DependencyLifetime.SINGLETON
+    this.container.registerClass('commandBus', InMemoryCommandBus, {
+      lifetime: DependencyLifetime.SINGLETON,
+      localInjections: {
+        container: this.container,
+        registry: this.registry
+      }
     });
   }
 
@@ -72,28 +71,24 @@ export class StratixApplication {
       return;
     }
 
-    this.container.registerValue<YamlSourceOptions>('yamlSourceOptions', {
-      filePath: appMetadata.configuration.configFile
-    });
-
-    this.container.registerClass<YamlConfigurationSource>(
-      'yamlConfigurationSource',
-      YamlConfigurationSource,
-      {
-        lifetime: DependencyLifetime.SINGLETON
+    this.container.registerClass('yamlConfigurationSource', YamlConfigurationSource, {
+      lifetime: DependencyLifetime.SINGLETON,
+      localInjections: {
+        filePath: appMetadata.configuration.configFile,
+        basePath: process.cwd(),
+        encoding: 'utf-8'
       }
-    );
-
-    this.container.registerValue<ConfigurationManagerOptions>('configurationManagerOptions', {
-      sources: [this.container.resolve<YamlConfigurationSource>('yamlConfigurationSource')],
-      cache: false
     });
 
-    this.container.registerClass<ConfigurationProvider>('config', ConfigurationManager, {
-      lifetime: DependencyLifetime.SINGLETON
+    this.container.registerClass('config', ConfigurationManager, {
+      lifetime: DependencyLifetime.SINGLETON,
+      localInjections: {
+        sources: [this.container.resolve('yamlConfigurationSource')],
+        cache: false
+      }
     });
 
-    this.config = this.container.resolve<ConfigurationProvider>('config');
+    this.config = this.container.resolve('config');
     this.config.load();
   }
 

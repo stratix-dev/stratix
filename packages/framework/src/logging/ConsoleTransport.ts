@@ -1,13 +1,14 @@
-import { LogEntry, LogLevel, LogTransport } from '@stratix/core';
-import { LogFormat } from '../../../core/dist/infrastructure/logging/LoggerConfig.js';
+import { LogEntry, LogLevel, LogTransport, LogFormat } from '@stratix/core';
 
 export class ConsoleTransport implements LogTransport {
   readonly name = 'console';
+  private readonly format: LogFormat;
+  private readonly colorize: boolean;
 
-  constructor(
-    private readonly format: LogFormat = 'pretty',
-    private readonly colorize: boolean = true
-  ) {}
+  constructor({ format, colorize }: { format?: LogFormat; colorize?: boolean }) {
+    this.format = format ?? 'pretty';
+    this.colorize = colorize ?? true;
+  }
 
   write(entry: LogEntry): void {
     const formatted = this.format === 'json' ? this.formatJson(entry) : this.formatPretty(entry);

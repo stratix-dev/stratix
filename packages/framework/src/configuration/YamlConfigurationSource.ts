@@ -5,30 +5,33 @@ import { resolve } from 'path';
 import { ConfigurationContentError } from '../errors/ConfigurationContentError.js';
 import { ConfigurationLoadError } from '../errors/ConfigurationLoadError.js';
 
-export interface YamlSourceOptions {
-  filePath: string;
-  basePath?: string;
-  encoding?: BufferEncoding;
-}
-
 export class YamlConfigurationSource implements ConfigurationSource {
   readonly name: string;
-  private readonly options: Required<YamlSourceOptions>;
 
-  constructor(yamlSourceOptions: YamlSourceOptions) {
-    this.name = `yaml:${yamlSourceOptions.filePath}`;
-    this.options = {
-      filePath: yamlSourceOptions.filePath,
-      basePath: yamlSourceOptions.basePath ?? process.cwd(),
-      encoding: yamlSourceOptions.encoding ?? 'utf-8'
-    };
+  private filePath: string;
+  private basePath: string;
+  private encoding: BufferEncoding;
+
+  constructor({
+    filePath,
+    basePath,
+    encoding
+  }: {
+    filePath: string;
+    basePath: string;
+    encoding: BufferEncoding;
+  }) {
+    this.name = `yaml:${filePath}`;
+    this.filePath = filePath;
+    this.basePath = basePath;
+    this.encoding = encoding;
   }
 
   async load(): Promise<Record<string, unknown>> {
-    const fullPath = resolve(this.options.basePath, this.options.filePath);
+    const fullPath = resolve(this.basePath, this.filePath);
 
     try {
-      const content = await readFile(fullPath, this.options.encoding);
+      const content = await readFile(fullPath, this.encoding);
       const parsed = parse(content);
 
       if (typeof parsed !== 'object' || parsed === null) {
@@ -48,9 +51,9 @@ export class YamlConfigurationSource implements ConfigurationSource {
   }
 
   async isAvailable(): Promise<boolean> {
-    const fullPath = resolve(this.options.basePath, this.options.filePath);
+    const fullPath = resolve(this.basePath, this.filePath);
     try {
-      await readFile(fullPath, this.options.encoding);
+      await readFile(fullPath, this.encoding);
       return true;
     } catch {
       return false;

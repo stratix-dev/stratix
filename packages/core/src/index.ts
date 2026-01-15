@@ -44,7 +44,7 @@ export { UUID } from './value-objects/UUID.js';
 // ========================================
 
 // Container (Dependency Injection)
-export type { Container, RegistrationOptions } from './container/Container.js';
+export type { Container, RegistrationOptions, ConstructorParams } from './container/Container.js';
 export type { Resolver } from './container/Resolver.js';
 export { DependencyLifetime } from './container/DependencyLifetime.js';
 
@@ -64,7 +64,7 @@ export { BaseCommandHandler, BaseQueryHandler } from './messaging/BaseHandlers.j
 export { LogLevel } from './infrastructure/logging/LogLevel.js';
 export type { Logger } from './infrastructure/logging/Logger.js';
 export type { LoggerFactory } from './infrastructure/logging/LoggerFactory.js';
-export type { LoggerConfig } from './infrastructure/logging/LoggerConfig.js';
+export type { LoggerConfig, LogFormat } from './infrastructure/logging/LoggerConfig.js';
 export type { LogEntry } from './infrastructure/logging/LogEntry.js';
 export type { LogTransport } from './infrastructure/logging/LogTransport.js';
 export type { SanitizeConfig } from './infrastructure/logging/SanitizeConfig.js';

@@ -2,27 +2,40 @@ import { LogEntry, LogTransport } from '@stratix/core';
 import * as fs from 'fs';
 import path from 'path';
 
-export interface FileTransportOptions {
-  filePath: string;
-  maxSize?: number;
-  maxFiles?: number;
-  append?: boolean;
-}
-
 export class FileTransport implements LogTransport {
   readonly name = 'file';
   private writeStream: fs.WriteStream;
 
-  constructor(private readonly options: FileTransportOptions) {
+  private readonly filePath: string;
+  private readonly maxSize?: number;
+  private readonly maxFiles?: number;
+  private readonly append?: boolean;
+
+  constructor({
+    filePath,
+    maxSize,
+    maxFiles,
+    append
+  }: {
+    filePath: string;
+    maxSize?: number;
+    maxFiles?: number;
+    append?: boolean;
+  }) {
+    this.filePath = filePath;
+    this.maxSize = maxSize;
+    this.maxFiles = maxFiles;
+    this.append = append;
+
     // Ensure directory exists
-    const dir = path.dirname(options.filePath);
+    const dir = path.dirname(this.filePath);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
 
     // Create write stream
-    this.writeStream = fs.createWriteStream(options.filePath, {
-      flags: (options.append ?? true) ? 'a' : 'w'
+    this.writeStream = fs.createWriteStream(this.filePath, {
+      flags: (this.append ?? true) ? 'a' : 'w'
     });
   }
 
@@ -57,8 +70,8 @@ export class FileTransport implements LogTransport {
   }
 
   private checkRotation(): void {
-    const stats = fs.statSync(this.options.filePath);
-    const maxSize = this.options.maxSize ?? 10 * 1024 * 1024; // 10MB default
+    const stats = fs.statSync(this.filePath);
+    const maxSize = this.maxSize ?? 10 * 1024 * 1024; // 10MB default
 
     if (stats.size > maxSize) {
       this.rotate();
@@ -69,10 +82,10 @@ export class FileTransport implements LogTransport {
     this.writeStream.close();
 
     // Rotate existing files
-    const maxFiles = this.options.maxFiles ?? 5;
+    const maxFiles = this.maxFiles ?? 5;
     for (let i = maxFiles - 1; i >= 0; i--) {
-      const oldPath = i === 0 ? this.options.filePath : `${this.options.filePath}.${i}`;
-      const newPath = `${this.options.filePath}.${i + 1}`;
+      const oldPath = i === 0 ? this.filePath : `${this.filePath}.${i}`;
+      const newPath = `${this.filePath}.${i + 1}`;
 
       if (fs.existsSync(oldPath)) {
         if (i === maxFiles - 1) {
@@ -84,6 +97,6 @@ export class FileTransport implements LogTransport {
     }
 
     // Create new stream
-    this.writeStream = fs.createWriteStream(this.options.filePath, { flags: 'w' });
+    this.writeStream = fs.createWriteStream(this.filePath, { flags: 'w' });
   }
 }

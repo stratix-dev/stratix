@@ -8,7 +8,7 @@ export class MetadataRegistry {
   public readonly commandToHandler: Map<ClassConstructor, ClassConstructor> = new Map();
   public readonly handlerToCommand: Map<ClassConstructor, ClassConstructor> = new Map();
 
-  constructor(appClass: ClassConstructor) {
+  constructor({ appClass }: { appClass: ClassConstructor }) {
     this.appClass = appClass;
 
     const appMetadata = MetadataReader.getAppMetadata(appClass);

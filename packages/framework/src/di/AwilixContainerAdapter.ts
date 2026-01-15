@@ -1,36 +1,50 @@
 import { AwilixContainer, asFunction, asValue, asClass } from 'awilix';
-import { Container, DependencyLifetime, RegistrationOptions } from '@stratix/core';
+import {
+  Container,
+  DependencyLifetime,
+  RegistrationOptions,
+  ConstructorParams
+} from '@stratix/core';
 
 export class AwilixContainerAdapter implements Container {
+  private readonly awilixContainer: AwilixContainer;
   private readonly symbolMap = new Map<symbol, string>();
 
-  constructor(private readonly awilix: AwilixContainer) {}
+  constructor({ awilixContainer }: { awilixContainer: AwilixContainer }) {
+    this.awilixContainer = awilixContainer;
+  }
 
   resolve<T>(token: string | symbol): T {
     const key = this.getTokenKey(token);
-    return this.awilix.resolve<T>(key);
+    return this.awilixContainer.resolve<T>(key);
   }
 
-  registerClass<T>(
+  registerClass<T, C extends new (arg: any) => T>(
     token: string | symbol,
-    classConstructor: { new (...args: any[]): T },
-    options?: RegistrationOptions
-  ) {
-    this.awilix.register({
-      [this.getTokenKey(token)]: asClass(classConstructor, {
-        lifetime: this.mapLifetime(options?.lifetime)
+    classConstructor: C,
+    options?: {
+      lifetime?: DependencyLifetime;
+      localInjections?: Partial<ConstructorParams<C>>;
+    }
+  ): void {
+    const key = this.getTokenKey(token);
+
+    this.awilixContainer.register({
+      [key]: asClass(classConstructor, {
+        lifetime: this.mapLifetime(options?.lifetime),
+        injector: () => options?.localInjections ?? {}
       })
     });
   }
 
   registerValue<T>(token: string | symbol, value: T) {
-    this.awilix.register({
+    this.awilixContainer.register({
       [this.getTokenKey(token)]: asValue(value)
     });
   }
 
   registerFunction<T>(token: string | symbol, func: () => T, options?: RegistrationOptions) {
-    this.awilix.register({
+    this.awilixContainer.register({
       [this.getTokenKey(token)]: asFunction(func, {
         lifetime: this.mapLifetime(options?.lifetime)
       })
@@ -38,11 +52,11 @@ export class AwilixContainerAdapter implements Container {
   }
 
   async dispose(): Promise<void> {
-    await this.awilix.dispose();
+    await this.awilixContainer.dispose();
   }
 
   createScope(): Container {
-    return new AwilixContainerAdapter(this.awilix.createScope());
+    return new AwilixContainerAdapter({ awilixContainer: this.awilixContainer.createScope() });
   }
 
   private mapLifetime(lifetime?: DependencyLifetime) {

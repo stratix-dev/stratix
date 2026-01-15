@@ -9,16 +9,27 @@ export class StratixLogger implements Logger {
     [LogLevel.FATAL]: 4
   };
 
-  constructor(
-    private readonly config: Required<LoggerConfig>,
-    private readonly transports: LogTransport[],
-    public readonly context?: string
-  ) {}
+  private readonly config: Required<LoggerConfig>;
+  private readonly transports: LogTransport[];
+  public readonly context?: string;
+
+  constructor({
+    config,
+    transports,
+    context
+  }: {
+    config: Required<LoggerConfig>;
+    transports: LogTransport[];
+    context?: string;
+  }) {
+    this.config = config;
+    this.transports = transports;
+    this.context = context;
+  }
 
   debug(message: string, metadata?: Record<string, unknown>): void {
     this.log(LogLevel.DEBUG, message, metadata);
   }
-
   info(message: string, metadata?: Record<string, unknown>): void {
     this.log(LogLevel.INFO, message, metadata);
   }
@@ -53,7 +64,11 @@ export class StratixLogger implements Logger {
    */
   child(childContext: string): Logger {
     const fullContext = this.context ? `${this.context}.${childContext}` : childContext;
-    return new StratixLogger(this.config, this.transports, fullContext);
+    return new StratixLogger({
+      config: this.config,
+      transports: this.transports,
+      context: fullContext
+    });
   }
 
   private shouldLog(level: LogLevel): boolean {
