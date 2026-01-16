@@ -1,5 +1,5 @@
 import { Command, CommandBus, CommandHandler, Container } from '@stratix/core';
-import { MetadataRegistry } from '../runtime/MetadataRegistry.js';
+import { MetadataRegistry } from '../metadata/index.js';
 
 export class InMemoryCommandBus implements CommandBus {
   private readonly container: Container;

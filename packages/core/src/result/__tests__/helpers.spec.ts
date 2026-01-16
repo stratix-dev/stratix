@@ -85,7 +85,7 @@ describe('Results Helpers', () => {
 
   describe('sequence', () => {
     it('should execute operations sequentially and collect results', async () => {
-      let executionOrder: number[] = [];
+      const executionOrder: number[] = [];
 
       const operations = [
         async () => {

@@ -1,6 +1,8 @@
 import { ClassConstructor } from '@stratix/core';
-import { MetadataWriter } from '../metadata/MetadataWriter.js';
 import { DecoratorKindError } from '../errors/DecoratorKindError.js';
+import { MetadataKeys } from '../metadata/keys.js';
+import { Metadata } from '../metadata/Metadata.js';
+import { ContextMetadata } from '../metadata/registry.js';
 
 export interface ContextOptions {
   commandHandlers?: ClassConstructor[];
@@ -15,10 +17,15 @@ export function Context(options: ContextOptions = {}) {
       throw new DecoratorKindError('Context', 'class', context.kind);
     }
 
-    MetadataWriter.setContextMetadata(target, {
+    const metadata: ContextMetadata = {
       contextClass: target,
-      commandHandlers: options?.commandHandlers || []
-    });
+      commandHandlers: options.commandHandlers ?? [],
+      queryHandlers: [],
+      eventHandlers: [],
+      providers: []
+    };
+
+    Metadata.set(target, MetadataKeys.Context, metadata);
 
     return target;
   };
