@@ -180,9 +180,7 @@ export const ToolDefinitionHelpers = {
     if (!definition.name || definition.name.trim().length === 0) {
       errors.push('Tool name cannot be empty');
     } else if (!/^[a-z][a-z0-9_]*$/.test(definition.name)) {
-      errors.push(
-        'Tool name must be snake_case (lowercase letters, numbers, underscores)'
-      );
+      errors.push('Tool name must be snake_case (lowercase letters, numbers, underscores)');
     }
 
     // Validate description
@@ -225,8 +223,8 @@ export const ToolDefinitionHelpers = {
       parameters: {
         type: 'object',
         properties,
-        required,
-      },
+        required
+      }
     };
   },
 
@@ -238,5 +236,5 @@ export const ToolDefinitionHelpers = {
    */
   isValid(definition: ToolDefinition): boolean {
     return this.validate(definition).length === 0;
-  },
+  }
 };

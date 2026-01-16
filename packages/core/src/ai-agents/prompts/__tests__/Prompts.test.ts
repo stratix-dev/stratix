@@ -15,17 +15,13 @@ describe('PromptVariableHelpers', () => {
     });
 
     it('should handle single brace syntax', () => {
-      const vars = PromptVariableHelpers.extractVariables(
-        'Hello {name}, you are {age} years old'
-      );
+      const vars = PromptVariableHelpers.extractVariables('Hello {name}, you are {age} years old');
 
       expect(vars).toEqual(['name', 'age']);
     });
 
     it('should return unique variables', () => {
-      const vars = PromptVariableHelpers.extractVariables(
-        '{{name}} said {{name}}'
-      );
+      const vars = PromptVariableHelpers.extractVariables('{{name}} said {{name}}');
 
       expect(vars).toEqual(['name']);
     });
@@ -33,19 +29,13 @@ describe('PromptVariableHelpers', () => {
 
   describe('validate', () => {
     it('should find missing variables', () => {
-      const missing = PromptVariableHelpers.validate(
-        'Hello {{name}}',
-        { age: 25 }
-      );
+      const missing = PromptVariableHelpers.validate('Hello {{name}}', { age: 25 });
 
       expect(missing).toEqual(['name']);
     });
 
     it('should pass when all variables present', () => {
-      const missing = PromptVariableHelpers.validate(
-        'Hello {{name}}',
-        { name: 'Alice' }
-      );
+      const missing = PromptVariableHelpers.validate('Hello {{name}}', { name: 'Alice' });
 
       expect(missing).toEqual([]);
     });
@@ -53,28 +43,24 @@ describe('PromptVariableHelpers', () => {
 
   describe('substitute', () => {
     it('should substitute variables', () => {
-      const result = PromptVariableHelpers.substitute(
-        'Hello {{name}}, you are {{age}} years old',
-        { name: 'Alice', age: 25 }
-      );
+      const result = PromptVariableHelpers.substitute('Hello {{name}}, you are {{age}} years old', {
+        name: 'Alice',
+        age: 25
+      });
 
       expect(result).toBe('Hello Alice, you are 25 years old');
     });
 
     it('should handle missing variables in non-strict mode', () => {
-      const result = PromptVariableHelpers.substitute(
-        'Hello {{name}}',
-        {},
-        false
-      );
+      const result = PromptVariableHelpers.substitute('Hello {{name}}', {}, false);
 
       expect(result).toBe('Hello {{name}}');
     });
 
     it('should throw in strict mode for missing variables', () => {
-      expect(() =>
-        PromptVariableHelpers.substitute('Hello {{name}}', {}, true)
-      ).toThrow('Missing required variables');
+      expect(() => PromptVariableHelpers.substitute('Hello {{name}}', {}, true)).toThrow(
+        'Missing required variables'
+      );
     });
   });
 });
@@ -88,8 +74,8 @@ describe('PromptTemplate', () => {
       template: 'Hello {{name}}, welcome to {{app}}!',
       variables: [
         { name: 'name', required: true },
-        { name: 'app', defaultValue: 'our app' },
-      ],
+        { name: 'app', defaultValue: 'our app' }
+      ]
     });
   });
 
@@ -174,12 +160,12 @@ describe('PromptRegistry', () => {
 
     template1 = new PromptTemplate({
       metadata: { name: 'greeting', tags: ['chat'] },
-      template: 'Hello {{name}}!',
+      template: 'Hello {{name}}!'
     });
 
     template2 = new PromptTemplate({
       metadata: { name: 'farewell', tags: ['chat'] },
-      template: 'Goodbye {{name}}!',
+      template: 'Goodbye {{name}}!'
     });
   });
 
@@ -204,7 +190,7 @@ describe('PromptRegistry', () => {
 
       const updated = new PromptTemplate({
         metadata: { name: 'greeting' },
-        template: 'Hi {{name}}!',
+        template: 'Hi {{name}}!'
       });
 
       registry.registerOrReplace(updated);
@@ -302,7 +288,7 @@ describe('PromptLoader', () => {
       const template = loader.fromObject({
         metadata: { name: 'greeting' },
         template: 'Hello {{name}}!',
-        variables: [{ name: 'name', required: true }],
+        variables: [{ name: 'name', required: true }]
       });
 
       expect(template.getMetadata().name).toBe('greeting');
@@ -313,7 +299,7 @@ describe('PromptLoader', () => {
       expect(() =>
         loader.fromObject({
           metadata: { name: '' },
-          template: '',
+          template: ''
         })
       ).toThrow();
     });
@@ -323,7 +309,7 @@ describe('PromptLoader', () => {
     it('should load template from JSON string', () => {
       const json = JSON.stringify({
         metadata: { name: 'greeting' },
-        template: 'Hello {{name}}!',
+        template: 'Hello {{name}}!'
       });
 
       const template = loader.fromJSON(json);
@@ -340,7 +326,7 @@ describe('PromptLoader', () => {
     it('should serialize template to object', () => {
       const template = new PromptTemplate({
         metadata: { name: 'greeting' },
-        template: 'Hello {{name}}!',
+        template: 'Hello {{name}}!'
       });
 
       const data = loader.toObject(template);
@@ -354,7 +340,7 @@ describe('PromptLoader', () => {
     it('should serialize template to JSON', () => {
       const template = new PromptTemplate({
         metadata: { name: 'greeting' },
-        template: 'Hello {{name}}!',
+        template: 'Hello {{name}}!'
       });
 
       const json = loader.toJSON(template);
@@ -369,12 +355,12 @@ describe('PromptLoader', () => {
       const data = [
         {
           metadata: { name: 'greeting' },
-          template: 'Hello!',
+          template: 'Hello!'
         },
         {
           metadata: { name: 'farewell' },
-          template: 'Goodbye!',
-        },
+          template: 'Goodbye!'
+        }
       ];
 
       const templates = loader.fromArray(data);

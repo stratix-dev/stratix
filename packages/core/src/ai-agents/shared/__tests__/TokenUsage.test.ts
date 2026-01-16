@@ -9,7 +9,7 @@ describe('TokenUsageHelpers', () => {
       expect(usage).toEqual({
         promptTokens: 100,
         completionTokens: 50,
-        totalTokens: 150,
+        totalTokens: 150
       });
     });
 
@@ -19,7 +19,7 @@ describe('TokenUsageHelpers', () => {
       expect(usage).toEqual({
         promptTokens: 0,
         completionTokens: 0,
-        totalTokens: 0,
+        totalTokens: 0
       });
     });
 
@@ -47,7 +47,7 @@ describe('TokenUsageHelpers', () => {
       expect(combined).toEqual({
         promptTokens: 350,
         completionTokens: 150,
-        totalTokens: 500,
+        totalTokens: 500
       });
     });
 
@@ -57,7 +57,7 @@ describe('TokenUsageHelpers', () => {
       expect(combined).toEqual({
         promptTokens: 0,
         completionTokens: 0,
-        totalTokens: 0,
+        totalTokens: 0
       });
     });
 
@@ -78,7 +78,7 @@ describe('TokenUsageHelpers', () => {
       expect(combined).toEqual({
         promptTokens: 150,
         completionTokens: 75,
-        totalTokens: 225,
+        totalTokens: 225
       });
     });
   });
@@ -105,7 +105,7 @@ describe('TokenUsageHelpers', () => {
       const usage: TokenUsage = {
         promptTokens: 0,
         completionTokens: 0,
-        totalTokens: 0,
+        totalTokens: 0
       };
 
       expect(TokenUsageHelpers.isEmpty(usage)).toBe(true);
@@ -120,7 +120,7 @@ describe('TokenUsageHelpers', () => {
         model: 'gpt-4',
         usage,
         costUSD: 0.0075,
-        timestamp: new Date('2024-01-01T00:00:00Z'),
+        timestamp: new Date('2024-01-01T00:00:00Z')
       };
 
       expect(cost.provider).toBe('openai');
@@ -136,7 +136,7 @@ describe('TokenUsageHelpers', () => {
         model: 'claude-3-opus',
         usage: TokenUsageHelpers.create(200, 100),
         costUSD: 0.015,
-        timestamp: new Date(),
+        timestamp: new Date()
       };
 
       expect(cost.provider).toBe('anthropic');
@@ -165,7 +165,7 @@ describe('TokenUsageHelpers', () => {
       const usage: TokenUsage = {
         promptTokens: 100.5,
         completionTokens: 50.3,
-        totalTokens: 150.8,
+        totalTokens: 150.8
       };
 
       expect(usage.promptTokens).toBe(100.5);
@@ -177,7 +177,7 @@ describe('TokenUsageHelpers', () => {
       const usage: TokenUsage = {
         promptTokens: -100,
         completionTokens: 50,
-        totalTokens: -50,
+        totalTokens: -50
       };
 
       expect(usage.promptTokens).toBe(-100);

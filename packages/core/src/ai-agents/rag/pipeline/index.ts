@@ -10,7 +10,4 @@
 export { type RAGPipelineConfig } from './PipelineConfig.js';
 
 // RAG pipeline
-export {
-  type RAGRetrievalResult,
-  RAGPipeline,
-} from './RAGPipeline.js';
+export { type RAGRetrievalResult, RAGPipeline } from './RAGPipeline.js';

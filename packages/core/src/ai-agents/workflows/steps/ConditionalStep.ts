@@ -1,8 +1,5 @@
 import { WorkflowStep } from '../WorkflowStep.js';
-import type {
-  WorkflowStepContext,
-  WorkflowStepResult,
-} from '../WorkflowStep.js';
+import type { WorkflowStepContext, WorkflowStepResult } from '../WorkflowStep.js';
 
 /**
  * Step that conditionally executes based on a predicate.
@@ -22,10 +19,7 @@ import type {
  * );
  * ```
  */
-export class ConditionalStep<TInput, TOutput> extends WorkflowStep<
-  TInput,
-  TOutput
-> {
+export class ConditionalStep<TInput, TOutput> extends WorkflowStep<TInput, TOutput> {
   constructor(
     private readonly stepId: string,
     private readonly stepName: string,
@@ -47,10 +41,7 @@ export class ConditionalStep<TInput, TOutput> extends WorkflowStep<
     return this.stepName;
   }
 
-  async execute(
-    input: TInput,
-    context: WorkflowStepContext
-  ): Promise<WorkflowStepResult<TOutput>> {
+  async execute(input: TInput, context: WorkflowStepContext): Promise<WorkflowStepResult<TOutput>> {
     try {
       const conditionResult = await this.condition(input, context);
 
@@ -62,9 +53,7 @@ export class ConditionalStep<TInput, TOutput> extends WorkflowStep<
         return this.skipped({ reason: 'Condition not met' });
       }
     } catch (error) {
-      return this.failure(
-        error instanceof Error ? error : new Error(String(error))
-      );
+      return this.failure(error instanceof Error ? error : new Error(String(error)));
     }
   }
 }

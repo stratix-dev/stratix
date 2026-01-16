@@ -183,7 +183,7 @@ export abstract class AgentSpecification extends AggregateRoot<'AgentSpecificati
       value: { ...this._modelConfig, ...updates },
       writable: false,
       enumerable: false,
-      configurable: false,
+      configurable: false
     });
 
     // Update timestamp

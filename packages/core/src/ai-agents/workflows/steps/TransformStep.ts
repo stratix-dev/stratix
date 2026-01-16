@@ -1,8 +1,5 @@
 import { WorkflowStep } from '../WorkflowStep.js';
-import type {
-  WorkflowStepContext,
-  WorkflowStepResult,
-} from '../WorkflowStep.js';
+import type { WorkflowStepContext, WorkflowStepResult } from '../WorkflowStep.js';
 
 /**
  * Step that transforms data using a function.
@@ -21,10 +18,7 @@ import type {
  * // result.output === 'HELLO'
  * ```
  */
-export class TransformStep<TInput, TOutput> extends WorkflowStep<
-  TInput,
-  TOutput
-> {
+export class TransformStep<TInput, TOutput> extends WorkflowStep<TInput, TOutput> {
   constructor(
     private readonly stepId: string,
     private readonly stepName: string,
@@ -54,9 +48,7 @@ export class TransformStep<TInput, TOutput> extends WorkflowStep<
       const output = await this.transform(input);
       return this.success(output);
     } catch (error) {
-      return this.failure(
-        error instanceof Error ? error : new Error(String(error))
-      );
+      return this.failure(error instanceof Error ? error : new Error(String(error)));
     }
   }
 }

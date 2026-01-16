@@ -48,10 +48,7 @@ export interface ChunkingStrategy {
    * @param config - Chunking configuration
    * @returns Array of document chunks
    */
-  chunk(
-    document: Document,
-    config?: ChunkingConfig
-  ): readonly Document[];
+  chunk(document: Document, config?: ChunkingConfig): readonly Document[];
 }
 
 /**
@@ -70,10 +67,7 @@ export interface ChunkingStrategy {
  * ```
  */
 export class FixedSizeChunking implements ChunkingStrategy {
-  chunk(
-    document: Document,
-    config: ChunkingConfig = {}
-  ): readonly Document[] {
+  chunk(document: Document, config: ChunkingConfig = {}): readonly Document[] {
     const maxSize = config.maxChunkSize ?? 1000;
     const overlap = config.overlap ?? 200;
     const preserveMetadata = config.preserveMetadata ?? true;
@@ -94,19 +88,15 @@ export class FixedSizeChunking implements ChunkingStrategy {
             sourceDocumentId: document.id,
             chunkIndex,
             chunkStart: start,
-            chunkEnd: end,
+            chunkEnd: end
           }
         : {
             sourceDocumentId: document.id,
-            chunkIndex,
+            chunkIndex
           };
 
       chunks.push(
-        DocumentHelpers.create(
-          `${document.id}_chunk_${chunkIndex}`,
-          chunkText,
-          metadata
-        )
+        DocumentHelpers.create(`${document.id}_chunk_${chunkIndex}`, chunkText, metadata)
       );
 
       chunkIndex++;
@@ -135,10 +125,7 @@ export class FixedSizeChunking implements ChunkingStrategy {
  * ```
  */
 export class ParagraphChunking implements ChunkingStrategy {
-  chunk(
-    document: Document,
-    config: ChunkingConfig = {}
-  ): readonly Document[] {
+  chunk(document: Document, config: ChunkingConfig = {}): readonly Document[] {
     const maxSize = config.maxChunkSize ?? 1000;
     const separator = config.separator ?? '\n\n';
     const preserveMetadata = config.preserveMetadata ?? true;
@@ -152,19 +139,16 @@ export class ParagraphChunking implements ChunkingStrategy {
       if (paragraph.trim().length === 0) continue;
 
       // If adding this paragraph would exceed max size, start new chunk
-      if (
-        currentChunk.length > 0 &&
-        currentChunk.length + paragraph.length > maxSize
-      ) {
+      if (currentChunk.length > 0 && currentChunk.length + paragraph.length > maxSize) {
         const metadata = preserveMetadata
           ? {
               ...document.metadata,
               sourceDocumentId: document.id,
-              chunkIndex,
+              chunkIndex
             }
           : {
               sourceDocumentId: document.id,
-              chunkIndex,
+              chunkIndex
             };
 
         chunks.push(
@@ -188,19 +172,15 @@ export class ParagraphChunking implements ChunkingStrategy {
         ? {
             ...document.metadata,
             sourceDocumentId: document.id,
-            chunkIndex,
+            chunkIndex
           }
         : {
             sourceDocumentId: document.id,
-            chunkIndex,
+            chunkIndex
           };
 
       chunks.push(
-        DocumentHelpers.create(
-          `${document.id}_chunk_${chunkIndex}`,
-          currentChunk.trim(),
-          metadata
-        )
+        DocumentHelpers.create(`${document.id}_chunk_${chunkIndex}`, currentChunk.trim(), metadata)
       );
     }
 
@@ -225,17 +205,12 @@ export class ParagraphChunking implements ChunkingStrategy {
  * ```
  */
 export class SentenceChunking implements ChunkingStrategy {
-  chunk(
-    document: Document,
-    config: ChunkingConfig = {}
-  ): readonly Document[] {
+  chunk(document: Document, config: ChunkingConfig = {}): readonly Document[] {
     const maxSize = config.maxChunkSize ?? 1000;
     const preserveMetadata = config.preserveMetadata ?? true;
 
     // Simple sentence splitting (can be improved with proper NLP)
-    const sentences = document.content.match(/[^.!?]+[.!?]+/g) || [
-      document.content,
-    ];
+    const sentences = document.content.match(/[^.!?]+[.!?]+/g) || [document.content];
 
     const chunks: Document[] = [];
     let currentChunk = '';
@@ -251,11 +226,11 @@ export class SentenceChunking implements ChunkingStrategy {
           ? {
               ...document.metadata,
               sourceDocumentId: document.id,
-              chunkIndex,
+              chunkIndex
             }
           : {
               sourceDocumentId: document.id,
-              chunkIndex,
+              chunkIndex
             };
 
         chunks.push(
@@ -279,19 +254,15 @@ export class SentenceChunking implements ChunkingStrategy {
         ? {
             ...document.metadata,
             sourceDocumentId: document.id,
-            chunkIndex,
+            chunkIndex
           }
         : {
             sourceDocumentId: document.id,
-            chunkIndex,
+            chunkIndex
           };
 
       chunks.push(
-        DocumentHelpers.create(
-          `${document.id}_chunk_${chunkIndex}`,
-          currentChunk.trim(),
-          metadata
-        )
+        DocumentHelpers.create(`${document.id}_chunk_${chunkIndex}`, currentChunk.trim(), metadata)
       );
     }
 

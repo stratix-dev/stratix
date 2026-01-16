@@ -237,25 +237,19 @@ export class InMemoryExecutionAuditLog implements ExecutionAuditLog {
           info: 0,
           warning: 1,
           error: 2,
-          critical: 3,
+          critical: 3
         };
         const minLevel = severityLevels[query.minSeverity];
-        results = results.filter(
-          (r) => severityLevels[r.severity] >= minLevel
-        );
+        results = results.filter((r) => severityLevels[r.severity] >= minLevel);
       }
 
       // Filter by time range
       if (query.startTime !== undefined) {
-        results = results.filter(
-          (r) => r.timestamp.getTime() >= query.startTime!.getTime()
-        );
+        results = results.filter((r) => r.timestamp.getTime() >= query.startTime!.getTime());
       }
 
       if (query.endTime !== undefined) {
-        results = results.filter(
-          (r) => r.timestamp.getTime() <= query.endTime!.getTime()
-        );
+        results = results.filter((r) => r.timestamp.getTime() <= query.endTime!.getTime());
       }
 
       // Apply pagination
@@ -306,7 +300,7 @@ export class InMemoryExecutionAuditLog implements ExecutionAuditLog {
       info: 0,
       warning: 0,
       error: 0,
-      critical: 0,
+      critical: 0
     };
 
     for (const record of records) {
@@ -316,8 +310,7 @@ export class InMemoryExecutionAuditLog implements ExecutionAuditLog {
     // Count by event type
     const byEventType: Record<string, number> = {};
     for (const record of records) {
-      byEventType[record.eventType] =
-        (byEventType[record.eventType] ?? 0) + 1;
+      byEventType[record.eventType] = (byEventType[record.eventType] ?? 0) + 1;
     }
 
     // Count unique agents
@@ -334,7 +327,7 @@ export class InMemoryExecutionAuditLog implements ExecutionAuditLog {
       const timestamps = records.map((r) => r.timestamp.getTime());
       timeRange = {
         earliest: new Date(Math.min(...timestamps)),
-        latest: new Date(Math.max(...timestamps)),
+        latest: new Date(Math.max(...timestamps))
       };
     }
 
@@ -344,7 +337,7 @@ export class InMemoryExecutionAuditLog implements ExecutionAuditLog {
       byEventType,
       uniqueAgents: agentIds.size,
       uniqueSessions: sessionIds.size,
-      timeRange,
+      timeRange
     };
   }
 

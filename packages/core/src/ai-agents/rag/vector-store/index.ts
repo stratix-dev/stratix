@@ -7,21 +7,10 @@
  */
 
 // Document types
-export {
-  type Document,
-  DocumentHelpers,
-} from './Document.js';
+export { type Document, DocumentHelpers } from './Document.js';
 
 // Embedding types
-export {
-  type Embedding,
-  type SimilarityResult,
-  EmbeddingHelpers,
-} from './Embedding.js';
+export { type Embedding, type SimilarityResult, EmbeddingHelpers } from './Embedding.js';
 
 // Vector store
-export {
-  type VectorStore,
-  type VectorStoreQuery,
-  InMemoryVectorStore,
-} from './VectorStore.js';
+export { type VectorStore, type VectorStoreQuery, InMemoryVectorStore } from './VectorStore.js';

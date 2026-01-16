@@ -157,7 +157,7 @@ export const ExecutionTraceHelpers = {
       userId: config.userId,
       startTime: new Date(),
       steps: [],
-      metadata: config.metadata,
+      metadata: config.metadata
     };
   },
 
@@ -171,7 +171,7 @@ export const ExecutionTraceHelpers = {
   addStep(trace: ExecutionTrace, step: TraceStep): ExecutionTrace {
     return {
       ...trace,
-      steps: [...trace.steps, step],
+      steps: [...trace.steps, step]
     };
   },
 
@@ -184,7 +184,7 @@ export const ExecutionTraceHelpers = {
   complete(trace: ExecutionTrace): ExecutionTrace {
     return {
       ...trace,
-      endTime: new Date(),
+      endTime: new Date()
     };
   },
 
@@ -274,5 +274,5 @@ export const ExecutionTraceHelpers = {
    */
   generateTraceId(): string {
     return `trace_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  },
+  }
 };

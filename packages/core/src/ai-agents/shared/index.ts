@@ -19,7 +19,7 @@ export type {
   NumberPropertySchema,
   BooleanPropertySchema,
   ArrayPropertySchema,
-  ObjectPropertySchema,
+  ObjectPropertySchema
 } from './ToolDefinition.js';
 export { ToolDefinitionHelpers } from './ToolDefinition.js';
 

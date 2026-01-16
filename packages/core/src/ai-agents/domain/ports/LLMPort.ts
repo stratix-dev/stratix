@@ -186,7 +186,7 @@ export const LLMPortHelpers = {
   createRequest(messages: readonly LLMMessage[], config: ModelConfig): LLMRequest {
     return {
       messages,
-      config,
+      config
     };
   },
 
@@ -207,5 +207,5 @@ export const LLMPortHelpers = {
     const outputCost = (usage.completionTokens / 1000) * outputCostPer1k;
 
     return inputCost + outputCost;
-  },
+  }
 };

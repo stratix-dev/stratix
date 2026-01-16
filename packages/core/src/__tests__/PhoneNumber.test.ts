@@ -292,10 +292,10 @@ describe('PhoneNumber', () => {
         '+1-212-555-1234',
         '+1.212.555.1234',
         '+1(212)555-1234',
-        '+1 (212) 555-1234',
+        '+1 (212) 555-1234'
       ];
 
-      formats.forEach(format => {
+      formats.forEach((format) => {
         const result = PhoneNumber.create(format);
         expect(result.isSuccess).toBe(true);
         expect(result.value.value).toBe('+12125551234');
@@ -307,7 +307,7 @@ describe('PhoneNumber', () => {
         { input: '+44 20 7946 0958', expected: '+442079460958' },
         { input: '+49 30 123456', expected: '+4930123456' },
         { input: '+81-3-1234-5678', expected: '+81312345678' },
-        { input: '+86 10 1234 5678', expected: '+861012345678' },
+        { input: '+86 10 1234 5678', expected: '+861012345678' }
       ];
 
       phones.forEach(({ input, expected }) => {

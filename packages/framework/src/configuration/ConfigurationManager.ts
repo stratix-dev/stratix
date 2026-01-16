@@ -59,20 +59,23 @@ export class ConfigurationManager implements ConfigurationProvider {
 
   private getNestedValue(obj: Record<string, any>, path: string): unknown {
     const keys = path.split('.');
-    let current: any = obj;
+    let current: unknown = obj;
 
     for (const key of keys) {
       if (current === null || current === undefined || typeof current !== 'object') {
         return undefined;
       }
-      current = current[key];
+      current = (current as Record<string, unknown>)[key];
     }
 
     return current;
   }
 
-  private deepMerge(target: Record<string, any>, source: Record<string, any>): Record<string, any> {
-    const result = { ...target };
+  private deepMerge(
+    target: Record<string, unknown>,
+    source: Record<string, unknown>
+  ): Record<string, unknown> {
+    const result: Record<string, unknown> = { ...target };
 
     for (const key in source) {
       if (Object.prototype.hasOwnProperty.call(source, key)) {
@@ -90,7 +93,7 @@ export class ConfigurationManager implements ConfigurationProvider {
     return result;
   }
 
-  private isPlainObject(value: unknown): value is Record<string, any> {
+  private isPlainObject(value: unknown): value is Record<string, unknown> {
     return (
       typeof value === 'object' &&
       value !== null &&

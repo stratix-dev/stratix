@@ -27,9 +27,7 @@ export class AgentVersion {
   static parse(version: string): AgentVersion {
     const parts = version.split('.');
     if (parts.length !== 3) {
-      throw new Error(
-        `Invalid version format: "${version}". Expected format: "major.minor.patch"`
-      );
+      throw new Error(`Invalid version format: "${version}". Expected format: "major.minor.patch"`);
     }
 
     const [major, minor, patch] = parts.map(Number);
@@ -132,7 +130,7 @@ export const AgentCapabilities = {
   CONTENT_CREATION: 'content_creation',
   DECISION_SUPPORT: 'decision_support',
   TRANSLATION: 'translation',
-  SUMMARIZATION: 'summarization',
+  SUMMARIZATION: 'summarization'
 } as const;
 
 /**
@@ -246,7 +244,7 @@ export class AgentMetadata {
       description: this.description,
       version: this.version.toString(),
       capabilities: this.capabilities,
-      tags: this.tags,
+      tags: this.tags
     };
   }
 }

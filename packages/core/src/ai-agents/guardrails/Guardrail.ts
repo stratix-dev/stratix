@@ -79,10 +79,7 @@ export abstract class Guardrail<T = unknown> {
    * @param context - Optional check context
    * @returns Promise resolving to check result
    */
-  abstract check(
-    content: T,
-    context?: GuardrailContext
-  ): Promise<GuardrailResult>;
+  abstract check(content: T, context?: GuardrailContext): Promise<GuardrailResult>;
 
   /**
    * Create a passing result.
@@ -91,10 +88,7 @@ export abstract class Guardrail<T = unknown> {
    * @returns Passing result
    */
   protected pass(message?: string): GuardrailResult {
-    return GuardrailResultHelpers.pass(
-      this.name,
-      message ?? `${this.name} passed`
-    );
+    return GuardrailResultHelpers.pass(this.name, message ?? `${this.name} passed`);
   }
 
   /**
@@ -104,16 +98,8 @@ export abstract class Guardrail<T = unknown> {
    * @param details - Optional details
    * @returns Failing result
    */
-  protected fail(
-    message: string,
-    details?: Record<string, unknown>
-  ): GuardrailResult {
-    return GuardrailResultHelpers.fail(
-      this.name,
-      this.severity,
-      message,
-      details
-    );
+  protected fail(message: string, details?: Record<string, unknown>): GuardrailResult {
+    return GuardrailResultHelpers.fail(this.name, this.severity, message, details);
   }
 }
 
@@ -151,14 +137,11 @@ export class TextLengthGuardrail extends Guardrail<string> {
   async check(content: string): Promise<GuardrailResult> {
     if (content.length > this.maxLength) {
       return Promise.resolve(
-        this.fail(
-          `Text exceeds maximum length of ${this.maxLength} characters`,
-          {
-            length: content.length,
-            maxLength: this.maxLength,
-            excess: content.length - this.maxLength,
-          }
-        )
+        this.fail(`Text exceeds maximum length of ${this.maxLength} characters`, {
+          length: content.length,
+          maxLength: this.maxLength,
+          excess: content.length - this.maxLength
+        })
       );
     }
 
@@ -206,7 +189,7 @@ export class PatternGuardrail extends Guardrail<string> {
       return Promise.resolve(
         this.fail(this.violationMessage, {
           matches: matches.length,
-          examples: matches.slice(0, 3), // Show first 3 matches
+          examples: matches.slice(0, 3) // Show first 3 matches
         })
       );
     }

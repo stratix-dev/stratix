@@ -15,6 +15,6 @@ export type {
   LLMCompletionResponse,
   TokenUsage as DomainTokenUsage,
   ToolCall as DomainToolCall,
-  LLMStreamChunk as DomainLLMStreamChunk,
+  LLMStreamChunk as DomainLLMStreamChunk
 } from './ports/LLMPort.js';
 export { LLMPortHelpers } from './ports/LLMPort.js';

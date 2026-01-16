@@ -9,7 +9,7 @@ import { ConfigurationManager } from '../configuration/ConfigurationManager.js';
 import { YamlConfigurationSource } from '../configuration/YamlConfigurationSource.js';
 
 export class StratixApplication {
-  public config: ConfigurationProvider;
+  public config?: ConfigurationProvider;
   public readonly registry: MetadataRegistry;
 
   private readonly appClass: new (...args: any[]) => any;
@@ -30,7 +30,7 @@ export class StratixApplication {
     this.registry = registry;
     this.awilixContainer = createContainer({ strict: true, injectionMode: InjectionMode.PROXY });
     this.container = new AwilixContainerAdapter({ awilixContainer: this.awilixContainer });
-    this.config = null as any; // To be initialized later
+    this.config = undefined; // To be initialized later
   }
 
   async initialize(): Promise<void> {
@@ -40,7 +40,7 @@ export class StratixApplication {
     }
     this.registerBuses();
     this.registerCommandHandlers();
-    this.registerConfiguration();
+    await this.registerConfiguration();
   }
 
   registerBuses(): void {
@@ -65,7 +65,7 @@ export class StratixApplication {
     }
   }
 
-  registerConfiguration(): void {
+  async registerConfiguration(): Promise<void> {
     const appMetadata = MetadataReader.getAppMetadata(this.appClass);
     if (!appMetadata?.configuration) {
       return;
@@ -89,7 +89,7 @@ export class StratixApplication {
     });
 
     this.config = this.container.resolve('config');
-    this.config.load();
+    await this.config.load();
   }
 
   async shutdown(): Promise<void> {

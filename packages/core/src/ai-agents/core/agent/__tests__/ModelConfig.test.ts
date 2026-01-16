@@ -12,7 +12,7 @@ describe('ModelConfigHelpers', () => {
         temperature: 0.7,
         topP: 1.0,
         frequencyPenalty: 0.0,
-        presencePenalty: 0.0,
+        presencePenalty: 0.0
       });
     });
 
@@ -20,7 +20,7 @@ describe('ModelConfigHelpers', () => {
       const config = ModelConfigHelpers.create('openai', 'gpt-4', {
         temperature: 0.9,
         maxTokens: 2000,
-        topP: 0.95,
+        topP: 0.95
       });
 
       expect(config).toEqual({
@@ -30,14 +30,14 @@ describe('ModelConfigHelpers', () => {
         maxTokens: 2000,
         topP: 0.95,
         frequencyPenalty: 0.0,
-        presencePenalty: 0.0,
+        presencePenalty: 0.0
       });
     });
 
     it('should support custom parameters', () => {
       const config = ModelConfigHelpers.create('openai', 'gpt-4', {
         customParam: 'value',
-        temperature: 0.5,
+        temperature: 0.5
       });
 
       expect((config as any).customParam).toBe('value');
@@ -64,7 +64,7 @@ describe('ModelConfigHelpers', () => {
         maxTokens: 2000,
         topP: 0.9,
         frequencyPenalty: 0.5,
-        presencePenalty: 0.5,
+        presencePenalty: 0.5
       };
 
       const errors = ModelConfigHelpers.validate(config);
@@ -75,7 +75,7 @@ describe('ModelConfigHelpers', () => {
     it('should reject empty provider', () => {
       const config: ModelConfig = {
         provider: '',
-        model: 'gpt-4',
+        model: 'gpt-4'
       };
 
       const errors = ModelConfigHelpers.validate(config);
@@ -86,7 +86,7 @@ describe('ModelConfigHelpers', () => {
     it('should reject whitespace-only provider', () => {
       const config: ModelConfig = {
         provider: '   ',
-        model: 'gpt-4',
+        model: 'gpt-4'
       };
 
       const errors = ModelConfigHelpers.validate(config);
@@ -97,7 +97,7 @@ describe('ModelConfigHelpers', () => {
     it('should reject empty model', () => {
       const config: ModelConfig = {
         provider: 'openai',
-        model: '',
+        model: ''
       };
 
       const errors = ModelConfigHelpers.validate(config);
@@ -109,32 +109,28 @@ describe('ModelConfigHelpers', () => {
       const config1: ModelConfig = {
         provider: 'openai',
         model: 'gpt-4',
-        temperature: -0.1,
+        temperature: -0.1
       };
       const config2: ModelConfig = {
         provider: 'openai',
         model: 'gpt-4',
-        temperature: 2.1,
+        temperature: 2.1
       };
 
-      expect(ModelConfigHelpers.validate(config1)).toContain(
-        'Temperature must be between 0 and 2'
-      );
-      expect(ModelConfigHelpers.validate(config2)).toContain(
-        'Temperature must be between 0 and 2'
-      );
+      expect(ModelConfigHelpers.validate(config1)).toContain('Temperature must be between 0 and 2');
+      expect(ModelConfigHelpers.validate(config2)).toContain('Temperature must be between 0 and 2');
     });
 
     it('should accept temperature at boundaries', () => {
       const config1: ModelConfig = {
         provider: 'openai',
         model: 'gpt-4',
-        temperature: 0,
+        temperature: 0
       };
       const config2: ModelConfig = {
         provider: 'openai',
         model: 'gpt-4',
-        temperature: 2,
+        temperature: 2
       };
 
       expect(ModelConfigHelpers.validate(config1)).toEqual([]);
@@ -145,7 +141,7 @@ describe('ModelConfigHelpers', () => {
       const config: ModelConfig = {
         provider: 'openai',
         model: 'gpt-4',
-        maxTokens: -100,
+        maxTokens: -100
       };
 
       const errors = ModelConfigHelpers.validate(config);
@@ -157,7 +153,7 @@ describe('ModelConfigHelpers', () => {
       const config: ModelConfig = {
         provider: 'openai',
         model: 'gpt-4',
-        maxTokens: 0,
+        maxTokens: 0
       };
 
       const errors = ModelConfigHelpers.validate(config);
@@ -169,32 +165,28 @@ describe('ModelConfigHelpers', () => {
       const config1: ModelConfig = {
         provider: 'openai',
         model: 'gpt-4',
-        topP: -0.1,
+        topP: -0.1
       };
       const config2: ModelConfig = {
         provider: 'openai',
         model: 'gpt-4',
-        topP: 1.1,
+        topP: 1.1
       };
 
-      expect(ModelConfigHelpers.validate(config1)).toContain(
-        'Top P must be between 0 and 1'
-      );
-      expect(ModelConfigHelpers.validate(config2)).toContain(
-        'Top P must be between 0 and 1'
-      );
+      expect(ModelConfigHelpers.validate(config1)).toContain('Top P must be between 0 and 1');
+      expect(ModelConfigHelpers.validate(config2)).toContain('Top P must be between 0 and 1');
     });
 
     it('should reject frequencyPenalty out of range', () => {
       const config1: ModelConfig = {
         provider: 'openai',
         model: 'gpt-4',
-        frequencyPenalty: -2.1,
+        frequencyPenalty: -2.1
       };
       const config2: ModelConfig = {
         provider: 'openai',
         model: 'gpt-4',
-        frequencyPenalty: 2.1,
+        frequencyPenalty: 2.1
       };
 
       expect(ModelConfigHelpers.validate(config1)).toContain(
@@ -209,12 +201,12 @@ describe('ModelConfigHelpers', () => {
       const config1: ModelConfig = {
         provider: 'openai',
         model: 'gpt-4',
-        presencePenalty: -2.1,
+        presencePenalty: -2.1
       };
       const config2: ModelConfig = {
         provider: 'openai',
         model: 'gpt-4',
-        presencePenalty: 2.1,
+        presencePenalty: 2.1
       };
 
       expect(ModelConfigHelpers.validate(config1)).toContain(
@@ -230,7 +222,7 @@ describe('ModelConfigHelpers', () => {
         provider: '',
         model: '',
         temperature: 3,
-        maxTokens: -1,
+        maxTokens: -1
       };
 
       const errors = ModelConfigHelpers.validate(config);
@@ -251,7 +243,7 @@ describe('ModelConfigHelpers', () => {
     it('should return false for invalid config', () => {
       const config: ModelConfig = {
         provider: '',
-        model: 'gpt-4',
+        model: 'gpt-4'
       };
 
       expect(ModelConfigHelpers.isValid(config)).toBe(false);
@@ -276,12 +268,12 @@ describe('ModelConfigHelpers', () => {
         provider: 'openai',
         model: 'gpt-4',
         temperature: 0.7,
-        maxTokens: 1000,
+        maxTokens: 1000
       };
 
       const override: Partial<ModelConfig> = {
         temperature: 0.9,
-        topP: 0.95,
+        topP: 0.95
       };
 
       const merged = ModelConfigHelpers.merge(base, override);
@@ -291,7 +283,7 @@ describe('ModelConfigHelpers', () => {
         model: 'gpt-4',
         temperature: 0.9,
         maxTokens: 1000,
-        topP: 0.95,
+        topP: 0.95
       });
     });
 
@@ -299,13 +291,13 @@ describe('ModelConfigHelpers', () => {
       const base: ModelConfig = {
         provider: 'openai',
         model: 'gpt-4',
-        temperature: 0.7,
+        temperature: 0.7
       };
 
       const override: Partial<ModelConfig> = {
         provider: 'anthropic',
         model: 'claude-3',
-        temperature: 0.5,
+        temperature: 0.5
       };
 
       const merged = ModelConfigHelpers.merge(base, override);
@@ -321,11 +313,11 @@ describe('ModelConfigHelpers', () => {
         model: 'gpt-4',
         temperature: 0.7,
         maxTokens: 2000,
-        topP: 0.9,
+        topP: 0.9
       };
 
       const override: Partial<ModelConfig> = {
-        temperature: 0.5,
+        temperature: 0.5
       };
 
       const merged = ModelConfigHelpers.merge(base, override);
@@ -345,11 +337,11 @@ describe('ModelConfigHelpers', () => {
       const base: ModelConfig = {
         provider: 'openai',
         model: 'gpt-4',
-        customParam1: 'value1',
+        customParam1: 'value1'
       };
 
       const override: Partial<ModelConfig> = {
-        customParam2: 'value2',
+        customParam2: 'value2'
       };
 
       const merged = ModelConfigHelpers.merge(base, override);
@@ -369,7 +361,7 @@ describe('ModelConfigHelpers', () => {
         topP: 1.0,
         frequencyPenalty: 0.0,
         presencePenalty: 0.0,
-        stopSequences: ['END'],
+        stopSequences: ['END']
       };
 
       expect(ModelConfigHelpers.isValid(config)).toBe(true);
@@ -380,7 +372,7 @@ describe('ModelConfigHelpers', () => {
         provider: 'anthropic',
         model: 'claude-3-opus-20240229',
         temperature: 0.5,
-        maxTokens: 4096,
+        maxTokens: 4096
       };
 
       expect(ModelConfigHelpers.isValid(config)).toBe(true);
@@ -392,7 +384,7 @@ describe('ModelConfigHelpers', () => {
         model: 'llama-2-70b',
         temperature: 0.8,
         maxTokens: 1000,
-        customEndpoint: 'http://localhost:8080',
+        customEndpoint: 'http://localhost:8080'
       };
 
       expect(ModelConfigHelpers.isValid(config)).toBe(true);
@@ -403,7 +395,7 @@ describe('ModelConfigHelpers', () => {
         provider: 'openai',
         model: 'gpt-4',
         temperature: 0.0,
-        seed: 42,
+        seed: 42
       };
 
       expect(ModelConfigHelpers.isValid(config)).toBe(true);

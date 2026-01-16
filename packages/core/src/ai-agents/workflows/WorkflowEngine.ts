@@ -1,9 +1,6 @@
 import type { Workflow } from './Workflow.js';
 import { WorkflowStatus } from './Workflow.js';
-import type {
-  WorkflowStepContext,
-  WorkflowStepResult,
-} from './WorkflowStep.js';
+import type { WorkflowStepContext, WorkflowStepResult } from './WorkflowStep.js';
 import { WorkflowStep, WorkflowStepStatus } from './WorkflowStep.js';
 
 /**
@@ -125,7 +122,7 @@ export class WorkflowEngine {
       stepTimeout: config.stepTimeout ?? 60000,
       stopOnError: config.stopOnError ?? true,
       maxRetries: config.maxRetries ?? 0,
-      variables: config.variables ?? {},
+      variables: config.variables ?? {}
     };
   }
 
@@ -166,7 +163,7 @@ export class WorkflowEngine {
     // Merge variables
     const variables = {
       ...workflow.variables,
-      ...executionConfig.variables,
+      ...executionConfig.variables
     };
 
     // Execute steps
@@ -179,15 +176,10 @@ export class WorkflowEngine {
           executionId,
           variables,
           stepResults,
-          metadata: {},
+          metadata: {}
         };
 
-        const result = await this.executeStep(
-          step,
-          currentInput,
-          context,
-          executionConfig
-        );
+        const result = await this.executeStep(step, currentInput, context, executionConfig);
 
         stepResults.set(step.id, result);
 
@@ -202,7 +194,7 @@ export class WorkflowEngine {
               stepResults,
               startTime,
               endTime,
-              duration: endTime.getTime() - startTime.getTime(),
+              duration: endTime.getTime() - startTime.getTime()
             };
           }
         }
@@ -221,7 +213,7 @@ export class WorkflowEngine {
         stepResults,
         startTime,
         endTime,
-        duration: endTime.getTime() - startTime.getTime(),
+        duration: endTime.getTime() - startTime.getTime()
       };
     } catch (error) {
       return this.createFailureResult<TOutput>(
@@ -243,21 +235,16 @@ export class WorkflowEngine {
     context: WorkflowStepContext,
     config: Required<WorkflowExecutionConfig>
   ): Promise<WorkflowStepResult<TOutput>> {
-    const timeoutPromise = new Promise<WorkflowStepResult<TOutput>>(
-      (_, reject) => {
-        setTimeout(
-          () => reject(new Error(`Step ${step.id} timed out`)),
-          config.stepTimeout
-        );
-      }
-    );
+    const timeoutPromise = new Promise<WorkflowStepResult<TOutput>>((_, reject) => {
+      setTimeout(() => reject(new Error(`Step ${step.id} timed out`)), config.stepTimeout);
+    });
 
     try {
       return await Promise.race([step.execute(input, context), timeoutPromise]);
     } catch (error) {
       return {
         status: WorkflowStepStatus.FAILED,
-        error: error instanceof Error ? error : new Error(String(error)),
+        error: error instanceof Error ? error : new Error(String(error))
       };
     }
   }
@@ -281,7 +268,7 @@ export class WorkflowEngine {
       stepResults,
       startTime,
       endTime,
-      duration: endTime.getTime() - startTime.getTime(),
+      duration: endTime.getTime() - startTime.getTime()
     };
   }
 

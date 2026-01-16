@@ -95,7 +95,7 @@ export class GuardrailChain<T = unknown> {
     this.config = {
       stopOnFirstFailure: config.stopOnFirstFailure ?? false,
       parallel: config.parallel ?? false,
-      timeout: config.timeout ?? 5000,
+      timeout: config.timeout ?? 5000
     };
   }
 
@@ -195,10 +195,7 @@ export class GuardrailChain<T = unknown> {
    * }
    * ```
    */
-  async check(
-    content: T,
-    context?: GuardrailContext
-  ): Promise<ChainResult> {
+  async check(content: T, context?: GuardrailContext): Promise<ChainResult> {
     const startTime = Date.now();
 
     if (this.guardrails.length === 0) {
@@ -208,7 +205,7 @@ export class GuardrailChain<T = unknown> {
         results: [],
         violations: [],
         summary: 'No guardrails configured',
-        duration: 0,
+        duration: 0
       };
     }
 
@@ -225,7 +222,7 @@ export class GuardrailChain<T = unknown> {
       results,
       violations: combined.violations,
       summary: combined.summary,
-      duration,
+      duration
     };
   }
 
@@ -242,10 +239,7 @@ export class GuardrailChain<T = unknown> {
       const result = await this.checkWithTimeout(guardrail, content, context);
       results.push(result);
 
-      if (
-        this.config.stopOnFirstFailure &&
-        GuardrailResultHelpers.shouldBlock(result)
-      ) {
+      if (this.config.stopOnFirstFailure && GuardrailResultHelpers.shouldBlock(result)) {
         break;
       }
     }
@@ -256,10 +250,7 @@ export class GuardrailChain<T = unknown> {
   /**
    * Run guardrails in parallel.
    */
-  private async checkParallel(
-    content: T,
-    context?: GuardrailContext
-  ): Promise<GuardrailResult[]> {
+  private async checkParallel(content: T, context?: GuardrailContext): Promise<GuardrailResult[]> {
     const promises = this.guardrails.map((guardrail) =>
       this.checkWithTimeout(guardrail, content, context)
     );
@@ -277,16 +268,10 @@ export class GuardrailChain<T = unknown> {
   ): Promise<GuardrailResult> {
     try {
       const timeoutPromise = new Promise<GuardrailResult>((_, reject) => {
-        setTimeout(
-          () => reject(new Error('Guardrail check timeout')),
-          this.config.timeout
-        );
+        setTimeout(() => reject(new Error('Guardrail check timeout')), this.config.timeout);
       });
 
-      return await Promise.race([
-        guardrail.check(content, context),
-        timeoutPromise,
-      ]);
+      return await Promise.race([guardrail.check(content, context), timeoutPromise]);
     } catch (error) {
       return GuardrailResultHelpers.fail(
         guardrail.name,

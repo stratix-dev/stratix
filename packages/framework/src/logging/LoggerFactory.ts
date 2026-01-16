@@ -76,6 +76,9 @@ export class LoggerFactory {
    * Cierra todos los transports
    */
   async close(): Promise<void> {
-    await Promise.all(this.transports.map((t) => t.close?.()));
+    const closePromises = this.transports
+      .map((t) => t.close?.())
+      .filter((p): p is Promise<void> => p !== undefined);
+    await Promise.all(closePromises);
   }
 }

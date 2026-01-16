@@ -30,7 +30,7 @@ describe('LLMMessageHelpers', () => {
     it('should create user message with multimodal content', () => {
       const content = [
         LLMMessageHelpers.text('What is in this image?'),
-        LLMMessageHelpers.imageUrl('https://example.com/image.jpg'),
+        LLMMessageHelpers.imageUrl('https://example.com/image.jpg')
       ];
 
       const message = LLMMessageHelpers.user(content);
@@ -56,9 +56,9 @@ describe('LLMMessageHelpers', () => {
           type: 'function',
           function: {
             name: 'get_weather',
-            arguments: '{"location":"London"}',
-          },
-        },
+            arguments: '{"location":"London"}'
+          }
+        }
       ];
 
       const message = LLMMessageHelpers.assistant('', toolCalls);
@@ -108,7 +108,7 @@ describe('LLMMessageHelpers', () => {
     it('should create multimodal content', () => {
       const parts = LLMMessageHelpers.multimodal([
         LLMMessageHelpers.text('Describe this'),
-        LLMMessageHelpers.imageUrl('https://example.com/img.jpg'),
+        LLMMessageHelpers.imageUrl('https://example.com/img.jpg')
       ]);
 
       expect(Array.isArray(parts)).toBe(true);
@@ -136,7 +136,7 @@ describe('LLMMessageHelpers', () => {
     it('should reject tool message without tool_call_id', () => {
       const message: LLMMessage = {
         role: 'tool',
-        content: 'result',
+        content: 'result'
       };
 
       const errors = LLMMessageHelpers.validate(message);
@@ -154,10 +154,10 @@ describe('LLMMessageHelpers', () => {
             type: 'function',
             function: {
               name: '',
-              arguments: '{}',
-            },
-          },
-        ],
+              arguments: '{}'
+            }
+          }
+        ]
       };
 
       const errors = LLMMessageHelpers.validate(message);
@@ -176,10 +176,10 @@ describe('LLMMessageHelpers', () => {
             type: 'function',
             function: {
               name: 'test',
-              arguments: 'invalid json',
-            },
-          },
-        ],
+              arguments: 'invalid json'
+            }
+          }
+        ]
       };
 
       const errors = LLMMessageHelpers.validate(message);
@@ -216,7 +216,7 @@ describe('LLMMessageHelpers', () => {
       const message = LLMMessageHelpers.user([
         LLMMessageHelpers.text('First line'),
         LLMMessageHelpers.imageUrl('https://example.com/img.jpg'),
-        LLMMessageHelpers.text('Second line'),
+        LLMMessageHelpers.text('Second line')
       ]);
 
       const text = LLMMessageHelpers.extractText(message);
@@ -226,7 +226,7 @@ describe('LLMMessageHelpers', () => {
 
     it('should return empty string for message without content', () => {
       const message: LLMMessage = {
-        role: 'assistant',
+        role: 'assistant'
       };
 
       const text = LLMMessageHelpers.extractText(message);
@@ -257,7 +257,7 @@ describe('LLMMessageHelpers', () => {
     it('should estimate tokens for multimodal content', () => {
       const message = LLMMessageHelpers.user([
         LLMMessageHelpers.text('Hello'),
-        LLMMessageHelpers.text('World'),
+        LLMMessageHelpers.text('World')
       ]);
 
       const tokens = LLMMessageHelpers.estimateTokens(message);
@@ -278,12 +278,12 @@ describe('LLMMessageHelpers', () => {
             type: 'function',
             function: {
               name: 'get_weather',
-              arguments: '{"location":"London"}',
-            },
-          },
+              arguments: '{"location":"London"}'
+            }
+          }
         ]),
         LLMMessageHelpers.toolResult('call_1', '{"temperature":72,"condition":"sunny"}'),
-        LLMMessageHelpers.assistant('The weather in London is 72°F and sunny.'),
+        LLMMessageHelpers.assistant('The weather in London is 72°F and sunny.')
       ];
 
       expect(conversation.length).toBe(5);

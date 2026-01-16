@@ -16,15 +16,13 @@ class CalculatorTool extends Tool<{ a: number; b: number }, number> {
       type: 'object' as const,
       properties: {
         a: { type: 'number', description: 'First number' },
-        b: { type: 'number', description: 'Second number' },
+        b: { type: 'number', description: 'Second number' }
       },
-      required: ['a', 'b'] as const,
+      required: ['a', 'b'] as const
     };
   }
 
-  async execute(
-    params: { a: number; b: number }
-  ): Promise<ToolResult<number>> {
+  async execute(params: { a: number; b: number }): Promise<ToolResult<number>> {
     return this.success(params.a + params.b);
   }
 }
@@ -43,10 +41,10 @@ class StrictTool extends Tool {
     return {
       type: 'object' as const,
       properties: {
-        value: { type: 'string' },
+        value: { type: 'string' }
       },
       required: ['value'] as const,
-      additionalProperties: false,
+      additionalProperties: false
     };
   }
 
@@ -72,7 +70,7 @@ class ErrorTool extends Tool {
   get parameters() {
     return {
       type: 'object' as const,
-      properties: {},
+      properties: {}
     };
   }
 
@@ -83,7 +81,7 @@ class ErrorTool extends Tool {
 
 describe('Tool', () => {
   const context: ToolContext = {
-    sessionId: 'test-session',
+    sessionId: 'test-session'
   };
 
   describe('basic properties', () => {
@@ -280,7 +278,7 @@ describe('Tool', () => {
         name: 'calculator',
         description: 'Performs basic arithmetic',
         parameters: tool.parameters,
-        strict: false,
+        strict: false
       });
     });
   });
@@ -295,9 +293,7 @@ describe('ToolHelpers', () => {
     });
 
     it('should catch promise rejection', async () => {
-      const result = await ToolHelpers.fromPromise(
-        Promise.reject(new Error('Failed'))
-      );
+      const result = await ToolHelpers.fromPromise(Promise.reject(new Error('Failed')));
 
       expect(result).toEqual({ success: false, error: 'Failed' });
     });
@@ -354,7 +350,7 @@ describe('ToolHelpers', () => {
 
       const chained = ToolHelpers.flatMap(result, (n) => ({
         success: true,
-        data: n * 2,
+        data: n * 2
       }));
 
       expect(chained).toEqual({ success: true, data: 10 });
@@ -365,7 +361,7 @@ describe('ToolHelpers', () => {
 
       const chained = ToolHelpers.flatMap(result, (n) => ({
         success: true,
-        data: n * 2,
+        data: n * 2
       }));
 
       expect(chained).toEqual({ success: false, error: 'Failed' });

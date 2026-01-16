@@ -161,11 +161,7 @@ export class ToolRegistry {
    * @returns Tool execution result
    * @throws ToolNotFoundError if tool doesn't exist
    */
-  async execute(
-    name: string,
-    params: unknown,
-    context: ToolContext
-  ): Promise<ToolResult> {
+  async execute(name: string, params: unknown, context: ToolContext): Promise<ToolResult> {
     const tool = this.get(name);
     return tool.executeValidated(params, context);
   }
@@ -177,9 +173,7 @@ export class ToolRegistry {
     calls: readonly { name: string; params: unknown }[],
     context: ToolContext
   ): Promise<readonly ToolResult[]> {
-    const promises = calls.map((call) =>
-      this.execute(call.name, call.params, context)
-    );
+    const promises = calls.map((call) => this.execute(call.name, call.params, context));
     return Promise.all(promises);
   }
 
@@ -209,9 +203,7 @@ export class ToolRegistry {
    */
   findByDescription(search: string): readonly Tool[] {
     const searchLower = search.toLowerCase();
-    return this.find((tool) =>
-      tool.description.toLowerCase().includes(searchLower)
-    );
+    return this.find((tool) => tool.description.toLowerCase().includes(searchLower));
   }
 
   /**
@@ -267,7 +259,7 @@ export class ToolRegistry {
   toJSON() {
     return {
       tools: this.getAll().map((tool) => tool.toJSON()),
-      size: this.size,
+      size: this.size
     };
   }
 

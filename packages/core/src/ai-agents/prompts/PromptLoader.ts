@@ -68,7 +68,7 @@ export class PromptLoader {
     return new PromptTemplate({
       metadata: data.metadata,
       template: data.template,
-      variables: data.variables,
+      variables: data.variables
     });
   }
 
@@ -129,7 +129,7 @@ export class PromptLoader {
     return {
       metadata: template.getMetadata(),
       template: template.getTemplate(),
-      variables: template.getVariables(),
+      variables: template.getVariables()
     };
   }
 

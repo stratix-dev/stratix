@@ -136,7 +136,7 @@ export class StratixLogger implements Logger {
     const enrichment: Record<string, unknown> = {};
 
     for (const [key, value] of Object.entries(this.config.enrichment)) {
-      enrichment[key] = typeof value === 'function' ? value() : value;
+      enrichment[key] = typeof value === 'function' ? (value as () => unknown)() : value;
     }
 
     return { ...enrichment, ...metadata };
@@ -145,10 +145,12 @@ export class StratixLogger implements Logger {
   private write(entry: LogEntry): void {
     for (const transport of this.transports) {
       try {
-        transport.write(entry);
+        void Promise.resolve(transport.write(entry)).catch((error: unknown) => {
+          console.error('[Stratix] Transport error:', error);
+          console.error('[Stratix] Original log:', entry);
+        });
       } catch (error) {
-        // Fallback to console.error if transport fails
-        console.error('[Stratix] Transport error:', error);
+        console.error('[Stratix] Transport sync error:', error);
         console.error('[Stratix] Original log:', entry);
       }
     }

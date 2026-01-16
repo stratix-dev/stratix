@@ -76,7 +76,7 @@ export class RAGPipeline {
       retrievalLimit: config.retrievalLimit ?? 5,
       similarityThreshold: config.similarityThreshold ?? 0.7,
       autoChunk: config.autoChunk ?? true,
-      embeddingBatchSize: config.embeddingBatchSize ?? 100,
+      embeddingBatchSize: config.embeddingBatchSize ?? 100
     };
   }
 
@@ -164,7 +164,7 @@ export class RAGPipeline {
       vector: queryEmbedding,
       limit: options.limit ?? this.config.retrievalLimit,
       threshold: options.threshold ?? this.config.similarityThreshold,
-      filters: options.filters,
+      filters: options.filters
     });
 
     // Step 3: Extract documents and scores
@@ -180,15 +180,13 @@ export class RAGPipeline {
     }
 
     const averageScore =
-      scores.length > 0
-        ? scores.reduce((sum, score) => sum + score, 0) / scores.length
-        : 0;
+      scores.length > 0 ? scores.reduce((sum, score) => sum + score, 0) / scores.length : 0;
 
     return {
       documents,
       scores,
       count: documents.length,
-      averageScore,
+      averageScore
     };
   }
 
@@ -290,7 +288,7 @@ export class RAGPipeline {
   private async embedText(text: string): Promise<readonly number[]> {
     const response = await this.llmProvider.embeddings({
       input: text,
-      model: this.config.embeddingModel,
+      model: this.config.embeddingModel
     });
 
     if (response.embeddings.length === 0) {
@@ -308,7 +306,7 @@ export class RAGPipeline {
 
     const response = await this.llmProvider.embeddings({
       input: texts,
-      model: this.config.embeddingModel,
+      model: this.config.embeddingModel
     });
 
     if (response.embeddings.length !== documents.length) {
@@ -320,7 +318,7 @@ export class RAGPipeline {
     return documents.map((doc, i) =>
       EmbeddingHelpers.create(response.embeddings[i].vector, doc.id, {
         model: this.config.embeddingModel,
-        timestamp: new Date().toISOString(),
+        timestamp: new Date().toISOString()
       })
     );
   }

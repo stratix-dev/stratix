@@ -54,7 +54,7 @@ describe('ShortTermMemory', () => {
 
     it('should return entries sorted by recency', async () => {
       const id1 = await memory.store('First');
-      await new Promise(resolve => setTimeout(resolve, 10)); // Ensure different timestamps
+      await new Promise((resolve) => setTimeout(resolve, 10)); // Ensure different timestamps
       const id2 = await memory.store('Second');
 
       const all = await memory.getAll();
@@ -77,9 +77,9 @@ describe('ShortTermMemory', () => {
   describe('getRecent', () => {
     it('should return recent entries', async () => {
       await memory.store('Old');
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       await memory.store('Recent 1');
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       await memory.store('Recent 2');
 
       const recent = await memory.getRecent(2);
@@ -113,7 +113,7 @@ describe('ShortTermMemory', () => {
       await memory.store('Recent');
 
       const results = await memory.search({
-        timeRange: { from: past },
+        timeRange: { from: past }
       });
 
       expect(results.length).toBe(2);
@@ -124,7 +124,7 @@ describe('ShortTermMemory', () => {
       await memory.store('High', 0.8);
 
       const results = await memory.search({
-        minImportance: 0.5,
+        minImportance: 0.5
       });
 
       expect(results.length).toBe(1);
@@ -136,7 +136,7 @@ describe('ShortTermMemory', () => {
       await memory.store('User B', undefined, { user: 'bob' });
 
       const results = await memory.search({
-        metadata: { user: 'alice' },
+        metadata: { user: 'alice' }
       });
 
       expect(results.length).toBe(1);
@@ -198,11 +198,11 @@ describe('ShortTermMemory', () => {
       const limitedMemory = new ShortTermMemory<string>({ maxEntries: 3 });
 
       await limitedMemory.store('Entry 1');
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       await limitedMemory.store('Entry 2');
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       await limitedMemory.store('Entry 3');
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
       await limitedMemory.store('Entry 4'); // Should evict Entry 1
 
       const all = await limitedMemory.getAll();

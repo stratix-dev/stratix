@@ -32,7 +32,7 @@ export class YamlConfigurationSource implements ConfigurationSource {
 
     try {
       const content = await readFile(fullPath, this.encoding);
-      const parsed = parse(content);
+      const parsed: unknown = parse(content);
 
       if (typeof parsed !== 'object' || parsed === null) {
         throw new ConfigurationContentError(

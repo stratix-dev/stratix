@@ -39,7 +39,7 @@ describe('Email', () => {
         'user-name@example.com',
         '123@example.com',
         'user@sub.example.com',
-        'user@example.co.uk',
+        'user@example.co.uk'
       ];
 
       validEmails.forEach((email) => {
@@ -53,7 +53,7 @@ describe('Email', () => {
         'notanemail',
         '@example.com',
         'user@',
-        'user @example.com',
+        'user @example.com'
         // Note: Simple regex allows 'user@example' without TLD
         // For stricter validation, enhance the regex in production
       ];
@@ -283,7 +283,7 @@ describe('Email', () => {
         'user@gmail.com',
         'user.name@gmail.com',
         'user+label@gmail.com',
-        'user123@gmail.com',
+        'user123@gmail.com'
       ];
 
       emails.forEach((emailStr) => {

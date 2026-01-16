@@ -57,7 +57,7 @@ export const GuardrailResultHelpers = {
       passed: true,
       message,
       guardrailName,
-      timestamp: new Date(),
+      timestamp: new Date()
     };
   },
 
@@ -92,7 +92,7 @@ export const GuardrailResultHelpers = {
       message,
       details,
       guardrailName,
-      timestamp: new Date(),
+      timestamp: new Date()
     };
   },
 
@@ -133,7 +133,7 @@ export const GuardrailResultHelpers = {
       allPassed,
       shouldBlock,
       violations,
-      summary,
+      summary
     };
-  },
+  }
 };

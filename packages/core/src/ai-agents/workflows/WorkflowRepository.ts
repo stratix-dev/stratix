@@ -87,9 +87,7 @@ export interface WorkflowRepository {
    * @param executionId - Execution ID
    * @returns Promise resolving to result or undefined if not found
    */
-  getExecution(
-    executionId: string
-  ): Promise<WorkflowExecutionResult | undefined>;
+  getExecution(executionId: string): Promise<WorkflowExecutionResult | undefined>;
 
   /**
    * List executions for a workflow.
@@ -196,9 +194,7 @@ export class InMemoryWorkflowRepository implements WorkflowRepository {
     return Promise.resolve();
   }
 
-  async getExecution(
-    executionId: string
-  ): Promise<WorkflowExecutionResult | undefined> {
+  async getExecution(executionId: string): Promise<WorkflowExecutionResult | undefined> {
     return Promise.resolve(this.executions.get(executionId));
   }
 
@@ -234,9 +230,7 @@ export class InMemoryWorkflowRepository implements WorkflowRepository {
     this.executions.delete(executionId);
 
     // Remove from workflow mapping
-    const workflowExecutionIds = this.workflowExecutions.get(
-      execution.workflowId
-    );
+    const workflowExecutionIds = this.workflowExecutions.get(execution.workflowId);
     if (workflowExecutionIds) {
       workflowExecutionIds.delete(executionId);
     }

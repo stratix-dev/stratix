@@ -95,10 +95,7 @@ export class PromptTemplate {
    * );
    * ```
    */
-  render(
-    variables: PromptVariables,
-    options: { strict?: boolean; cache?: boolean } = {}
-  ): string {
+  render(variables: PromptVariables, options: { strict?: boolean; cache?: boolean } = {}): string {
     const strict = options.strict ?? true;
     const cache = options.cache ?? true;
 
@@ -123,11 +120,7 @@ export class PromptTemplate {
     }
 
     // Render
-    const rendered = PromptVariableHelpers.substitute(
-      this.template,
-      withDefaults,
-      strict
-    );
+    const rendered = PromptVariableHelpers.substitute(this.template, withDefaults, strict);
 
     // Cache
     if (cache) {
@@ -237,7 +230,7 @@ export class PromptTemplate {
 
     return varNames.map((name) => ({
       name,
-      required: true,
+      required: true
     }));
   }
 

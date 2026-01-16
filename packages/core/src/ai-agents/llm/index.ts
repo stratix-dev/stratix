@@ -16,7 +16,7 @@ export {
   type ToolCall,
   type ToolResult,
   type LLMMessage,
-  LLMMessageHelpers,
+  LLMMessageHelpers
 } from './LLMMessage.js';
 
 // Response types
@@ -27,7 +27,7 @@ export {
   type ToolCallDelta,
   type Embedding,
   type EmbeddingResponse,
-  LLMResponseHelpers,
+  LLMResponseHelpers
 } from './LLMResponse.js';
 
 // Provider interface
@@ -38,5 +38,5 @@ export {
   type EmbeddingParams,
   type ProviderCapabilities,
   type LLMProvider,
-  LLMProviderHelpers,
+  LLMProviderHelpers
 } from './LLMProvider.js';

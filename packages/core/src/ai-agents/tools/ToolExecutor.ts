@@ -133,12 +133,7 @@ export class ToolExecutor {
 
       // Execute with optional timeout
       const result = config?.timeout
-        ? await this.executeWithTimeout(
-            call.function.name,
-            params,
-            context,
-            config.timeout
-          )
+        ? await this.executeWithTimeout(call.function.name, params, context, config.timeout)
         : await this.registry.execute(call.function.name, params, context);
 
       const durationMs = Date.now() - startTime;
@@ -147,7 +142,7 @@ export class ToolExecutor {
         call,
         result,
         durationMs,
-        timedOut,
+        timedOut
       };
     } catch (error) {
       const durationMs = Date.now() - startTime;
@@ -161,10 +156,10 @@ export class ToolExecutor {
         call,
         result: {
           success: false,
-          error: error instanceof Error ? error.message : String(error),
+          error: error instanceof Error ? error.message : String(error)
         },
         durationMs,
-        timedOut,
+        timedOut
       };
     }
   }
@@ -206,7 +201,7 @@ export class ToolExecutor {
       totalDurationMs,
       successCount,
       failureCount,
-      timeoutCount,
+      timeoutCount
     };
   }
 
@@ -275,7 +270,7 @@ export class ToolExecutor {
   ): Promise<ToolResult> {
     return Promise.race([
       this.registry.execute(name, params, context),
-      this.createTimeout(timeoutMs),
+      this.createTimeout(timeoutMs)
     ]);
   }
 
@@ -294,9 +289,7 @@ export class ToolExecutor {
     return results
       .map((r) => {
         const status = r.result.success ? '✓' : '✗';
-        const content = r.result.success
-          ? JSON.stringify(r.result.data)
-          : r.result.error;
+        const content = r.result.success ? JSON.stringify(r.result.data) : r.result.error;
         return `${status} ${r.call.function.name}: ${content}`;
       })
       .join('\n');
@@ -317,11 +310,9 @@ export class ToolExecutor {
     return {
       successRate: total > 0 ? result.successCount / total : 0,
       averageDuration:
-        durations.length > 0
-          ? durations.reduce((a, b) => a + b, 0) / durations.length
-          : 0,
+        durations.length > 0 ? durations.reduce((a, b) => a + b, 0) / durations.length : 0,
       maxDuration: durations.length > 0 ? Math.max(...durations) : 0,
-      minDuration: durations.length > 0 ? Math.min(...durations) : 0,
+      minDuration: durations.length > 0 ? Math.min(...durations) : 0
     };
   }
 }

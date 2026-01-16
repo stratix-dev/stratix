@@ -154,7 +154,7 @@ export const LLMResponseHelpers = {
       usage,
       finishReason,
       model,
-      metadata,
+      metadata
     };
   },
 
@@ -173,22 +173,18 @@ export const LLMResponseHelpers = {
       toolCallDeltas,
       isComplete,
       finishReason,
-      usage,
+      usage
     };
   },
 
   /**
    * Create an embedding.
    */
-  createEmbedding(
-    vector: readonly number[],
-    index: number,
-    input?: string
-  ): Embedding {
+  createEmbedding(vector: readonly number[], index: number, input?: string): Embedding {
     return {
       vector,
       index,
-      input,
+      input
     };
   },
 
@@ -205,7 +201,7 @@ export const LLMResponseHelpers = {
       embeddings,
       usage,
       model,
-      dimensions,
+      dimensions
     };
   },
 
@@ -213,10 +209,7 @@ export const LLMResponseHelpers = {
    * Check if response has tool calls.
    */
   hasToolCalls(response: LLMResponse): boolean {
-    return (
-      response.toolCalls !== undefined &&
-      response.toolCalls.length > 0
-    );
+    return response.toolCalls !== undefined && response.toolCalls.length > 0;
   },
 
   /**
@@ -329,14 +322,14 @@ export const LLMResponseHelpers = {
       )
       .map((tc) => ({
         ...tc,
-        type: 'function' as const,
+        type: 'function' as const
       }));
 
     return {
       content,
       toolCalls,
       usage,
-      finishReason,
+      finishReason
     };
-  },
+  }
 };

@@ -36,51 +36,51 @@ import { DomainError } from '../errors/DomainError.js';
  * }
  * ```
  */
-export abstract class BaseCommandHandler<TCommand extends Command, TResult>
-    implements CommandHandler<TCommand, TResult> {
-    /**
-     * Validates the command before handling.
-     * Override this method to add custom validation logic.
-     *
-     * @param command - The command to validate
-     * @returns Success if valid, Failure with error if invalid
-     */
-    protected validate(_command: TCommand): Result<void, DomainError> {
-        // Default implementation: no validation
-        return Success.create(undefined);
+export abstract class BaseCommandHandler<
+  TCommand extends Command,
+  TResult
+> implements CommandHandler<TCommand, TResult> {
+  /**
+   * Validates the command before handling.
+   * Override this method to add custom validation logic.
+   *
+   * @param command - The command to validate
+   * @returns Success if valid, Failure with error if invalid
+   */
+  protected validate(_command: TCommand): Result<void, DomainError> {
+    // Default implementation: no validation
+    return Success.create(undefined);
+  }
+
+  /**
+   * Main handler logic. Override this method to implement the command handling.
+   *
+   * @param command - The command to execute
+   * @returns Result with success value or domain error
+   */
+  protected abstract execute(command: TCommand): Promise<Result<TResult, DomainError>>;
+
+  /**
+   * Handles the command with automatic validation and error handling.
+   * This method orchestrates validation and execution.
+   *
+   * @param command - The command to handle
+   * @returns The success value
+   * @throws DomainError if validation or execution fails
+   */
+  async handle(command: TCommand): Promise<TResult> {
+    const validation = this.validate(command);
+    if (validation.isFailure) {
+      throw validation.error;
     }
 
-    /**
-     * Main handler logic. Override this method to implement the command handling.
-     *
-     * @param command - The command to execute
-     * @returns Result with success value or domain error
-     */
-    protected abstract execute(
-        command: TCommand
-    ): Promise<Result<TResult, DomainError>>;
-
-    /**
-     * Handles the command with automatic validation and error handling.
-     * This method orchestrates validation and execution.
-     *
-     * @param command - The command to handle
-     * @returns The success value
-     * @throws DomainError if validation or execution fails
-     */
-    async handle(command: TCommand): Promise<TResult> {
-        const validation = this.validate(command);
-        if (validation.isFailure) {
-            throw validation.error;
-        }
-
-        const result = await this.execute(command);
-        if (result.isFailure) {
-            throw result.error;
-        }
-
-        return result.value;
+    const result = await this.execute(command);
+    if (result.isFailure) {
+      throw result.error;
     }
+
+    return result.value;
+  }
 }
 
 /**
@@ -115,47 +115,49 @@ export abstract class BaseCommandHandler<TCommand extends Command, TResult>
  * }
  * ```
  */
-export abstract class BaseQueryHandler<TQuery extends Query, TResult>
-    implements QueryHandler<TQuery, TResult> {
-    /**
-     * Validates the query before handling.
-     * Override this method to add custom validation logic.
-     *
-     * @param query - The query to validate
-     * @returns Success if valid, Failure with error if invalid
-     */
-    protected validate(_query: TQuery): Result<void, DomainError> {
-        // Default implementation: no validation
-        return Success.create(undefined);
+export abstract class BaseQueryHandler<TQuery extends Query, TResult> implements QueryHandler<
+  TQuery,
+  TResult
+> {
+  /**
+   * Validates the query before handling.
+   * Override this method to add custom validation logic.
+   *
+   * @param query - The query to validate
+   * @returns Success if valid, Failure with error if invalid
+   */
+  protected validate(_query: TQuery): Result<void, DomainError> {
+    // Default implementation: no validation
+    return Success.create(undefined);
+  }
+
+  /**
+   * Main handler logic. Override this method to implement the query handling.
+   *
+   * @param query - The query to execute
+   * @returns Result with success value or domain error
+   */
+  protected abstract execute(query: TQuery): Promise<Result<TResult, DomainError>>;
+
+  /**
+   * Handles the query with automatic validation and error handling.
+   * This method orchestrates validation and execution.
+   *
+   * @param query - The query to handle
+   * @returns The success value
+   * @throws DomainError if validation or execution fails
+   */
+  async handle(query: TQuery): Promise<TResult> {
+    const validation = this.validate(query);
+    if (validation.isFailure) {
+      throw validation.error;
     }
 
-    /**
-     * Main handler logic. Override this method to implement the query handling.
-     *
-     * @param query - The query to execute
-     * @returns Result with success value or domain error
-     */
-    protected abstract execute(query: TQuery): Promise<Result<TResult, DomainError>>;
-
-    /**
-     * Handles the query with automatic validation and error handling.
-     * This method orchestrates validation and execution.
-     *
-     * @param query - The query to handle
-     * @returns The success value
-     * @throws DomainError if validation or execution fails
-     */
-    async handle(query: TQuery): Promise<TResult> {
-        const validation = this.validate(query);
-        if (validation.isFailure) {
-            throw validation.error;
-        }
-
-        const result = await this.execute(query);
-        if (result.isFailure) {
-            throw result.error;
-        }
-
-        return result.value;
+    const result = await this.execute(query);
+    if (result.isFailure) {
+      throw result.error;
     }
+
+    return result.value;
+  }
 }

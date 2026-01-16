@@ -51,7 +51,7 @@ export class TraceCollector {
 
     const trace = ExecutionTraceHelpers.create({
       traceId,
-      ...config,
+      ...config
     });
 
     this.traces.set(traceId, trace);
@@ -92,7 +92,7 @@ export class TraceCollector {
     const final: ExecutionTrace = {
       ...completed,
       totalCost,
-      totalTokens,
+      totalTokens
     };
 
     this.traces.set(traceId, final);
@@ -186,19 +186,11 @@ export class TraceCollector {
       .filter((d): d is number => d !== undefined);
 
     const averageDuration =
-      durations.length > 0
-        ? durations.reduce((sum, d) => sum + d, 0) / durations.length
-        : 0;
+      durations.length > 0 ? durations.reduce((sum, d) => sum + d, 0) / durations.length : 0;
 
-    const totalCost = completed.reduce(
-      (sum, trace) => sum + (trace.totalCost ?? 0),
-      0
-    );
+    const totalCost = completed.reduce((sum, trace) => sum + (trace.totalCost ?? 0), 0);
 
-    const totalTokens = completed.reduce(
-      (sum, trace) => sum + (trace.totalTokens ?? 0),
-      0
-    );
+    const totalTokens = completed.reduce((sum, trace) => sum + (trace.totalTokens ?? 0), 0);
 
     return {
       total: this.traces.size,
@@ -206,7 +198,7 @@ export class TraceCollector {
       completed: completed.length,
       averageDuration,
       totalCost,
-      totalTokens,
+      totalTokens
     };
   }
 }

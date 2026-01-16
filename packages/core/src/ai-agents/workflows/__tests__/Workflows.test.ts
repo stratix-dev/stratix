@@ -1,10 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { Workflow, WorkflowStatus } from '../Workflow.js';
 import { WorkflowStep, WorkflowStepStatus } from '../WorkflowStep.js';
-import type {
-  WorkflowStepContext,
-  WorkflowStepResult,
-} from '../WorkflowStep.js';
+import type { WorkflowStepContext, WorkflowStepResult } from '../WorkflowStep.js';
 import { WorkflowEngine } from '../WorkflowEngine.js';
 import { InMemoryWorkflowRepository } from '../WorkflowRepository.js';
 import { TransformStep } from '../steps/TransformStep.js';
@@ -24,10 +21,7 @@ class AddNumberStep extends WorkflowStep<number, number> {
     return `Add ${this.amount}`;
   }
 
-  async execute(
-    input: number,
-    _context: WorkflowStepContext
-  ): Promise<WorkflowStepResult<number>> {
+  async execute(input: number, _context: WorkflowStepContext): Promise<WorkflowStepResult<number>> {
     return this.success(input + this.amount);
   }
 }
@@ -52,7 +46,7 @@ describe('WorkflowStep', () => {
     const context: WorkflowStepContext = {
       executionId: 'test',
       variables: {},
-      stepResults: new Map(),
+      stepResults: new Map()
     };
 
     const result = await step.execute(10, context);
@@ -66,7 +60,7 @@ describe('WorkflowStep', () => {
     const context: WorkflowStepContext = {
       executionId: 'test',
       variables: {},
-      stepResults: new Map(),
+      stepResults: new Map()
     };
 
     const result = await step.execute(null, context);
@@ -78,16 +72,14 @@ describe('WorkflowStep', () => {
 
 describe('TransformStep', () => {
   it('should transform data', async () => {
-    const step = new TransformStep(
-      'uppercase',
-      'To Uppercase',
-      (text: string) => text.toUpperCase()
+    const step = new TransformStep('uppercase', 'To Uppercase', (text: string) =>
+      text.toUpperCase()
     );
 
     const context: WorkflowStepContext = {
       executionId: 'test',
       variables: {},
-      stepResults: new Map(),
+      stepResults: new Map()
     };
 
     const result = await step.execute('hello', context);
@@ -97,19 +89,15 @@ describe('TransformStep', () => {
   });
 
   it('should handle async transforms', async () => {
-    const step = new TransformStep(
-      'async-transform',
-      'Async Transform',
-      async (num: number) => {
-        await new Promise((resolve) => setTimeout(resolve, 10));
-        return num * 2;
-      }
-    );
+    const step = new TransformStep('async-transform', 'Async Transform', async (num: number) => {
+      await new Promise((resolve) => setTimeout(resolve, 10));
+      return num * 2;
+    });
 
     const context: WorkflowStepContext = {
       executionId: 'test',
       variables: {},
-      stepResults: new Map(),
+      stepResults: new Map()
     };
 
     const result = await step.execute(5, context);
@@ -135,7 +123,7 @@ describe('ConditionalStep', () => {
     const context: WorkflowStepContext = {
       executionId: 'test',
       variables: {},
-      stepResults: new Map(),
+      stepResults: new Map()
     };
 
     const result = await step.execute(10, context);
@@ -159,7 +147,7 @@ describe('ConditionalStep', () => {
     const context: WorkflowStepContext = {
       executionId: 'test',
       variables: {},
-      stepResults: new Map(),
+      stepResults: new Map()
     };
 
     const result = await step.execute(3, context);
@@ -181,7 +169,7 @@ describe('ConditionalStep', () => {
     const context: WorkflowStepContext = {
       executionId: 'test',
       variables: {},
-      stepResults: new Map(),
+      stepResults: new Map()
     };
 
     const result = await step.execute(3, context);
@@ -196,10 +184,10 @@ describe('Workflow', () => {
       metadata: {
         name: 'test-workflow',
         description: 'A test workflow',
-        version: '1.0',
+        version: '1.0'
       },
       steps: [new AddNumberStep(1), new AddNumberStep(2)],
-      variables: { x: 10 },
+      variables: { x: 10 }
     });
 
     expect(workflow.metadata.name).toBe('test-workflow');
@@ -210,7 +198,7 @@ describe('Workflow', () => {
   it('should validate workflows', () => {
     const emptyWorkflow = new Workflow({
       metadata: { name: 'empty' },
-      steps: [],
+      steps: []
     });
 
     const errors = emptyWorkflow.validate();
@@ -222,7 +210,7 @@ describe('Workflow', () => {
   it('should detect duplicate step IDs', () => {
     const workflow = new Workflow({
       metadata: { name: 'duplicate' },
-      steps: [new AddNumberStep(1), new AddNumberStep(1)],
+      steps: [new AddNumberStep(1), new AddNumberStep(1)]
     });
 
     const errors = workflow.validate();
@@ -237,7 +225,7 @@ describe('Workflow', () => {
 
     const workflow = new Workflow({
       metadata: { name: 'test' },
-      steps: [step1, step2],
+      steps: [step1, step2]
     });
 
     const retrieved = workflow.getStep('add-1');
@@ -256,7 +244,7 @@ describe('WorkflowEngine', () => {
   it('should execute a simple workflow', async () => {
     const workflow = new Workflow({
       metadata: { name: 'simple' },
-      steps: [new AddNumberStep(1), new AddNumberStep(2), new AddNumberStep(3)],
+      steps: [new AddNumberStep(1), new AddNumberStep(2), new AddNumberStep(3)]
     });
 
     const result = await engine.execute(workflow, 10);
@@ -269,7 +257,7 @@ describe('WorkflowEngine', () => {
   it('should stop on error when configured', async () => {
     const workflow = new Workflow({
       metadata: { name: 'failing' },
-      steps: [new AddNumberStep(1), new FailingStep(), new AddNumberStep(2)],
+      steps: [new AddNumberStep(1), new FailingStep(), new AddNumberStep(2)]
     });
 
     const result = await engine.execute(workflow, 10, { stopOnError: true });
@@ -299,7 +287,7 @@ describe('WorkflowEngine', () => {
     const workflow = new Workflow({
       metadata: { name: 'variables' },
       steps: [new VariableStep()],
-      variables: { multiplier: 5 },
+      variables: { multiplier: 5 }
     });
 
     const result = await engine.execute(workflow, 10);
@@ -310,7 +298,7 @@ describe('WorkflowEngine', () => {
   it('should track execution metadata', async () => {
     const workflow = new Workflow({
       metadata: { name: 'metadata' },
-      steps: [new AddNumberStep(1)],
+      steps: [new AddNumberStep(1)]
     });
 
     const result = await engine.execute(workflow, 10);
@@ -333,7 +321,7 @@ describe('InMemoryWorkflowRepository', () => {
   it('should save and retrieve workflows', async () => {
     const workflow = new Workflow({
       metadata: { name: 'test' },
-      steps: [new AddNumberStep(1)],
+      steps: [new AddNumberStep(1)]
     });
 
     await repository.save(workflow);
@@ -345,7 +333,7 @@ describe('InMemoryWorkflowRepository', () => {
   it('should get workflow by name', async () => {
     const workflow = new Workflow({
       metadata: { name: 'my-workflow' },
-      steps: [new AddNumberStep(1)],
+      steps: [new AddNumberStep(1)]
     });
 
     await repository.save(workflow);
@@ -357,12 +345,12 @@ describe('InMemoryWorkflowRepository', () => {
   it('should list workflows with tags', async () => {
     const workflow1 = new Workflow({
       metadata: { name: 'wf1', tags: ['production'] },
-      steps: [new AddNumberStep(1)],
+      steps: [new AddNumberStep(1)]
     });
 
     const workflow2 = new Workflow({
       metadata: { name: 'wf2', tags: ['development'] },
-      steps: [new AddNumberStep(1)],
+      steps: [new AddNumberStep(1)]
     });
 
     await repository.save(workflow1);
@@ -377,7 +365,7 @@ describe('InMemoryWorkflowRepository', () => {
   it('should save and retrieve executions', async () => {
     const workflow = new Workflow({
       metadata: { name: 'test' },
-      steps: [new AddNumberStep(1)],
+      steps: [new AddNumberStep(1)]
     });
 
     const engine = new WorkflowEngine();
@@ -392,7 +380,7 @@ describe('InMemoryWorkflowRepository', () => {
   it('should list executions for a workflow', async () => {
     const workflow = new Workflow({
       metadata: { name: 'test' },
-      steps: [new AddNumberStep(1)],
+      steps: [new AddNumberStep(1)]
     });
 
     const engine = new WorkflowEngine();
@@ -410,7 +398,7 @@ describe('InMemoryWorkflowRepository', () => {
   it('should delete executions', async () => {
     const workflow = new Workflow({
       metadata: { name: 'test' },
-      steps: [new AddNumberStep(1)],
+      steps: [new AddNumberStep(1)]
     });
 
     const engine = new WorkflowEngine();

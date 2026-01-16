@@ -12,7 +12,7 @@ export {
   type ChunkingConfig,
   FixedSizeChunking,
   ParagraphChunking,
-  SentenceChunking,
+  SentenceChunking
 } from './ChunkingStrategy.js';
 
 // Document chunker

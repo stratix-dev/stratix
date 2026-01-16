@@ -1,9 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import {
-  ExecutionTrace,
-  ExecutionTraceHelpers,
-  type TraceStep,
-} from '../ExecutionTrace.js';
+import { ExecutionTrace, ExecutionTraceHelpers, type TraceStep } from '../ExecutionTrace.js';
 import { TraceCollector } from '../TraceCollector.js';
 
 describe('ExecutionTrace', () => {
@@ -14,7 +10,7 @@ describe('ExecutionTrace', () => {
         agentId: 'agent-1',
         sessionId: 'session-1',
         userId: 'user-1',
-        metadata: { version: '1.0' },
+        metadata: { version: '1.0' }
       });
 
       expect(trace.traceId).toBe('trace_123');
@@ -30,7 +26,7 @@ describe('ExecutionTrace', () => {
     it('should allow optional fields to be undefined', () => {
       const trace = ExecutionTraceHelpers.create({
         traceId: 'trace_123',
-        agentId: 'agent-1',
+        agentId: 'agent-1'
       });
 
       expect(trace.sessionId).toBeUndefined();
@@ -43,7 +39,7 @@ describe('ExecutionTrace', () => {
     it('should add a step to trace', () => {
       const trace = ExecutionTraceHelpers.create({
         traceId: 'trace_123',
-        agentId: 'agent-1',
+        agentId: 'agent-1'
       });
 
       const step: TraceStep = {
@@ -51,7 +47,7 @@ describe('ExecutionTrace', () => {
         type: 'llm',
         startTime: new Date(),
         endTime: new Date(),
-        metadata: { model: 'gpt-4' },
+        metadata: { model: 'gpt-4' }
       };
 
       const updated = ExecutionTraceHelpers.addStep(trace, step);
@@ -63,19 +59,19 @@ describe('ExecutionTrace', () => {
     it('should append multiple steps', () => {
       let trace = ExecutionTraceHelpers.create({
         traceId: 'trace_123',
-        agentId: 'agent-1',
+        agentId: 'agent-1'
       });
 
       const step1: TraceStep = {
         name: 'step1',
         type: 'llm',
-        startTime: new Date(),
+        startTime: new Date()
       };
 
       const step2: TraceStep = {
         name: 'step2',
         type: 'tool',
-        startTime: new Date(),
+        startTime: new Date()
       };
 
       trace = ExecutionTraceHelpers.addStep(trace, step1);
@@ -91,7 +87,7 @@ describe('ExecutionTrace', () => {
     it('should mark trace as completed', () => {
       const trace = ExecutionTraceHelpers.create({
         traceId: 'trace_123',
-        agentId: 'agent-1',
+        agentId: 'agent-1'
       });
 
       const completed = ExecutionTraceHelpers.complete(trace);
@@ -110,7 +106,7 @@ describe('ExecutionTrace', () => {
         agentId: 'agent-1',
         startTime: start,
         endTime: end,
-        steps: [],
+        steps: []
       };
 
       const duration = ExecutionTraceHelpers.getDuration(trace);
@@ -120,7 +116,7 @@ describe('ExecutionTrace', () => {
     it('should return undefined for incomplete trace', () => {
       const trace = ExecutionTraceHelpers.create({
         traceId: 'trace_123',
-        agentId: 'agent-1',
+        agentId: 'agent-1'
       });
 
       const duration = ExecutionTraceHelpers.getDuration(trace);
@@ -132,25 +128,25 @@ describe('ExecutionTrace', () => {
     it('should count steps by type', () => {
       let trace = ExecutionTraceHelpers.create({
         traceId: 'trace_123',
-        agentId: 'agent-1',
+        agentId: 'agent-1'
       });
 
       trace = ExecutionTraceHelpers.addStep(trace, {
         name: 'llm1',
         type: 'llm',
-        startTime: new Date(),
+        startTime: new Date()
       });
 
       trace = ExecutionTraceHelpers.addStep(trace, {
         name: 'llm2',
         type: 'llm',
-        startTime: new Date(),
+        startTime: new Date()
       });
 
       trace = ExecutionTraceHelpers.addStep(trace, {
         name: 'tool1',
         type: 'tool',
-        startTime: new Date(),
+        startTime: new Date()
       });
 
       const counts = ExecutionTraceHelpers.countStepsByType(trace);
@@ -164,19 +160,19 @@ describe('ExecutionTrace', () => {
     it('should find steps by type', () => {
       let trace = ExecutionTraceHelpers.create({
         traceId: 'trace_123',
-        agentId: 'agent-1',
+        agentId: 'agent-1'
       });
 
       const llmStep: TraceStep = {
         name: 'llm',
         type: 'llm',
-        startTime: new Date(),
+        startTime: new Date()
       };
 
       const toolStep: TraceStep = {
         name: 'tool',
         type: 'tool',
-        startTime: new Date(),
+        startTime: new Date()
       };
 
       trace = ExecutionTraceHelpers.addStep(trace, llmStep);
@@ -192,21 +188,21 @@ describe('ExecutionTrace', () => {
     it('should calculate total cost from steps', () => {
       let trace = ExecutionTraceHelpers.create({
         traceId: 'trace_123',
-        agentId: 'agent-1',
+        agentId: 'agent-1'
       });
 
       trace = ExecutionTraceHelpers.addStep(trace, {
         name: 'step1',
         type: 'llm',
         startTime: new Date(),
-        metadata: { cost: 0.05 },
+        metadata: { cost: 0.05 }
       });
 
       trace = ExecutionTraceHelpers.addStep(trace, {
         name: 'step2',
         type: 'llm',
         startTime: new Date(),
-        metadata: { cost: 0.03 },
+        metadata: { cost: 0.03 }
       });
 
       const totalCost = ExecutionTraceHelpers.calculateTotalCost(trace);
@@ -216,7 +212,7 @@ describe('ExecutionTrace', () => {
     it('should return undefined when no costs', () => {
       const trace = ExecutionTraceHelpers.create({
         traceId: 'trace_123',
-        agentId: 'agent-1',
+        agentId: 'agent-1'
       });
 
       const totalCost = ExecutionTraceHelpers.calculateTotalCost(trace);
@@ -228,27 +224,27 @@ describe('ExecutionTrace', () => {
     it('should calculate total tokens from LLM steps', () => {
       let trace = ExecutionTraceHelpers.create({
         traceId: 'trace_123',
-        agentId: 'agent-1',
+        agentId: 'agent-1'
       });
 
       trace = ExecutionTraceHelpers.addStep(trace, {
         name: 'llm1',
         type: 'llm',
         startTime: new Date(),
-        metadata: { totalTokens: 100 },
+        metadata: { totalTokens: 100 }
       });
 
       trace = ExecutionTraceHelpers.addStep(trace, {
         name: 'llm2',
         type: 'llm',
         startTime: new Date(),
-        metadata: { totalTokens: 150 },
+        metadata: { totalTokens: 150 }
       });
 
       trace = ExecutionTraceHelpers.addStep(trace, {
         name: 'tool',
         type: 'tool',
-        startTime: new Date(),
+        startTime: new Date()
       });
 
       const totalTokens = ExecutionTraceHelpers.calculateTotalTokens(trace);
@@ -258,7 +254,7 @@ describe('ExecutionTrace', () => {
     it('should return undefined when no tokens', () => {
       const trace = ExecutionTraceHelpers.create({
         traceId: 'trace_123',
-        agentId: 'agent-1',
+        agentId: 'agent-1'
       });
 
       const totalTokens = ExecutionTraceHelpers.calculateTotalTokens(trace);
@@ -291,7 +287,7 @@ describe('TraceCollector', () => {
         agentId: 'agent-1',
         sessionId: 'session-1',
         userId: 'user-1',
-        metadata: { version: '1.0' },
+        metadata: { version: '1.0' }
       });
 
       expect(trace.traceId).toMatch(/^trace_\d+_/);
@@ -322,7 +318,7 @@ describe('TraceCollector', () => {
         type: 'llm',
         startTime: new Date(),
         endTime: new Date(),
-        metadata: { model: 'gpt-4' },
+        metadata: { model: 'gpt-4' }
       };
 
       collector.addStep(trace.traceId, step);
@@ -336,7 +332,7 @@ describe('TraceCollector', () => {
       const step: TraceStep = {
         name: 'test',
         type: 'llm',
-        startTime: new Date(),
+        startTime: new Date()
       };
 
       expect(() => collector.addStep('non-existent', step)).not.toThrow();
@@ -352,7 +348,7 @@ describe('TraceCollector', () => {
         type: 'llm',
         startTime: new Date(),
         endTime: new Date(),
-        metadata: { cost: 0.05, totalTokens: 100 },
+        metadata: { cost: 0.05, totalTokens: 100 }
       });
 
       collector.addStep(trace.traceId, {
@@ -360,7 +356,7 @@ describe('TraceCollector', () => {
         type: 'llm',
         startTime: new Date(),
         endTime: new Date(),
-        metadata: { cost: 0.03, totalTokens: 50 },
+        metadata: { cost: 0.03, totalTokens: 50 }
       });
 
       collector.endTrace(trace.traceId);
@@ -494,7 +490,7 @@ describe('TraceCollector', () => {
         type: 'llm',
         startTime: new Date(),
         endTime: new Date(),
-        metadata: { cost: 0.05, totalTokens: 100 },
+        metadata: { cost: 0.05, totalTokens: 100 }
       });
 
       collector.addStep(trace2.traceId, {
@@ -502,7 +498,7 @@ describe('TraceCollector', () => {
         type: 'llm',
         startTime: new Date(),
         endTime: new Date(),
-        metadata: { cost: 0.03, totalTokens: 50 },
+        metadata: { cost: 0.03, totalTokens: 50 }
       });
 
       // Complete both traces with a delay to ensure different durations
@@ -536,7 +532,7 @@ describe('TraceCollector', () => {
       // Start tracing
       const trace = collector.startTrace({
         agentId: 'customer-support',
-        sessionId: 'session_123',
+        sessionId: 'session_123'
       });
 
       // Add LLM call
@@ -547,7 +543,7 @@ describe('TraceCollector', () => {
         endTime: new Date(),
         input: 'Help me reset my password',
         output: 'I can help you...',
-        metadata: { model: 'gpt-4', totalTokens: 150, cost: 0.003 },
+        metadata: { model: 'gpt-4', totalTokens: 150, cost: 0.003 }
       });
 
       // Add tool call
@@ -556,7 +552,7 @@ describe('TraceCollector', () => {
         type: 'tool',
         startTime: new Date(),
         endTime: new Date(),
-        metadata: { duration: 50 },
+        metadata: { duration: 50 }
       });
 
       // Add memory operation
@@ -564,7 +560,7 @@ describe('TraceCollector', () => {
         name: 'memory.store',
         type: 'memory',
         startTime: new Date(),
-        endTime: new Date(),
+        endTime: new Date()
       });
 
       // Complete trace

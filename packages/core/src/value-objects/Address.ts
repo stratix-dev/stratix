@@ -217,7 +217,7 @@ export class Address extends ValueObject {
       this.state.toLowerCase(),
       this.postalCode.toLowerCase(),
       this.country.toLowerCase(),
-      this.additionalInfo?.toLowerCase() || '',
+      this.additionalInfo?.toLowerCase() || ''
     ];
   }
 
@@ -232,7 +232,7 @@ export class Address extends ValueObject {
       state: this.state,
       postalCode: this.postalCode,
       country: this.country,
-      additionalInfo: this.additionalInfo,
+      additionalInfo: this.additionalInfo
     };
   }
 }

@@ -134,7 +134,7 @@ export class LoggerBuilder {
   /**
    * Añade metadata global
    */
-  withEnrichment(enrichment: Record<string, unknown | (() => unknown)>): this {
+  withEnrichment(enrichment: Record<string, unknown>): this {
     this.config.enrichment = enrichment;
     return this;
   }

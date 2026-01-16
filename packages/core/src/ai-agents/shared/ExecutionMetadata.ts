@@ -73,7 +73,7 @@ export const ExecutionMetadataHelpers = {
   create(model: string, additional?: Partial<ExecutionMetadata>): ExecutionMetadata {
     return {
       model,
-      ...additional,
+      ...additional
     };
   },
 
@@ -94,15 +94,14 @@ export const ExecutionMetadataHelpers = {
           acc.usage && metadata.usage
             ? {
                 promptTokens: acc.usage.promptTokens + metadata.usage.promptTokens,
-                completionTokens:
-                  acc.usage.completionTokens + metadata.usage.completionTokens,
-                totalTokens: acc.usage.totalTokens + metadata.usage.totalTokens,
+                completionTokens: acc.usage.completionTokens + metadata.usage.completionTokens,
+                totalTokens: acc.usage.totalTokens + metadata.usage.totalTokens
               }
-            : metadata.usage ?? acc.usage,
+            : (metadata.usage ?? acc.usage),
         // Sum costs if both present
         cost: (acc.cost ?? 0) + (metadata.cost ?? 0),
         // Sum durations if both present
-        durationMs: (acc.durationMs ?? 0) + (metadata.durationMs ?? 0),
+        durationMs: (acc.durationMs ?? 0) + (metadata.durationMs ?? 0)
       }),
       {} as ExecutionMetadata
     );
@@ -124,7 +123,7 @@ export const ExecutionMetadataHelpers = {
       model: metadata.model,
       totalTokens: metadata.usage?.totalTokens ?? 0,
       totalCost: metadata.cost ?? 0,
-      durationMs: metadata.durationMs ?? 0,
+      durationMs: metadata.durationMs ?? 0
     };
-  },
+  }
 };

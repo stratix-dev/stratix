@@ -25,7 +25,7 @@ class TestAggregate extends AggregateRoot<'Test'> {
     this.record({
       occurredAt: new Date(),
       testId: this.id.value,
-      action,
+      action
     });
     this.touch();
   }
@@ -34,12 +34,12 @@ class TestAggregate extends AggregateRoot<'Test'> {
     this.record({
       occurredAt: new Date(),
       testId: this.id.value,
-      action: 'first',
+      action: 'first'
     });
     this.record({
       occurredAt: new Date(),
       testId: this.id.value,
-      action: 'second',
+      action: 'second'
     });
     this.touch();
   }
@@ -104,11 +104,11 @@ describe('AggregateRoot', () => {
       expect(events).toHaveLength(2);
       expect(events[0]).toMatchObject({
         testId: id.value,
-        action: 'action1',
+        action: 'action1'
       });
       expect(events[1]).toMatchObject({
         testId: id.value,
-        action: 'action2',
+        action: 'action2'
       });
     });
 
@@ -129,7 +129,7 @@ describe('AggregateRoot', () => {
       events.push({
         occurredAt: new Date(),
         testId: 'fake',
-        action: 'fake',
+        action: 'fake'
       });
 
       // Should not affect internal state

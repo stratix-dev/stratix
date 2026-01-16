@@ -1,4 +1,5 @@
 import { ClassConstructor, ConfigurationSource } from '@stratix/core';
+import { METADATA_KEYS, STRATIX_METADATA } from './metadataKeys.js';
 
 export interface AppMetadata {
   name: string;
@@ -23,4 +24,14 @@ export interface CommandHandlerMetadata {
 export interface ContextMetadata {
   contextClass: ClassConstructor;
   commandHandlers: ClassConstructor[];
+}
+
+export interface MetadataStorage {
+  [METADATA_KEYS.APP]?: AppMetadata;
+  [METADATA_KEYS.CONTEXT]?: ContextMetadata;
+  [METADATA_KEYS.COMMAND_HANDLER]?: CommandHandlerMetadata;
+}
+
+export interface ClassWithMetadata extends ClassConstructor {
+  [STRATIX_METADATA]?: MetadataStorage;
 }

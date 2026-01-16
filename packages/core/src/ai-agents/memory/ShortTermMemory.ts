@@ -62,7 +62,7 @@ export class ShortTermMemory<T = unknown> implements Memory<T> {
     this.config = {
       maxEntries: config.maxEntries ?? 100,
       maxAgeMs: config.maxAgeMs ?? Infinity,
-      autoCleanup: config.autoCleanup ?? true,
+      autoCleanup: config.autoCleanup ?? true
     };
   }
 
@@ -104,11 +104,7 @@ export class ShortTermMemory<T = unknown> implements Memory<T> {
 
     // Filter by time range
     if (query.timeRange) {
-      results = MemoryHelpers.filterByTimeRange(
-        results,
-        query.timeRange.from,
-        query.timeRange.to
-      );
+      results = MemoryHelpers.filterByTimeRange(results, query.timeRange.from, query.timeRange.to);
     }
 
     // Filter by importance
@@ -143,9 +139,7 @@ export class ShortTermMemory<T = unknown> implements Memory<T> {
     }
 
     const sorted = MemoryHelpers.sortByRecency(this.entries);
-    return Promise.resolve(
-      limit !== undefined ? sorted.slice(0, limit) : sorted
-    );
+    return Promise.resolve(limit !== undefined ? sorted.slice(0, limit) : sorted);
   }
 
   async getRecent(count: number): Promise<readonly MemoryEntry<T>[]> {
@@ -218,7 +212,7 @@ export class ShortTermMemory<T = unknown> implements Memory<T> {
     if (totalEntries === 0) {
       return {
         totalEntries: 0,
-        averageImportance: 0,
+        averageImportance: 0
       };
     }
 
@@ -226,17 +220,14 @@ export class ShortTermMemory<T = unknown> implements Memory<T> {
     const oldestEntry = sorted[sorted.length - 1]?.timestamp;
     const newestEntry = sorted[0]?.timestamp;
 
-    const sumImportance = this.entries.reduce(
-      (sum, entry) => sum + (entry.importance ?? 0),
-      0
-    );
+    const sumImportance = this.entries.reduce((sum, entry) => sum + (entry.importance ?? 0), 0);
     const averageImportance = sumImportance / totalEntries;
 
     return {
       totalEntries,
       oldestEntry,
       newestEntry,
-      averageImportance,
+      averageImportance
     };
   }
 }

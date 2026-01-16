@@ -1,14 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import {
-  GuardrailSeverity,
-  GuardrailSeverityHelpers,
-} from '../GuardrailSeverity.js';
+import { GuardrailSeverity, GuardrailSeverityHelpers } from '../GuardrailSeverity.js';
 import { GuardrailResultHelpers } from '../GuardrailResult.js';
-import {
-  Guardrail,
-  TextLengthGuardrail,
-  PatternGuardrail,
-} from '../Guardrail.js';
+import { Guardrail, TextLengthGuardrail, PatternGuardrail } from '../Guardrail.js';
 import { GuardrailChain } from '../GuardrailChain.js';
 
 describe('GuardrailSeverity', () => {
@@ -33,24 +26,15 @@ describe('GuardrailSeverity', () => {
   describe('compare', () => {
     it('should compare severities', () => {
       expect(
-        GuardrailSeverityHelpers.compare(
-          GuardrailSeverity.INFO,
-          GuardrailSeverity.ERROR
-        )
+        GuardrailSeverityHelpers.compare(GuardrailSeverity.INFO, GuardrailSeverity.ERROR)
       ).toBe(-1);
 
       expect(
-        GuardrailSeverityHelpers.compare(
-          GuardrailSeverity.ERROR,
-          GuardrailSeverity.WARNING
-        )
+        GuardrailSeverityHelpers.compare(GuardrailSeverity.ERROR, GuardrailSeverity.WARNING)
       ).toBe(1);
 
       expect(
-        GuardrailSeverityHelpers.compare(
-          GuardrailSeverity.ERROR,
-          GuardrailSeverity.ERROR
-        )
+        GuardrailSeverityHelpers.compare(GuardrailSeverity.ERROR, GuardrailSeverity.ERROR)
       ).toBe(0);
     });
   });
@@ -60,7 +44,7 @@ describe('GuardrailSeverity', () => {
       const max = GuardrailSeverityHelpers.max([
         GuardrailSeverity.INFO,
         GuardrailSeverity.CRITICAL,
-        GuardrailSeverity.WARNING,
+        GuardrailSeverity.WARNING
       ]);
 
       expect(max).toBe(GuardrailSeverity.CRITICAL);
@@ -97,7 +81,7 @@ describe('GuardrailResult', () => {
       const results = [
         GuardrailResultHelpers.pass('g1'),
         GuardrailResultHelpers.fail('g2', GuardrailSeverity.WARNING, 'Fail'),
-        GuardrailResultHelpers.pass('g3'),
+        GuardrailResultHelpers.pass('g3')
       ];
 
       const combined = GuardrailResultHelpers.combine(results);
@@ -107,9 +91,7 @@ describe('GuardrailResult', () => {
     });
 
     it('should detect blocking violations', () => {
-      const results = [
-        GuardrailResultHelpers.fail('g1', GuardrailSeverity.ERROR, 'Block me'),
-      ];
+      const results = [GuardrailResultHelpers.fail('g1', GuardrailSeverity.ERROR, 'Block me')];
 
       const combined = GuardrailResultHelpers.combine(results);
 
@@ -172,12 +154,7 @@ describe('GuardrailChain', () => {
     const chain = new GuardrailChain<string>()
       .add(new TextLengthGuardrail(100, GuardrailSeverity.ERROR))
       .add(
-        new PatternGuardrail(
-          'test-pattern',
-          /bad/gi,
-          GuardrailSeverity.WARNING,
-          'Bad word found'
-        )
+        new PatternGuardrail('test-pattern', /bad/gi, GuardrailSeverity.WARNING, 'Bad word found')
       );
 
     const result = await chain.check('This is good');
@@ -200,17 +177,10 @@ describe('GuardrailChain', () => {
 
   it('should stop on first failure when configured', async () => {
     const chain = new GuardrailChain<string>({
-      stopOnFirstFailure: true,
+      stopOnFirstFailure: true
     })
       .add(new TextLengthGuardrail(5, GuardrailSeverity.ERROR))
-      .add(
-        new PatternGuardrail(
-          'test',
-          /bad/gi,
-          GuardrailSeverity.ERROR,
-          'Bad word'
-        )
-      );
+      .add(new PatternGuardrail('test', /bad/gi, GuardrailSeverity.ERROR, 'Bad word'));
 
     const result = await chain.check('This is too long and bad');
 

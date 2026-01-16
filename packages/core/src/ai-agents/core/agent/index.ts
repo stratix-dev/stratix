@@ -8,6 +8,6 @@ export {
   AgentVersion,
   AgentMetadata,
   AgentCapabilities,
-  type AgentCapability,
+  type AgentCapability
 } from './AgentMetadata.js';
 export { ModelConfigHelpers, type ModelConfig } from './ModelConfig.js';

@@ -34,7 +34,7 @@ export class DomainError extends Error {
     return {
       name: this.name,
       code: this.code,
-      message: this.message,
+      message: this.message
     };
   }
 }

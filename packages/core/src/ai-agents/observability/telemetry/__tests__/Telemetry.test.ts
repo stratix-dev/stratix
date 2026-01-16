@@ -4,17 +4,10 @@ import {
   TelemetrySpanHelpers,
   SpanKind,
   SpanStatusCode,
-  type SpanAttributeValue,
+  type SpanAttributeValue
 } from '../TelemetrySpan.js';
-import {
-  AITelemetry,
-  InMemoryTelemetry,
-} from '../AITelemetry.js';
-import {
-  TelemetryExporter,
-  ConsoleExporter,
-  BatchingExporter,
-} from '../TelemetryExporter.js';
+import { AITelemetry, InMemoryTelemetry } from '../AITelemetry.js';
+import { TelemetryExporter, ConsoleExporter, BatchingExporter } from '../TelemetryExporter.js';
 
 describe('TelemetrySpan', () => {
   describe('TelemetrySpanHelpers.create', () => {
@@ -24,10 +17,10 @@ describe('TelemetrySpan', () => {
         traceId: 'trace_123',
         attributes: {
           'agent.name': 'CustomerSupport',
-          'agent.version': '1.0',
+          'agent.version': '1.0'
         },
         kind: SpanKind.SERVER,
-        parentSpanId: 'parent_123',
+        parentSpanId: 'parent_123'
       });
 
       expect(span.spanId).toMatch(/^span_\d+_/);
@@ -37,11 +30,11 @@ describe('TelemetrySpan', () => {
       expect(span.parentSpanId).toBe('parent_123');
       expect(span.attributes).toEqual({
         'agent.name': 'CustomerSupport',
-        'agent.version': '1.0',
+        'agent.version': '1.0'
       });
       expect(span.events).toEqual([]);
       expect(span.status).toEqual({
-        code: SpanStatusCode.UNSET,
+        code: SpanStatusCode.UNSET
       });
       expect(span.startTime).toBeInstanceOf(Date);
       expect(span.endTime).toBeUndefined();
@@ -50,7 +43,7 @@ describe('TelemetrySpan', () => {
     it('should default to INTERNAL kind', () => {
       const span = TelemetrySpanHelpers.create({
         name: 'test',
-        traceId: 'trace_123',
+        traceId: 'trace_123'
       });
 
       expect(span.kind).toBe(SpanKind.INTERNAL);
@@ -59,7 +52,7 @@ describe('TelemetrySpan', () => {
     it('should default to empty attributes', () => {
       const span = TelemetrySpanHelpers.create({
         name: 'test',
-        traceId: 'trace_123',
+        traceId: 'trace_123'
       });
 
       expect(span.attributes).toEqual({});
@@ -70,7 +63,7 @@ describe('TelemetrySpan', () => {
     it('should mark span as completed', () => {
       const span = TelemetrySpanHelpers.create({
         name: 'test',
-        traceId: 'trace_123',
+        traceId: 'trace_123'
       });
 
       const completed = TelemetrySpanHelpers.complete(span);
@@ -82,7 +75,7 @@ describe('TelemetrySpan', () => {
     it('should mark span as error when error provided', () => {
       const span = TelemetrySpanHelpers.create({
         name: 'test',
-        traceId: 'trace_123',
+        traceId: 'trace_123'
       });
 
       const error = new Error('Test error');
@@ -97,11 +90,11 @@ describe('TelemetrySpan', () => {
     it('should add an event to span with string event name', () => {
       const span = TelemetrySpanHelpers.create({
         name: 'test',
-        traceId: 'trace_123',
+        traceId: 'trace_123'
       });
 
       const withEvent = TelemetrySpanHelpers.addEvent(span, 'llm.request', {
-        model: 'gpt-4',
+        model: 'gpt-4'
       });
 
       expect(withEvent.events).toHaveLength(1);
@@ -113,14 +106,14 @@ describe('TelemetrySpan', () => {
     it('should add an event to span with full event object', () => {
       const span = TelemetrySpanHelpers.create({
         name: 'test',
-        traceId: 'trace_123',
+        traceId: 'trace_123'
       });
 
       const timestamp = new Date();
       const withEvent = TelemetrySpanHelpers.addEvent(span, {
         name: 'llm.request',
         timestamp,
-        attributes: { model: 'gpt-4' },
+        attributes: { model: 'gpt-4' }
       });
 
       expect(withEvent.events).toHaveLength(1);
@@ -132,7 +125,7 @@ describe('TelemetrySpan', () => {
     it('should append events', () => {
       let span = TelemetrySpanHelpers.create({
         name: 'test',
-        traceId: 'trace_123',
+        traceId: 'trace_123'
       });
 
       span = TelemetrySpanHelpers.addEvent(span, 'event1');
@@ -149,18 +142,18 @@ describe('TelemetrySpan', () => {
       const span = TelemetrySpanHelpers.create({
         name: 'test',
         traceId: 'trace_123',
-        attributes: { key1: 'value1' },
+        attributes: { key1: 'value1' }
       });
 
       const withAttrs = TelemetrySpanHelpers.setAttributes(span, {
         key2: 'value2',
-        key3: 123,
+        key3: 123
       });
 
       expect(withAttrs.attributes).toEqual({
         key1: 'value1',
         key2: 'value2',
-        key3: 123,
+        key3: 123
       });
     });
 
@@ -168,17 +161,17 @@ describe('TelemetrySpan', () => {
       const span = TelemetrySpanHelpers.create({
         name: 'test',
         traceId: 'trace_123',
-        attributes: { existing: 'value' },
+        attributes: { existing: 'value' }
       });
 
       const updated = TelemetrySpanHelpers.setAttributes(span, {
         existing: 'updated',
-        new: 'value',
+        new: 'value'
       });
 
       expect(updated.attributes).toEqual({
         existing: 'updated',
-        new: 'value',
+        new: 'value'
       });
     });
   });
@@ -197,7 +190,7 @@ describe('TelemetrySpan', () => {
         endTime: end,
         attributes: {},
         events: [],
-        status: { code: SpanStatusCode.OK },
+        status: { code: SpanStatusCode.OK }
       };
 
       const duration = TelemetrySpanHelpers.getDuration(span);
@@ -207,7 +200,7 @@ describe('TelemetrySpan', () => {
     it('should return undefined for incomplete span', () => {
       const span = TelemetrySpanHelpers.create({
         name: 'test',
-        traceId: 'trace_123',
+        traceId: 'trace_123'
       });
 
       const duration = TelemetrySpanHelpers.getDuration(span);
@@ -248,7 +241,7 @@ describe('InMemoryTelemetry', () => {
   describe('startSpan', () => {
     it('should create and store a span', () => {
       const span = telemetry.startSpan('agent.execute', {
-        'agent.name': 'CustomerSupport',
+        'agent.name': 'CustomerSupport'
       });
 
       expect(span.name).toBe('agent.execute');
@@ -260,11 +253,7 @@ describe('InMemoryTelemetry', () => {
     });
 
     it('should use provided span kind', () => {
-      const span = telemetry.startSpan(
-        'http.request',
-        {},
-        SpanKind.CLIENT
-      );
+      const span = telemetry.startSpan('http.request', {}, SpanKind.CLIENT);
 
       expect(span.kind).toBe(SpanKind.CLIENT);
     });
@@ -318,7 +307,7 @@ describe('InMemoryTelemetry', () => {
     it('should add event to existing span', () => {
       const span = telemetry.startSpan('test');
       telemetry.addSpanEvent(span.spanId, 'llm.request', {
-        model: 'gpt-4',
+        model: 'gpt-4'
       });
 
       const updated = telemetry.getSpan(span.spanId);
@@ -328,9 +317,7 @@ describe('InMemoryTelemetry', () => {
     });
 
     it('should do nothing for non-existent span', () => {
-      expect(() =>
-        telemetry.addSpanEvent('non-existent', 'event')
-      ).not.toThrow();
+      expect(() => telemetry.addSpanEvent('non-existent', 'event')).not.toThrow();
     });
   });
 
@@ -342,14 +329,12 @@ describe('InMemoryTelemetry', () => {
       const updated = telemetry.getSpan(span.spanId);
       expect(updated!.attributes).toEqual({
         key1: 'value1',
-        key2: 'value2',
+        key2: 'value2'
       });
     });
 
     it('should do nothing for non-existent span', () => {
-      expect(() =>
-        telemetry.setSpanAttributes('non-existent', {})
-      ).not.toThrow();
+      expect(() => telemetry.setSpanAttributes('non-existent', {})).not.toThrow();
     });
   });
 
@@ -398,9 +383,13 @@ describe('InMemoryTelemetry', () => {
   describe('integration scenario', () => {
     it('should track agent execution with nested spans', () => {
       // Start agent execution
-      const agentSpan = telemetry.startSpan('agent.execute', {
-        'agent.name': 'CustomerSupport',
-      }, SpanKind.SERVER);
+      const agentSpan = telemetry.startSpan(
+        'agent.execute',
+        {
+          'agent.name': 'CustomerSupport'
+        },
+        SpanKind.SERVER
+      );
 
       // Track LLM call
       const llmSpan = telemetry.startSpan(
@@ -458,9 +447,9 @@ describe('ConsoleExporter', () => {
         TelemetrySpanHelpers.complete(
           TelemetrySpanHelpers.create({
             name: 'test',
-            traceId: 'trace_123',
+            traceId: 'trace_123'
           })
-        ),
+        )
       ];
 
       await exporter.export(spans);
@@ -471,7 +460,7 @@ describe('ConsoleExporter', () => {
     it('should handle multiple spans', async () => {
       const spans: TelemetrySpan[] = [
         TelemetrySpanHelpers.create({ name: 'span1', traceId: 'trace_1' }),
-        TelemetrySpanHelpers.create({ name: 'span2', traceId: 'trace_1' }),
+        TelemetrySpanHelpers.create({ name: 'span2', traceId: 'trace_1' })
       ];
 
       await exporter.export(spans);
@@ -501,11 +490,11 @@ describe('BatchingExporter', () => {
     mockExporter = {
       export: vi.fn().mockResolvedValue(undefined),
       flush: vi.fn().mockResolvedValue(undefined),
-      shutdown: vi.fn().mockResolvedValue(undefined),
+      shutdown: vi.fn().mockResolvedValue(undefined)
     };
     batchingExporter = new BatchingExporter(mockExporter, {
       batchSize: 3,
-      flushInterval: 100,
+      flushInterval: 100
     });
   });
 
@@ -517,15 +506,15 @@ describe('BatchingExporter', () => {
     it('should batch spans until batchSize', async () => {
       const span1 = TelemetrySpanHelpers.create({
         name: 'span1',
-        traceId: 'trace_1',
+        traceId: 'trace_1'
       });
       const span2 = TelemetrySpanHelpers.create({
         name: 'span2',
-        traceId: 'trace_1',
+        traceId: 'trace_1'
       });
       const span3 = TelemetrySpanHelpers.create({
         name: 'span3',
-        traceId: 'trace_1',
+        traceId: 'trace_1'
       });
 
       await batchingExporter.export([span1]);
@@ -543,7 +532,7 @@ describe('BatchingExporter', () => {
     it('should flush on flushInterval', async () => {
       const span = TelemetrySpanHelpers.create({
         name: 'span',
-        traceId: 'trace_1',
+        traceId: 'trace_1'
       });
 
       await batchingExporter.export([span]);
@@ -558,7 +547,7 @@ describe('BatchingExporter', () => {
       const spans = Array.from({ length: 6 }, (_, i) =>
         TelemetrySpanHelpers.create({
           name: `span${i}`,
-          traceId: 'trace_1',
+          traceId: 'trace_1'
         })
       );
 
@@ -575,7 +564,7 @@ describe('BatchingExporter', () => {
     it('should flush remaining spans', async () => {
       const span = TelemetrySpanHelpers.create({
         name: 'span',
-        traceId: 'trace_1',
+        traceId: 'trace_1'
       });
 
       await batchingExporter.export([span]);

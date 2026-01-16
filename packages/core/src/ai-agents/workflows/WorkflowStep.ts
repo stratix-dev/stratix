@@ -25,7 +25,7 @@ export enum WorkflowStepStatus {
   /**
    * Step was skipped (conditional execution).
    */
-  SKIPPED = 'skipped',
+  SKIPPED = 'skipped'
 }
 
 /**
@@ -144,7 +144,7 @@ export abstract class WorkflowStep<TInput = unknown, TOutput = unknown> {
     return {
       status: WorkflowStepStatus.COMPLETED,
       output,
-      metadata,
+      metadata
     };
   }
 
@@ -155,14 +155,11 @@ export abstract class WorkflowStep<TInput = unknown, TOutput = unknown> {
    * @param metadata - Optional metadata
    * @returns Failure result
    */
-  protected failure(
-    error: Error,
-    metadata?: Record<string, unknown>
-  ): WorkflowStepResult<TOutput> {
+  protected failure(error: Error, metadata?: Record<string, unknown>): WorkflowStepResult<TOutput> {
     return {
       status: WorkflowStepStatus.FAILED,
       error,
-      metadata,
+      metadata
     };
   }
 
@@ -172,12 +169,10 @@ export abstract class WorkflowStep<TInput = unknown, TOutput = unknown> {
    * @param metadata - Optional metadata
    * @returns Skipped result
    */
-  protected skipped(
-    metadata?: Record<string, unknown>
-  ): WorkflowStepResult<TOutput> {
+  protected skipped(metadata?: Record<string, unknown>): WorkflowStepResult<TOutput> {
     return {
       status: WorkflowStepStatus.SKIPPED,
-      metadata,
+      metadata
     };
   }
 
@@ -188,10 +183,7 @@ export abstract class WorkflowStep<TInput = unknown, TOutput = unknown> {
    * @param key - Variable key
    * @returns Variable value or undefined
    */
-  protected getVariable<T = unknown>(
-    context: WorkflowStepContext,
-    key: string
-  ): T | undefined {
+  protected getVariable<T = unknown>(context: WorkflowStepContext, key: string): T | undefined {
     return context.variables[key] as T | undefined;
   }
 

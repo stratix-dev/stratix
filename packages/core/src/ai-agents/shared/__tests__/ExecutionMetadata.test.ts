@@ -1,8 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  ExecutionMetadataHelpers,
-  type ExecutionMetadata,
-} from '../ExecutionMetadata.js';
+import { ExecutionMetadataHelpers, type ExecutionMetadata } from '../ExecutionMetadata.js';
 import { TokenUsageHelpers } from '../TokenUsage.js';
 
 describe('ExecutionMetadataHelpers', () => {
@@ -11,7 +8,7 @@ describe('ExecutionMetadataHelpers', () => {
       const metadata = ExecutionMetadataHelpers.create('gpt-4');
 
       expect(metadata).toEqual({
-        model: 'gpt-4',
+        model: 'gpt-4'
       });
     });
 
@@ -21,7 +18,7 @@ describe('ExecutionMetadataHelpers', () => {
         usage,
         cost: 0.0075,
         durationMs: 1234,
-        stage: 'completion',
+        stage: 'completion'
       });
 
       expect(metadata).toEqual({
@@ -29,7 +26,7 @@ describe('ExecutionMetadataHelpers', () => {
         usage,
         cost: 0.0075,
         durationMs: 1234,
-        stage: 'completion',
+        stage: 'completion'
       });
     });
 
@@ -37,7 +34,7 @@ describe('ExecutionMetadataHelpers', () => {
       const metadata = ExecutionMetadataHelpers.create('claude-3-opus', {
         customField: 'custom value',
         temperature: 0.7,
-        provider: 'anthropic',
+        provider: 'anthropic'
       });
 
       expect(metadata.model).toBe('claude-3-opus');
@@ -50,7 +47,7 @@ describe('ExecutionMetadataHelpers', () => {
       const metadata = ExecutionMetadataHelpers.create('gpt-4', undefined);
 
       expect(metadata).toEqual({
-        model: 'gpt-4',
+        model: 'gpt-4'
       });
     });
 
@@ -58,7 +55,7 @@ describe('ExecutionMetadataHelpers', () => {
       const metadata = ExecutionMetadataHelpers.create('gpt-4', {});
 
       expect(metadata).toEqual({
-        model: 'gpt-4',
+        model: 'gpt-4'
       });
     });
   });
@@ -69,15 +66,15 @@ describe('ExecutionMetadataHelpers', () => {
         model: 'gpt-4',
         usage: TokenUsageHelpers.create(100, 50),
         cost: 0.005,
-        durationMs: 1000,
+        durationMs: 1000
       };
 
       const meta2: ExecutionMetadata = {
         model: 'gpt-4',
         usage: TokenUsageHelpers.create(200, 75),
-        cost: 0.010,
+        cost: 0.01,
         durationMs: 1500,
-        stage: 'completion',
+        stage: 'completion'
       };
 
       const merged = ExecutionMetadataHelpers.merge(meta1, meta2);
@@ -87,18 +84,18 @@ describe('ExecutionMetadataHelpers', () => {
         usage: {
           promptTokens: 300,
           completionTokens: 125,
-          totalTokens: 425,
+          totalTokens: 425
         },
         cost: 0.015,
         durationMs: 2500,
-        stage: 'completion',
+        stage: 'completion'
       });
     });
 
     it('should handle single metadata', () => {
       const meta: ExecutionMetadata = {
         model: 'gpt-4',
-        usage: TokenUsageHelpers.create(100, 50),
+        usage: TokenUsageHelpers.create(100, 50)
       };
 
       const merged = ExecutionMetadataHelpers.merge(meta);
@@ -108,7 +105,7 @@ describe('ExecutionMetadataHelpers', () => {
         model: 'gpt-4',
         usage: TokenUsageHelpers.create(100, 50),
         cost: 0,
-        durationMs: 0,
+        durationMs: 0
       });
     });
 
@@ -130,17 +127,17 @@ describe('ExecutionMetadataHelpers', () => {
     it('should combine usage from all metadata', () => {
       const meta1: ExecutionMetadata = {
         model: 'gpt-4',
-        usage: TokenUsageHelpers.create(100, 50),
+        usage: TokenUsageHelpers.create(100, 50)
       };
 
       const meta2: ExecutionMetadata = {
         model: 'gpt-4',
-        usage: TokenUsageHelpers.create(200, 100),
+        usage: TokenUsageHelpers.create(200, 100)
       };
 
       const meta3: ExecutionMetadata = {
         model: 'gpt-4',
-        usage: TokenUsageHelpers.create(50, 25),
+        usage: TokenUsageHelpers.create(50, 25)
       };
 
       const merged = ExecutionMetadataHelpers.merge(meta1, meta2, meta3);
@@ -148,13 +145,13 @@ describe('ExecutionMetadataHelpers', () => {
       expect(merged.usage).toEqual({
         promptTokens: 350,
         completionTokens: 175,
-        totalTokens: 525,
+        totalTokens: 525
       });
     });
 
     it('should sum costs from all metadata', () => {
       const meta1: ExecutionMetadata = { model: 'gpt-4', cost: 0.005 };
-      const meta2: ExecutionMetadata = { model: 'gpt-4', cost: 0.010 };
+      const meta2: ExecutionMetadata = { model: 'gpt-4', cost: 0.01 };
       const meta3: ExecutionMetadata = { model: 'gpt-4', cost: 0.003 };
 
       const merged = ExecutionMetadataHelpers.merge(meta1, meta2, meta3);
@@ -175,17 +172,17 @@ describe('ExecutionMetadataHelpers', () => {
     it('should handle partial usage (only some metadata have usage)', () => {
       const meta1: ExecutionMetadata = {
         model: 'gpt-4',
-        usage: TokenUsageHelpers.create(100, 50),
+        usage: TokenUsageHelpers.create(100, 50)
       };
 
       const meta2: ExecutionMetadata = {
         model: 'gpt-4',
-        cost: 0.005,
+        cost: 0.005
       };
 
       const meta3: ExecutionMetadata = {
         model: 'gpt-4',
-        usage: TokenUsageHelpers.create(200, 100),
+        usage: TokenUsageHelpers.create(200, 100)
       };
 
       const merged = ExecutionMetadataHelpers.merge(meta1, meta2, meta3);
@@ -193,7 +190,7 @@ describe('ExecutionMetadataHelpers', () => {
       expect(merged.usage).toEqual({
         promptTokens: 300,
         completionTokens: 150,
-        totalTokens: 450,
+        totalTokens: 450
       });
     });
 
@@ -210,12 +207,12 @@ describe('ExecutionMetadataHelpers', () => {
     it('should merge arbitrary additional properties', () => {
       const meta1: ExecutionMetadata = {
         model: 'gpt-4',
-        customField1: 'value1',
+        customField1: 'value1'
       };
 
       const meta2: ExecutionMetadata = {
         model: 'gpt-4',
-        customField2: 'value2',
+        customField2: 'value2'
       };
 
       const merged = ExecutionMetadataHelpers.merge(meta1, meta2);
@@ -227,12 +224,12 @@ describe('ExecutionMetadataHelpers', () => {
     it('should override arbitrary properties with later values', () => {
       const meta1: ExecutionMetadata = {
         model: 'gpt-4',
-        temperature: 0.5,
+        temperature: 0.5
       };
 
       const meta2: ExecutionMetadata = {
         model: 'gpt-4',
-        temperature: 0.7,
+        temperature: 0.7
       };
 
       const merged = ExecutionMetadataHelpers.merge(meta1, meta2);
@@ -248,7 +245,7 @@ describe('ExecutionMetadataHelpers', () => {
         usage: TokenUsageHelpers.create(100, 50),
         cost: 0.0075,
         durationMs: 1234,
-        stage: 'completion',
+        stage: 'completion'
       };
 
       const summary = ExecutionMetadataHelpers.summarize(metadata);
@@ -257,7 +254,7 @@ describe('ExecutionMetadataHelpers', () => {
         model: 'gpt-4',
         totalTokens: 150,
         totalCost: 0.0075,
-        durationMs: 1234,
+        durationMs: 1234
       });
     });
 
@@ -265,7 +262,7 @@ describe('ExecutionMetadataHelpers', () => {
       const metadata: ExecutionMetadata = {
         model: 'gpt-4',
         cost: 0.0075,
-        durationMs: 1234,
+        durationMs: 1234
       };
 
       const summary = ExecutionMetadataHelpers.summarize(metadata);
@@ -274,7 +271,7 @@ describe('ExecutionMetadataHelpers', () => {
         model: 'gpt-4',
         totalTokens: 0,
         totalCost: 0.0075,
-        durationMs: 1234,
+        durationMs: 1234
       });
     });
 
@@ -282,7 +279,7 @@ describe('ExecutionMetadataHelpers', () => {
       const metadata: ExecutionMetadata = {
         model: 'gpt-4',
         usage: TokenUsageHelpers.create(100, 50),
-        durationMs: 1234,
+        durationMs: 1234
       };
 
       const summary = ExecutionMetadataHelpers.summarize(metadata);
@@ -291,7 +288,7 @@ describe('ExecutionMetadataHelpers', () => {
         model: 'gpt-4',
         totalTokens: 150,
         totalCost: 0,
-        durationMs: 1234,
+        durationMs: 1234
       });
     });
 
@@ -299,7 +296,7 @@ describe('ExecutionMetadataHelpers', () => {
       const metadata: ExecutionMetadata = {
         model: 'gpt-4',
         usage: TokenUsageHelpers.create(100, 50),
-        cost: 0.0075,
+        cost: 0.0075
       };
 
       const summary = ExecutionMetadataHelpers.summarize(metadata);
@@ -308,13 +305,13 @@ describe('ExecutionMetadataHelpers', () => {
         model: 'gpt-4',
         totalTokens: 150,
         totalCost: 0.0075,
-        durationMs: 0,
+        durationMs: 0
       });
     });
 
     it('should handle minimal metadata (model only)', () => {
       const metadata: ExecutionMetadata = {
-        model: 'gpt-4',
+        model: 'gpt-4'
       };
 
       const summary = ExecutionMetadataHelpers.summarize(metadata);
@@ -323,7 +320,7 @@ describe('ExecutionMetadataHelpers', () => {
         model: 'gpt-4',
         totalTokens: 0,
         totalCost: 0,
-        durationMs: 0,
+        durationMs: 0
       });
     });
 
@@ -335,7 +332,7 @@ describe('ExecutionMetadataHelpers', () => {
         durationMs: 1234,
         stage: 'completion',
         temperature: 0.7,
-        customField: 'ignored',
+        customField: 'ignored'
       };
 
       const summary = ExecutionMetadataHelpers.summarize(metadata);
@@ -344,7 +341,7 @@ describe('ExecutionMetadataHelpers', () => {
         model: 'gpt-4',
         totalTokens: 150,
         totalCost: 0.0075,
-        durationMs: 1234,
+        durationMs: 1234
       });
       expect((summary as any).stage).toBeUndefined();
       expect((summary as any).temperature).toBeUndefined();
@@ -358,14 +355,14 @@ describe('ExecutionMetadataHelpers', () => {
         usage: TokenUsageHelpers.create(100, 50),
         cost: 0.005,
         durationMs: 1000,
-        stage: 'retrieval',
+        stage: 'retrieval'
       });
 
       const meta2 = ExecutionMetadataHelpers.create('gpt-4', {
         usage: TokenUsageHelpers.create(200, 100),
-        cost: 0.010,
+        cost: 0.01,
         durationMs: 1500,
-        stage: 'generation',
+        stage: 'generation'
       });
 
       const merged = ExecutionMetadataHelpers.merge(meta1, meta2);
@@ -375,7 +372,7 @@ describe('ExecutionMetadataHelpers', () => {
         model: 'gpt-4',
         totalTokens: 450,
         totalCost: 0.015,
-        durationMs: 2500,
+        durationMs: 2500
       });
     });
 
@@ -386,29 +383,29 @@ describe('ExecutionMetadataHelpers', () => {
           usage: TokenUsageHelpers.create(50, 20),
           cost: 0.0035,
           durationMs: 500,
-          stage: 'classification',
+          stage: 'classification'
         },
         {
           model: 'gpt-4',
           usage: TokenUsageHelpers.create(200, 150),
           cost: 0.0175,
           durationMs: 2000,
-          stage: 'retrieval',
+          stage: 'retrieval'
         },
         {
           model: 'gpt-4',
           usage: TokenUsageHelpers.create(500, 300),
-          cost: 0.040,
+          cost: 0.04,
           durationMs: 3000,
-          stage: 'generation',
+          stage: 'generation'
         },
         {
           model: 'gpt-4',
           usage: TokenUsageHelpers.create(100, 50),
           cost: 0.0075,
           durationMs: 800,
-          stage: 'validation',
-        },
+          stage: 'validation'
+        }
       ];
 
       const total = ExecutionMetadataHelpers.merge(...stages);

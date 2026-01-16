@@ -40,7 +40,7 @@ export {
   EmbeddingHelpers,
   type VectorStore,
   type VectorStoreQuery,
-  InMemoryVectorStore,
+  InMemoryVectorStore
 } from './vector-store/index.js';
 
 // Chunking
@@ -50,12 +50,8 @@ export {
   FixedSizeChunking,
   ParagraphChunking,
   SentenceChunking,
-  DocumentChunker,
+  DocumentChunker
 } from './chunking/index.js';
 
 // Pipeline
-export {
-  type RAGPipelineConfig,
-  type RAGRetrievalResult,
-  RAGPipeline,
-} from './pipeline/index.js';
+export { type RAGPipelineConfig, type RAGRetrievalResult, RAGPipeline } from './pipeline/index.js';

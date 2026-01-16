@@ -89,7 +89,7 @@ export const TokenUsageHelpers = {
     return {
       promptTokens,
       completionTokens,
-      totalTokens: promptTokens + completionTokens,
+      totalTokens: promptTokens + completionTokens
     };
   },
 
@@ -101,7 +101,7 @@ export const TokenUsageHelpers = {
       (acc, usage) => ({
         promptTokens: acc.promptTokens + usage.promptTokens,
         completionTokens: acc.completionTokens + usage.completionTokens,
-        totalTokens: acc.totalTokens + usage.totalTokens,
+        totalTokens: acc.totalTokens + usage.totalTokens
       }),
       { promptTokens: 0, completionTokens: 0, totalTokens: 0 }
     );
@@ -112,5 +112,5 @@ export const TokenUsageHelpers = {
    */
   isEmpty(usage: TokenUsage): boolean {
     return usage.totalTokens === 0;
-  },
+  }
 };

@@ -57,5 +57,5 @@ export interface LoggerConfig {
   /**
    * Global metadata added to all log entries
    */
-  enrichment?: Record<string, unknown | (() => unknown)>;
+  enrichment?: Record<string, unknown>;
 }

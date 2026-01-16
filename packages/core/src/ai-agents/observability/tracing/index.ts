@@ -40,11 +40,7 @@
  */
 
 // Trace types
-export {
-  type ExecutionTrace,
-  type TraceStep,
-  ExecutionTraceHelpers,
-} from './ExecutionTrace.js';
+export { type ExecutionTrace, type TraceStep, ExecutionTraceHelpers } from './ExecutionTrace.js';
 
 // Trace collector
 export { TraceCollector } from './TraceCollector.js';

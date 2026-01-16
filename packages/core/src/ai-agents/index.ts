@@ -47,7 +47,7 @@ export {
   type ToolCallResult,
   type BatchExecutionResult,
   ToolExecutor,
-  TimeoutError,
+  TimeoutError
 } from './tools/index.js';
 
 // RAG (renamed Embedding to RAGEmbedding to avoid conflict)
@@ -68,7 +68,7 @@ export {
   DocumentChunker,
   type RAGPipelineConfig,
   type RAGRetrievalResult,
-  RAGPipeline,
+  RAGPipeline
 } from './rag/index.js';
 
 // Observability

@@ -16,7 +16,7 @@ export enum HealthStatus {
   /**
    * The component is down and not functioning.
    */
-  DOWN = 'down',
+  DOWN = 'down'
 }
 
 /**

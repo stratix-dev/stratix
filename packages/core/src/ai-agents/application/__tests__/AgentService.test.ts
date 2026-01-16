@@ -21,9 +21,9 @@ class TestAgentService extends AgentService<string, string> {
     return {
       messages: [
         { role: 'system', content: 'Test system' },
-        { role: 'user', content: input },
+        { role: 'user', content: input }
       ],
-      config: spec.modelConfig,
+      config: spec.modelConfig
     };
   }
 
@@ -40,10 +40,10 @@ class MockLLMPort implements LLMPort {
       usage: {
         promptTokens: 10,
         completionTokens: 20,
-        totalTokens: 30,
+        totalTokens: 30
       },
       model: request.config.model,
-      finishReason: 'stop',
+      finishReason: 'stop'
     };
   }
 
@@ -60,13 +60,13 @@ describe('AgentService', () => {
     description: 'Test',
     version: '1.0.0',
     capabilities: ['test'],
-    tags: [],
+    tags: []
   };
   const mockModelConfig: ModelConfig = {
     provider: 'openai',
     model: 'gpt-4',
     temperature: 0.7,
-    maxTokens: 1000,
+    maxTokens: 1000
   };
 
   it('should execute successfully', async () => {

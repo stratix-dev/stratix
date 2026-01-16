@@ -1,19 +1,13 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { InMemoryVectorStore } from '../vector-store/VectorStore.js';
-import {
-  DocumentHelpers,
-  type Document,
-} from '../vector-store/Document.js';
-import {
-  EmbeddingHelpers,
-  type Embedding,
-} from '../vector-store/Embedding.js';
+import { DocumentHelpers, type Document } from '../vector-store/Document.js';
+import { EmbeddingHelpers, type Embedding } from '../vector-store/Embedding.js';
 
 describe('Document', () => {
   describe('DocumentHelpers', () => {
     it('should create a document', () => {
       const doc = DocumentHelpers.create('doc1', 'Hello world', {
-        source: 'test',
+        source: 'test'
       });
 
       expect(doc.id).toBe('doc1');
@@ -49,7 +43,7 @@ describe('Embedding', () => {
   describe('EmbeddingHelpers', () => {
     it('should create an embedding', () => {
       const embedding = EmbeddingHelpers.create([0.1, 0.2, 0.3], 'doc1', {
-        model: 'test',
+        model: 'test'
       });
 
       expect(embedding.vector).toEqual([0.1, 0.2, 0.3]);
@@ -86,9 +80,7 @@ describe('Embedding', () => {
       expect(normalized[1]).toBeCloseTo(0.8);
 
       // Verify unit length
-      const length = Math.sqrt(
-        normalized[0] * normalized[0] + normalized[1] * normalized[1]
-      );
+      const length = Math.sqrt(normalized[0] * normalized[0] + normalized[1] * normalized[1]);
       expect(length).toBeCloseTo(1);
     });
 
@@ -116,7 +108,7 @@ describe('InMemoryVectorStore', () => {
 
     doc1 = DocumentHelpers.create('doc1', 'First document', { category: 'tech' });
     doc2 = DocumentHelpers.create('doc2', 'Second document', {
-      category: 'science',
+      category: 'science'
     });
 
     emb1 = EmbeddingHelpers.create([1, 0, 0], 'doc1');
@@ -151,9 +143,7 @@ describe('InMemoryVectorStore', () => {
     });
 
     it('should throw on length mismatch', async () => {
-      await expect(store.upsertBatch([doc1, doc2], [emb1])).rejects.toThrow(
-        'mismatch'
-      );
+      await expect(store.upsertBatch([doc1, doc2], [emb1])).rejects.toThrow('mismatch');
     });
   });
 
@@ -165,7 +155,7 @@ describe('InMemoryVectorStore', () => {
     it('should find similar documents', async () => {
       const results = await store.search({
         vector: [1, 0, 0], // Similar to doc1
-        limit: 10,
+        limit: 10
       });
 
       expect(results.length).toBe(2);
@@ -181,7 +171,7 @@ describe('InMemoryVectorStore', () => {
 
       const results = await store.search({
         vector: [1, 0, 0],
-        limit: 1,
+        limit: 1
       });
 
       expect(results.length).toBe(1);
@@ -190,7 +180,7 @@ describe('InMemoryVectorStore', () => {
     it('should apply similarity threshold', async () => {
       const results = await store.search({
         vector: [1, 0, 0],
-        threshold: 0.5,
+        threshold: 0.5
       });
 
       // Only doc1 should be above threshold
@@ -201,7 +191,7 @@ describe('InMemoryVectorStore', () => {
     it('should filter by metadata', async () => {
       const results = await store.search({
         vector: [1, 0, 0],
-        filters: { category: 'tech' },
+        filters: { category: 'tech' }
       });
 
       expect(results.length).toBe(1);

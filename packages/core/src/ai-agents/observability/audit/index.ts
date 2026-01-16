@@ -54,16 +54,12 @@
  */
 
 // Audit records
-export {
-  type AuditRecord,
-  AuditSeverity,
-  AuditRecordHelpers,
-} from './AuditRecord.js';
+export { type AuditRecord, AuditSeverity, AuditRecordHelpers } from './AuditRecord.js';
 
 // Audit log
 export {
   type ExecutionAuditLog,
   type AuditQuery,
   type AuditStats,
-  InMemoryExecutionAuditLog,
+  InMemoryExecutionAuditLog
 } from './ExecutionAuditLog.js';

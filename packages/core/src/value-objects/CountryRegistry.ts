@@ -36,8 +36,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'North America',
         capital: 'Washington, D.C.',
-        languages: ['English'],
-      },
+        languages: ['English']
+      }
     ],
     [
       'CA',
@@ -51,8 +51,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'North America',
         capital: 'Ottawa',
-        languages: ['English', 'French'],
-      },
+        languages: ['English', 'French']
+      }
     ],
     [
       'MX',
@@ -66,8 +66,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'North America',
         capital: 'Mexico City',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
 
     // Central America
@@ -83,8 +83,8 @@ export class CountryRegistry {
         currencySymbol: 'Q',
         continent: 'Central America',
         capital: 'Guatemala City',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
     [
       'BZ',
@@ -98,8 +98,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'Central America',
         capital: 'Belmopan',
-        languages: ['English'],
-      },
+        languages: ['English']
+      }
     ],
     [
       'SV',
@@ -113,8 +113,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'Central America',
         capital: 'San Salvador',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
     [
       'HN',
@@ -128,8 +128,8 @@ export class CountryRegistry {
         currencySymbol: 'L',
         continent: 'Central America',
         capital: 'Tegucigalpa',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
     [
       'NI',
@@ -143,8 +143,8 @@ export class CountryRegistry {
         currencySymbol: 'C$',
         continent: 'Central America',
         capital: 'Managua',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
     [
       'CR',
@@ -158,8 +158,8 @@ export class CountryRegistry {
         currencySymbol: '₡',
         continent: 'Central America',
         capital: 'San José',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
     [
       'PA',
@@ -173,8 +173,8 @@ export class CountryRegistry {
         currencySymbol: 'B/.',
         continent: 'Central America',
         capital: 'Panama City',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
 
     // Caribbean
@@ -190,8 +190,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'Caribbean',
         capital: 'Havana',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
     [
       'JM',
@@ -205,8 +205,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'Caribbean',
         capital: 'Kingston',
-        languages: ['English'],
-      },
+        languages: ['English']
+      }
     ],
     [
       'HT',
@@ -220,8 +220,8 @@ export class CountryRegistry {
         currencySymbol: 'G',
         continent: 'Caribbean',
         capital: 'Port-au-Prince',
-        languages: ['French', 'Haitian Creole'],
-      },
+        languages: ['French', 'Haitian Creole']
+      }
     ],
     [
       'DO',
@@ -235,8 +235,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'Caribbean',
         capital: 'Santo Domingo',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
 
     // South America
@@ -252,8 +252,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'South America',
         capital: 'Bogotá',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
     [
       'VE',
@@ -267,8 +267,8 @@ export class CountryRegistry {
         currencySymbol: 'Bs.',
         continent: 'South America',
         capital: 'Caracas',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
     [
       'BR',
@@ -282,8 +282,8 @@ export class CountryRegistry {
         currencySymbol: 'R$',
         continent: 'South America',
         capital: 'Brasília',
-        languages: ['Portuguese'],
-      },
+        languages: ['Portuguese']
+      }
     ],
     [
       'PE',
@@ -297,8 +297,8 @@ export class CountryRegistry {
         currencySymbol: 'S/',
         continent: 'South America',
         capital: 'Lima',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
     [
       'EC',
@@ -312,8 +312,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'South America',
         capital: 'Quito',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
     [
       'BO',
@@ -327,8 +327,8 @@ export class CountryRegistry {
         currencySymbol: 'Bs.',
         continent: 'South America',
         capital: 'Sucre',
-        languages: ['Spanish', 'Quechua', 'Aymara'],
-      },
+        languages: ['Spanish', 'Quechua', 'Aymara']
+      }
     ],
     [
       'PY',
@@ -342,8 +342,8 @@ export class CountryRegistry {
         currencySymbol: '₲',
         continent: 'South America',
         capital: 'Asunción',
-        languages: ['Spanish', 'Guaraní'],
-      },
+        languages: ['Spanish', 'Guaraní']
+      }
     ],
     [
       'CL',
@@ -357,8 +357,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'South America',
         capital: 'Santiago',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
     [
       'AR',
@@ -372,8 +372,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'South America',
         capital: 'Buenos Aires',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
     [
       'UY',
@@ -387,8 +387,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'South America',
         capital: 'Montevideo',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
     [
       'GY',
@@ -402,8 +402,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'South America',
         capital: 'Georgetown',
-        languages: ['English'],
-      },
+        languages: ['English']
+      }
     ],
     [
       'SR',
@@ -417,8 +417,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'South America',
         capital: 'Paramaribo',
-        languages: ['Dutch'],
-      },
+        languages: ['Dutch']
+      }
     ],
 
     // Western Europe
@@ -434,8 +434,8 @@ export class CountryRegistry {
         currencySymbol: '£',
         continent: 'Europe',
         capital: 'London',
-        languages: ['English'],
-      },
+        languages: ['English']
+      }
     ],
     [
       'IE',
@@ -449,8 +449,8 @@ export class CountryRegistry {
         currencySymbol: '€',
         continent: 'Europe',
         capital: 'Dublin',
-        languages: ['English', 'Irish'],
-      },
+        languages: ['English', 'Irish']
+      }
     ],
     [
       'FR',
@@ -464,8 +464,8 @@ export class CountryRegistry {
         currencySymbol: '€',
         continent: 'Europe',
         capital: 'Paris',
-        languages: ['French'],
-      },
+        languages: ['French']
+      }
     ],
     [
       'ES',
@@ -479,8 +479,8 @@ export class CountryRegistry {
         currencySymbol: '€',
         continent: 'Europe',
         capital: 'Madrid',
-        languages: ['Spanish'],
-      },
+        languages: ['Spanish']
+      }
     ],
     [
       'PT',
@@ -494,8 +494,8 @@ export class CountryRegistry {
         currencySymbol: '€',
         continent: 'Europe',
         capital: 'Lisbon',
-        languages: ['Portuguese'],
-      },
+        languages: ['Portuguese']
+      }
     ],
     [
       'IT',
@@ -509,8 +509,8 @@ export class CountryRegistry {
         currencySymbol: '€',
         continent: 'Europe',
         capital: 'Rome',
-        languages: ['Italian'],
-      },
+        languages: ['Italian']
+      }
     ],
     [
       'DE',
@@ -524,8 +524,8 @@ export class CountryRegistry {
         currencySymbol: '€',
         continent: 'Europe',
         capital: 'Berlin',
-        languages: ['German'],
-      },
+        languages: ['German']
+      }
     ],
     [
       'NL',
@@ -539,8 +539,8 @@ export class CountryRegistry {
         currencySymbol: '€',
         continent: 'Europe',
         capital: 'Amsterdam',
-        languages: ['Dutch'],
-      },
+        languages: ['Dutch']
+      }
     ],
     [
       'BE',
@@ -554,8 +554,8 @@ export class CountryRegistry {
         currencySymbol: '€',
         continent: 'Europe',
         capital: 'Brussels',
-        languages: ['Dutch', 'French', 'German'],
-      },
+        languages: ['Dutch', 'French', 'German']
+      }
     ],
     [
       'LU',
@@ -569,8 +569,8 @@ export class CountryRegistry {
         currencySymbol: '€',
         continent: 'Europe',
         capital: 'Luxembourg',
-        languages: ['Luxembourgish', 'French', 'German'],
-      },
+        languages: ['Luxembourgish', 'French', 'German']
+      }
     ],
     [
       'CH',
@@ -584,8 +584,8 @@ export class CountryRegistry {
         currencySymbol: 'Fr',
         continent: 'Europe',
         capital: 'Bern',
-        languages: ['German', 'French', 'Italian'],
-      },
+        languages: ['German', 'French', 'Italian']
+      }
     ],
     [
       'AT',
@@ -599,8 +599,8 @@ export class CountryRegistry {
         currencySymbol: '€',
         continent: 'Europe',
         capital: 'Vienna',
-        languages: ['German'],
-      },
+        languages: ['German']
+      }
     ],
 
     // Northern Europe
@@ -616,8 +616,8 @@ export class CountryRegistry {
         currencySymbol: 'kr',
         continent: 'Europe',
         capital: 'Copenhagen',
-        languages: ['Danish'],
-      },
+        languages: ['Danish']
+      }
     ],
     [
       'SE',
@@ -631,8 +631,8 @@ export class CountryRegistry {
         currencySymbol: 'kr',
         continent: 'Europe',
         capital: 'Stockholm',
-        languages: ['Swedish'],
-      },
+        languages: ['Swedish']
+      }
     ],
     [
       'NO',
@@ -646,8 +646,8 @@ export class CountryRegistry {
         currencySymbol: 'kr',
         continent: 'Europe',
         capital: 'Oslo',
-        languages: ['Norwegian'],
-      },
+        languages: ['Norwegian']
+      }
     ],
     [
       'FI',
@@ -661,8 +661,8 @@ export class CountryRegistry {
         currencySymbol: '€',
         continent: 'Europe',
         capital: 'Helsinki',
-        languages: ['Finnish', 'Swedish'],
-      },
+        languages: ['Finnish', 'Swedish']
+      }
     ],
     [
       'IS',
@@ -676,8 +676,8 @@ export class CountryRegistry {
         currencySymbol: 'kr',
         continent: 'Europe',
         capital: 'Reykjavik',
-        languages: ['Icelandic'],
-      },
+        languages: ['Icelandic']
+      }
     ],
 
     // Eastern Europe
@@ -693,8 +693,8 @@ export class CountryRegistry {
         currencySymbol: 'zł',
         continent: 'Europe',
         capital: 'Warsaw',
-        languages: ['Polish'],
-      },
+        languages: ['Polish']
+      }
     ],
     [
       'CZ',
@@ -708,8 +708,8 @@ export class CountryRegistry {
         currencySymbol: 'Kč',
         continent: 'Europe',
         capital: 'Prague',
-        languages: ['Czech'],
-      },
+        languages: ['Czech']
+      }
     ],
     [
       'SK',
@@ -723,8 +723,8 @@ export class CountryRegistry {
         currencySymbol: '€',
         continent: 'Europe',
         capital: 'Bratislava',
-        languages: ['Slovak'],
-      },
+        languages: ['Slovak']
+      }
     ],
     [
       'HU',
@@ -738,8 +738,8 @@ export class CountryRegistry {
         currencySymbol: 'Ft',
         continent: 'Europe',
         capital: 'Budapest',
-        languages: ['Hungarian'],
-      },
+        languages: ['Hungarian']
+      }
     ],
     [
       'RO',
@@ -753,8 +753,8 @@ export class CountryRegistry {
         currencySymbol: 'lei',
         continent: 'Europe',
         capital: 'Bucharest',
-        languages: ['Romanian'],
-      },
+        languages: ['Romanian']
+      }
     ],
     [
       'BG',
@@ -768,8 +768,8 @@ export class CountryRegistry {
         currencySymbol: 'лв',
         continent: 'Europe',
         capital: 'Sofia',
-        languages: ['Bulgarian'],
-      },
+        languages: ['Bulgarian']
+      }
     ],
     [
       'UA',
@@ -783,8 +783,8 @@ export class CountryRegistry {
         currencySymbol: '₴',
         continent: 'Europe',
         capital: 'Kyiv',
-        languages: ['Ukrainian'],
-      },
+        languages: ['Ukrainian']
+      }
     ],
     [
       'RU',
@@ -798,8 +798,8 @@ export class CountryRegistry {
         currencySymbol: '₽',
         continent: 'Europe/Asia',
         capital: 'Moscow',
-        languages: ['Russian'],
-      },
+        languages: ['Russian']
+      }
     ],
 
     // Southern Europe
@@ -815,8 +815,8 @@ export class CountryRegistry {
         currencySymbol: '€',
         continent: 'Europe',
         capital: 'Athens',
-        languages: ['Greek'],
-      },
+        languages: ['Greek']
+      }
     ],
     [
       'HR',
@@ -830,8 +830,8 @@ export class CountryRegistry {
         currencySymbol: '€',
         continent: 'Europe',
         capital: 'Zagreb',
-        languages: ['Croatian'],
-      },
+        languages: ['Croatian']
+      }
     ],
     [
       'SI',
@@ -845,8 +845,8 @@ export class CountryRegistry {
         currencySymbol: '€',
         continent: 'Europe',
         capital: 'Ljubljana',
-        languages: ['Slovenian'],
-      },
+        languages: ['Slovenian']
+      }
     ],
     [
       'RS',
@@ -860,8 +860,8 @@ export class CountryRegistry {
         currencySymbol: 'дин',
         continent: 'Europe',
         capital: 'Belgrade',
-        languages: ['Serbian'],
-      },
+        languages: ['Serbian']
+      }
     ],
 
     // Asia - East
@@ -877,8 +877,8 @@ export class CountryRegistry {
         currencySymbol: '¥',
         continent: 'Asia',
         capital: 'Beijing',
-        languages: ['Chinese'],
-      },
+        languages: ['Chinese']
+      }
     ],
     [
       'JP',
@@ -892,8 +892,8 @@ export class CountryRegistry {
         currencySymbol: '¥',
         continent: 'Asia',
         capital: 'Tokyo',
-        languages: ['Japanese'],
-      },
+        languages: ['Japanese']
+      }
     ],
     [
       'KR',
@@ -907,8 +907,8 @@ export class CountryRegistry {
         currencySymbol: '₩',
         continent: 'Asia',
         capital: 'Seoul',
-        languages: ['Korean'],
-      },
+        languages: ['Korean']
+      }
     ],
     [
       'TW',
@@ -922,8 +922,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'Asia',
         capital: 'Taipei',
-        languages: ['Chinese'],
-      },
+        languages: ['Chinese']
+      }
     ],
     [
       'HK',
@@ -937,8 +937,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'Asia',
         capital: 'Hong Kong',
-        languages: ['Chinese', 'English'],
-      },
+        languages: ['Chinese', 'English']
+      }
     ],
     [
       'MO',
@@ -952,8 +952,8 @@ export class CountryRegistry {
         currencySymbol: 'P',
         continent: 'Asia',
         capital: 'Macau',
-        languages: ['Chinese', 'Portuguese'],
-      },
+        languages: ['Chinese', 'Portuguese']
+      }
     ],
 
     // Asia - Southeast
@@ -969,8 +969,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'Asia',
         capital: 'Singapore',
-        languages: ['English', 'Malay', 'Chinese', 'Tamil'],
-      },
+        languages: ['English', 'Malay', 'Chinese', 'Tamil']
+      }
     ],
     [
       'MY',
@@ -984,8 +984,8 @@ export class CountryRegistry {
         currencySymbol: 'RM',
         continent: 'Asia',
         capital: 'Kuala Lumpur',
-        languages: ['Malay'],
-      },
+        languages: ['Malay']
+      }
     ],
     [
       'TH',
@@ -999,8 +999,8 @@ export class CountryRegistry {
         currencySymbol: '฿',
         continent: 'Asia',
         capital: 'Bangkok',
-        languages: ['Thai'],
-      },
+        languages: ['Thai']
+      }
     ],
     [
       'VN',
@@ -1014,8 +1014,8 @@ export class CountryRegistry {
         currencySymbol: '₫',
         continent: 'Asia',
         capital: 'Hanoi',
-        languages: ['Vietnamese'],
-      },
+        languages: ['Vietnamese']
+      }
     ],
     [
       'PH',
@@ -1029,8 +1029,8 @@ export class CountryRegistry {
         currencySymbol: '₱',
         continent: 'Asia',
         capital: 'Manila',
-        languages: ['Filipino', 'English'],
-      },
+        languages: ['Filipino', 'English']
+      }
     ],
     [
       'ID',
@@ -1044,8 +1044,8 @@ export class CountryRegistry {
         currencySymbol: 'Rp',
         continent: 'Asia',
         capital: 'Jakarta',
-        languages: ['Indonesian'],
-      },
+        languages: ['Indonesian']
+      }
     ],
 
     // Asia - South
@@ -1061,8 +1061,8 @@ export class CountryRegistry {
         currencySymbol: '₹',
         continent: 'Asia',
         capital: 'New Delhi',
-        languages: ['Hindi', 'English'],
-      },
+        languages: ['Hindi', 'English']
+      }
     ],
     [
       'PK',
@@ -1076,8 +1076,8 @@ export class CountryRegistry {
         currencySymbol: '₨',
         continent: 'Asia',
         capital: 'Islamabad',
-        languages: ['Urdu', 'English'],
-      },
+        languages: ['Urdu', 'English']
+      }
     ],
     [
       'BD',
@@ -1091,8 +1091,8 @@ export class CountryRegistry {
         currencySymbol: '৳',
         continent: 'Asia',
         capital: 'Dhaka',
-        languages: ['Bengali'],
-      },
+        languages: ['Bengali']
+      }
     ],
     [
       'LK',
@@ -1106,8 +1106,8 @@ export class CountryRegistry {
         currencySymbol: 'Rs',
         continent: 'Asia',
         capital: 'Colombo',
-        languages: ['Sinhala', 'Tamil'],
-      },
+        languages: ['Sinhala', 'Tamil']
+      }
     ],
 
     // Middle East
@@ -1123,8 +1123,8 @@ export class CountryRegistry {
         currencySymbol: 'ر.س',
         continent: 'Asia',
         capital: 'Riyadh',
-        languages: ['Arabic'],
-      },
+        languages: ['Arabic']
+      }
     ],
     [
       'AE',
@@ -1138,8 +1138,8 @@ export class CountryRegistry {
         currencySymbol: 'د.إ',
         continent: 'Asia',
         capital: 'Abu Dhabi',
-        languages: ['Arabic'],
-      },
+        languages: ['Arabic']
+      }
     ],
     [
       'IL',
@@ -1153,8 +1153,8 @@ export class CountryRegistry {
         currencySymbol: '₪',
         continent: 'Asia',
         capital: 'Jerusalem',
-        languages: ['Hebrew', 'Arabic'],
-      },
+        languages: ['Hebrew', 'Arabic']
+      }
     ],
     [
       'TR',
@@ -1168,8 +1168,8 @@ export class CountryRegistry {
         currencySymbol: '₺',
         continent: 'Asia/Europe',
         capital: 'Ankara',
-        languages: ['Turkish'],
-      },
+        languages: ['Turkish']
+      }
     ],
 
     // Africa
@@ -1185,8 +1185,8 @@ export class CountryRegistry {
         currencySymbol: 'R',
         continent: 'Africa',
         capital: 'Pretoria',
-        languages: ['Afrikaans', 'English', 'Zulu'],
-      },
+        languages: ['Afrikaans', 'English', 'Zulu']
+      }
     ],
     [
       'EG',
@@ -1200,8 +1200,8 @@ export class CountryRegistry {
         currencySymbol: '£',
         continent: 'Africa',
         capital: 'Cairo',
-        languages: ['Arabic'],
-      },
+        languages: ['Arabic']
+      }
     ],
     [
       'NG',
@@ -1215,8 +1215,8 @@ export class CountryRegistry {
         currencySymbol: '₦',
         continent: 'Africa',
         capital: 'Abuja',
-        languages: ['English'],
-      },
+        languages: ['English']
+      }
     ],
     [
       'KE',
@@ -1230,8 +1230,8 @@ export class CountryRegistry {
         currencySymbol: 'Sh',
         continent: 'Africa',
         capital: 'Nairobi',
-        languages: ['English', 'Swahili'],
-      },
+        languages: ['English', 'Swahili']
+      }
     ],
     [
       'MA',
@@ -1245,8 +1245,8 @@ export class CountryRegistry {
         currencySymbol: 'د.م.',
         continent: 'Africa',
         capital: 'Rabat',
-        languages: ['Arabic', 'Berber'],
-      },
+        languages: ['Arabic', 'Berber']
+      }
     ],
 
     // Oceania
@@ -1262,8 +1262,8 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'Oceania',
         capital: 'Canberra',
-        languages: ['English'],
-      },
+        languages: ['English']
+      }
     ],
     [
       'NZ',
@@ -1277,9 +1277,9 @@ export class CountryRegistry {
         currencySymbol: '$',
         continent: 'Oceania',
         capital: 'Wellington',
-        languages: ['English', 'Maori'],
-      },
-    ],
+        languages: ['English', 'Maori']
+      }
+    ]
   ]);
 
   // Index by ISO3 for quick lookups

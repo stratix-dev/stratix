@@ -19,13 +19,13 @@ describe('AgentSpecification', () => {
     description: 'Test agent for unit tests',
     version: '1.0.0',
     capabilities: ['test-capability', 'another-capability'],
-    tags: ['test', 'unit'],
+    tags: ['test', 'unit']
   };
   const mockModelConfig: ModelConfig = {
     provider: 'openai',
     model: 'gpt-4',
     temperature: 0.7,
-    maxTokens: 1000,
+    maxTokens: 1000
   };
 
   it('should create an agent specification', () => {
@@ -77,7 +77,7 @@ describe('AgentSpecification', () => {
       EntityId.create<'AgentSpecification'>(),
       {
         ...mockMetadata,
-        capabilities: ['test-capability'], // Subset of spec1
+        capabilities: ['test-capability'] // Subset of spec1
       },
       mockModelConfig
     );
@@ -86,7 +86,7 @@ describe('AgentSpecification', () => {
       EntityId.create<'AgentSpecification'>(),
       {
         ...mockMetadata,
-        capabilities: ['different-capability'],
+        capabilities: ['different-capability']
       },
       mockModelConfig
     );

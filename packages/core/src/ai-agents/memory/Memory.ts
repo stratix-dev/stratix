@@ -71,11 +71,7 @@ export interface Memory<T = unknown> {
    * @param metadata - Additional metadata
    * @returns ID of the stored entry
    */
-  store(
-    content: T,
-    importance?: number,
-    metadata?: Record<string, unknown>
-  ): Promise<string>;
+  store(content: T, importance?: number, metadata?: Record<string, unknown>): Promise<string>;
 
   /**
    * Retrieve a memory entry by ID.
@@ -154,7 +150,7 @@ export const MemoryHelpers = {
       content,
       timestamp: new Date(),
       importance,
-      metadata,
+      metadata
     };
   },
 
@@ -169,9 +165,7 @@ export const MemoryHelpers = {
    * Sort entries by timestamp (most recent first).
    */
   sortByRecency<T>(entries: readonly MemoryEntry<T>[]): MemoryEntry<T>[] {
-    return [...entries].sort(
-      (a, b) => b.timestamp.getTime() - a.timestamp.getTime()
-    );
+    return [...entries].sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   },
 
   /**
@@ -211,9 +205,7 @@ export const MemoryHelpers = {
     entries: readonly MemoryEntry<T>[],
     minImportance: number
   ): MemoryEntry<T>[] {
-    return entries.filter(
-      (entry) => (entry.importance ?? 0) >= minImportance
-    );
+    return entries.filter((entry) => (entry.importance ?? 0) >= minImportance);
   },
 
   /**
@@ -223,10 +215,7 @@ export const MemoryHelpers = {
    * @param recencyWeight - Weight for recency (0-1), default 0.5
    * @returns Relevance score (0-1)
    */
-  calculateRelevance<T>(
-    entry: MemoryEntry<T>,
-    recencyWeight = 0.5
-  ): number {
+  calculateRelevance<T>(entry: MemoryEntry<T>, recencyWeight = 0.5): number {
     // Recency score: exponential decay
     const ageMs = Date.now() - entry.timestamp.getTime();
     const ageDays = ageMs / (1000 * 60 * 60 * 24);
@@ -237,5 +226,5 @@ export const MemoryHelpers = {
 
     // Weighted combination
     return recencyWeight * recencyScore + (1 - recencyWeight) * importanceScore;
-  },
+  }
 };

@@ -193,10 +193,10 @@ export abstract class AgentService<TInput, TOutput> {
         usage: {
           promptTokens: response.usage.promptTokens,
           completionTokens: response.usage.completionTokens,
-          totalTokens: response.usage.totalTokens,
+          totalTokens: response.usage.totalTokens
         },
         cost,
-        durationMs,
+        durationMs
       });
     } catch (error) {
       return Failure.create(
@@ -352,7 +352,7 @@ export class SimpleTextAgentService extends AgentService<string, string> {
   protected prepareRequest(spec: AgentSpecification, input: string): LLMRequest {
     return {
       messages: this.buildMessages(spec, input),
-      config: spec.modelConfig,
+      config: spec.modelConfig
     };
   }
 

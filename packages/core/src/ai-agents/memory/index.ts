@@ -8,15 +8,7 @@
  */
 
 // Base memory interface
-export {
-  type MemoryEntry,
-  type MemoryQuery,
-  type Memory,
-  MemoryHelpers,
-} from './Memory.js';
+export { type MemoryEntry, type MemoryQuery, type Memory, MemoryHelpers } from './Memory.js';
 
 // Short-term memory (in-memory)
-export {
-  type ShortTermMemoryConfig,
-  ShortTermMemory,
-} from './ShortTermMemory.js';
+export { type ShortTermMemoryConfig, ShortTermMemory } from './ShortTermMemory.js';

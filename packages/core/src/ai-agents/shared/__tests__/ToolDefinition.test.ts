@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   ToolDefinitionHelpers,
   type ToolDefinition,
-  type PropertySchema,
+  type PropertySchema
 } from '../ToolDefinition.js';
 
 describe('ToolDefinitionHelpers', () => {
@@ -16,11 +16,11 @@ describe('ToolDefinitionHelpers', () => {
           properties: {
             query: {
               type: 'string',
-              description: 'The search query',
-            },
+              description: 'The search query'
+            }
           },
-          required: ['query'],
-        },
+          required: ['query']
+        }
       };
 
       const errors = ToolDefinitionHelpers.validate(definition);
@@ -34,8 +34,8 @@ describe('ToolDefinitionHelpers', () => {
         description: 'A valid description',
         parameters: {
           type: 'object',
-          properties: {},
-        },
+          properties: {}
+        }
       };
 
       const errors = ToolDefinitionHelpers.validate(definition);
@@ -49,8 +49,8 @@ describe('ToolDefinitionHelpers', () => {
         description: 'A valid description',
         parameters: {
           type: 'object',
-          properties: {},
-        },
+          properties: {}
+        }
       };
 
       const errors = ToolDefinitionHelpers.validate(definition);
@@ -66,7 +66,7 @@ describe('ToolDefinitionHelpers', () => {
         'search knowledge base', // spaces
         'Search_Base', // Mixed case
         '123_search', // Starts with number
-        'search__base', // Double underscore (allowed but not ideal)
+        'search__base' // Double underscore (allowed but not ideal)
       ];
 
       for (const name of invalidNames.slice(0, -1)) {
@@ -75,8 +75,8 @@ describe('ToolDefinitionHelpers', () => {
           description: 'A valid description',
           parameters: {
             type: 'object',
-            properties: {},
-          },
+            properties: {}
+          }
         };
 
         const errors = ToolDefinitionHelpers.validate(definition);
@@ -95,7 +95,7 @@ describe('ToolDefinitionHelpers', () => {
         'get_user_by_id',
         'create_ticket_v2',
         'tool123',
-        'a',
+        'a'
       ];
 
       for (const name of validNames) {
@@ -104,8 +104,8 @@ describe('ToolDefinitionHelpers', () => {
           description: 'A valid description',
           parameters: {
             type: 'object',
-            properties: {},
-          },
+            properties: {}
+          }
         };
 
         const errors = ToolDefinitionHelpers.validate(definition);
@@ -120,8 +120,8 @@ describe('ToolDefinitionHelpers', () => {
         description: '',
         parameters: {
           type: 'object',
-          properties: {},
-        },
+          properties: {}
+        }
       };
 
       const errors = ToolDefinitionHelpers.validate(definition);
@@ -135,8 +135,8 @@ describe('ToolDefinitionHelpers', () => {
         description: '   ',
         parameters: {
           type: 'object',
-          properties: {},
-        },
+          properties: {}
+        }
       };
 
       const errors = ToolDefinitionHelpers.validate(definition);
@@ -151,8 +151,8 @@ describe('ToolDefinitionHelpers', () => {
         description: longDescription,
         parameters: {
           type: 'object',
-          properties: {},
-        },
+          properties: {}
+        }
       };
 
       const errors = ToolDefinitionHelpers.validate(definition);
@@ -167,8 +167,8 @@ describe('ToolDefinitionHelpers', () => {
         description,
         parameters: {
           type: 'object',
-          properties: {},
-        },
+          properties: {}
+        }
       };
 
       const errors = ToolDefinitionHelpers.validate(definition);
@@ -182,8 +182,8 @@ describe('ToolDefinitionHelpers', () => {
         description: 'A valid description',
         parameters: {
           type: 'string' as any,
-          properties: {},
-        },
+          properties: {}
+        }
       };
 
       const errors = ToolDefinitionHelpers.validate(definition);
@@ -196,8 +196,8 @@ describe('ToolDefinitionHelpers', () => {
         name: 'valid_name',
         description: 'A valid description',
         parameters: {
-          type: 'object',
-        } as any,
+          type: 'object'
+        } as any
       };
 
       const errors = ToolDefinitionHelpers.validate(definition);
@@ -211,8 +211,8 @@ describe('ToolDefinitionHelpers', () => {
         description: '',
         parameters: {
           type: 'array' as any,
-          properties: {},
-        },
+          properties: {}
+        }
       };
 
       const errors = ToolDefinitionHelpers.validate(definition);
@@ -234,8 +234,8 @@ describe('ToolDefinitionHelpers', () => {
         {
           query: {
             type: 'string',
-            description: 'Search query',
-          },
+            description: 'Search query'
+          }
         },
         ['query']
       );
@@ -248,11 +248,11 @@ describe('ToolDefinitionHelpers', () => {
           properties: {
             query: {
               type: 'string',
-              description: 'Search query',
-            },
+              description: 'Search query'
+            }
           },
-          required: ['query'],
-        },
+          required: ['query']
+        }
       });
 
       expect(ToolDefinitionHelpers.isValid(definition)).toBe(true);
@@ -275,25 +275,25 @@ describe('ToolDefinitionHelpers', () => {
           type: 'string',
           description: 'Search query',
           minLength: 1,
-          maxLength: 200,
+          maxLength: 200
         },
         limit: {
           type: 'number',
           description: 'Maximum results',
           minimum: 1,
-          maximum: 100,
+          maximum: 100
         },
         include_archived: {
           type: 'boolean',
-          description: 'Include archived items',
+          description: 'Include archived items'
         },
         tags: {
           type: 'array',
           description: 'Filter by tags',
           items: {
-            type: 'string',
-          },
-        },
+            type: 'string'
+          }
+        }
       };
 
       const definition = ToolDefinitionHelpers.create(
@@ -315,16 +315,16 @@ describe('ToolDefinitionHelpers', () => {
           properties: {
             name: {
               type: 'string',
-              description: 'User name',
+              description: 'User name'
             },
             email: {
               type: 'string',
               description: 'User email',
-              format: 'email',
-            },
+              format: 'email'
+            }
           },
-          required: ['name'],
-        },
+          required: ['name']
+        }
       };
 
       const definition = ToolDefinitionHelpers.create(
@@ -340,15 +340,11 @@ describe('ToolDefinitionHelpers', () => {
 
   describe('isValid', () => {
     it('should return true for valid definition', () => {
-      const definition = ToolDefinitionHelpers.create(
-        'valid_tool',
-        'A valid tool',
-        {
-          param: {
-            type: 'string',
-          },
+      const definition = ToolDefinitionHelpers.create('valid_tool', 'A valid tool', {
+        param: {
+          type: 'string'
         }
-      );
+      });
 
       expect(ToolDefinitionHelpers.isValid(definition)).toBe(true);
     });
@@ -359,8 +355,8 @@ describe('ToolDefinitionHelpers', () => {
         description: '',
         parameters: {
           type: 'object',
-          properties: {},
-        },
+          properties: {}
+        }
       };
 
       expect(ToolDefinitionHelpers.isValid(definition)).toBe(false);
@@ -368,12 +364,12 @@ describe('ToolDefinitionHelpers', () => {
 
     it('should be equivalent to validate().length === 0', () => {
       const validDef = ToolDefinitionHelpers.create('tool', 'A tool', {
-        x: { type: 'string' },
+        x: { type: 'string' }
       });
       const invalidDef: ToolDefinition = {
         name: '',
         description: '',
-        parameters: { type: 'object', properties: {} },
+        parameters: { type: 'object', properties: {} }
       };
 
       expect(ToolDefinitionHelpers.isValid(validDef)).toBe(
@@ -392,16 +388,16 @@ describe('ToolDefinitionHelpers', () => {
           type: 'string',
           format: 'email',
           minLength: 5,
-          maxLength: 100,
+          maxLength: 100
         },
         status: {
           type: 'string',
-          enum: ['active', 'inactive', 'pending'],
+          enum: ['active', 'inactive', 'pending']
         },
         pattern_test: {
           type: 'string',
-          pattern: '^[A-Z]{3}$',
-        },
+          pattern: '^[A-Z]{3}$'
+        }
       });
 
       expect(ToolDefinitionHelpers.isValid(definition)).toBe(true);
@@ -412,13 +408,13 @@ describe('ToolDefinitionHelpers', () => {
         age: {
           type: 'integer',
           minimum: 0,
-          maximum: 150,
+          maximum: 150
         },
         price: {
           type: 'number',
           exclusiveMinimum: 0,
-          multipleOf: 0.01,
-        },
+          multipleOf: 0.01
+        }
       });
 
       expect(ToolDefinitionHelpers.isValid(definition)).toBe(true);
@@ -429,18 +425,18 @@ describe('ToolDefinitionHelpers', () => {
         tags: {
           type: 'array',
           items: {
-            type: 'string',
+            type: 'string'
           },
           minItems: 1,
           maxItems: 10,
-          uniqueItems: true,
+          uniqueItems: true
         },
         coordinates: {
           type: 'array',
           items: {
-            type: 'number',
-          },
-        },
+            type: 'number'
+          }
+        }
       });
 
       expect(ToolDefinitionHelpers.isValid(definition)).toBe(true);
@@ -455,12 +451,12 @@ describe('ToolDefinitionHelpers', () => {
             city: { type: 'string' },
             zip: {
               type: 'string',
-              pattern: '^\\d{5}$',
-            },
+              pattern: '^\\d{5}$'
+            }
           },
           required: ['city'],
-          additionalProperties: false,
-        },
+          additionalProperties: false
+        }
       });
 
       expect(ToolDefinitionHelpers.isValid(definition)).toBe(true);
@@ -470,8 +466,8 @@ describe('ToolDefinitionHelpers', () => {
       const definition = ToolDefinitionHelpers.create('tool', 'A tool', {
         enabled: {
           type: 'boolean',
-          description: 'Whether the feature is enabled',
-        },
+          description: 'Whether the feature is enabled'
+        }
       });
 
       expect(ToolDefinitionHelpers.isValid(definition)).toBe(true);
@@ -488,17 +484,17 @@ describe('ToolDefinitionHelpers', () => {
           properties: {
             query: {
               type: 'string',
-              description: 'The search query',
+              description: 'The search query'
             },
             limit: {
               type: 'number',
               description: 'Maximum number of results',
               minimum: 1,
-              maximum: 100,
-            },
+              maximum: 100
+            }
           },
-          required: ['query'],
-        },
+          required: ['query']
+        }
       };
 
       expect(ToolDefinitionHelpers.isValid(definition)).toBe(true);
@@ -516,29 +512,29 @@ describe('ToolDefinitionHelpers', () => {
               type: 'string',
               description: 'Ticket title',
               minLength: 5,
-              maxLength: 200,
+              maxLength: 200
             },
             description: {
               type: 'string',
               description: 'Detailed description of the issue',
-              minLength: 10,
+              minLength: 10
             },
             priority: {
               type: 'string',
               description: 'Ticket priority',
-              enum: ['low', 'medium', 'high', 'urgent'],
+              enum: ['low', 'medium', 'high', 'urgent']
             },
             tags: {
               type: 'array',
               description: 'Tags for categorization',
               items: {
-                type: 'string',
+                type: 'string'
               },
-              maxItems: 5,
-            },
+              maxItems: 5
+            }
           },
-          required: ['title', 'description', 'priority'],
-        },
+          required: ['title', 'description', 'priority']
+        }
       };
 
       expect(ToolDefinitionHelpers.isValid(definition)).toBe(true);
@@ -556,32 +552,32 @@ describe('ToolDefinitionHelpers', () => {
               description: 'Recipient email addresses',
               items: {
                 type: 'string',
-                format: 'email',
+                format: 'email'
               },
-              minItems: 1,
+              minItems: 1
             },
             subject: {
               type: 'string',
               description: 'Email subject',
               minLength: 1,
-              maxLength: 200,
+              maxLength: 200
             },
             body: {
               type: 'string',
               description: 'Email body content',
-              minLength: 1,
+              minLength: 1
             },
             cc: {
               type: 'array',
               description: 'CC recipients',
               items: {
                 type: 'string',
-                format: 'email',
-              },
-            },
+                format: 'email'
+              }
+            }
           },
-          required: ['to', 'subject', 'body'],
-        },
+          required: ['to', 'subject', 'body']
+        }
       };
 
       expect(ToolDefinitionHelpers.isValid(definition)).toBe(true);

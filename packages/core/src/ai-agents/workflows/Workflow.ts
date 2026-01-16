@@ -62,7 +62,7 @@ export enum WorkflowStatus {
   /**
    * Workflow was cancelled.
    */
-  CANCELLED = 'cancelled',
+  CANCELLED = 'cancelled'
 }
 
 /**

@@ -1,13 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import {
-  AuditRecord,
-  AuditRecordHelpers,
-  AuditSeverity,
-} from '../AuditRecord.js';
-import {
-  InMemoryExecutionAuditLog,
-  type AuditQuery,
-} from '../ExecutionAuditLog.js';
+import { AuditRecord, AuditRecordHelpers, AuditSeverity } from '../AuditRecord.js';
+import { InMemoryExecutionAuditLog, type AuditQuery } from '../ExecutionAuditLog.js';
 
 describe('AuditRecord', () => {
   describe('AuditRecordHelpers.create', () => {
@@ -19,7 +12,7 @@ describe('AuditRecord', () => {
         userId: 'user-1',
         data: { input: 'test' },
         severity: AuditSeverity.INFO,
-        metadata: { version: '1.0' },
+        metadata: { version: '1.0' }
       });
 
       expect(record.id).toMatch(/^audit_\d+_/);
@@ -37,7 +30,7 @@ describe('AuditRecord', () => {
       const record = AuditRecordHelpers.create({
         eventType: 'test',
         agentId: 'agent-1',
-        data: {},
+        data: {}
       });
 
       expect(record.severity).toBe(AuditSeverity.INFO);
@@ -47,7 +40,7 @@ describe('AuditRecord', () => {
       const record = AuditRecordHelpers.create({
         eventType: 'test',
         agentId: 'agent-1',
-        data: {},
+        data: {}
       });
 
       expect(record.sessionId).toBeUndefined();
@@ -59,7 +52,7 @@ describe('AuditRecord', () => {
   describe('AuditRecordHelpers.info', () => {
     it('should create an INFO-level record', () => {
       const record = AuditRecordHelpers.info('agent.started', 'agent-1', {
-        config: 'default',
+        config: 'default'
       });
 
       expect(record.eventType).toBe('agent.started');
@@ -71,11 +64,7 @@ describe('AuditRecord', () => {
 
   describe('AuditRecordHelpers.warning', () => {
     it('should create a WARNING-level record', () => {
-      const record = AuditRecordHelpers.warning(
-        'tool.slow',
-        'agent-1',
-        { duration: 5000 }
-      );
+      const record = AuditRecordHelpers.warning('tool.slow', 'agent-1', { duration: 5000 });
 
       expect(record.severity).toBe(AuditSeverity.WARNING);
       expect(record.eventType).toBe('tool.slow');
@@ -85,7 +74,7 @@ describe('AuditRecord', () => {
   describe('AuditRecordHelpers.error', () => {
     it('should create an ERROR-level record', () => {
       const record = AuditRecordHelpers.error('llm.failed', 'agent-1', {
-        error: 'Rate limit exceeded',
+        error: 'Rate limit exceeded'
       });
 
       expect(record.severity).toBe(AuditSeverity.ERROR);
@@ -95,11 +84,9 @@ describe('AuditRecord', () => {
 
   describe('AuditRecordHelpers.critical', () => {
     it('should create a CRITICAL-level record', () => {
-      const record = AuditRecordHelpers.critical(
-        'security.breach',
-        'agent-1',
-        { details: 'Unauthorized access attempt' }
-      );
+      const record = AuditRecordHelpers.critical('security.breach', 'agent-1', {
+        details: 'Unauthorized access attempt'
+      });
 
       expect(record.severity).toBe(AuditSeverity.CRITICAL);
       expect(record.eventType).toBe('security.breach');
@@ -150,7 +137,7 @@ describe('InMemoryExecutionAuditLog', () => {
       const records = [
         AuditRecordHelpers.info('test1', 'agent-1', {}),
         AuditRecordHelpers.info('test2', 'agent-1', {}),
-        AuditRecordHelpers.info('test3', 'agent-1', {}),
+        AuditRecordHelpers.info('test3', 'agent-1', {})
       ];
 
       auditLog.recordMany(records);
@@ -168,7 +155,7 @@ describe('InMemoryExecutionAuditLog', () => {
           agentId: 'agent-1',
           sessionId: 'session-1',
           data: {},
-          severity: AuditSeverity.INFO,
+          severity: AuditSeverity.INFO
         })
       );
 
@@ -180,7 +167,7 @@ describe('InMemoryExecutionAuditLog', () => {
           agentId: 'agent-1',
           sessionId: 'session-1',
           data: {},
-          severity: AuditSeverity.WARNING,
+          severity: AuditSeverity.WARNING
         })
       );
 
@@ -192,7 +179,7 @@ describe('InMemoryExecutionAuditLog', () => {
           agentId: 'agent-2',
           sessionId: 'session-2',
           data: {},
-          severity: AuditSeverity.ERROR,
+          severity: AuditSeverity.ERROR
         })
       );
 
@@ -204,7 +191,7 @@ describe('InMemoryExecutionAuditLog', () => {
           agentId: 'agent-2',
           sessionId: 'session-2',
           data: {},
-          severity: AuditSeverity.CRITICAL,
+          severity: AuditSeverity.CRITICAL
         })
       );
     });
@@ -234,14 +221,12 @@ describe('InMemoryExecutionAuditLog', () => {
 
     it('should filter by minimum severity', () => {
       const results = auditLog.query({
-        minSeverity: AuditSeverity.ERROR,
+        minSeverity: AuditSeverity.ERROR
       });
       expect(results).toHaveLength(2); // ERROR and CRITICAL
       expect(
         results.every(
-          (r) =>
-            r.severity === AuditSeverity.ERROR ||
-            r.severity === AuditSeverity.CRITICAL
+          (r) => r.severity === AuditSeverity.ERROR || r.severity === AuditSeverity.CRITICAL
         )
       ).toBe(true);
     });
@@ -251,7 +236,7 @@ describe('InMemoryExecutionAuditLog', () => {
       const midpoint = allRecords[1]!.timestamp;
 
       const results = auditLog.query({
-        startTime: midpoint,
+        startTime: midpoint
       });
 
       // Should include records from midpoint onwards
@@ -263,7 +248,7 @@ describe('InMemoryExecutionAuditLog', () => {
       const midpoint = allRecords[1]!.timestamp;
 
       const results = auditLog.query({
-        endTime: midpoint,
+        endTime: midpoint
       });
 
       // Should include records up to midpoint
@@ -283,16 +268,14 @@ describe('InMemoryExecutionAuditLog', () => {
     it('should combine multiple filters', () => {
       const results = auditLog.query({
         agentId: 'agent-2',
-        minSeverity: AuditSeverity.ERROR,
+        minSeverity: AuditSeverity.ERROR
       });
 
       expect(results).toHaveLength(2);
       expect(results.every((r) => r.agentId === 'agent-2')).toBe(true);
       expect(
         results.every(
-          (r) =>
-            r.severity === AuditSeverity.ERROR ||
-            r.severity === AuditSeverity.CRITICAL
+          (r) => r.severity === AuditSeverity.ERROR || r.severity === AuditSeverity.CRITICAL
         )
       ).toBe(true);
     });
@@ -327,7 +310,7 @@ describe('InMemoryExecutionAuditLog', () => {
     it('should return all records', () => {
       const records = [
         AuditRecordHelpers.info('test1', 'agent-1', {}),
-        AuditRecordHelpers.info('test2', 'agent-1', {}),
+        AuditRecordHelpers.info('test2', 'agent-1', {})
       ];
 
       auditLog.recordMany(records);
@@ -350,36 +333,36 @@ describe('InMemoryExecutionAuditLog', () => {
           agentId: 'agent-1',
           sessionId: 'session-1',
           data: {},
-          severity: AuditSeverity.INFO,
+          severity: AuditSeverity.INFO
         }),
         AuditRecordHelpers.create({
           eventType: 'event2',
           agentId: 'agent-1',
           sessionId: 'session-1',
           data: {},
-          severity: AuditSeverity.INFO,
+          severity: AuditSeverity.INFO
         }),
         AuditRecordHelpers.create({
           eventType: 'event3',
           agentId: 'agent-2',
           sessionId: 'session-2',
           data: {},
-          severity: AuditSeverity.WARNING,
+          severity: AuditSeverity.WARNING
         }),
         AuditRecordHelpers.create({
           eventType: 'event1',
           agentId: 'agent-2',
           sessionId: 'session-2',
           data: {},
-          severity: AuditSeverity.ERROR,
+          severity: AuditSeverity.ERROR
         }),
         AuditRecordHelpers.create({
           eventType: 'event4',
           agentId: 'agent-3',
           sessionId: 'session-3',
           data: {},
-          severity: AuditSeverity.CRITICAL,
-        }),
+          severity: AuditSeverity.CRITICAL
+        })
       ]);
     });
 
@@ -419,10 +402,7 @@ describe('InMemoryExecutionAuditLog', () => {
       expect(stats.timeRange).toBeDefined();
       expect(stats.timeRange!.earliest).toBeInstanceOf(Date);
       expect(stats.timeRange!.latest).toBeInstanceOf(Date);
-      expect(
-        stats.timeRange!.latest.getTime() >=
-          stats.timeRange!.earliest.getTime()
-      ).toBe(true);
+      expect(stats.timeRange!.latest.getTime() >= stats.timeRange!.earliest.getTime()).toBe(true);
     });
 
     it('should handle empty log', () => {
@@ -440,7 +420,7 @@ describe('InMemoryExecutionAuditLog', () => {
     it('should remove all records', () => {
       auditLog.recordMany([
         AuditRecordHelpers.info('test1', 'agent-1', {}),
-        AuditRecordHelpers.info('test2', 'agent-1', {}),
+        AuditRecordHelpers.info('test2', 'agent-1', {})
       ]);
 
       expect(auditLog.getAll()).toHaveLength(2);
@@ -480,7 +460,7 @@ describe('InMemoryExecutionAuditLog', () => {
     it('should keep all records if threshold is before earliest', () => {
       auditLog.recordMany([
         AuditRecordHelpers.info('test1', 'agent-1', {}),
-        AuditRecordHelpers.info('test2', 'agent-1', {}),
+        AuditRecordHelpers.info('test2', 'agent-1', {})
       ]);
 
       const veryOld = new Date('2000-01-01');
@@ -492,7 +472,7 @@ describe('InMemoryExecutionAuditLog', () => {
     it('should remove all records if threshold is after latest', () => {
       auditLog.recordMany([
         AuditRecordHelpers.info('test1', 'agent-1', {}),
-        AuditRecordHelpers.info('test2', 'agent-1', {}),
+        AuditRecordHelpers.info('test2', 'agent-1', {})
       ]);
 
       const future = new Date(Date.now() + 10000);
@@ -514,7 +494,7 @@ describe('InMemoryExecutionAuditLog', () => {
           agentId,
           sessionId,
           data: { input: 'Help me reset password' },
-          severity: AuditSeverity.INFO,
+          severity: AuditSeverity.INFO
         })
       );
 
@@ -525,7 +505,7 @@ describe('InMemoryExecutionAuditLog', () => {
           agentId,
           sessionId,
           data: { tool: 'database_query', params: {} },
-          severity: AuditSeverity.INFO,
+          severity: AuditSeverity.INFO
         })
       );
 
@@ -536,7 +516,7 @@ describe('InMemoryExecutionAuditLog', () => {
           agentId,
           sessionId,
           data: { tool: 'database_query', duration: 3000 },
-          severity: AuditSeverity.WARNING,
+          severity: AuditSeverity.WARNING
         })
       );
 
@@ -547,7 +527,7 @@ describe('InMemoryExecutionAuditLog', () => {
           agentId,
           sessionId,
           data: { output: 'Password reset email sent', duration: 3500 },
-          severity: AuditSeverity.INFO,
+          severity: AuditSeverity.INFO
         })
       );
 
@@ -556,7 +536,7 @@ describe('InMemoryExecutionAuditLog', () => {
 
       const warnings = auditLog.query({
         sessionId,
-        minSeverity: AuditSeverity.WARNING,
+        minSeverity: AuditSeverity.WARNING
       });
       expect(warnings).toHaveLength(1);
       expect(warnings[0]!.eventType).toBe('tool.slow');
@@ -566,19 +546,19 @@ describe('InMemoryExecutionAuditLog', () => {
       // Agent 1: mostly successful
       auditLog.recordMany([
         AuditRecordHelpers.info('agent.executed', 'agent-1', {}),
-        AuditRecordHelpers.info('agent.executed', 'agent-1', {}),
+        AuditRecordHelpers.info('agent.executed', 'agent-1', {})
       ]);
 
       // Agent 2: many errors
       auditLog.recordMany([
         AuditRecordHelpers.error('llm.failed', 'agent-2', {}),
         AuditRecordHelpers.error('tool.failed', 'agent-2', {}),
-        AuditRecordHelpers.critical('security.breach', 'agent-2', {}),
+        AuditRecordHelpers.critical('security.breach', 'agent-2', {})
       ]);
 
       const agent2Errors = auditLog.query({
         agentId: 'agent-2',
-        minSeverity: AuditSeverity.ERROR,
+        minSeverity: AuditSeverity.ERROR
       });
 
       expect(agent2Errors).toHaveLength(3);

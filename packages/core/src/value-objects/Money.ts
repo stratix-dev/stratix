@@ -349,7 +349,7 @@ export class Money extends ValueObject {
   format(locale = 'en-US'): string {
     return new Intl.NumberFormat(locale, {
       style: 'currency',
-      currency: this.currency.code,
+      currency: this.currency.code
     }).format(this.amount);
   }
 
@@ -397,7 +397,7 @@ export class Money extends ValueObject {
   toJSON(): { amount: number; currency: string } {
     return {
       amount: this.amount,
-      currency: this.currency.code,
+      currency: this.currency.code
     };
   }
 }

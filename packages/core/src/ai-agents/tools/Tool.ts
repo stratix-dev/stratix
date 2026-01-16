@@ -100,10 +100,7 @@ export abstract class Tool<TParams = unknown, TResult = unknown> {
    * @param context - Execution context
    * @returns Tool execution result
    */
-  abstract execute(
-    params: TParams,
-    context: ToolContext
-  ): Promise<ToolResult<TResult>>;
+  abstract execute(params: TParams, context: ToolContext): Promise<ToolResult<TResult>>;
 
   /**
    * Get the tool definition for LLM function calling.
@@ -113,7 +110,7 @@ export abstract class Tool<TParams = unknown, TResult = unknown> {
       name: this.name,
       description: this.description,
       parameters: this.parameters,
-      strict: this.strict,
+      strict: this.strict
     };
   }
 
@@ -167,15 +164,12 @@ export abstract class Tool<TParams = unknown, TResult = unknown> {
    * Execute with automatic validation.
    * Returns error result if validation fails.
    */
-  async executeValidated(
-    params: unknown,
-    context: ToolContext
-  ): Promise<ToolResult<TResult>> {
+  async executeValidated(params: unknown, context: ToolContext): Promise<ToolResult<TResult>> {
     const errors = this.validate(params);
     if (errors.length > 0) {
       return {
         success: false,
-        error: `Validation failed: ${errors.join(', ')}`,
+        error: `Validation failed: ${errors.join(', ')}`
       };
     }
 
@@ -184,7 +178,7 @@ export abstract class Tool<TParams = unknown, TResult = unknown> {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? error.message : String(error)
       };
     }
   }
@@ -218,7 +212,7 @@ export abstract class Tool<TParams = unknown, TResult = unknown> {
       name: this.name,
       description: this.description,
       parameters: this.parameters,
-      strict: this.strict,
+      strict: this.strict
     };
   }
 }
@@ -231,16 +225,14 @@ export const ToolHelpers = {
    * Create a tool result from a promise.
    * Catches errors and returns error result.
    */
-  async fromPromise<T>(
-    promise: Promise<T>
-  ): Promise<ToolResult<T>> {
+  async fromPromise<T>(promise: Promise<T>): Promise<ToolResult<T>> {
     try {
       const data = await promise;
       return { success: true, data };
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        error: error instanceof Error ? error.message : String(error)
       };
     }
   },
@@ -266,23 +258,20 @@ export const ToolHelpers = {
     if (errors.length > 0) {
       return {
         success: false,
-        error: errors.join('; '),
+        error: errors.join('; ')
       };
     }
 
     return {
       success: true,
-      data: data as { [K in keyof T]: T[K] extends ToolResult<infer U> ? U : never },
+      data: data as { [K in keyof T]: T[K] extends ToolResult<infer U> ? U : never }
     };
   },
 
   /**
    * Transform a successful result.
    */
-  map<T, U>(
-    result: ToolResult<T>,
-    fn: (data: T) => U
-  ): ToolResult<U> {
+  map<T, U>(result: ToolResult<T>, fn: (data: T) => U): ToolResult<U> {
     if (!result.success) {
       return result;
     }
@@ -292,10 +281,7 @@ export const ToolHelpers = {
   /**
    * Chain tool results (flatMap).
    */
-  flatMap<T, U>(
-    result: ToolResult<T>,
-    fn: (data: T) => ToolResult<U>
-  ): ToolResult<U> {
+  flatMap<T, U>(result: ToolResult<T>, fn: (data: T) => ToolResult<U>): ToolResult<U> {
     if (!result.success) {
       return result;
     }
@@ -317,5 +303,5 @@ export const ToolHelpers = {
       throw new Error(result.error);
     }
     return result.data;
-  },
+  }
 };

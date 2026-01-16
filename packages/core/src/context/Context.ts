@@ -1,6 +1,11 @@
 import { ContextMetadata } from './ContextMetadata.js';
 import { ContextConfig } from './ContextConfig.js';
-import { ContextCommandDefinition, ContextQueryDefinition, ContextEventHandlerDefinition, ContextRepositoryDefinition } from './definitions.js';
+import {
+  ContextCommandDefinition,
+  ContextQueryDefinition,
+  ContextEventHandlerDefinition,
+  ContextRepositoryDefinition
+} from './definitions.js';
 import { HealthCheckResult } from '../infrastructure/HealthCheck.js';
 
 /**

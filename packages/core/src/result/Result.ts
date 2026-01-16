@@ -206,5 +206,5 @@ export const ResultUtils = {
    */
   isFailure<T, E extends Error>(result: Result<T, E>): result is Failure<E> {
     return result.isFailure;
-  },
+  }
 };

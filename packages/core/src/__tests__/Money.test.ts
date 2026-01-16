@@ -355,7 +355,7 @@ describe('Money', () => {
 
       expect(json).toEqual({
         amount: 100,
-        currency: 'USD',
+        currency: 'USD'
       });
     });
 

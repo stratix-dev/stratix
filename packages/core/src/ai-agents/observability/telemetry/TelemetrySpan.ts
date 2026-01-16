@@ -82,7 +82,7 @@ export enum SpanKind {
   /**
    * Message consumer.
    */
-  CONSUMER = 'consumer',
+  CONSUMER = 'consumer'
 }
 
 /**
@@ -142,7 +142,7 @@ export enum SpanStatusCode {
   /**
    * Status is unset (default).
    */
-  UNSET = 'unset',
+  UNSET = 'unset'
 }
 
 /**
@@ -172,7 +172,7 @@ export const TelemetrySpanHelpers = {
       startTime: new Date(),
       attributes: config.attributes ?? {},
       events: [],
-      status: { code: SpanStatusCode.UNSET },
+      status: { code: SpanStatusCode.UNSET }
     };
   },
 
@@ -183,16 +183,13 @@ export const TelemetrySpanHelpers = {
    * @param errorOrStatus - Error object or status
    * @returns Completed span
    */
-  complete(
-    span: TelemetrySpan,
-    errorOrStatus?: Error | SpanStatus
-  ): TelemetrySpan {
+  complete(span: TelemetrySpan, errorOrStatus?: Error | SpanStatus): TelemetrySpan {
     let status: SpanStatus;
 
     if (errorOrStatus instanceof Error) {
       status = {
         code: SpanStatusCode.ERROR,
-        message: errorOrStatus.message,
+        message: errorOrStatus.message
       };
     } else {
       status = errorOrStatus ?? { code: SpanStatusCode.OK };
@@ -201,7 +198,7 @@ export const TelemetrySpanHelpers = {
     return {
       ...span,
       endTime: new Date(),
-      status,
+      status
     };
   },
 
@@ -223,13 +220,13 @@ export const TelemetrySpanHelpers = {
         ? {
             name: event,
             timestamp: new Date(),
-            attributes,
+            attributes
           }
         : event;
 
     return {
       ...span,
-      events: [...span.events, spanEvent],
+      events: [...span.events, spanEvent]
     };
   },
 
@@ -246,7 +243,7 @@ export const TelemetrySpanHelpers = {
   ): TelemetrySpan {
     return {
       ...span,
-      attributes: { ...span.attributes, ...attributes },
+      attributes: { ...span.attributes, ...attributes }
     };
   },
 
@@ -297,5 +294,5 @@ export const TelemetrySpanHelpers = {
    */
   generateTraceId(): string {
     return `trace_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  },
+  }
 };

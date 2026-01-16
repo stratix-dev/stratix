@@ -24,7 +24,7 @@ export enum GuardrailSeverity {
    * Critical - serious violation.
    * Log the violation and block execution.
    */
-  CRITICAL = 'critical',
+  CRITICAL = 'critical'
 }
 
 /**
@@ -57,10 +57,7 @@ export const GuardrailSeverityHelpers = {
    * @returns True if execution should be blocked
    */
   shouldBlock(severity: GuardrailSeverity): boolean {
-    return (
-      severity === GuardrailSeverity.ERROR ||
-      severity === GuardrailSeverity.CRITICAL
-    );
+    return severity === GuardrailSeverity.ERROR || severity === GuardrailSeverity.CRITICAL;
   },
 
   /**
@@ -90,8 +87,6 @@ export const GuardrailSeverityHelpers = {
       return GuardrailSeverity.INFO;
     }
 
-    return severities.reduce((max, current) =>
-      this.compare(current, max) > 0 ? current : max
-    );
-  },
+    return severities.reduce((max, current) => (this.compare(current, max) > 0 ? current : max));
+  }
 };

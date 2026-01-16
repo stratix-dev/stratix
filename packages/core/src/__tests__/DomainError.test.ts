@@ -58,7 +58,7 @@ describe('DomainError', () => {
       expect(json).toEqual({
         name: 'DomainError',
         code: 'TEST_CODE',
-        message: 'Test message',
+        message: 'Test message'
       });
     });
 

@@ -17,7 +17,7 @@ export class EnvironmentConfigurationSource implements ConfigurationSource {
     this.lowercase = lowercase ?? true;
   }
 
-  async load(): Promise<Record<string, unknown>> {
+  load(): Promise<Record<string, unknown>> {
     const config: Record<string, unknown> = {};
     const prefix = this.prefix;
 
@@ -42,14 +42,18 @@ export class EnvironmentConfigurationSource implements ConfigurationSource {
       this.setNestedValue(config, configKey, value);
     }
 
-    return config;
+    return Promise.resolve(config);
   }
 
   async isAvailable(): Promise<boolean> {
-    return true; // Environment always available
+    return Promise.resolve(true); // Environment always available
   }
 
-  private setNestedValue(obj: Record<string, any>, path: string, value: string | undefined): void {
+  private setNestedValue(
+    obj: Record<string, unknown>,
+    path: string,
+    value: string | undefined
+  ): void {
     const keys = path.split('.');
     let current = obj;
 
@@ -58,7 +62,7 @@ export class EnvironmentConfigurationSource implements ConfigurationSource {
       if (!(key in current) || typeof current[key] !== 'object') {
         current[key] = {};
       }
-      current = current[key];
+      current = current[key] as Record<string, unknown>;
     }
 
     const lastKey = keys[keys.length - 1];

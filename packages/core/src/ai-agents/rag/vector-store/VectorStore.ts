@@ -98,10 +98,7 @@ export interface VectorStore {
    * );
    * ```
    */
-  upsertBatch(
-    documents: readonly Document[],
-    embeddings: readonly Embedding[]
-  ): Promise<void>;
+  upsertBatch(documents: readonly Document[], embeddings: readonly Embedding[]): Promise<void>;
 
   /**
    * Search for similar documents.
@@ -305,7 +302,7 @@ export class InMemoryVectorStore implements VectorStore {
           documentId: docId,
           score,
           embedding: embedding.vector,
-          metadata: doc.metadata,
+          metadata: doc.metadata
         });
       }
     }
@@ -383,14 +380,9 @@ export class InMemoryVectorStore implements VectorStore {
   /**
    * Check if document metadata matches all filters.
    */
-  private matchesFilters(
-    doc: Document,
-    filters: Record<string, unknown>
-  ): boolean {
+  private matchesFilters(doc: Document, filters: Record<string, unknown>): boolean {
     if (!doc.metadata) return false;
 
-    return Object.entries(filters).every(
-      ([key, value]) => doc.metadata![key] === value
-    );
+    return Object.entries(filters).every(([key, value]) => doc.metadata![key] === value);
   }
 }

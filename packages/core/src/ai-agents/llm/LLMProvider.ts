@@ -259,11 +259,7 @@ export interface LLMProvider {
    * @param completionTokens - Number of completion tokens
    * @returns Estimated cost in USD
    */
-  estimateCost?(
-    model: string,
-    promptTokens: number,
-    completionTokens: number
-  ): number;
+  estimateCost?(model: string, promptTokens: number, completionTokens: number): number;
 
   /**
    * Validate that a model is supported.
@@ -352,7 +348,7 @@ export const LLMProviderHelpers = {
       structuredOutput: false,
       maxContextTokens: 4096,
       maxOutputTokens: 4096,
-      ...overrides,
+      ...overrides
     };
-  },
+  }
 };

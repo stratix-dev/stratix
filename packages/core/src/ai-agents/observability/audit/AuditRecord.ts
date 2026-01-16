@@ -73,7 +73,7 @@ export enum AuditSeverity {
   /**
    * Critical event.
    */
-  CRITICAL = 'critical',
+  CRITICAL = 'critical'
 }
 
 /**
@@ -104,7 +104,7 @@ export const AuditRecordHelpers = {
       userId: config.userId,
       data: config.data,
       severity: config.severity ?? AuditSeverity.INFO,
-      metadata: config.metadata,
+      metadata: config.metadata
     };
   },
 
@@ -116,16 +116,12 @@ export const AuditRecordHelpers = {
    * @param data - Event data
    * @returns Audit record
    */
-  info(
-    eventType: string,
-    agentId: string,
-    data: Record<string, unknown>
-  ): AuditRecord {
+  info(eventType: string, agentId: string, data: Record<string, unknown>): AuditRecord {
     return this.create({
       eventType,
       agentId,
       data,
-      severity: AuditSeverity.INFO,
+      severity: AuditSeverity.INFO
     });
   },
 
@@ -137,16 +133,12 @@ export const AuditRecordHelpers = {
    * @param data - Event data
    * @returns Audit record
    */
-  warning(
-    eventType: string,
-    agentId: string,
-    data: Record<string, unknown>
-  ): AuditRecord {
+  warning(eventType: string, agentId: string, data: Record<string, unknown>): AuditRecord {
     return this.create({
       eventType,
       agentId,
       data,
-      severity: AuditSeverity.WARNING,
+      severity: AuditSeverity.WARNING
     });
   },
 
@@ -158,16 +150,12 @@ export const AuditRecordHelpers = {
    * @param data - Event data
    * @returns Audit record
    */
-  error(
-    eventType: string,
-    agentId: string,
-    data: Record<string, unknown>
-  ): AuditRecord {
+  error(eventType: string, agentId: string, data: Record<string, unknown>): AuditRecord {
     return this.create({
       eventType,
       agentId,
       data,
-      severity: AuditSeverity.ERROR,
+      severity: AuditSeverity.ERROR
     });
   },
 
@@ -179,16 +167,12 @@ export const AuditRecordHelpers = {
    * @param data - Event data
    * @returns Audit record
    */
-  critical(
-    eventType: string,
-    agentId: string,
-    data: Record<string, unknown>
-  ): AuditRecord {
+  critical(eventType: string, agentId: string, data: Record<string, unknown>): AuditRecord {
     return this.create({
       eventType,
       agentId,
       data,
-      severity: AuditSeverity.CRITICAL,
+      severity: AuditSeverity.CRITICAL
     });
   },
 
@@ -199,5 +183,5 @@ export const AuditRecordHelpers = {
    */
   generateId(): string {
     return `audit_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  },
+  }
 };

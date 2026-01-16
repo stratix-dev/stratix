@@ -190,9 +190,7 @@ export class PromptRegistry {
    * );
    * ```
    */
-  find(
-    predicate: (template: PromptTemplate) => boolean
-  ): readonly PromptTemplate[] {
+  find(predicate: (template: PromptTemplate) => boolean): readonly PromptTemplate[] {
     return Array.from(this.templates.values()).filter(predicate);
   }
 
@@ -208,9 +206,7 @@ export class PromptRegistry {
    * ```
    */
   findByTag(tag: string): readonly PromptTemplate[] {
-    return this.find((template) =>
-      template.getMetadata().tags?.includes(tag) ?? false
-    );
+    return this.find((template) => template.getMetadata().tags?.includes(tag) ?? false);
   }
 
   /**

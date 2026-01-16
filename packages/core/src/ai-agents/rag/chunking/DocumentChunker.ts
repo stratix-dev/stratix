@@ -81,10 +81,7 @@ export class DocumentChunker {
    * );
    * ```
    */
-  chunkBatch(
-    documents: readonly Document[],
-    config?: ChunkingConfig
-  ): readonly Document[] {
+  chunkBatch(documents: readonly Document[], config?: ChunkingConfig): readonly Document[] {
     const allChunks: Document[] = [];
 
     for (const document of documents) {
@@ -123,7 +120,7 @@ export class DocumentChunker {
         totalCharacters: 0,
         averageSize: 0,
         minSize: 0,
-        maxSize: 0,
+        maxSize: 0
       };
     }
 
@@ -143,7 +140,7 @@ export class DocumentChunker {
       totalCharacters,
       averageSize: Math.round(totalCharacters / chunks.length),
       minSize: minSize === Infinity ? 0 : minSize,
-      maxSize,
+      maxSize
     };
   }
 
@@ -174,9 +171,7 @@ export class DocumentChunker {
       }
 
       if (size > maxSize) {
-        errors.push(
-          `Chunk ${i} exceeds max size: ${size} > ${maxSize}`
-        );
+        errors.push(`Chunk ${i} exceeds max size: ${size} > ${maxSize}`);
       }
     }
 

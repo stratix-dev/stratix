@@ -299,10 +299,10 @@ describe('UUID', () => {
         '550e8400-e29b-41d4-8716-446655440000',
         '550e8400-e29b-41d4-9716-446655440000',
         '550e8400-e29b-41d4-a716-446655440000',
-        '550e8400-e29b-41d4-b716-446655440000',
+        '550e8400-e29b-41d4-b716-446655440000'
       ];
 
-      variants.forEach(v => {
+      variants.forEach((v) => {
         const result = UUID.create(v);
         expect(result.isSuccess).toBe(true);
         expect(result.value.variant()).toBe('RFC4122');
@@ -319,10 +319,10 @@ describe('UUID', () => {
     it('should handle boundary values', () => {
       const boundaryUUIDs = [
         '00000000-0000-1000-8000-000000000000',
-        'ffffffff-ffff-5fff-bfff-ffffffffffff',
+        'ffffffff-ffff-5fff-bfff-ffffffffffff'
       ];
 
-      boundaryUUIDs.forEach(v => {
+      boundaryUUIDs.forEach((v) => {
         const result = UUID.create(v);
         expect(result.isSuccess).toBe(true);
       });
@@ -340,13 +340,9 @@ describe('UUID', () => {
     });
 
     it('should work in collections', () => {
-      const uuids = [
-        UUID.generate(),
-        UUID.generate(),
-        UUID.generate(),
-      ];
+      const uuids = [UUID.generate(), UUID.generate(), UUID.generate()];
 
-      const values = uuids.map(u => u.value);
+      const values = uuids.map((u) => u.value);
       const uniqueValues = new Set(values);
 
       expect(uniqueValues.size).toBe(3);

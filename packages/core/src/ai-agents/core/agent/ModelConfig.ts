@@ -132,11 +132,7 @@ export const ModelConfigHelpers = {
    * @param overrides - Optional parameter overrides
    * @returns ModelConfig with defaults applied
    */
-  create(
-    provider: string,
-    model: string,
-    overrides?: Partial<ModelConfig>
-  ): ModelConfig {
+  create(provider: string, model: string, overrides?: Partial<ModelConfig>): ModelConfig {
     return {
       provider,
       model,
@@ -144,7 +140,7 @@ export const ModelConfigHelpers = {
       topP: 1.0,
       frequencyPenalty: 0.0,
       presencePenalty: 0.0,
-      ...overrides,
+      ...overrides
     };
   },
 
@@ -167,10 +163,7 @@ export const ModelConfigHelpers = {
       errors.push('Model cannot be empty');
     }
 
-    if (
-      config.temperature !== undefined &&
-      (config.temperature < 0 || config.temperature > 2)
-    ) {
+    if (config.temperature !== undefined && (config.temperature < 0 || config.temperature > 2)) {
       errors.push('Temperature must be between 0 and 2');
     }
 
@@ -220,7 +213,7 @@ export const ModelConfigHelpers = {
   merge(base: ModelConfig, override: Partial<ModelConfig>): ModelConfig {
     return {
       ...base,
-      ...override,
+      ...override
     };
-  },
+  }
 };

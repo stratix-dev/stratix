@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  ToolRegistry,
-  ToolNotFoundError,
-  ToolConflictError,
-} from '../ToolRegistry.js';
+import { ToolRegistry, ToolNotFoundError, ToolConflictError } from '../ToolRegistry.js';
 import { Tool, type ToolResult, type ToolContext } from '../Tool.js';
 
 // Simple test tool
@@ -24,9 +20,9 @@ class TestTool extends Tool<{ value: string }, string> {
     return {
       type: 'object' as const,
       properties: {
-        value: { type: 'string' },
+        value: { type: 'string' }
       },
-      required: ['value'] as const,
+      required: ['value'] as const
     };
   }
 
@@ -223,9 +219,7 @@ describe('ToolRegistry', () => {
     it('should throw for non-existent tool', async () => {
       const registry = new ToolRegistry();
 
-      await expect(
-        registry.execute('nonexistent', {}, context)
-      ).rejects.toThrow(ToolNotFoundError);
+      await expect(registry.execute('nonexistent', {}, context)).rejects.toThrow(ToolNotFoundError);
     });
   });
 
@@ -238,7 +232,7 @@ describe('ToolRegistry', () => {
       const results = await registry.executeMany(
         [
           { name: 'tool1', params: { value: 'a' } },
-          { name: 'tool2', params: { value: 'b' } },
+          { name: 'tool2', params: { value: 'b' } }
         ],
         context
       );

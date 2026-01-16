@@ -265,7 +265,7 @@ export class DateRange extends ValueObject {
   toJSON(): { startDate: string; endDate: string } {
     return {
       startDate: this.startDate.toISOString(),
-      endDate: this.endDate.toISOString(),
+      endDate: this.endDate.toISOString()
     };
   }
 }

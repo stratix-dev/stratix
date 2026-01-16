@@ -7,9 +7,7 @@ export type MessageRole = 'system' | 'user' | 'assistant' | 'tool';
  * Content of a message.
  * Can be simple text or multi-part (text + images).
  */
-export type MessageContent =
-  | string
-  | Array<TextContent | ImageContent>;
+export type MessageContent = string | Array<TextContent | ImageContent>;
 
 /**
  * Text content part.
@@ -81,7 +79,7 @@ export const LLMMessageHelpers = {
   system(content: string): LLMMessage {
     return {
       role: 'system',
-      content,
+      content
     };
   },
 
@@ -92,7 +90,7 @@ export const LLMMessageHelpers = {
     return {
       role: 'user',
       content,
-      name,
+      name
     };
   },
 
@@ -103,7 +101,7 @@ export const LLMMessageHelpers = {
     return {
       role: 'assistant',
       content,
-      tool_calls: toolCalls,
+      tool_calls: toolCalls
     };
   },
 
@@ -114,7 +112,7 @@ export const LLMMessageHelpers = {
     return {
       role: 'tool',
       content,
-      tool_call_id: toolCallId,
+      tool_call_id: toolCallId
     };
   },
 
@@ -131,7 +129,7 @@ export const LLMMessageHelpers = {
   text(text: string): TextContent {
     return {
       type: 'text',
-      text,
+      text
     };
   },
 
@@ -142,22 +140,18 @@ export const LLMMessageHelpers = {
     return {
       type: 'image',
       source: { type: 'url', url },
-      detail,
+      detail
     };
   },
 
   /**
    * Create image content from base64 data.
    */
-  imageBase64(
-    mediaType: string,
-    data: string,
-    detail?: 'auto' | 'low' | 'high'
-  ): ImageContent {
+  imageBase64(mediaType: string, data: string, detail?: 'auto' | 'low' | 'high'): ImageContent {
     return {
       type: 'image',
       source: { type: 'base64', mediaType, data },
-      detail,
+      detail
     };
   },
 
@@ -232,5 +226,5 @@ export const LLMMessageHelpers = {
     // Rough estimate: ~1.3 tokens per word
     const wordCount = text.split(/\s+/).filter(Boolean).length;
     return Math.ceil(wordCount * 1.3);
-  },
+  }
 };

@@ -116,11 +116,7 @@ export const PromptVariableHelpers = {
    * // => 'Hello Alice, you are 25 years old'
    * ```
    */
-  substitute(
-    template: string,
-    variables: PromptVariables,
-    strict = false
-  ): string {
+  substitute(template: string, variables: PromptVariables, strict = false): string {
     if (strict) {
       const missing = this.validate(template, variables);
       if (missing.length > 0) {
@@ -154,5 +150,5 @@ export const PromptVariableHelpers = {
       return value ? 'true' : 'false';
     }
     return String(value);
-  },
+  }
 };

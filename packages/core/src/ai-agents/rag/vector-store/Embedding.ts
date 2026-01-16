@@ -114,9 +114,7 @@ export const EmbeddingHelpers = {
    */
   cosineSimilarity(a: Embedding, b: Embedding): number {
     if (a.vector.length !== b.vector.length) {
-      throw new Error(
-        `Dimension mismatch: ${a.vector.length} vs ${b.vector.length}`
-      );
+      throw new Error(`Dimension mismatch: ${a.vector.length} vs ${b.vector.length}`);
     }
 
     return this.cosineSimilarityVectors(a.vector, b.vector);
@@ -129,10 +127,7 @@ export const EmbeddingHelpers = {
    * @param b - Second vector
    * @returns Cosine similarity (0-1)
    */
-  cosineSimilarityVectors(
-    a: readonly number[],
-    b: readonly number[]
-  ): number {
+  cosineSimilarityVectors(a: readonly number[], b: readonly number[]): number {
     if (a.length !== b.length) {
       throw new Error(`Dimension mismatch: ${a.length} vs ${b.length}`);
     }
@@ -164,9 +159,7 @@ export const EmbeddingHelpers = {
    */
   euclideanDistance(a: Embedding, b: Embedding): number {
     if (a.vector.length !== b.vector.length) {
-      throw new Error(
-        `Dimension mismatch: ${a.vector.length} vs ${b.vector.length}`
-      );
+      throw new Error(`Dimension mismatch: ${a.vector.length} vs ${b.vector.length}`);
     }
 
     return this.euclideanDistanceVectors(a.vector, b.vector);
@@ -179,10 +172,7 @@ export const EmbeddingHelpers = {
    * @param b - Second vector
    * @returns Euclidean distance
    */
-  euclideanDistanceVectors(
-    a: readonly number[],
-    b: readonly number[]
-  ): number {
+  euclideanDistanceVectors(a: readonly number[], b: readonly number[]): number {
     if (a.length !== b.length) {
       throw new Error(`Dimension mismatch: ${a.length} vs ${b.length}`);
     }
@@ -226,10 +216,7 @@ export const EmbeddingHelpers = {
    * @param expectedDimensions - Expected number of dimensions (optional)
    * @returns Array of validation errors (empty if valid)
    */
-  validate(
-    vector: readonly number[],
-    expectedDimensions?: number
-  ): string[] {
+  validate(vector: readonly number[], expectedDimensions?: number): string[] {
     const errors: string[] = [];
 
     if (vector.length === 0) {
@@ -237,9 +224,7 @@ export const EmbeddingHelpers = {
     }
 
     if (expectedDimensions !== undefined && vector.length !== expectedDimensions) {
-      errors.push(
-        `Expected ${expectedDimensions} dimensions, got ${vector.length}`
-      );
+      errors.push(`Expected ${expectedDimensions} dimensions, got ${vector.length}`);
     }
 
     for (let i = 0; i < vector.length; i++) {
@@ -250,5 +235,5 @@ export const EmbeddingHelpers = {
     }
 
     return errors;
-  },
+  }
 };

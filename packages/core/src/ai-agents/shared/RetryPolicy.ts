@@ -96,7 +96,7 @@ export const RetryPolicies = {
     maxRetries: 0,
     initialDelayMs: 0,
     maxDelayMs: 0,
-    backoffMultiplier: 1,
+    backoffMultiplier: 1
   } as const satisfies RetryPolicy,
 
   /**
@@ -112,7 +112,7 @@ export const RetryPolicies = {
     initialDelayMs: 1000,
     maxDelayMs: 10000,
     backoffMultiplier: 2,
-    jitterFactor: 0.1,
+    jitterFactor: 0.1
   } as const satisfies RetryPolicy,
 
   /**
@@ -128,7 +128,7 @@ export const RetryPolicies = {
     initialDelayMs: 100,
     maxDelayMs: 5000,
     backoffMultiplier: 2,
-    jitterFactor: 0.2,
+    jitterFactor: 0.2
   } as const satisfies RetryPolicy,
 
   /**
@@ -146,7 +146,7 @@ export const RetryPolicies = {
     maxDelayMs: 30000,
     backoffMultiplier: 3,
     jitterFactor: 0.3,
-    retryableErrorCodes: ['RATE_LIMIT', 'TIMEOUT', 'SERVICE_UNAVAILABLE'],
+    retryableErrorCodes: ['RATE_LIMIT', 'TIMEOUT', 'SERVICE_UNAVAILABLE']
   } as const satisfies RetryPolicy,
 
   /**
@@ -163,8 +163,8 @@ export const RetryPolicies = {
     maxDelayMs: 8000,
     backoffMultiplier: 2,
     jitterFactor: 0.15,
-    retryableErrorCodes: ['ECONNREFUSED', 'ETIMEDOUT', 'ENOTFOUND', 'NETWORK_ERROR'],
-  } as const satisfies RetryPolicy,
+    retryableErrorCodes: ['ECONNREFUSED', 'ETIMEDOUT', 'ENOTFOUND', 'NETWORK_ERROR']
+  } as const satisfies RetryPolicy
 } as const;
 
 /**
@@ -234,5 +234,5 @@ export const RetryPolicyHelpers = {
    */
   shouldAttemptRetry(policy: RetryPolicy, attempt: number): boolean {
     return attempt <= policy.maxRetries;
-  },
+  }
 };

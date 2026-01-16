@@ -62,9 +62,7 @@ export class ConsoleExporter implements TelemetryExporter {
   }
 
   private formatSpan(span: TelemetrySpan): string {
-    const duration = span.endTime
-      ? span.endTime.getTime() - span.startTime.getTime()
-      : 'ongoing';
+    const duration = span.endTime ? span.endTime.getTime() - span.startTime.getTime() : 'ongoing';
 
     return `[${span.name}] ${span.spanId} (${duration}ms) - ${span.status.code}`;
   }

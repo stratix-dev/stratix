@@ -48,11 +48,7 @@ export const DocumentHelpers = {
    * );
    * ```
    */
-  create(
-    id: string,
-    content: string,
-    metadata?: Record<string, unknown>
-  ): Document {
+  create(id: string, content: string, metadata?: Record<string, unknown>): Document {
     return { id, content, metadata };
   },
 
@@ -113,5 +109,5 @@ export const DocumentHelpers = {
    */
   isEmpty(doc: Document): boolean {
     return doc.content.trim().length === 0;
-  },
+  }
 };

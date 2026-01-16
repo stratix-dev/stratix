@@ -1,9 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import {
-  RetryPolicyHelpers,
-  RetryPolicies,
-  type RetryPolicy,
-} from '../RetryPolicy.js';
+import { RetryPolicyHelpers, RetryPolicies, type RetryPolicy } from '../RetryPolicy.js';
 
 describe('RetryPolicies', () => {
   describe('predefined policies', () => {
@@ -12,7 +8,7 @@ describe('RetryPolicies', () => {
         maxRetries: 0,
         initialDelayMs: 0,
         maxDelayMs: 0,
-        backoffMultiplier: 1,
+        backoffMultiplier: 1
       });
     });
 
@@ -22,7 +18,7 @@ describe('RetryPolicies', () => {
         initialDelayMs: 1000,
         maxDelayMs: 10000,
         backoffMultiplier: 2,
-        jitterFactor: 0.1,
+        jitterFactor: 0.1
       });
     });
 
@@ -32,7 +28,7 @@ describe('RetryPolicies', () => {
         initialDelayMs: 100,
         maxDelayMs: 5000,
         backoffMultiplier: 2,
-        jitterFactor: 0.2,
+        jitterFactor: 0.2
       });
     });
 
@@ -43,7 +39,7 @@ describe('RetryPolicies', () => {
         maxDelayMs: 30000,
         backoffMultiplier: 3,
         jitterFactor: 0.3,
-        retryableErrorCodes: ['RATE_LIMIT', 'TIMEOUT', 'SERVICE_UNAVAILABLE'],
+        retryableErrorCodes: ['RATE_LIMIT', 'TIMEOUT', 'SERVICE_UNAVAILABLE']
       });
     });
 
@@ -54,7 +50,7 @@ describe('RetryPolicies', () => {
         maxDelayMs: 8000,
         backoffMultiplier: 2,
         jitterFactor: 0.15,
-        retryableErrorCodes: ['ECONNREFUSED', 'ETIMEDOUT', 'ENOTFOUND', 'NETWORK_ERROR'],
+        retryableErrorCodes: ['ECONNREFUSED', 'ETIMEDOUT', 'ENOTFOUND', 'NETWORK_ERROR']
       });
     });
   });
@@ -67,7 +63,7 @@ describe('RetryPolicyHelpers', () => {
         maxRetries: 5,
         initialDelayMs: 100,
         maxDelayMs: 10000,
-        backoffMultiplier: 2,
+        backoffMultiplier: 2
       };
 
       expect(RetryPolicyHelpers.calculateDelay(policy, 1)).toBe(100);
@@ -82,7 +78,7 @@ describe('RetryPolicyHelpers', () => {
         maxRetries: 10,
         initialDelayMs: 100,
         maxDelayMs: 500,
-        backoffMultiplier: 2,
+        backoffMultiplier: 2
       };
 
       expect(RetryPolicyHelpers.calculateDelay(policy, 1)).toBe(100);
@@ -99,7 +95,7 @@ describe('RetryPolicyHelpers', () => {
         initialDelayMs: 1000,
         maxDelayMs: 10000,
         backoffMultiplier: 2,
-        jitterFactor: 0.5,
+        jitterFactor: 0.5
       };
 
       // Mock Math.random to control jitter
@@ -130,7 +126,7 @@ describe('RetryPolicyHelpers', () => {
         initialDelayMs: 1000,
         maxDelayMs: 10000,
         backoffMultiplier: 2,
-        jitterFactor: 0,
+        jitterFactor: 0
       };
 
       expect(RetryPolicyHelpers.calculateDelay(policy, 1)).toBe(1000);
@@ -142,7 +138,7 @@ describe('RetryPolicyHelpers', () => {
         maxRetries: 3,
         initialDelayMs: 1000,
         maxDelayMs: 10000,
-        backoffMultiplier: 2,
+        backoffMultiplier: 2
       };
 
       expect(RetryPolicyHelpers.calculateDelay(policy, 1)).toBe(1000);
@@ -152,12 +148,8 @@ describe('RetryPolicyHelpers', () => {
     it('should throw for invalid attempt numbers', () => {
       const policy = RetryPolicies.CONSERVATIVE;
 
-      expect(() => RetryPolicyHelpers.calculateDelay(policy, 0)).toThrow(
-        'Attempt must be >= 1'
-      );
-      expect(() => RetryPolicyHelpers.calculateDelay(policy, -1)).toThrow(
-        'Attempt must be >= 1'
-      );
+      expect(() => RetryPolicyHelpers.calculateDelay(policy, 0)).toThrow('Attempt must be >= 1');
+      expect(() => RetryPolicyHelpers.calculateDelay(policy, -1)).toThrow('Attempt must be >= 1');
     });
 
     it('should never return negative delay even with max jitter', () => {
@@ -166,7 +158,7 @@ describe('RetryPolicyHelpers', () => {
         initialDelayMs: 100,
         maxDelayMs: 10000,
         backoffMultiplier: 2,
-        jitterFactor: 1.0, // Full jitter
+        jitterFactor: 1.0 // Full jitter
       };
 
       // Run multiple times to test randomness
@@ -183,7 +175,7 @@ describe('RetryPolicyHelpers', () => {
         maxRetries: 3,
         initialDelayMs: 1000,
         maxDelayMs: 10000,
-        backoffMultiplier: 2,
+        backoffMultiplier: 2
       };
 
       const error1 = new Error('Network error');
@@ -199,7 +191,7 @@ describe('RetryPolicyHelpers', () => {
         initialDelayMs: 1000,
         maxDelayMs: 10000,
         backoffMultiplier: 2,
-        retryableErrorCodes: [],
+        retryableErrorCodes: []
       };
 
       const error = new Error('Any error');
@@ -213,14 +205,14 @@ describe('RetryPolicyHelpers', () => {
         initialDelayMs: 1000,
         maxDelayMs: 10000,
         backoffMultiplier: 2,
-        retryableErrorCodes: ['RATE_LIMIT', 'TIMEOUT'],
+        retryableErrorCodes: ['RATE_LIMIT', 'TIMEOUT']
       };
 
       const retryableError = Object.assign(new Error('Rate limit'), {
-        code: 'RATE_LIMIT',
+        code: 'RATE_LIMIT'
       });
       const nonRetryableError = Object.assign(new Error('Auth failed'), {
-        code: 'UNAUTHORIZED',
+        code: 'UNAUTHORIZED'
       });
       const errorWithoutCode = new Error('Generic error');
 
@@ -240,7 +232,7 @@ describe('RetryPolicyHelpers', () => {
         maxDelayMs: 10000,
         backoffMultiplier: 2,
         retryableErrorCodes: ['RATE_LIMIT'], // Should be ignored
-        shouldRetry,
+        shouldRetry
       };
 
       const retryableError = new Error('Please retry');
@@ -268,7 +260,7 @@ describe('RetryPolicyHelpers', () => {
         maxRetries: 3,
         initialDelayMs: 1000,
         maxDelayMs: 10000,
-        backoffMultiplier: 2,
+        backoffMultiplier: 2
       };
 
       expect(RetryPolicyHelpers.shouldAttemptRetry(policy, 1)).toBe(true);
@@ -281,7 +273,7 @@ describe('RetryPolicyHelpers', () => {
         maxRetries: 3,
         initialDelayMs: 1000,
         maxDelayMs: 10000,
-        backoffMultiplier: 2,
+        backoffMultiplier: 2
       };
 
       expect(RetryPolicyHelpers.shouldAttemptRetry(policy, 4)).toBe(false);
@@ -317,7 +309,7 @@ describe('RetryPolicyHelpers', () => {
         }
 
         const error = Object.assign(new Error('Transient error'), {
-          code: 'NETWORK_ERROR',
+          code: 'NETWORK_ERROR'
         });
 
         if (RetryPolicyHelpers.isRetryable(policy, error, attempt)) {
@@ -335,10 +327,10 @@ describe('RetryPolicyHelpers', () => {
       const policy = RetryPolicies.LLM_API;
 
       const rateLimitError = Object.assign(new Error('Rate limited'), {
-        code: 'RATE_LIMIT',
+        code: 'RATE_LIMIT'
       });
       const authError = Object.assign(new Error('Unauthorized'), {
-        code: 'UNAUTHORIZED',
+        code: 'UNAUTHORIZED'
       });
 
       // Rate limit errors should be retried

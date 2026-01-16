@@ -64,10 +64,7 @@ export interface AITelemetry {
    * @param spanId - Span ID
    * @param attributes - Attributes to set
    */
-  setSpanAttributes(
-    spanId: string,
-    attributes: Record<string, SpanAttributeValue>
-  ): void;
+  setSpanAttributes(spanId: string, attributes: Record<string, SpanAttributeValue>): void;
 
   /**
    * Get a span by ID.
@@ -129,7 +126,7 @@ export class InMemoryTelemetry implements AITelemetry {
       name,
       kind,
       parentSpanId,
-      attributes,
+      attributes
     });
 
     this.spans.set(span.spanId, span);
@@ -156,10 +153,7 @@ export class InMemoryTelemetry implements AITelemetry {
     this.spans.set(spanId, updatedSpan);
   }
 
-  setSpanAttributes(
-    spanId: string,
-    attributes: Record<string, SpanAttributeValue>
-  ): void {
+  setSpanAttributes(spanId: string, attributes: Record<string, SpanAttributeValue>): void {
     const span = this.spans.get(spanId);
     if (!span) return;
 
