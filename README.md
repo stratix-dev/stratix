@@ -17,12 +17,12 @@ This package is under active development and should be considered unstable. The 
 
 **Stable versions will be available starting from version 1.0.0.** Not recommended for production use. Use at your own risk.
 
-´´´
+```typescript
 @StratixApp({
-name: "MyApp"
+  name: 'MyApp'
 })
 export class App {}
-´´´
+```
 
 ## License
 
@@ -30,6 +30,6 @@ MIT - See [LICENSE](https://github.com/stratix-dev/stratix/blob/main/LICENSE) fo
 
 <div align="center">
 
-**[Stratix Framework](https://stratix-dev.github.io/stratix/)** - Build better software with proven patterns
+**[Stratix Framework](https://stratixdev.com)** - Build better software
 
 </div>
