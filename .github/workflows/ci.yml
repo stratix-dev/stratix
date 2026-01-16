@@ -21,7 +21,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -45,27 +45,26 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm -r --sort --workspace-concurrency=1 build
+        run: pnpm build
 
       - name: Type check all packages
-        run: pnpm -r typecheck
+        run: pnpm typecheck
 
   test:
-    name: Test (Node ${{ matrix.node-version }} on ${{ matrix.os }})
+    name: Test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        node-version: [18, 20]
 
     steps:
       - name: Checkout code
@@ -74,17 +73,17 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '24'
           cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm -r --sort --workspace-concurrency=1 build
+        run: pnpm build
 
       - name: Run tests
         run: pnpm test
@@ -92,10 +91,10 @@ jobs:
           CI: true
 
       - name: Upload coverage
-        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '20'
-        uses: codecov/codecov-action@v3
+        if: matrix.os == 'ubuntu-latest'
+        uses: codecov/codecov-action@v4
         with:
-          files: ./coverage/lcov.info
+          files: ./packages/core/coverage/lcov.info,./packages/framework/coverage/lcov.info
           fail_ci_if_error: false
         continue-on-error: true
 
@@ -113,66 +112,26 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: Build all packages
-        run: pnpm -r --sort --workspace-concurrency=1 build
+        run: pnpm build
 
       - name: Check build artifacts
         run: |
           echo "Checking build artifacts..."
-          # Check core packages
-          for pkg in packages/core packages/runtime packages/testing; do
+          for pkg in packages/core packages/framework; do
             if [ -d "$pkg/dist" ]; then
-              echo "✓ $pkg/dist exists"
+              echo "[OK] $pkg/dist exists"
             else
-              echo "✗ $pkg/dist missing"
+              echo "[FAIL] $pkg/dist missing"
               exit 1
             fi
           done
-
-          # Check AI providers
-          for pkg in packages/ai/providers/*; do
-            if [ -d "$pkg/dist" ]; then
-              echo "✓ $pkg/dist exists"
-            else
-              echo "✗ $pkg/dist missing"
-              exit 1
-            fi
-          done
-
-          # Check provider packages (handle both consolidated packages and categories)
-          for item in packages/providers/*; do
-            if [ -d "$item" ]; then
-              # Check if this is a package (has package.json) or a category directory
-              if [ -f "$item/package.json" ]; then
-                # This is a consolidated package like packages/providers/config
-                if [ -d "$item/dist" ]; then
-                  echo "✓ $item/dist exists"
-                else
-                  echo "✗ $item/dist missing"
-                  exit 1
-                fi
-              else
-                # This is a category directory (di, validation), check packages inside
-                for pkg in "$item"/*; do
-                  if [ -d "$pkg" ] && [ -f "$pkg/package.json" ]; then
-                    if [ -d "$pkg/dist" ]; then
-                      echo "✓ $pkg/dist exists"
-                    else
-                      echo "✗ $pkg/dist missing"
-                      exit 1
-                    fi
-                  fi
-                done
-              fi
-            fi
-          done
-        continue-on-error: false
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -180,8 +139,5 @@ jobs:
           name: build-artifacts
           path: |
             packages/core/dist
-            packages/runtime/dist
-            packages/testing/dist
-            packages/ai/providers/*/dist
-            packages/providers/*/*/dist
+            packages/framework/dist
           retention-days: 7

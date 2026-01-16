@@ -11,9 +11,9 @@ export async function bootstrap(
     throw new DecoratorMissingError('@StratixApp', appClass.name);
   }
 
-  const registry = new MetadataRegistry(appClass);
+  const registry = new MetadataRegistry({ appClass });
 
-  const app = new StratixApplication(appClass, registry);
+  const app = new StratixApplication({ appClass, registry });
   await app.initialize();
   return app;
 }

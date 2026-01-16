@@ -1,6 +1,3 @@
-export { ConfigurationManager, type ConfigurationManagerOptions } from './ConfigurationManager.js';
-export { YamlConfigurationSource, type YamlSourceOptions } from './YamlConfigurationSource.js';
-export {
-  EnvironmentConfigurationSource,
-  type EnvironmentSourceOptions
-} from './EnvironmentConfigurationSource.js';
+export { ConfigurationManager } from './ConfigurationManager.js';
+export { YamlConfigurationSource } from './YamlConfigurationSource.js';
+export { EnvironmentConfigurationSource } from './EnvironmentConfigurationSource.js';

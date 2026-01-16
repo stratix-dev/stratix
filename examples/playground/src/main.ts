@@ -12,9 +12,7 @@ import { UserContext } from './contexts/user/index.js';
 export class UserApp {}
 
 async function main() {
-  console.log('Execute bootstrap from client app...');
-  const app = await bootstrap(UserApp);
-  console.log('Application started:', app);
+  await bootstrap(UserApp);
 }
 
 main().catch(console.error);

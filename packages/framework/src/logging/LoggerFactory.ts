@@ -6,8 +6,26 @@ export class LoggerFactory {
   private readonly config: Required<LoggerConfig>;
   private readonly transports: LogTransport[];
 
-  constructor(config: LoggerConfig = {}) {
-    this.config = this.normalizeConfig(config);
+  constructor({
+    colorize,
+    context,
+    enrichment,
+    format,
+    level,
+    transports,
+    timestamp,
+    sanitize
+  }: LoggerConfig = {}) {
+    this.config = this.normalizeConfig({
+      colorize,
+      context,
+      enrichment,
+      format,
+      level,
+      transports,
+      timestamp,
+      sanitize
+    });
     this.transports = this.config.transports;
   }
 
@@ -15,7 +33,7 @@ export class LoggerFactory {
    * Crea un nuevo logger con contexto
    */
   create(context?: string): Logger {
-    return new StratixLogger(this.config, this.transports, context);
+    return new StratixLogger({ config: this.config, transports: this.transports, context });
   }
 
   /**
@@ -36,7 +54,7 @@ export class LoggerFactory {
       timestamp: config.timestamp ?? true,
       colorize: config.colorize ?? isDev,
       context: config.context ?? '',
-      transports: config.transports ?? [new ConsoleTransport()],
+      transports: config.transports ?? [new ConsoleTransport({})],
       sanitize: {
         enabled: config.sanitize?.enabled ?? !isDev,
         patterns: config.sanitize?.patterns ?? [

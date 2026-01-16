@@ -1,31 +1,26 @@
 import { ConfigurationProvider, ConfigurationSource } from '@stratix/core';
 
-export interface ConfigurationManagerOptions {
-  sources: ConfigurationSource[];
-  cache?: boolean;
-}
-
 export class ConfigurationManager implements ConfigurationProvider {
   private config: Record<string, unknown> = {};
   private loaded = false;
-  private readonly options: Required<ConfigurationManagerOptions>;
 
-  constructor(configurationManagerOptions: ConfigurationManagerOptions) {
-    this.options = {
-      sources: configurationManagerOptions.sources,
-      cache: configurationManagerOptions.cache ?? false
-    };
+  private sources: ConfigurationSource[];
+  private cache: boolean;
+
+  constructor({ sources, cache }: { sources: ConfigurationSource[]; cache?: boolean }) {
+    this.sources = sources;
+    this.cache = cache ?? false;
   }
 
   async load(): Promise<void> {
-    if (this.loaded && this.options.cache) {
+    if (this.loaded && this.cache) {
       return;
     }
 
     let mergedConfig: Record<string, unknown> = {};
 
     // Load sources in order (later sources override earlier ones)
-    for (const source of this.options.sources) {
+    for (const source of this.sources) {
       try {
         const available = await source.isAvailable();
         if (!available) {

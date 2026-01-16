@@ -1,26 +1,25 @@
 import { ConfigurationSource } from '@stratix/core';
 
-export interface EnvironmentSourceOptions {
-  prefix?: string;
-  separator?: string;
-  lowercase?: boolean;
-}
-
 export class EnvironmentConfigurationSource implements ConfigurationSource {
-  readonly name = 'environment';
-  private readonly options: Required<EnvironmentSourceOptions>;
+  public readonly name = 'environment';
 
-  constructor(options: EnvironmentSourceOptions = {}) {
-    this.options = {
-      prefix: options.prefix ?? '',
-      separator: options.separator ?? '__',
-      lowercase: options.lowercase ?? true
-    };
+  private prefix: string;
+  private separator: string;
+  private lowercase: boolean;
+
+  constructor({
+    prefix,
+    separator,
+    lowercase
+  }: { prefix?: string; separator?: string; lowercase?: boolean } = {}) {
+    this.prefix = prefix ?? '';
+    this.separator = separator ?? '__';
+    this.lowercase = lowercase ?? true;
   }
 
   async load(): Promise<Record<string, unknown>> {
     const config: Record<string, unknown> = {};
-    const prefix = this.options.prefix;
+    const prefix = this.prefix;
 
     for (const [key, value] of Object.entries(process.env)) {
       // Skip if doesn't match prefix
@@ -32,10 +31,10 @@ export class EnvironmentConfigurationSource implements ConfigurationSource {
       let configKey = prefix ? key.slice(prefix.length) : key;
 
       // Convert separator to dots
-      configKey = configKey.replace(new RegExp(this.options.separator, 'g'), '.');
+      configKey = configKey.replace(new RegExp(this.separator, 'g'), '.');
 
       // Lowercase if needed
-      if (this.options.lowercase) {
+      if (this.lowercase) {
         configKey = configKey.toLowerCase();
       }
 
