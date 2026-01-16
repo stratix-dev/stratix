@@ -1,6 +1,6 @@
 {
   "name": "@stratix/framework",
-  "version": "2.0.0-beta.1",
+  "version": "0.9.0",
   "description": "Stratix framework - Decorator-based DDD framework with CQRS, Event Sourcing, and AI agents",
   "type": "module",
   "main": "./dist/index.js",
