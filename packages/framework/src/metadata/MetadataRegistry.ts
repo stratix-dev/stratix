@@ -65,7 +65,6 @@ export class MetadataRegistry {
         throw new DecoratorMissingError('@CommandHandler', handlerClass.name);
       }
 
-      // Type-safe: metadata.commandClass is guaranteed to be ClassConstructor
       this.commandToHandler.set(metadata.commandClass, metadata.handlerClass);
       this.handlerToCommand.set(metadata.handlerClass, metadata.commandClass);
     }
@@ -99,7 +98,6 @@ export class MetadataRegistry {
     }
   }
 
-  // Type-safe query methods
   getHandlerForCommand(commandClass: ClassConstructor): ClassConstructor | undefined {
     return this.commandToHandler.get(commandClass);
   }
