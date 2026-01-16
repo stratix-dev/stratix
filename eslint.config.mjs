@@ -4,7 +4,7 @@ import tseslint from 'typescript-eslint';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
 export default defineConfig(
-  // Global ignores - must be a separate config object with only ignores
+  // Global ignores
   {
     ignores: [
       '**/dist/**',
