@@ -51,6 +51,7 @@ jobs:
         run: |
           # Get the number of changed lines
           changed_lines=$(git diff --shortstat origin/${{ github.base_ref }}...HEAD | awk '{print $4+$6}')
+          changed_lines=${changed_lines:-0}
 
           echo "Changed lines: $changed_lines"
 
@@ -95,6 +96,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Check for changelog entry
         run: |
