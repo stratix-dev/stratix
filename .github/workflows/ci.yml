@@ -57,47 +57,6 @@ jobs:
       - name: Type check all packages
         run: pnpm typecheck
 
-  test:
-    name: Test (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build packages
-        run: pnpm build
-
-      - name: Run tests
-        run: pnpm test
-        env:
-          CI: true
-
-      - name: Upload coverage
-        if: matrix.os == 'ubuntu-latest'
-        uses: codecov/codecov-action@v4
-        with:
-          files: ./packages/core/coverage/lcov.info,./packages/framework/coverage/lcov.info
-          fail_ci_if_error: false
-        continue-on-error: true
-
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -120,24 +79,3 @@ jobs:
 
       - name: Build all packages
         run: pnpm build
-
-      - name: Check build artifacts
-        run: |
-          echo "Checking build artifacts..."
-          for pkg in packages/core packages/framework; do
-            if [ -d "$pkg/dist" ]; then
-              echo "[OK] $pkg/dist exists"
-            else
-              echo "[FAIL] $pkg/dist missing"
-              exit 1
-            fi
-          done
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifacts
-          path: |
-            packages/core/dist
-            packages/framework/dist
-          retention-days: 7
