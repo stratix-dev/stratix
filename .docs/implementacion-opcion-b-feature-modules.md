@@ -240,7 +240,7 @@ src/
 | `configuration/ConfigurationManager.ts` | `config/ConfigurationManager.ts` | Mover |
 | `configuration/YamlConfigurationSource.ts` | `config/sources/YamlConfigurationSource.ts` | Mover |
 | `configuration/EnvironmentConfigurationSource.ts` | `config/sources/EnvironmentConfigurationSource.ts` | Mover |
-| `defaults/AppDefaults.ts` | `config/defaults.ts` | Mover + Renombrar |
+| `defaults/Defaults.ts` | `config/defaults.ts` | Mover + Renombrar |
 
 ### logging/ (Sistema de Logs)
 
@@ -570,7 +570,7 @@ export * as AI from './ai/index.js';
 ### Fase 5: Migracion config/
 
 1. Mover archivos de `configuration/` a `config/`
-2. Mover `defaults/AppDefaults.ts` a `config/defaults.ts`
+2. Mover `defaults/Defaults.ts` a `config/defaults.ts`
 3. Eliminar carpeta `defaults/`
 4. Actualizar imports
 
@@ -630,7 +630,7 @@ mv src/config/ConfigurationSchema.ts src/config/interfaces/
 mv src/config/ConfigurationManager.ts src/config/
 mv src/config/YamlConfigurationSource.ts src/config/sources/
 mv src/config/EnvironmentConfigurationSource.ts src/config/sources/
-mv src/defaults/AppDefaults.ts src/config/defaults.ts
+mv src/defaults/Defaults.ts src/config/defaults.ts
 rmdir src/config src/defaults
 
 # Fase 6: Reorganizar logging

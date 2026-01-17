@@ -378,7 +378,7 @@ packages/framework/src/
 
 | Archivo          | Naturaleza | Función                           | Ubicación   |
 | ---------------- | ---------- | --------------------------------- | ----------- |
-| `AppDefaults.ts` | Const      | Valores por defecto de aplicación | ✅ Correcta |
+| `Defaults.ts` | Const      | Valores por defecto de aplicación | ✅ Correcta |
 
 **Evaluación:** ✅ Correcta.
 

@@ -584,7 +584,7 @@ private mapInjectionMode(mode?: 'CLASSIC' | 'PROXY'): InjectionMode {
 
 **Actualizar defaults:**
 ```typescript
-// En packages/framework/src/defaults/AppDefaults.ts
+// En packages/framework/src/defaults/Defaults.ts
 export const APP_DEFAULTS = {
   // ...
   di: {
@@ -932,7 +932,7 @@ console.log(Object.keys(app.container.cradle));
 
 #### Cambios Necesarios
 
-1. **Actualizar `AppDefaults.ts`:**
+1. **Actualizar `Defaults.ts`:**
 ```typescript
 export const APP_DEFAULTS = {
   // ...
@@ -1332,7 +1332,7 @@ const handler = container.build(CreateUserCommandHandler);
 - `packages/framework/src/runtime/bootstrap.ts` - Bootstrap process
 - `packages/framework/src/decorators/StratixApp.ts` - Decorador principal
 - `packages/framework/src/decorators/CommandHandler.ts` - Decorador de handlers
-- `packages/framework/src/defaults/AppDefaults.ts` - Configuración por defecto
+- `packages/framework/src/defaults/Defaults.ts` - Configuración por defecto
 
 #### Ejemplos
 - `examples/playground/src/main.ts` - Ejemplo de uso

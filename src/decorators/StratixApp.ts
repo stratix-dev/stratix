@@ -1,5 +1,5 @@
 import { DecoratorKindError } from '../shared/errors/DecoratorKindError.js';
-import { APP_DEFAULTS } from '../defaults/AppDefaults.js';
+import { APP_DEFAULTS } from './Defaults.js';
 import { AppMetadata } from '../metadata/registry.js';
 import { Metadata } from '../metadata/Metadata.js';
 import { MetadataKeys } from '../metadata/keys.js';

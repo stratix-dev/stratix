@@ -5,8 +5,8 @@ export class ConfigurationManager implements ConfigurationProvider {
   private config: Record<string, unknown> = {};
   private loaded = false;
 
-  private sources: ConfigurationSource[];
-  private cache: boolean;
+  private readonly sources: ConfigurationSource[];
+  private readonly cache: boolean;
 
   constructor({ sources, cache }: { sources: ConfigurationSource[]; cache?: boolean }) {
     this.sources = sources;

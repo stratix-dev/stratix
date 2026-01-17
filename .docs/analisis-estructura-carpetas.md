@@ -53,7 +53,7 @@ El archivo `src/index.ts` esta vacio, lo que significa que no hay API publica de
 
 ### 5. Carpeta defaults aislada
 
-Solo contiene `AppDefaults.ts`. Deberia estar integrada en otro modulo.
+Solo contiene `Defaults.ts`. Deberia estar integrada en otro modulo.
 
 ### 6. Modulos pequenos dispersos
 
@@ -289,7 +289,7 @@ export * as AI from './ai/index.js';
 ```
 configuration/
 ├── defaults/
-│   └── AppDefaults.ts
+│   └── Defaults.ts
 ├── ConfigurationManager.ts
 └── ...
 ```

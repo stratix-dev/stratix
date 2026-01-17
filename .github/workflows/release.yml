@@ -32,8 +32,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build all packages
-        run: pnpm -r --sort --workspace-concurrency=1 build
+      - name: Build package
+        run: pnpm build
 
       - name: Run tests
         run: pnpm test
@@ -68,21 +68,17 @@ jobs:
       - name: Create package summary
         id: packages
         run: |
-          echo "## Packages" > packages.md
+          echo "## Package" > packages.md
           echo "" >> packages.md
 
-          # All packages
-          for pkg in packages/core packages/framework; do
-            if [ -f "$pkg/package.json" ]; then
-              name=$(node -p "require('./$pkg/package.json').name")
-              version=$(node -p "require('./$pkg/package.json').version")
-              description=$(node -p "require('./$pkg/package.json').description || 'No description'")
-              echo "### \`$name@$version\`" >> packages.md
-              echo "" >> packages.md
-              echo "$description" >> packages.md
-              echo "" >> packages.md
-            fi
-          done
+          # Single package
+          name=$(node -p "require('./package.json').name")
+          version=$(node -p "require('./package.json').version")
+          description=$(node -p "require('./package.json').description || 'No description'")
+          echo "### \`$name@$version\`" >> packages.md
+          echo "" >> packages.md
+          echo "$description" >> packages.md
+          echo "" >> packages.md
 
       - name: Create release body
         run: |
@@ -100,8 +96,7 @@ jobs:
           ## Installation
 
           \`\`\`bash
-          npm install @stratix/core@${{ steps.version.outputs.version }}
-          npm install @stratix/framework@${{ steps.version.outputs.version }}
+          npm install stratix@${{ steps.version.outputs.version }}
           \`\`\`
 
           ## Full Changelog
