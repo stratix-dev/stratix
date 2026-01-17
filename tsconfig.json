@@ -6,7 +6,7 @@
     "noEmit": true
   },
   "include": [
-    "packages/*/src/**/*.ts",
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules",

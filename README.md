@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/logo-no-bg.png" alt="Stratix Logo" width="200"/>
+  <img src="./logo.png" alt="Stratix Logo" width="200"/>
 
 # Stratix
 
