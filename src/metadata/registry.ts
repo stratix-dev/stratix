@@ -11,7 +11,7 @@
  * }
  */
 
-import { ConfigurationSource } from '../configuration/ConfigurationSource.js';
+import { ConfigurationSource } from '../config/ConfigurationSource.js';
 
 type ClassConstructor = new (...args: any[]) => any;
 

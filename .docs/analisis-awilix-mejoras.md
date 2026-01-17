@@ -364,7 +364,7 @@ this.awilixContainer = createContainer({
 
 **Esperado:**
 ```typescript
-// El decorador @StratixApp acepta di.injectionMode pero nunca se usa
+// El decorador @StratixApp acepta container.injectionMode pero nunca se usa
 @StratixApp({
   di: {
     injectionMode: 'PROXY',  // ❌ Este valor se ignora
@@ -385,7 +385,7 @@ this.awilixContainer = createContainer({
 ```typescript
 // PROBLEMA: strict siempre es true
 this.awilixContainer = createContainer({
-  strict: true,  // ❌ Debería leer de appMetadata.di.strict
+  strict: true,  // ❌ Debería leer de appMetadata.container.strict
   injectionMode: InjectionMode.CLASSIC
 });
 ```
@@ -516,7 +516,7 @@ private getTokenKey(token: string | symbol): string {
 Crear un sistema de auto-discovery que combine decoradores de Stratix con auto-loading de Awilix:
 
 ```typescript
-// Nueva clase en packages/framework/src/di/ModuleLoader.ts
+// Nueva clase en packages/framework/src/container/ModuleLoader.ts
 export class ModuleLoader {
   constructor(
     private readonly container: AwilixContainer,
@@ -702,7 +702,7 @@ export interface Container {
 #### Implementación en Framework
 
 ```typescript
-// En packages/framework/src/di/AwilixContainerAdapter.ts
+// En packages/framework/src/container/AwilixContainerAdapter.ts
 import { Disposer } from 'awilix';
 
 registerClassWithDisposer<T>(

@@ -1,4 +1,4 @@
-import { Container } from '../di/Container.js';
+import { Container } from '../container/Container.js';
 import { Logger } from '../logging/Logger.js';
 
 /**
@@ -33,10 +33,10 @@ export interface PluginContext {
   logger: Logger;
 
   /**
-   * Gets configuration for this plugin.
+   * Gets config for this plugin.
    *
-   * @template T - The configuration type
-   * @returns The plugin configuration
+   * @template T - The config type
+   * @returns The plugin config
    *
    * @example
    * ```typescript

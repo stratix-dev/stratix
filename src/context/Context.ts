@@ -127,7 +127,7 @@ export interface Context {
    * Called during docorators startup, after all required plugins and contexts are initialized.
    * Register services in the container during this phase.
    *
-   * @param config - The context configuration
+   * @param config - The context config
    *
    * @example
    * ```typescript

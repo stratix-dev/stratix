@@ -1,4 +1,4 @@
-import { DecoratorKindError } from '../errors/DecoratorKindError.js';
+import { DecoratorKindError } from '../shared/errors/DecoratorKindError.js';
 import { MetadataKeys } from '../metadata/keys.js';
 import { Metadata } from '../metadata/Metadata.js';
 import { ContextMetadata } from '../metadata/registry.js';

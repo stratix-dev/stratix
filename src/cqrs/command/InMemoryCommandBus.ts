@@ -1,4 +1,4 @@
-import { Container } from '../../di/Container.js';
+import { Container } from '../../container/Container.js';
 import { MetadataRegistry } from '../../metadata/index.js';
 import { Command } from './Command.js';
 import { CommandBus } from './CommandBus.js';

@@ -1,4 +1,4 @@
-import { DecoratorMissingError } from '../errors/DecoratorMissingError.js';
+import { DecoratorMissingError } from '../shared/errors/DecoratorMissingError.js';
 import { MetadataKeys } from '../metadata/keys.js';
 import { Metadata } from '../metadata/Metadata.js';
 import { MetadataRegistry } from '../metadata/MetadataRegistry.js';

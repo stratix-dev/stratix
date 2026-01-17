@@ -1,9 +1,9 @@
-import { DecoratorKindError } from '../errors/DecoratorKindError.js';
+import { DecoratorKindError } from '../shared/errors/DecoratorKindError.js';
 import { APP_DEFAULTS } from '../defaults/AppDefaults.js';
 import { AppMetadata } from '../metadata/registry.js';
 import { Metadata } from '../metadata/Metadata.js';
 import { MetadataKeys } from '../metadata/keys.js';
-import { ConfigurationSource } from '../configuration/ConfigurationSource.js';
+import { ConfigurationSource } from '../config/ConfigurationSource.js';
 
 type ClassConstructor<T = any> = new (...args: any[]) => T;
 

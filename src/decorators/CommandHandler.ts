@@ -1,5 +1,5 @@
 import { Metadata } from '../metadata/Metadata.js';
-import { DecoratorKindError } from '../errors/DecoratorKindError.js';
+import { DecoratorKindError } from '../shared/errors/DecoratorKindError.js';
 import { CommandHandlerMetadata } from '../metadata/registry.js';
 import { MetadataKeys } from '../metadata/keys.js';
 import { Command } from '../cqrs/command/Command.js';

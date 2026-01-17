@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import { YamlConfigurationSource } from '../configuration/YamlConfigurationSource.js';
+import { YamlConfigurationSource } from '../config/YamlConfigurationSource.js';
 
 export const APP_DEFAULTS = {
   name: 'Stratix Application',

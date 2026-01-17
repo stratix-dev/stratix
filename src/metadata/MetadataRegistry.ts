@@ -4,7 +4,7 @@ import {
   type AppMetadata,
   type ContextMetadata
 } from '../metadata/index.js';
-import { DecoratorMissingError } from '../errors/DecoratorMissingError.js';
+import { DecoratorMissingError } from '../shared/errors/DecoratorMissingError.js';
 
 /**
  * Central registry that builds handler mappings from metadata.

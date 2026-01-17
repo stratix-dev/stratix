@@ -234,15 +234,15 @@ import {
   ClassConstructor
 } from '@stratix/core';
 import { AwilixContainer, createContainer, InjectionMode } from 'awilix';
-import { AwilixContainerAdapter } from '../di/AwilixContainerAdapter.js';
+import { AwilixContainerAdapter } from '../container/AwilixContainerAdapter.js';
 import { Metadata, MetadataKeys, type AppMetadata } from '../metadata/index.js';
 import { MetadataRegistry } from './MetadataRegistry.js';
 import { InMemoryCommandBus } from '../cqrs/InMemoryCommandBus.js';
 import { InMemoryQueryBus } from '../cqrs/InMemoryQueryBus.js';
 import { InMemoryEventBus } from '../cqrs/InMemoryEventBus.js';
-import { ConfigurationManager } from '../configuration/ConfigurationManager.js';
-import { YamlConfigurationSource } from '../configuration/YamlConfigurationSource.js';
-import { EnvironmentConfigurationSource } from '../configuration/EnvironmentConfigurationSource.js';
+import { ConfigurationManager } from '../config/ConfigurationManager.js';
+import { YamlConfigurationSource } from '../config/YamlConfigurationSource.js';
+import { EnvironmentConfigurationSource } from '../config/EnvironmentConfigurationSource.js';
 
 export class StratixApplication {
   public config?: ConfigurationProvider;
@@ -373,7 +373,7 @@ export class StratixApplication {
   private async registerConfiguration(): Promise<void> {
     const configMetadata = this.metadata.configuration;
 
-    // Build configuration sources from metadata
+    // Build config sources from metadata
     const sources: ConfigurationSource[] = [];
 
     // Add YAML source if configured
@@ -399,7 +399,7 @@ export class StratixApplication {
       sources.push(new SourceClass());
     }
 
-    // Register configuration manager
+    // Register config manager
     this.container.registerClass('config', ConfigurationManager, {
       lifetime: DependencyLifetime.SINGLETON,
       localInjections: { sources, cache: true }

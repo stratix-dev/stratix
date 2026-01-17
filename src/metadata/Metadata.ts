@@ -1,7 +1,7 @@
 import { METADATA_STORAGE, type MetadataContainer } from './storage.js';
 import type { MetadataKey } from './keys.js';
 import type { MetadataTypeMap, MetadataValue } from './registry.js';
-import { MetadataNotFoundError } from '../errors/MetadataNotFoundError.js';
+import { MetadataNotFoundError } from '../shared/errors/MetadataNotFoundError.js';
 
 type ClassConstructor = new (...args: any[]) => any;
 

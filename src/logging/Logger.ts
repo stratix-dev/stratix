@@ -94,7 +94,7 @@ export interface Logger {
 
   /**
    * Creates a child logger with additional context.
-   * Child loggers inherit configuration from parent.
+   * Child loggers inherit config from parent.
    *
    * @param context - Context to add to all child logs
    * @returns A new logger instance with inherited context

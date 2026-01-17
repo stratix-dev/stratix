@@ -1,4 +1,4 @@
-import { Container } from '../di/Container.js';
+import { Container } from '../container/Container.js';
 import { Logger } from '../logging/Logger.js';
 
 /**
@@ -7,7 +7,7 @@ import { Logger } from '../logging/Logger.js';
  * Contexts can:
  * - Access the DI container to resolve dependencies
  * - Access the logger for logging
- * - Access configuration specific to the context
+ * - Access config specific to the context
  * @category Runtime & Application
  */
 export interface ContextConfig {
@@ -22,9 +22,9 @@ export interface ContextConfig {
   readonly logger: Logger;
 
   /**
-   * Gets configuration for this context.
+   * Gets config for this context.
    *
-   * @returns The context configuration, or undefined if not set
+   * @returns The context config, or undefined if not set
    *
    * @example
    * ```typescript

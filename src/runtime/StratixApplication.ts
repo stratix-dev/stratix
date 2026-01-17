@@ -1,15 +1,15 @@
-import { AwilixContainerAdapter } from '../di/AwilixContainerAdapter.js';
+import { AwilixContainerAdapter } from '../container/AwilixContainerAdapter.js';
 import { AwilixContainer, createContainer, InjectionMode } from 'awilix';
-import { DecoratorMissingError } from '../errors/DecoratorMissingError.js';
-import { ConfigurationManager } from '../configuration/ConfigurationManager.js';
-import { YamlConfigurationSource } from '../configuration/YamlConfigurationSource.js';
+import { DecoratorMissingError } from '../shared/errors/DecoratorMissingError.js';
+import { ConfigurationManager } from '../config/ConfigurationManager.js';
+import { YamlConfigurationSource } from '../config/YamlConfigurationSource.js';
 import { AppMetadata } from '../metadata/registry.js';
 import { Metadata } from '../metadata/Metadata.js';
 import { MetadataKeys } from '../metadata/keys.js';
 import { MetadataRegistry } from '../metadata/MetadataRegistry.js';
-import { ConfigurationProvider } from '../configuration/ConfigurationProvider.js';
+import { ConfigurationProvider } from '../config/ConfigurationProvider.js';
 import { InMemoryCommandBus } from '../cqrs/command/InMemoryCommandBus.js';
-import { DependencyLifetime } from '../di/DependencyLifetime.js';
+import { DependencyLifetime } from '../container/DependencyLifetime.js';
 
 export class StratixApplication {
   public config?: ConfigurationProvider;
