@@ -6,7 +6,7 @@
  * ```typescript
  * {
  *   name: 'postgres',
- *   description: 'PostgreSQL database plugin',
+ *   description: 'PostgresSQL database plugin',
  *   dependencies: ['logger'],
  *   optionalDependencies: ['opentelemetry']
  * }
