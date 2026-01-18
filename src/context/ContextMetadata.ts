@@ -3,7 +3,7 @@
  * @category Runtime & Application
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * {
  *   name: 'products-context',
  *   description: 'Products management',

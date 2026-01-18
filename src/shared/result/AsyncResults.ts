@@ -8,7 +8,7 @@ import { Result, Success, Failure } from './Result.js';
  * reducing boilerplate code and improving error handling.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * // Wrap async operation that might throw
  * const result = await AsyncResults.fromPromise(
  *   fetch('/api/users'),
@@ -33,7 +33,7 @@ export const AsyncResults = {
    * @returns Promise resolving to Success or Failure
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = await AsyncResults.fromPromise(
    *   repository.findById(id),
    *   (error) => new DomainError('DB_ERROR', `Database error: ${error}`)
@@ -70,7 +70,7 @@ export const AsyncResults = {
    * @returns Promise of mapped Result
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const userResult = await getUserById(id);
    * const nameResult = await AsyncResults.map(
    *   userResult,
@@ -101,7 +101,7 @@ export const AsyncResults = {
    * @returns Promise of final Result
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = await AsyncResults.flatMap(
    *   AsyncResults.fromPromise(getUserId()),
    *   async (userId) => {
@@ -132,7 +132,7 @@ export const AsyncResults = {
    * @returns Promise of Result with array of all success values
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const results = await AsyncResults.sequence([
    *   () => saveUser(user1),
    *   () => saveUser(user2),
@@ -170,7 +170,7 @@ export const AsyncResults = {
    * @returns Promise of Result with array of all success values
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const results = await AsyncResults.parallel([
    *   () => fetchUser(id1),
    *   () => fetchUser(id2),

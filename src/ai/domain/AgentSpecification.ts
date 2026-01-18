@@ -25,7 +25,7 @@ export type AgentSpecificationId = EntityId<'AgentSpecification'>;
  * respecting hexagonal architecture principles.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * // domain/CustomerSupportSpec.ts
  * export class CustomerSupportSpec extends AgentSpecification {
  *   constructor(id: AgentId) {

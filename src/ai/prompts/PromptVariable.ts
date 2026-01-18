@@ -42,7 +42,7 @@ export const PromptVariableHelpers = {
    * @returns Array of unique variable names
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const vars = PromptVariableHelpers.extractVariables(
    *   'Hello {{name}}, you are {{age}} years old'
    * );
@@ -71,7 +71,7 @@ export const PromptVariableHelpers = {
    * @returns Array of missing variable names (empty if valid)
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const errors = PromptVariableHelpers.validate(
    *   'Hello {{name}}',
    *   { age: 25 }
@@ -108,7 +108,7 @@ export const PromptVariableHelpers = {
    * @returns Rendered string
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = PromptVariableHelpers.substitute(
    *   'Hello {{name}}, you are {{age}} years old',
    *   { name: 'Alice', age: 25 }

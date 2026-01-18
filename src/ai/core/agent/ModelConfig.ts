@@ -5,7 +5,7 @@
  * These settings control how the LLM behaves during execution.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const config: ModelConfig = {
  *   provider: 'openai',
  *   model: 'gpt-4',

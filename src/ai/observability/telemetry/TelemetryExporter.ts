@@ -40,7 +40,7 @@ export interface TelemetryExporter {
  * Logs spans to console in a readable format.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const exporter = new ConsoleExporter();
  * await exporter.export([span1, span2, span3]);
  * ```
@@ -74,7 +74,7 @@ export class ConsoleExporter implements TelemetryExporter {
  * Reduces overhead by grouping multiple spans into single export operations.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const backend = new ConsoleExporter();
  * const exporter = new BatchingExporter(backend, { batchSize: 100 });
  *

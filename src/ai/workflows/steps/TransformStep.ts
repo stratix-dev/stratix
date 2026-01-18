@@ -7,7 +7,7 @@ import type { WorkflowStepContext, WorkflowStepResult } from '../WorkflowStep.js
  * Useful for simple data transformations between steps.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const uppercase = new TransformStep(
  *   'to-uppercase',
  *   'Convert to Uppercase',

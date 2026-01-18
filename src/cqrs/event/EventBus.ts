@@ -7,7 +7,7 @@ import { EventHandler } from './EventHandler.js';
  * Supports multiple handlers for the same event type (pub/sub pattern).
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * // Register handlers
  * eventBus.subscribe(UserCreatedEvent, new SendWelcomeEmailHandler());
  * eventBus.subscribe(UserCreatedEvent, new UpdateStatisticsHandler());
@@ -31,7 +31,7 @@ export interface EventBus {
    * @param handler - The handler for this event type
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * eventBus.subscribe(
    *   UserCreatedEvent,
    *   new SendWelcomeEmailHandler()
@@ -51,7 +51,7 @@ export interface EventBus {
    * @param event - The event to publish
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const event = new UserCreatedEvent('user-123', 'user@example.com');
    * await eventBus.publish(event);
    * ```
@@ -67,7 +67,7 @@ export interface EventBus {
    * @param events - The events to publish
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * await eventBus.publishAll([
    *   new UserCreatedEvent('user-123', 'user@example.com'),
    *   new WelcomeEmailSentEvent('user-123')
@@ -84,7 +84,7 @@ export interface EventBus {
    * @param handler - The handler to unsubscribe
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * eventBus.unsubscribe(UserCreatedEvent, handler);
    * ```
    */

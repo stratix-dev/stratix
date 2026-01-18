@@ -11,7 +11,7 @@ import { FixedSizeChunking } from './ChunkingStrategy.js';
  * - Reduces noise in retrieved context
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const chunker = new DocumentChunker();
  *
  * // Chunk a single document
@@ -33,7 +33,7 @@ export class DocumentChunker {
    * @param strategy - Chunking strategy to use (default: FixedSizeChunking)
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * import { SentenceChunking } from './ChunkingStrategy.js';
    *
    * const chunker = new DocumentChunker(new SentenceChunking());
@@ -51,7 +51,7 @@ export class DocumentChunker {
    * @returns Array of document chunks
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const chunks = chunker.chunk(document, {
    *   maxChunkSize: 1000,
    *   overlap: 200
@@ -74,7 +74,7 @@ export class DocumentChunker {
    * @returns Flattened array of all chunks
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const allChunks = chunker.chunkBatch(
    *   [doc1, doc2, doc3],
    *   { maxChunkSize: 1000 }
@@ -99,7 +99,7 @@ export class DocumentChunker {
    * @returns Chunking statistics
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const chunks = chunker.chunk(document);
    * const stats = chunker.getStats(chunks);
    *
@@ -152,7 +152,7 @@ export class DocumentChunker {
    * @returns Array of validation errors (empty if valid)
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const errors = chunker.validate(chunks, 1000);
    * if (errors.length > 0) {
    *   console.error('Invalid chunks:', errors);

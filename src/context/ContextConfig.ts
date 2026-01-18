@@ -27,7 +27,7 @@ export interface ContextConfig {
    * @returns The context config, or undefined if not set
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const config = contextConfig.getConfig<ProductsConfig>();
    * ```
    */

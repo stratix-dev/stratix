@@ -39,7 +39,7 @@ export interface RAGRetrievalResult {
  * 3. Generation: Use retrieved documents as context for LLM
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const pipeline = new RAGPipeline(
  *   vectorStore,
  *   llmProvider,
@@ -93,7 +93,7 @@ export class RAGPipeline {
    * @returns Promise resolving to number of chunks stored
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const count = await pipeline.ingest(documents);
    * console.log(`Ingested ${count} chunks`);
    * ```
@@ -140,7 +140,7 @@ export class RAGPipeline {
    * @returns Promise resolving to retrieval results
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const results = await pipeline.retrieve('authentication setup');
    *
    * for (let i = 0; i < results.documents.length; i++) {
@@ -200,7 +200,7 @@ export class RAGPipeline {
    * @returns Formatted context string
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const results = await pipeline.retrieve(query);
    * const context = pipeline.formatContext(results);
    *
@@ -244,7 +244,7 @@ export class RAGPipeline {
    * @returns Promise resolving to number of documents deleted
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const deleted = await pipeline.delete(['doc1', 'doc2']);
    * console.log(`Deleted ${deleted} documents`);
    * ```
@@ -259,7 +259,7 @@ export class RAGPipeline {
    * @returns Promise resolving when complete
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * await pipeline.clear();
    * ```
    */
@@ -273,7 +273,7 @@ export class RAGPipeline {
    * @returns Promise resolving to document count
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const count = await pipeline.size();
    * console.log(`Pipeline contains ${count} documents`);
    * ```

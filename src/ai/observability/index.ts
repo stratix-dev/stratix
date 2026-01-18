@@ -9,7 +9,7 @@
  * @module observability
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * import {
  *   // Telemetry
  *   AITelemetry,

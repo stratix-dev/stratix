@@ -34,7 +34,7 @@ export interface ToolContext {
  * Each tool has a name, description, parameter schema, and execute method.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class WeatherTool extends Tool<{ location: string }, { temperature: number }> {
  *   get name(): string {
  *     return 'get_weather';

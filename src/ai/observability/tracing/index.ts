@@ -7,7 +7,7 @@
  * @module observability/tracing
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * import {
  *   TraceCollector,
  *   ExecutionTraceHelpers

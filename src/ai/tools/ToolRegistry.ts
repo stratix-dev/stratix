@@ -27,7 +27,7 @@ export class ToolConflictError extends Error {
  * Provides tool discovery, registration, and retrieval.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const registry = new ToolRegistry();
  *
  * // Register tools

@@ -7,7 +7,7 @@
  * @module observability/audit
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * import {
  *   ExecutionAuditLog,
  *   InMemoryExecutionAuditLog,

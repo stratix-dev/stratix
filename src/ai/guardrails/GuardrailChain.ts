@@ -75,7 +75,7 @@ export interface ChainResult {
  * Allows combining multiple guardrails and running them together.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const chain = new GuardrailChain<string>()
  *   .add(new TextLengthGuardrail(1000, GuardrailSeverity.ERROR))
  *   .add(new ProfanityGuardrail())
@@ -106,7 +106,7 @@ export class GuardrailChain<T = unknown> {
    * @returns This chain for method chaining
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * chain.add(new TextLengthGuardrail(1000, GuardrailSeverity.ERROR));
    * ```
    */
@@ -122,7 +122,7 @@ export class GuardrailChain<T = unknown> {
    * @returns This chain for method chaining
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * chain.addAll([guardrail1, guardrail2, guardrail3]);
    * ```
    */
@@ -138,7 +138,7 @@ export class GuardrailChain<T = unknown> {
    * @returns True if removed
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * chain.remove('text-length');
    * ```
    */
@@ -152,7 +152,7 @@ export class GuardrailChain<T = unknown> {
    * Clear all guardrails from the chain.
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * chain.clear();
    * ```
    */
@@ -186,7 +186,7 @@ export class GuardrailChain<T = unknown> {
    * @returns Promise resolving to chain result
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = await chain.check(userInput, { type: 'user-message' });
    *
    * if (result.shouldBlock) {

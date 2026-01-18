@@ -7,7 +7,7 @@ import type { TokenUsage } from './TokenUsage.js';
  * additional data about an execution.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const metadata: ExecutionMetadata = {
  *   model: 'gpt-4',
  *   usage: {

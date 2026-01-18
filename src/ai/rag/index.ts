@@ -9,7 +9,7 @@
  * @module rag
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * import {
  *   RAGPipeline,
  *   InMemoryVectorStore,

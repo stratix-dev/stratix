@@ -11,7 +11,7 @@ import { EntityId } from './EntityId.js';
  * @template TProps - Type of the entity's properties
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * // Create a new entity (generates ID automatically)
  * const product = EntityBuilder.create<'Product', ProductProps>()
  *   .withProps({ name: 'Laptop', price: 999 })
@@ -86,7 +86,7 @@ export class EntityBuilder<T extends string, TProps> {
    * @throws Error if props were not set
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const product = builder.build(Product);
    * ```
    */

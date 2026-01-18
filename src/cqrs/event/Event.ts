@@ -5,7 +5,7 @@
  * They should be named in past tense (UserCreated, OrderUpdated, ProductDeleted).
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * interface UserCreatedEvent extends Event {
  *   userId: string;
  *   email: string;

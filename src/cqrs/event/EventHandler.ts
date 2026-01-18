@@ -9,7 +9,7 @@ import { Event } from './Event.js';
  * @template TEvent - The type of event this handler processes
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class SendWelcomeEmailHandler implements EventHandler<UserCreatedEvent> {
  *   async handle(event: UserCreatedEvent): Promise<void> {
  *     await this.emailService.sendWelcomeEmail(event.email);

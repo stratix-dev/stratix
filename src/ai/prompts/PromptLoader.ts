@@ -32,7 +32,7 @@ export interface SerializedPrompt {
  * - Files (in runtime, not core)
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const loader = new PromptLoader();
  *
  * // Load from JSON object
@@ -54,7 +54,7 @@ export class PromptLoader {
    * @returns Prompt template
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const template = loader.fromObject({
    *   metadata: { name: 'greeting', version: '1.0' },
    *   template: 'Hello {{name}}!',
@@ -79,7 +79,7 @@ export class PromptLoader {
    * @returns Prompt template
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const json = JSON.stringify({
    *   metadata: { name: 'greeting' },
    *   template: 'Hello {{name}}!'
@@ -105,7 +105,7 @@ export class PromptLoader {
    * @returns Array of prompt templates
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const templates = loader.fromArray([prompt1, prompt2, prompt3]);
    * ```
    */
@@ -120,7 +120,7 @@ export class PromptLoader {
    * @returns Serialized prompt data
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const data = loader.toObject(template);
    * console.log(JSON.stringify(data, null, 2));
    * ```
@@ -141,7 +141,7 @@ export class PromptLoader {
    * @returns JSON string
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const json = loader.toJSON(template, true);
    * ```
    */
@@ -157,7 +157,7 @@ export class PromptLoader {
    * @returns Array of serialized prompts
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const data = loader.toArray([template1, template2]);
    * ```
    */
@@ -172,7 +172,7 @@ export class PromptLoader {
    * @returns Array of validation errors (empty if valid)
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const errors = loader.validate(data);
    * if (errors.length > 0) {
    *   console.error('Validation errors:', errors);

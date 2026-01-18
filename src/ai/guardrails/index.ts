@@ -7,7 +7,7 @@
  * @module guardrails
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * import {
  *   Guardrail,
  *   GuardrailChain,

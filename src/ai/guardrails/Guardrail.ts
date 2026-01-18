@@ -40,7 +40,7 @@ export interface GuardrailContext {
  * - Topic restrictions
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class ProfanityGuardrail extends Guardrail<string> {
  *   get name() { return 'profanity-filter'; }
  *   get severity() { return GuardrailSeverity.WARNING; }
@@ -109,7 +109,7 @@ export abstract class Guardrail<T = unknown> {
  * Ensures text doesn't exceed a maximum length.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const guardrail = new TextLengthGuardrail(1000, GuardrailSeverity.ERROR);
  * const result = await guardrail.check('Some text...');
  * ```
@@ -155,7 +155,7 @@ export class TextLengthGuardrail extends Guardrail<string> {
  * Detects patterns using regular expressions.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const emailGuardrail = new PatternGuardrail(
  *   'email-detector',
  *   /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,

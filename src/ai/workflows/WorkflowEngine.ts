@@ -98,7 +98,7 @@ export interface WorkflowExecutionResult<TOutput = unknown> {
  * Executes workflows step by step, managing state and errors.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const engine = new WorkflowEngine();
  *
  * const result = await engine.execute(workflow, initialInput, {
@@ -135,7 +135,7 @@ export class WorkflowEngine {
    * @returns Promise resolving to execution result
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = await engine.execute(workflow, { userId: '123' });
    * ```
    */

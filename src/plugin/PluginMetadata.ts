@@ -3,7 +3,7 @@
  * @category Runtime & Application
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * {
  *   name: 'postgres',
  *   description: 'PostgresSQL database plugin',

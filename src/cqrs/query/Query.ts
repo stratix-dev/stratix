@@ -5,7 +5,7 @@
  * They should be named as questions or data requests (GetUser, FindOrders, ListProducts).
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * interface GetUserQuery extends Query {
  *   userId: string;
  * }

@@ -50,7 +50,7 @@ export interface PromptMetadata {
  * - Memoization for performance
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const template = new PromptTemplate({
  *   name: 'greeting',
  *   template: 'Hello {{name}}, welcome to {{app}}!',
@@ -88,7 +88,7 @@ export class PromptTemplate {
    * @returns Rendered string
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = template.render(
    *   { name: 'Alice', age: 25 },
    *   { strict: true, cache: false }
@@ -138,7 +138,7 @@ export class PromptTemplate {
    * @returns Array of validation errors (empty if valid)
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const errors = template.validate({ name: 'Alice' });
    * if (errors.length > 0) {
    *   console.error('Validation errors:', errors);
@@ -190,7 +190,7 @@ export class PromptTemplate {
    * Clear the render cache.
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * template.clearCache();
    * ```
    */

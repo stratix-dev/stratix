@@ -8,7 +8,7 @@ import { Result, Success, Failure } from './Result.js';
  * and complex business logic flows.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * // Combine multiple Results
  * const nameResult = ProductName.create(command.name);
  * const priceResult = Money.create(command.price);
@@ -26,7 +26,7 @@ export const Results = {
    * @returns Combined Result with tuple of values
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = Results.combine(
    *   ProductName.create('Laptop'),
    *   Money.create(999, 'USD')
@@ -54,7 +54,7 @@ export const Results = {
    * @returns Result with array of values or first failure
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const emailResults = emails.map(e => Email.create(e));
    * const validEmails = Results.all(emailResults);
    * // validEmails is Success<Email[]> or Failure<DomainError>
@@ -78,7 +78,7 @@ export const Results = {
    * @returns Result with array of values or first failure
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = await Results.sequence([
    *   () => validateUser(userId),
    *   () => checkPermissions(userId),
@@ -107,7 +107,7 @@ export const Results = {
    * @returns Result with array of values or aggregated failure
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = await Results.parallel([
    *   () => fetchUser(id1),
    *   () => fetchUser(id2),
@@ -137,7 +137,7 @@ export const Results = {
    * @returns Result of the operation after retries
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = await Results.retry(
    *   () => callExternalAPI(),
    *   { maxRetries: 3, delay: 100 }
@@ -173,7 +173,7 @@ export const Results = {
    * @returns The value if Success, null if Failure
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const email: string | null = Results.toOptional(emailResult);
    * ```
    */
@@ -190,7 +190,7 @@ export const Results = {
    * @throws The error if Failure
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const value = Results.unwrapOrThrow(result); // throws if failure
    * ```
    */

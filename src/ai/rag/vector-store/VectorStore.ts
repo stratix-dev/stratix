@@ -44,7 +44,7 @@ export interface VectorStoreQuery {
  * - WeaviateVectorStore: Weaviate vector database
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const store = new InMemoryVectorStore();
  *
  * // Add documents with embeddings
@@ -72,7 +72,7 @@ export interface VectorStore {
    * @returns Promise resolving when complete
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * await store.upsert(
    *   { id: 'doc1', content: 'Introduction to AI' },
    *   { vector: [0.1, 0.2, ...], documentId: 'doc1' }
@@ -91,7 +91,7 @@ export interface VectorStore {
    * @returns Promise resolving when complete
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * await store.upsertBatch(
    *   [doc1, doc2, doc3],
    *   [emb1, emb2, emb3]
@@ -110,7 +110,7 @@ export interface VectorStore {
    * @returns Promise resolving to similarity results
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const results = await store.search({
    *   vector: queryEmbedding,
    *   limit: 5,
@@ -132,7 +132,7 @@ export interface VectorStore {
    * @returns Promise resolving to document or undefined if not found
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const doc = await store.get('doc1');
    * if (doc) {
    *   console.log(doc.content);
@@ -148,7 +148,7 @@ export interface VectorStore {
    * @returns Promise resolving to embedding or undefined if not found
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const embedding = await store.getEmbedding('doc1');
    * if (embedding) {
    *   console.log(`Dimensions: ${embedding.vector.length}`);
@@ -164,7 +164,7 @@ export interface VectorStore {
    * @returns Promise resolving to true if deleted, false if not found
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const deleted = await store.delete('doc1');
    * ```
    */
@@ -177,7 +177,7 @@ export interface VectorStore {
    * @returns Promise resolving to number of documents deleted
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const count = await store.deleteBatch(['doc1', 'doc2', 'doc3']);
    * console.log(`Deleted ${count} documents`);
    * ```
@@ -190,7 +190,7 @@ export interface VectorStore {
    * @returns Promise resolving when complete
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * await store.clear();
    * ```
    */
@@ -202,7 +202,7 @@ export interface VectorStore {
    * @returns Promise resolving to document count
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const count = await store.size();
    * console.log(`Store contains ${count} documents`);
    * ```
@@ -216,7 +216,7 @@ export interface VectorStore {
    * @returns Promise resolving to true if exists
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * if (await store.has('doc1')) {
    *   console.log('Document exists');
    * }
@@ -231,7 +231,7 @@ export interface VectorStore {
    * @returns Promise resolving to array of document IDs
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const ids = await store.listIds(100);
    * ```
    */
@@ -245,7 +245,7 @@ export interface VectorStore {
  * Not suitable for production use with large datasets.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const store = new InMemoryVectorStore();
  *
  * await store.upsert(doc, embedding);

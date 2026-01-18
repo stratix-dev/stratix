@@ -58,7 +58,7 @@ export interface ChunkingStrategy {
  * Simple but effective for most use cases.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const strategy = new FixedSizeChunking();
  * const chunks = strategy.chunk(document, {
  *   maxChunkSize: 1000,
@@ -116,7 +116,7 @@ export class FixedSizeChunking implements ChunkingStrategy {
  * Better preserves semantic meaning than fixed-size chunking.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const strategy = new ParagraphChunking();
  * const chunks = strategy.chunk(document, {
  *   maxChunkSize: 1000,
@@ -197,7 +197,7 @@ export class ParagraphChunking implements ChunkingStrategy {
  * Provides the best semantic coherence but may be slower.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const strategy = new SentenceChunking();
  * const chunks = strategy.chunk(document, {
  *   maxChunkSize: 500

@@ -7,7 +7,7 @@ import { CommandHandler } from './CommandHandler.js';
  * Ensures that each command is handled by exactly one handler.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * // Register handler
  * commandBus.register(CreateUserCommand, new CreateUserCommandHandler());
  *
@@ -29,7 +29,7 @@ export interface CommandBus {
    * @param handler - The handler for this command type
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * commandBus.register(
    *   CreateUserCommand,
    *   new CreateUserCommandHandler(repository)
@@ -50,7 +50,7 @@ export interface CommandBus {
    * @throws Error if no handler is registered for the command
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const command = new CreateUserCommand('user@example.com', 'John');
    * const user = await commandBus.dispatch<User>(command);
    * ```

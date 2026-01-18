@@ -8,7 +8,7 @@ import { DomainError } from './DomainError.js';
  * @category Validation
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * // Compose validators for a ProductName value object
  * static create(value: string): Result<ProductName, DomainError> {
  *   return Validators.compose(
@@ -27,7 +27,7 @@ export const Validators = {
    * @returns Success with trimmed string or Failure
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = Validators.notEmpty(name, 'Name');
    * ```
    */
@@ -46,7 +46,7 @@ export const Validators = {
    * @returns Success with trimmed string or Failure
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = Validators.length(name, { min: 3, max: 50, fieldName: 'Name' });
    * ```
    */
@@ -80,7 +80,7 @@ export const Validators = {
    * @returns Success with number or Failure
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = Validators.range(price, { min: 0, max: 10000, fieldName: 'Price' });
    * ```
    */
@@ -110,7 +110,7 @@ export const Validators = {
    * @returns Success with string or Failure
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = Validators.pattern(code, /^[A-Z]{3}$/, 'Code must be 3 uppercase letters');
    * ```
    */
@@ -132,7 +132,7 @@ export const Validators = {
    * @returns Success with email or Failure
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = Validators.email('user@example.com');
    * ```
    */
@@ -147,7 +147,7 @@ export const Validators = {
    * @returns Success with URL or Failure
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = Validators.url('https://example.com');
    * ```
    */
@@ -168,7 +168,7 @@ export const Validators = {
    * @returns A composed validator function
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const emailValidator = Validators.compose(
    *   (v) => Validators.notEmpty(v, 'Email'),
    *   (v) => Validators.length(v, { max: 254 }),

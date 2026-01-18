@@ -10,7 +10,7 @@
  * the AI agents system. All LLM providers must map to this format.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const usage: TokenUsage = {
  *   promptTokens: 100,
  *   completionTokens: 50,
@@ -41,7 +41,7 @@ export interface TokenUsage {
  * Associates token usage with monetary cost and provider details.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const cost: LLMCost = {
  *   provider: 'openai',
  *   model: 'gpt-4',

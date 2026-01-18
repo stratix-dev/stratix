@@ -11,7 +11,7 @@ import type { WorkflowExecutionResult } from './WorkflowEngine.js';
  * - Cloud storage
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class InMemoryWorkflowRepository implements WorkflowRepository {
  *   private workflows = new Map<string, Workflow>();
  *   private executions = new Map<string, WorkflowExecutionResult>();
@@ -125,7 +125,7 @@ export interface WorkflowRepository {
  * Not suitable for production use.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const repository = new InMemoryWorkflowRepository();
  *
  * await repository.save(workflow);

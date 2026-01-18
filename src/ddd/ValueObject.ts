@@ -5,7 +5,7 @@
  * with no conceptual identity. They are compared by their structural content rather than identity.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class Email extends ValueObject {
  *   constructor(private readonly value: string) {
  *     super();

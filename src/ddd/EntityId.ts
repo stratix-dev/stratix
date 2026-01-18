@@ -13,7 +13,7 @@ import { ValueObject } from './ValueObject.js';
  * @category Domain Primitives
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * type UserId = EntityId<'User'>;
  * type OrderId = EntityId<'Order'>;
  *
@@ -43,7 +43,7 @@ export class EntityId<T extends string> extends ValueObject {
    * @returns A new EntityId instance
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const userId = EntityId.create<'User'>();
    * console.log(userId.value); // "550e8400-e29b-41d4-a716-446655440000"
    * ```
@@ -61,7 +61,7 @@ export class EntityId<T extends string> extends ValueObject {
    * @returns An EntityId instance
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const userId = EntityId.from<'User'>('550e8400-e29b-41d4-a716-446655440000');
    * ```
    */

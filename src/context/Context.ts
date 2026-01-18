@@ -25,7 +25,7 @@ import {
  * - Easily testable in isolation
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class ProductsContext extends BaseContext {
  *   readonly metadata: ContextMetadata = {
  *     name: 'products-context',
@@ -130,7 +130,7 @@ export interface Context {
    * @param config - The context config
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * async initialize(config: ContextConfig): Promise<void> {
    *   this.repository = config.container.resolve('productRepository');
    *   await super.initialize(config);
@@ -146,7 +146,7 @@ export interface Context {
    * Connect to external resources during this phase.
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * async start(): Promise<void> {
    *   await this.service.connect();
    * }
@@ -161,7 +161,7 @@ export interface Context {
    * Close connections and clean up resources during this phase.
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * async stop(): Promise<void> {
    *   await this.service.disconnect();
    * }

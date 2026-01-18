@@ -7,7 +7,7 @@ import { QueryHandler } from './QueryHandler.js';
  * Ensures that each query is handled by exactly one handler.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * // Register handler
  * queryBus.register(GetUserQuery, new GetUserQueryHandler());
  *
@@ -29,7 +29,7 @@ export interface QueryBus {
    * @param handler - The handler for this query type
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * queryBus.register(
    *   GetUserQuery,
    *   new GetUserQueryHandler(repository)
@@ -50,7 +50,7 @@ export interface QueryBus {
    * @throws Error if no handler is registered for the query
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const query = new GetUserQuery('user-123');
    * const user = await queryBus.execute<User | null>(query);
    * ```

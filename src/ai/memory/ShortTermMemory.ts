@@ -40,7 +40,7 @@ export interface ShortTermMemoryConfig {
  * - Temporary working memory
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const memory = new ShortTermMemory<string>({
  *   maxEntries: 50,
  *   maxAgeMs: 3600000 // 1 hour

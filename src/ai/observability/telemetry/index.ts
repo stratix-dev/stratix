@@ -6,7 +6,7 @@
  * @module observability/telemetry
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * import {
  *   AITelemetry,
  *   InMemoryTelemetry,

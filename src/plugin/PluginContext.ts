@@ -7,7 +7,7 @@ import { Logger } from '../logging/Logger.js';
  * Allows plugins to register services and access the decorators container.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class DatabasePlugin implements Plugin {
  *   async initialize(context: PluginContext): Promise<void> {
  *     const config = context.getConfig<DatabaseConfig>();
@@ -39,7 +39,7 @@ export interface PluginContext {
    * @returns The plugin config
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const config = context.getConfig<DatabaseConfig>();
    * console.log(config.host, config.port);
    * ```
@@ -54,7 +54,7 @@ export interface PluginContext {
    * @returns The service instance if it exists, undefined otherwise
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const metrics = context.getService<Metrics>('metrics');
    * if (metrics) {
    *   metrics.increment('database.connections');

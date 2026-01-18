@@ -48,7 +48,7 @@ export const GuardrailResultHelpers = {
    * @returns Passing result
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = GuardrailResultHelpers.pass('content-policy', 'Content is safe');
    * ```
    */
@@ -71,7 +71,7 @@ export const GuardrailResultHelpers = {
    * @returns Failing result
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = GuardrailResultHelpers.fail(
    *   'content-policy',
    *   GuardrailSeverity.ERROR,

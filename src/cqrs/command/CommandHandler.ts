@@ -10,7 +10,7 @@ import { Command } from './Command.js';
  * @template TResult - The result type returned by the handler
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class CreateUserCommandHandler implements CommandHandler<CreateUserCommand, User> {
  *   async handle(command: CreateUserCommand): Promise<User> {
  *     const user = new User(command.email, command.name);

@@ -2,7 +2,7 @@
  * Semantic version for an AI agent.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const version = AgentVersion.parse('1.2.3');
  * console.log(version.major); // 1
  * console.log(version.minor); // 2
@@ -140,7 +140,7 @@ export const AgentCapabilities = {
  * change during execution.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const metadata = AgentMetadata.create({
  *   name: 'Customer Support Agent',
  *   description: 'Handles customer support tickets and inquiries',

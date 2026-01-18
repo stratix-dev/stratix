@@ -6,7 +6,7 @@ import type { PromptTemplate } from './PromptTemplate.js';
  * Provides centralized storage and retrieval of prompts.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const registry = new PromptRegistry();
  *
  * registry.register(greetingTemplate);
@@ -26,7 +26,7 @@ export class PromptRegistry {
    * @returns This registry for chaining
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * registry.register(template);
    * ```
    */
@@ -48,7 +48,7 @@ export class PromptRegistry {
    * @returns This registry for chaining
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * registry.registerOrReplace(updatedTemplate);
    * ```
    */
@@ -65,7 +65,7 @@ export class PromptRegistry {
    * @returns This registry for chaining
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * registry.registerAll([template1, template2, template3]);
    * ```
    */
@@ -84,7 +84,7 @@ export class PromptRegistry {
    * @throws {Error} If template not found
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const template = registry.get('greeting');
    * ```
    */
@@ -105,7 +105,7 @@ export class PromptRegistry {
    * @returns The template or undefined if not found
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const template = registry.tryGet('greeting');
    * if (template) {
    *   // Use template
@@ -123,7 +123,7 @@ export class PromptRegistry {
    * @returns True if template exists
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * if (registry.has('greeting')) {
    *   console.log('Template exists');
    * }
@@ -140,7 +140,7 @@ export class PromptRegistry {
    * @returns True if template was removed
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * registry.unregister('greeting');
    * ```
    */
@@ -154,7 +154,7 @@ export class PromptRegistry {
    * @returns Array of template names
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const names = registry.getNames();
    * console.log('Available templates:', names);
    * ```
@@ -169,7 +169,7 @@ export class PromptRegistry {
    * @returns Array of templates
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const all = registry.getAll();
    * ```
    */
@@ -184,7 +184,7 @@ export class PromptRegistry {
    * @returns Matching templates
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const chatTemplates = registry.find(
    *   (t) => t.getMetadata().tags?.includes('chat')
    * );
@@ -201,7 +201,7 @@ export class PromptRegistry {
    * @returns Templates with the given tag
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const chatTemplates = registry.findByTag('chat');
    * ```
    */
@@ -213,7 +213,7 @@ export class PromptRegistry {
    * Clear all templates.
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * registry.clear();
    * ```
    */
@@ -227,7 +227,7 @@ export class PromptRegistry {
    * @returns Template count
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * console.log(`Registry contains ${registry.size} templates`);
    * ```
    */
@@ -252,7 +252,7 @@ export class PromptRegistry {
    * @returns New registry
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const copy = registry.clone();
    * ```
    */
@@ -270,7 +270,7 @@ export class PromptRegistry {
    * @returns This registry for chaining
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * registry1.merge(registry2, true);
    * ```
    */

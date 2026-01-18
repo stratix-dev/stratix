@@ -7,7 +7,7 @@
  * @module prompts
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * import {
  *   PromptTemplate,
  *   PromptRegistry,

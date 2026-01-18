@@ -9,7 +9,7 @@ import { EntityId } from './EntityId.js';
  * @template T - Phantom type representing the entity type (e.g., 'User', 'Order')
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class User extends Entity<'User'> {
  *   constructor(
  *     id: EntityId<'User'>,

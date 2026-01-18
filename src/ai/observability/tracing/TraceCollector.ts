@@ -7,7 +7,7 @@ import { ExecutionTraceHelpers } from './ExecutionTrace.js';
  * Manages trace lifecycle and provides query capabilities.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const collector = new TraceCollector();
  *
  * // Start a trace

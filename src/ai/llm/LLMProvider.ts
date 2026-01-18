@@ -173,7 +173,7 @@ export interface ProviderCapabilities {
  * This interface is provider-agnostic and works with any LLM API.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class OpenAIProvider implements LLMProvider {
  *   readonly name = 'openai';
  *   readonly models = ['gpt-4', 'gpt-4-turbo', 'gpt-3.5-turbo'];

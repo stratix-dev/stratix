@@ -11,7 +11,7 @@ import { DomainEvent } from './DomainEvent.js';
  * @template T - Phantom type representing the aggregate type (e.g., 'User', 'Order')
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class Order extends AggregateRoot<'Order'> {
  *   constructor(id: EntityId<'Order'>, private items: OrderItem[]) {
  *     super(id, new Date(), new Date());
@@ -47,7 +47,7 @@ export abstract class AggregateRoot<T extends string> extends Entity<T> {
    * @protected
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * this.record({
    *   occurredAt: new Date(),
    *   userId: this.id.value,
@@ -66,7 +66,7 @@ export abstract class AggregateRoot<T extends string> extends Entity<T> {
    * @returns An array of domain events
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * await repository.save(order);
    * const events = order.pullDomainEvents();
    * await eventBus.publish(events);

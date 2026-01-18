@@ -7,7 +7,7 @@ import { TelemetrySpanHelpers } from './TelemetrySpan.js';
  * Provides observability into agent execution, tool calls, LLM requests, etc.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const telemetry = new InMemoryTelemetry();
  *
  * const span = telemetry.startSpan('agent.execute', {
@@ -94,7 +94,7 @@ export interface AITelemetry {
  * For production, use an exporter to send to a backend.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const telemetry = new InMemoryTelemetry();
  *
  * const span = telemetry.startSpan('llm.request', {

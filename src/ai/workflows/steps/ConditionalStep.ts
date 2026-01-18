@@ -7,7 +7,7 @@ import type { WorkflowStepContext, WorkflowStepResult } from '../WorkflowStep.js
  * If the condition is false, the step is skipped.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const step = new ConditionalStep(
  *   'check-premium',
  *   'Premium User Check',

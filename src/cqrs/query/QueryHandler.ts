@@ -10,7 +10,7 @@ import { Query } from './Query.js';
  * @template TResult - The result type returned by the handler
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class GetUserQueryHandler implements QueryHandler<GetUserQuery, User | null> {
  *   async handle(query: GetUserQuery): Promise<User | null> {
  *     return await this.repository.findById(query.userId);

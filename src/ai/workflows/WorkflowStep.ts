@@ -88,7 +88,7 @@ export interface WorkflowStepResult<T = unknown> {
  * @template TOutput - Type of output data
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class CustomStep extends WorkflowStep<string, number> {
  *   get id() { return 'custom-step'; }
  *   get name() { return 'Custom Step'; }

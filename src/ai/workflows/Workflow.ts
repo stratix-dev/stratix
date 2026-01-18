@@ -72,7 +72,7 @@ export enum WorkflowStatus {
  * Each step can access data from previous steps and shared variables.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const workflow = new Workflow({
  *   metadata: {
  *     name: 'data-processing',

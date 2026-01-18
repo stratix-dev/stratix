@@ -61,7 +61,7 @@ export interface TraceStep {
  * - Sub-agent executions
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const trace: ExecutionTrace = {
  *   traceId: 'trace_123',
  *   agentId: 'customer-support',

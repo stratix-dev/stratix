@@ -6,7 +6,7 @@
  * @module workflows
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * import {
  *   Workflow,
  *   WorkflowEngine,

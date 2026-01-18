@@ -9,7 +9,7 @@
  * Follows JSON Schema format for parameter definitions.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const definition: ToolDefinition = {
  *   name: 'search_knowledge_base',
  *   description: 'Search the company knowledge base for relevant articles',

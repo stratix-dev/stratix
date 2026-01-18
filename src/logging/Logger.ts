@@ -4,7 +4,7 @@ import { LogLevel } from './LogLevel.js';
  * Logger interface for structured logging.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * logger.info('User logged in', { userId: '123', timestamp: new Date() });
  * logger.error('Failed to process order', { orderId: '456', error });
  * logger.debug('Processing request', { method: 'POST', path: '/api/users' });
@@ -21,7 +21,7 @@ export interface Logger {
    * @param context - Optional context object
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * logger.log(LogLevel.INFO, 'User created', { userId: '123' });
    * ```
    */
@@ -34,7 +34,7 @@ export interface Logger {
    * @param context - Optional context object
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * logger.debug('Processing request', { method: 'POST' });
    * ```
    */
@@ -47,7 +47,7 @@ export interface Logger {
    * @param context - Optional context object
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * logger.info('User logged in', { userId: '123' });
    * ```
    */
@@ -60,7 +60,7 @@ export interface Logger {
    * @param context - Optional context object
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * logger.warn('Rate limit approaching', { current: 95, limit: 100 });
    * ```
    */
@@ -73,7 +73,7 @@ export interface Logger {
    * @param context - Optional context object (should include error)
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * logger.error('Database connection failed', { error, retryCount: 3 });
    * ```
    */
@@ -86,7 +86,7 @@ export interface Logger {
    * @param context - Optional context object (should include error)
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * logger.fatal('Application crashed', { error, stack: error.stack });
    * ```
    */
@@ -100,7 +100,7 @@ export interface Logger {
    * @returns A new logger instance with inherited context
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const childLogger = logger.child('UserService');
    * childLogger.info('User created'); // Logs with context: "UserService"
    * ```

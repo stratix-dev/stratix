@@ -7,11 +7,11 @@ import { PluginContext } from './PluginContext.js';
  * Plugins follow a lifecycle: initialize → start → stop
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class DatabasePlugin implements Plugin {
  *   readonly metadata: PluginMetadata = {
  *     name: 'database',
- *     description: 'PostgreSQL database plugin',
+ *     description: 'PostgresSQL database plugin',
  *     dependencies: ['logger']
  *   };
  *
@@ -57,7 +57,7 @@ export interface Plugin {
    * @param context - The plugin context
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * async initialize(context: PluginContext): Promise<void> {
    *   const database = new Database(context.getConfig());
    *   context.container.register('database', () => database);
@@ -73,7 +73,7 @@ export interface Plugin {
    * Connect to external resources during this phase.
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * async start(): Promise<void> {
    *   await this.database.connect();
    *   console.log('Database connected');
@@ -89,7 +89,7 @@ export interface Plugin {
    * Close connections and clean up resources during this phase.
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * async stop(): Promise<void> {
    *   await this.database.disconnect();
    *   console.log('Database disconnected');

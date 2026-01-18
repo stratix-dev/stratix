@@ -10,7 +10,7 @@
  * Supports exponential backoff with jitter to prevent thundering herd problems.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const policy: RetryPolicy = {
  *   maxRetries: 3,
  *   initialDelayMs: 1000,

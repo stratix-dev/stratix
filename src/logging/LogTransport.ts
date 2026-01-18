@@ -7,7 +7,7 @@ import { LogEntry } from './LogEntry.js';
  * @category Infrastructure
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class ConsoleTransport implements LogTransport {
  *   readonly name = 'console';
  *

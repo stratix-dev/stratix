@@ -95,7 +95,7 @@ export interface BatchExecutionResult {
  * - Performance tracking
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const executor = new ToolExecutor(registry);
  *
  * // Execute a single tool call

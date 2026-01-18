@@ -40,7 +40,7 @@ export const DocumentHelpers = {
    * @returns Document
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const doc = DocumentHelpers.create(
    *   'doc1',
    *   'This is the content',
@@ -59,7 +59,7 @@ export const DocumentHelpers = {
    * @returns Unique ID
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const id = DocumentHelpers.generateId('doc');
    * // => 'doc_1234567890_abc123'
    * ```

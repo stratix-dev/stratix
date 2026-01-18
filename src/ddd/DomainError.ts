@@ -5,7 +5,7 @@
  * Unlike technical errors, domain errors are expected and should be handled gracefully.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * throw new DomainError('INVALID_EMAIL', 'Email format is invalid');
  * ```
  *

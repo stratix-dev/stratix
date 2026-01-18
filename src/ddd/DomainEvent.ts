@@ -5,7 +5,7 @@
  * They are immutable facts about the past.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * interface UserCreatedEvent extends DomainEvent {
  *   readonly userId: string;
  *   readonly email: string;

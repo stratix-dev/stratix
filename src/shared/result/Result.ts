@@ -8,7 +8,7 @@
  * @template E - The type of the error (must extend Error)
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * function divide(a: number, b: number): Result<number, DomainError> {
  *   if (b === 0) {
  *     return Failure.create(new DomainError('DIVISION_BY_ZERO', 'Cannot divide by zero'));
@@ -47,7 +47,7 @@ export class Success<T> {
    * @returns A Success instance
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * return Success.create(42);
    * ```
    */
@@ -62,7 +62,7 @@ export class Success<T> {
    * @returns A new Success with the mapped value
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = Success.create(5);
    * const doubled = result.map(x => x * 2); // Success(10)
    * ```
@@ -78,7 +78,7 @@ export class Success<T> {
    * @returns The result of the flat mapping function
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = Success.create(5);
    * const divided = result.flatMap(x => divide(10, x)); // Success(2) or Failure
    * ```
@@ -107,7 +107,7 @@ export class Failure<E extends Error> {
    * @returns A Failure instance
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * return Failure.create(new DomainError('INVALID_INPUT', 'Input is invalid'));
    * ```
    */
@@ -121,7 +121,7 @@ export class Failure<E extends Error> {
    * @returns This Failure instance
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = Failure.create(new Error('fail'));
    * const mapped = result.map(x => x * 2); // Still Failure('fail')
    * ```
@@ -136,7 +136,7 @@ export class Failure<E extends Error> {
    * @returns This Failure instance cast to the new Result type
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const result = Failure.create(new Error('fail'));
    * const flatMapped = result.flatMap(x => Success.create(x * 2)); // Still Failure('fail')
    * ```
@@ -158,7 +158,7 @@ export const ResultUtils = {
    * @throws The error if result is Failure
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const value = ResultUtils.unwrap(result); // throws if failure
    * ```
    */
@@ -177,7 +177,7 @@ export const ResultUtils = {
    * @returns The success value or the default value
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const value = ResultUtils.unwrapOr(result, 0); // returns 0 if failure
    * ```
    */

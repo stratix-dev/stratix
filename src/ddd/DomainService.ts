@@ -10,7 +10,7 @@
  * and have no dependencies on infrastructure concerns.
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class MoneyTransferService extends DomainService {
  *   readonly name = 'MoneyTransferService';
  *
@@ -57,7 +57,7 @@
  * ```
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * class OrderPricingService extends DomainService {
  *   readonly name = 'OrderPricingService';
  *
@@ -101,7 +101,7 @@ export abstract class DomainService {
  * Utility type for domain service method signatures
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * type TransferMethod = DomainServiceMethod<
  *   [BankAccount, BankAccount, Money],
  *   Result<void, DomainError>
@@ -114,7 +114,7 @@ export type DomainServiceMethod<TArgs extends unknown[], TReturn> = (...args: TA
  * Utility type for async domain service method signatures
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * type ValidateTransferMethod = AsyncDomainServiceMethod<
  *   [BankAccount, Money],
  *   Result<boolean, DomainError>

@@ -158,7 +158,7 @@ export interface ExecutionAuditLog {
  * a persistent backend (database, log aggregator, etc.).
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const auditLog = new InMemoryExecutionAuditLog();
  *
  * // Record an event

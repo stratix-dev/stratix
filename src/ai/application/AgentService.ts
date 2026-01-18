@@ -80,7 +80,7 @@ export class AgentServiceError extends Error {
  * ```
  *
  * @example Basic usage
- * ```typescript
+ * ```TypeScript
  * // Domain layer
  * class CustomerSupportSpec extends AgentSpecification {
  *   buildMessages(query: string): LLMMessage[] {
@@ -114,7 +114,7 @@ export class AgentServiceError extends Error {
  * ```
  *
  * @example With validation
- * ```typescript
+ * ```TypeScript
  * class ValidatedAgentService extends AgentService<Input, Output> {
  *   protected async validate(
  *     spec: AgentSpecification,
@@ -329,7 +329,7 @@ export abstract class AgentService<TInput, TOutput> {
  * - Messages are built from a simple template
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * const service = new SimpleTextAgentService(
  *   llmPort,
  *   (spec, input) => [

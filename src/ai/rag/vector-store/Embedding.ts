@@ -68,7 +68,7 @@ export const EmbeddingHelpers = {
    * @returns Embedding
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const embedding = EmbeddingHelpers.create(
    *   [0.1, 0.2, 0.3, ...],
    *   'doc1',
@@ -105,7 +105,7 @@ export const EmbeddingHelpers = {
    * @returns Cosine similarity (0-1)
    *
    * @example
-   * ```typescript
+   * ```TypeScript
    * const similarity = EmbeddingHelpers.cosineSimilarity(embedding1, embedding2);
    * if (similarity > 0.8) {
    *   console.log('Very similar!');

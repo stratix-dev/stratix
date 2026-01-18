@@ -131,7 +131,7 @@ export interface LLMStreamChunk {
  * - Respects dependency inversion principle
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * // domain/ports/LLMPort.ts (interface)
  * export interface LLMPort { ... }
  *

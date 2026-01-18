@@ -5,7 +5,7 @@
  * They should be named in imperative form (CreateUser, UpdateOrder, DeleteProduct).
  *
  * @example
- * ```typescript
+ * ```TypeScript
  * interface CreateUserCommand extends Command {
  *   email: string;
  *   name: string;
