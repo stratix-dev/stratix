@@ -1,13 +1,12 @@
 import { METADATA_STORAGE, type MetadataContainer } from './storage.js';
 import type { MetadataKey } from './keys.js';
 import type { MetadataTypeMap, MetadataValue } from './registry.js';
-import { MetadataNotFoundError } from '../shared/errors/MetadataNotFoundError.js';
-
-type ClassConstructor = new (...args: any[]) => any;
+import { ClassConstructorType } from '../core/types/UtilityTypes.js';
+import { MetadataNotFoundError } from '../core/errors/MetadataNotFoundError.js';
 
 export class Metadata {
   static get<K extends keyof MetadataTypeMap>(
-    target: ClassConstructor,
+    target: ClassConstructorType,
     key: MetadataKey<K>
   ): MetadataValue<K> | undefined {
     const container = target as unknown as MetadataContainer;
@@ -20,7 +19,7 @@ export class Metadata {
   }
 
   static set<K extends keyof MetadataTypeMap>(
-    target: ClassConstructor,
+    target: ClassConstructorType,
     key: MetadataKey<K>,
     value: MetadataValue<K>
   ): void {
@@ -40,16 +39,16 @@ export class Metadata {
   }
 
   static has<K extends keyof MetadataTypeMap>(
-    target: ClassConstructor,
+    target: ClassConstructorType,
     key: MetadataKey<K>
-  ): target is ClassConstructor & {
+  ): target is ClassConstructorType & {
     [METADATA_STORAGE]: { [P in K]: MetadataValue<K> };
   } {
     return this.get(target, key) !== undefined;
   }
 
   static getOrThrow<K extends keyof MetadataTypeMap>(
-    target: ClassConstructor,
+    target: ClassConstructorType,
     key: MetadataKey<K>
   ): MetadataValue<K> {
     const value = this.get(target, key);
@@ -60,7 +59,7 @@ export class Metadata {
   }
 
   static delete<K extends keyof MetadataTypeMap>(
-    target: ClassConstructor,
+    target: ClassConstructorType,
     key: MetadataKey<K>
   ): boolean {
     const container = target as unknown as MetadataContainer;
@@ -75,7 +74,7 @@ export class Metadata {
     return false;
   }
 
-  static keys(target: ClassConstructor): (keyof MetadataTypeMap)[] {
+  static keys(target: ClassConstructorType): (keyof MetadataTypeMap)[] {
     const container = target as unknown as MetadataContainer;
     const storage = container[METADATA_STORAGE];
     if (!storage) return [];
@@ -83,7 +82,7 @@ export class Metadata {
   }
 
   static merge<K extends keyof MetadataTypeMap>(
-    target: ClassConstructor,
+    target: ClassConstructorType,
     key: MetadataKey<K>,
     partial: Partial<MetadataValue<K>>
   ): void {

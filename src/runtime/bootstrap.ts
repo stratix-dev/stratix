@@ -1,12 +1,10 @@
-import { DecoratorMissingError } from '../shared/errors/DecoratorMissingError.js';
+import { DecoratorMissingError } from '../core/errors/DecoratorMissingError.js';
 import { MetadataKeys } from '../metadata/keys.js';
 import { Metadata } from '../metadata/Metadata.js';
 import { MetadataRegistry } from '../metadata/MetadataRegistry.js';
 import { StratixApplication } from './StratixApplication.js';
 
-export async function bootstrap(
-  appClass: new (...args: any[]) => any
-): Promise<StratixApplication> {
+export function bootstrap(appClass: new (...args: any[]) => any): StratixApplication {
   // Type-safe metadata check with proper error
   if (!Metadata.has(appClass, MetadataKeys.App)) {
     throw new DecoratorMissingError('@StratixApp', appClass.name);
@@ -24,7 +22,7 @@ export async function bootstrap(
 
   // Create application instance
   const app = new StratixApplication({ appClass, registry });
-  await app.initialize();
+  app.initialize();
 
   return app;
 }

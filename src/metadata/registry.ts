@@ -1,19 +1,4 @@
-/**
- * Central type registry mapping metadata key strings to their value types.
- * Use declaration merging to extend with custom metadata types.
- *
- * @example
- * // In your module
- * declare module '@stratix/framework' {
- *   interface MetadataTypeMap {
- *     'my-custom': MyCustomMetadata;
- *   }
- * }
- */
-
-import { ConfigurationSource } from '../config/ConfigurationSource.js';
-
-type ClassConstructor = new (...args: any[]) => any;
+import { ClassConstructorType } from '../core/types/UtilityTypes.js';
 
 export interface MetadataTypeMap {
   app: AppMetadata;
@@ -40,42 +25,36 @@ export type IsValidMetadataKey<K extends string> = K extends keyof MetadataTypeM
 export interface AppMetadata {
   readonly name: string;
   readonly version: string;
-  readonly configuration: AppConfigurationMetadata;
   readonly di: AppDIMetadata;
-  readonly contexts: readonly ClassConstructor[];
-}
-
-export interface AppConfigurationMetadata {
-  readonly sources: readonly (new (...args: any[]) => ConfigurationSource)[];
-  readonly configFile: string;
-  readonly envPrefix: string;
+  readonly contexts: readonly ClassConstructorType[];
 }
 
 export interface AppDIMetadata {
   readonly strict: boolean;
+  readonly injectionMode: 'classic' | 'proxy';
 }
 
 export interface ContextMetadata {
-  readonly contextClass: ClassConstructor;
-  readonly commandHandlers: readonly ClassConstructor[];
-  readonly queryHandlers: readonly ClassConstructor[];
-  readonly eventHandlers: readonly ClassConstructor[];
-  readonly providers: readonly ClassConstructor[];
+  readonly contextClass: ClassConstructorType;
+  readonly commandHandlers: readonly ClassConstructorType[];
+  readonly queryHandlers: readonly ClassConstructorType[];
+  readonly eventHandlers: readonly ClassConstructorType[];
+  readonly providers: readonly ClassConstructorType[];
 }
 
 export interface CommandHandlerMetadata {
-  readonly handlerClass: ClassConstructor;
-  readonly commandClass: ClassConstructor;
+  readonly handlerClass: ClassConstructorType;
+  readonly commandClass: ClassConstructorType;
 }
 
 export interface QueryHandlerMetadata {
-  readonly handlerClass: ClassConstructor;
-  readonly queryClass: ClassConstructor;
+  readonly handlerClass: ClassConstructorType;
+  readonly queryClass: ClassConstructorType;
 }
 
 export interface EventHandlerMetadata {
-  readonly handlerClass: ClassConstructor;
-  readonly eventClasses: readonly ClassConstructor[];
+  readonly handlerClass: ClassConstructorType;
+  readonly eventClasses: readonly ClassConstructorType[];
 }
 
 export interface InjectableMetadata {
@@ -84,7 +63,7 @@ export interface InjectableMetadata {
 }
 
 export interface ModuleMetadata {
-  readonly imports: readonly ClassConstructor[];
-  readonly exports: readonly ClassConstructor[];
-  readonly providers: readonly ClassConstructor[];
+  readonly imports: readonly ClassConstructorType[];
+  readonly exports: readonly ClassConstructorType[];
+  readonly providers: readonly ClassConstructorType[];
 }

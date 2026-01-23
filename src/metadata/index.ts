@@ -1,18 +1,17 @@
-export { type MetadataKey, MetadataKeys } from './keys.js';
 export { Metadata } from './Metadata.js';
-export { MetadataRegistry } from './MetadataRegistry.js';
+export { MetadataKeys, type MetadataKey, defineMetadataKey } from './keys.js';
+export type { MetadataRegistry } from './MetadataRegistry.js';
 export type {
-  AppConfigurationMetadata,
   AppDIMetadata,
   AppMetadata,
   CommandHandlerMetadata,
   ContextMetadata,
   EventHandlerMetadata,
-  QueryHandlerMetadata,
   InjectableMetadata,
   IsValidMetadataKey,
   MetadataTypeMap,
   MetadataValue,
-  ModuleMetadata
+  ModuleMetadata,
+  QueryHandlerMetadata
 } from './registry.js';
 export { METADATA_STORAGE, type MetadataContainer, isMetadataContainer } from './storage.js';

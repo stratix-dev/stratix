@@ -1,32 +1,23 @@
-import {
-  Metadata,
-  MetadataKeys,
-  type AppMetadata,
-  type ContextMetadata
-} from '../metadata/index.js';
-import { DecoratorMissingError } from '../shared/errors/DecoratorMissingError.js';
-
-/**
- * Central registry that builds handler mappings from metadata.
- * All operations are fully type-safe.
- */
-
-type ClassConstructor = new (...args: any[]) => any;
+import { DecoratorMissingError } from '../core/errors/DecoratorMissingError.js';
+import { ClassConstructorType } from '../core/types/UtilityTypes.js';
+import { Metadata } from './Metadata.js';
+import { MetadataKeys } from './keys.js';
+import { AppMetadata, ContextMetadata } from './registry.js';
 
 export class MetadataRegistry {
-  public readonly appClass: ClassConstructor;
+  public readonly appClass: ClassConstructorType;
   public readonly appMetadata: AppMetadata;
 
   // Handler mappings
-  public readonly commandToHandler = new Map<ClassConstructor, ClassConstructor>();
-  public readonly handlerToCommand = new Map<ClassConstructor, ClassConstructor>();
-  public readonly queryToHandler = new Map<ClassConstructor, ClassConstructor>();
-  public readonly eventToHandlers = new Map<ClassConstructor, ClassConstructor[]>();
+  public readonly commandToHandler = new Map<ClassConstructorType, ClassConstructorType>();
+  public readonly handlerToCommand = new Map<ClassConstructorType, ClassConstructorType>();
+  public readonly queryToHandler = new Map<ClassConstructorType, ClassConstructorType>();
+  public readonly eventToHandlers = new Map<ClassConstructorType, ClassConstructorType[]>();
 
   // Context tracking
-  public readonly contexts = new Map<ClassConstructor, ContextMetadata>();
+  public readonly contexts = new Map<ClassConstructorType, ContextMetadata>();
 
-  constructor({ appClass }: { appClass: ClassConstructor }) {
+  constructor({ appClass }: { appClass: ClassConstructorType }) {
     this.appClass = appClass;
 
     // Get app metadata (type-safe, throws if missing)
@@ -42,7 +33,7 @@ export class MetadataRegistry {
     }
   }
 
-  private processContext(contextClass: ClassConstructor): void {
+  private processContext(contextClass: ClassConstructorType): void {
     // Get context metadata (type-safe)
     const contextMetadata = Metadata.get(contextClass, MetadataKeys.Context);
 
@@ -59,7 +50,7 @@ export class MetadataRegistry {
     this.processEventHandlers(contextMetadata.eventHandlers);
   }
 
-  private processCommandHandlers(handlers: readonly ClassConstructor[]): void {
+  private processCommandHandlers(handlers: readonly ClassConstructorType[]): void {
     for (const handlerClass of handlers) {
       const metadata = Metadata.get(handlerClass, MetadataKeys.CommandHandler);
 
@@ -72,7 +63,7 @@ export class MetadataRegistry {
     }
   }
 
-  private processQueryHandlers(handlers: readonly ClassConstructor[]): void {
+  private processQueryHandlers(handlers: readonly ClassConstructorType[]): void {
     for (const handlerClass of handlers) {
       const metadata = Metadata.get(handlerClass, MetadataKeys.QueryHandler);
 
@@ -84,7 +75,7 @@ export class MetadataRegistry {
     }
   }
 
-  private processEventHandlers(handlers: readonly ClassConstructor[]): void {
+  private processEventHandlers(handlers: readonly ClassConstructorType[]): void {
     for (const handlerClass of handlers) {
       const metadata = Metadata.get(handlerClass, MetadataKeys.EventHandler);
 
@@ -100,15 +91,15 @@ export class MetadataRegistry {
     }
   }
 
-  getHandlerForCommand(commandClass: ClassConstructor): ClassConstructor | undefined {
+  getHandlerForCommand(commandClass: ClassConstructorType): ClassConstructorType | undefined {
     return this.commandToHandler.get(commandClass);
   }
 
-  getHandlerForQuery(queryClass: ClassConstructor): ClassConstructor | undefined {
+  getHandlerForQuery(queryClass: ClassConstructorType): ClassConstructorType | undefined {
     return this.queryToHandler.get(queryClass);
   }
 
-  getHandlersForEvent(eventClass: ClassConstructor): ClassConstructor[] {
+  getHandlersForEvent(eventClass: ClassConstructorType): ClassConstructorType[] {
     return this.eventToHandlers.get(eventClass) ?? [];
   }
 }
