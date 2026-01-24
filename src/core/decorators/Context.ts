@@ -19,6 +19,7 @@ export function Context(options: ContextOptions = {}) {
     }
 
     const metadata: ContextMetadata = {
+      name: options.name ? Symbol.for(options.name) : Symbol.for(target.name),
       contextClass: target,
       commandHandlers: options.commandHandlers ?? [],
       queryHandlers: [],

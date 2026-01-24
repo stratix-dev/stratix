@@ -35,6 +35,7 @@ export interface AppDIMetadata {
 }
 
 export interface ContextMetadata {
+  readonly name: symbol;
   readonly contextClass: ClassConstructorType;
   readonly commandHandlers: readonly ClassConstructorType[];
   readonly queryHandlers: readonly ClassConstructorType[];

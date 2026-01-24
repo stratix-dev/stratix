@@ -20,9 +20,7 @@ This package is under active development and should be considered unstable. The 
 </div>
 
 ```typescript
-@StratixApp({
-  name: 'MyApp'
-})
+@StratixApp()
 export class App {}
 ```
 
