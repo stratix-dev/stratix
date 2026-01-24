@@ -18,19 +18,19 @@ export class StratixApplication {
   constructor(options: StratixApplicationOptions) {
     this.stratixApplicationOptions = options;
     this.stratixApplicationOptions.registry =
-      options.registry ?? new MetadataRegistry({ appClass });
+      options?.registry ?? new MetadataRegistry({ appClass: options.appClass });
     const factory = options.containerFactory ?? new AwilixContainerFactory();
     this.container = factory.create({ injectionMode: 'proxy', strict: true });
   }
 
   initialize(): void {
     this.registerBuses();
-    this.registerCommandHandlers();
+    this.registerHandlers();
   }
 
   registerBuses(): void {}
 
-  registerCommandHandlers(): void {}
+  registerHandlers(): void {}
 
   async shutdown(): Promise<void> {
     await this.container.dispose();

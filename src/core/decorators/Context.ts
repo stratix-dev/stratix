@@ -5,6 +5,7 @@ import { DecoratorKindError } from '../errors/DecoratorKindError.js';
 import { ClassConstructorType } from '../types/UtilityTypes.js';
 
 export interface ContextOptions {
+  name?: string;
   commandHandlers?: ClassConstructorType[];
 }
 

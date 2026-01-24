@@ -19,7 +19,8 @@ export default defineConfig(
       '**/*.spec.ts',
       '**/__tests__/**',
       'scripts/**',
-      'examples/**'
+      'examples/**',
+      'playground/**'
     ]
   },
   // TypeScript rules

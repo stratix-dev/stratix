@@ -1,7 +1,6 @@
 import { Container } from '../../core/ports/Container.js';
-import { Query, QueryBus } from '../../core/ports/QueryBus.js';
+import { Query, QueryBus, QueryHandler } from '../../core/ports/QueryBus.js';
 import { MetadataRegistry } from '../../metadata/MetadataRegistry.js';
-import { QueryHandler } from './QueryHandler.js';
 
 export class InMemoryQueryBus implements QueryBus {
   private readonly container: Container;
