@@ -3,15 +3,8 @@
   "compilerOptions": {
     "composite": true,
     "incremental": true,
-    "noEmit": true
+    "inlineSources": true
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/node_modules",
-    "dist",
-    "**/dist"
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "**/node_modules", "dist", "**/dist"]
 }

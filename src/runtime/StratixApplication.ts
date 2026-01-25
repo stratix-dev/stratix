@@ -1,114 +1,71 @@
-import { AwilixContainerAdapter } from '../container/AwilixContainerAdapter.js';
-import { AwilixContainer, createContainer, InjectionMode } from 'awilix';
-import { DecoratorMissingError } from '../shared/errors/DecoratorMissingError.js';
-import { ConfigurationManager } from '../config/ConfigurationManager.js';
-import { YamlConfigurationSource } from '../config/YamlConfigurationSource.js';
-import { AppMetadata } from '../metadata/registry.js';
-import { Metadata } from '../metadata/Metadata.js';
-import { MetadataKeys } from '../metadata/keys.js';
-import { MetadataRegistry } from '../metadata/MetadataRegistry.js';
-import { ConfigurationProvider } from '../config/ConfigurationProvider.js';
-import { InMemoryCommandBus } from '../cqrs/command/InMemoryCommandBus.js';
-import { DependencyLifetime } from '../container/DependencyLifetime.js';
+import { ContainerFactory } from './factories/ContainerFactory.js';
+import { Container } from '../core/ports/Container.js';
+import { AwilixContainerFactory } from '../infrastructure/di/AwilixContainerFactory.js';
+import { exit } from 'process';
+import { ClassConstructorType } from '../core/types/UtilityTypes.js';
+import { GlobContextScanner } from '../infrastructure/scanner/GlobContextScanner.js';
+import { DEFAULT_CONTEXT_PATTERNS } from '../config/ContextPatterns.js';
+import { toCamelCase } from '../functions/strings.js';
+import { DependencyLifetime } from '../core/types/DependencyLifetime.js';
+
+export interface StratixApplicationOptions {
+  appClass: ClassConstructorType;
+  scanDirs?: string[];
+  ignoreFiles?: string[];
+  containerFactory?: ContainerFactory;
+  diMode?: 'proxy' | 'classic';
+}
 
 export class StratixApplication {
-  public config?: ConfigurationProvider;
-  public readonly registry: MetadataRegistry;
-  public readonly metadata: AppMetadata;
+  private readonly container: Container;
+  private readonly contextScanner: GlobContextScanner;
 
-  private readonly appClass: new (...args: any[]) => any;
-  private readonly awilixContainer: AwilixContainer;
-  private readonly container: AwilixContainerAdapter;
+  constructor(options: StratixApplicationOptions) {
+    const factory = options.containerFactory ?? new AwilixContainerFactory();
+    this.container = factory.create({ injectionMode: options.diMode ?? 'proxy', strict: true });
 
-  constructor({
-    appClass,
-    registry
-  }: {
-    appClass: new (...args: any[]) => any;
-    registry?: MetadataRegistry;
-  }) {
-    this.appClass = appClass;
-    this.registry = registry ?? new MetadataRegistry({ appClass });
-
-    // Get metadata (type-safe, guaranteed by registry construction)
-    this.metadata = Metadata.getOrThrow(appClass, MetadataKeys.App);
-
-    // Create DI container with settings from metadata
-    this.awilixContainer = createContainer({
-      strict: this.metadata.di.strict,
-      injectionMode: InjectionMode.PROXY
-    });
-
-    this.container = new AwilixContainerAdapter({
-      awilixContainer: this.awilixContainer
+    this.contextScanner = new GlobContextScanner({
+      scanDirs: options.scanDirs ?? ['src/'],
+      patterns: DEFAULT_CONTEXT_PATTERNS,
+      ignore: options.ignoreFiles ?? [
+        'node_modules/**',
+        'dist/**',
+        'build/**',
+        '**/*.spec.*',
+        '**/*.test.*'
+      ]
     });
   }
 
+  /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+  /* eslint-disable @typescript-eslint/no-unsafe-member-access */
   async initialize(): Promise<void> {
-    const appMetadata = this.metadata;
-    if (!appMetadata) {
-      throw new DecoratorMissingError('@StratixApp', this.appClass.name);
-    }
-    this.registerBuses();
-    this.registerCommandHandlers();
-    await this.registerConfiguration();
-  }
+    const contexts = await this.contextScanner.scan();
 
-  registerBuses(): void {
-    this.container.registerClass('commandBus', InMemoryCommandBus, {
-      lifetime: DependencyLifetime.SINGLETON,
-      localInjections: {
-        container: this.container,
-        registry: this.registry
+    for (const contextPath of contexts) {
+      const contextModule = await import(contextPath);
+
+      for (const exportKey in contextModule) {
+        const ContextClass = contextModule[exportKey];
+        if (typeof ContextClass === 'function') {
+          const className: string = ContextClass.name;
+          const registrationId: string = toCamelCase(className);
+          this.container.registerClass(registrationId, ContextClass, {
+            lifetime: DependencyLifetime.SINGLETON
+          });
+        }
       }
-    });
-  }
-
-  registerCommandHandlers(): void {
-    const commandHandlerMetadatas = this.registry.handlerToCommand.entries();
-    for (const [handlerClass, commandClass] of commandHandlerMetadatas) {
-      this.container.registerClass(commandClass.name, handlerClass, {
-        lifetime: DependencyLifetime.TRANSIENT
-      });
-      this.container.registerClass(handlerClass.name, handlerClass, {
-        lifetime: DependencyLifetime.TRANSIENT
-      });
     }
   }
 
-  async registerConfiguration(): Promise<void> {
-    const appMetadata = this.metadata;
-    if (!appMetadata?.configuration) {
-      return;
-    }
+  scanContexts(): void {}
 
-    this.container.registerClass('yamlConfigurationSource', YamlConfigurationSource, {
-      lifetime: DependencyLifetime.SINGLETON,
-      localInjections: {
-        filePath: appMetadata.configuration.configFile,
-        basePath: process.cwd(),
-        encoding: 'utf-8'
-      }
-    });
+  registerBuses(): void {}
 
-    this.container.registerClass('config', ConfigurationManager, {
-      lifetime: DependencyLifetime.SINGLETON,
-      localInjections: {
-        sources: [this.container.resolve('yamlConfigurationSource')],
-        cache: false
-      }
-    });
-
-    this.config = this.container.resolve('config');
-    await this.config.load();
-  }
+  registerHandlers(): void {}
 
   async shutdown(): Promise<void> {
-    // Dispose DI container
     await this.container.dispose();
-  }
-
-  resolve<T>(token: string | symbol): T {
-    return this.container.resolve<T>(token);
+    exit(0);
   }
 }

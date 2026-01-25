@@ -1,5 +1,5 @@
 {
-  "name": "stratix",
+  "name": "@stratix/framework",
   "version": "0.9.0",
   "private": true,
   "type": "module",
