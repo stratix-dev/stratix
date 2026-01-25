@@ -1,4 +1,7 @@
-import { StratixApp } from '@stratix/framework';
+import { bootstrap } from '@stratix/framework';
+import { MyHttpApp } from './app/MyHttpApp.js';
 
-@StratixApp()
-export class MyApp {}
+console.log('Starting MyHttpApp...');
+
+const app = await bootstrap(MyHttpApp, ['playground/src']);
+await app.initialize();

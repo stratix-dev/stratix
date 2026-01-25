@@ -5,5 +5,5 @@ export interface CommandHandler<TCommand extends Command, TResult = void> {
 }
 
 export interface CommandBus {
-  dispatch<TResult = void>(command: Command): Promise<TResult>;
+  dispatch<T extends Command>(command: T): Promise<void>;
 }

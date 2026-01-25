@@ -19,9 +19,35 @@ This package is under active development and should be considered unstable. The 
 
 </div>
 
-```typescript
-@StratixApp()
-export class App {}
+```
+src/
+	app/
+		App.ts - HTTP, Console ... application entry point, maybe more than one
+		 *Controller.ts - Controllers (for HTTP applications)
+	   *Middleware.ts - Middlewares (for HTTP applications)
+     *Listener.ts - Event listeners (for event-driven applications)
+     *Scheduler.ts - Scheduled tasks (for scheduled applications)
+     ...
+  <context-name> isolated context folder
+  application/
+     *Command.ts - Command classes
+     *CommandHandler.ts - Command handler classes
+	   *Query.ts - Query classes
+     *QueryHandler.ts - Query handler classes
+	   *Event.ts - Event classes
+     *EventHandler.ts - Event handler classes
+     *UseCase.ts - Use case classes
+	domain/
+     *Entity.ts - Domain entity classes
+     *ValueObject.ts - Domain value object classes
+     *AggregateRoot.ts - Domain aggregate root classes
+     *DomainService.ts - Domain service classes
+     *Repository.ts - Repository interfaces
+	infrastructure/
+     *Repository.ts - Repository implementations
+  <other-context> isolated context folder
+    ...
+ * main.ts - application bootstrap file
 ```
 
 ## License

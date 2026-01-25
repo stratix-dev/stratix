@@ -1,27 +1,27 @@
 import { Command, CommandBus, CommandHandler } from '../../core/ports/CommandBus.js';
 import { Container } from '../../core/ports/Container.js';
-import { MetadataRegistry } from '../../metadata/MetadataRegistry.js';
+import { toCamelCase } from '../../functions/strings.js';
 
 export class InMemoryCommandBus implements CommandBus {
   private readonly container: Container;
-  private readonly registry: MetadataRegistry;
 
-  constructor({ container, registry }: { container: Container; registry: MetadataRegistry }) {
+  constructor({ container }: { container: Container }) {
     this.container = container;
-    this.registry = registry;
   }
 
-  async dispatch<TResult = void>(command: Command): Promise<TResult> {
-    const CommandClass = command.constructor as new (...args: any[]) => Command;
+  async dispatch<T extends Command>(command: T): Promise<void> {
+    const commandName = command.constructor.name;
+    const handlerName = `${commandName}Handler`;
+    const handlerId = toCamelCase(handlerName);
 
-    if (!CommandClass) {
-      throw new Error(`Invalid command instance.`);
+    try {
+      const handler = this.container.resolve<CommandHandler<Command>>(handlerId);
+      await handler.handle(command);
+    } catch (error) {
+      console.error(
+        `No handler found for command: ${commandName} (expected handler id: ${handlerId})`
+      );
+      throw error;
     }
-    const HandlerClass = this.registry.commandToHandler.get(CommandClass);
-    if (!HandlerClass) {
-      throw new Error(`No handler registered for command: ${command.constructor.name}`);
-    }
-    const handler = this.container.resolve<CommandHandler<Command, TResult>>(HandlerClass.name);
-    return (await handler.handle(command)) as TResult;
   }
 }

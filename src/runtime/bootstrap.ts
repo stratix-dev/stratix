@@ -1,28 +1,17 @@
-import { DecoratorMissingError } from '../core/errors/DecoratorMissingError.js';
-import { MetadataKeys } from '../metadata/keys.js';
-import { Metadata } from '../metadata/Metadata.js';
-import { MetadataRegistry } from '../metadata/MetadataRegistry.js';
 import { StratixApplication } from './StratixApplication.js';
 
-export function bootstrap(appClass: new (...args: any[]) => any): StratixApplication {
-  // Type-safe metadata check with proper error
-  if (!Metadata.has(appClass, MetadataKeys.App)) {
-    throw new DecoratorMissingError('@StratixApp', appClass.name);
-  }
-
-  // After the check, TypeScript knows metadata exists
-  // but we use getOrThrow for explicit guarantee
-  const appMetadata = Metadata.getOrThrow(appClass, MetadataKeys.App);
-
-  // Log startup info (metadata is fully typed)
-  console.log(`Starting ${appMetadata.name} v${appMetadata.version}`);
-
-  // Build registry from metadata graph
-  const registry = new MetadataRegistry({ appClass });
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export async function bootstrap(
+  appClass: new (...args: any[]) => any,
+  scanDirs?: string[]
+): Promise<StratixApplication> {
   // Create application instance
-  const app = new StratixApplication({ appClass, registry });
-  app.initialize();
+  const app = new StratixApplication({
+    appClass,
+    scanDirs
+  });
+
+  await app.initialize();
 
   return app;
 }

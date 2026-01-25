@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { AwilixContainer, asFunction, asValue, asClass } from 'awilix';
 import { Container, RegistrationOptions } from '../../core/ports/Container.js';
 import { DependencyLifetime } from '../../core/types/DependencyLifetime.js';
@@ -56,6 +58,18 @@ export class AwilixContainerAdapter implements Container {
     return new AwilixContainerAdapter({ awilixContainer: this.awilixContainer.createScope() });
   }
 
+  registrationMap(): Map<string, RegistrationOptions> {
+    const registrations = this.awilixContainer.registrations;
+    console.log('Registrations:', registrations);
+    const map = new Map<string, RegistrationOptions>();
+
+    for (const [key, registration] of Object.entries(registrations)) {
+      map.set(key, { lifetime: registration.lifetime as DependencyLifetime });
+    }
+
+    return map;
+  }
+
   private mapLifetime(lifetime?: DependencyLifetime) {
     switch (lifetime) {
       case DependencyLifetime.SCOPED:
@@ -65,7 +79,7 @@ export class AwilixContainerAdapter implements Container {
       case DependencyLifetime.TRANSIENT:
         return 'TRANSIENT';
       default:
-        return 'TRANSIENT';
+        return 'SINGLETON';
     }
   }
 

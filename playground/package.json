@@ -7,19 +7,23 @@
   "type": "module",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx src/main.ts",
+    "build": "tsc",
+    "build:all": "cd .. && pnpm build && cd playground && pnpm build",
+    "start": "node --enable-source-maps dist/main.js"
   },
   "dependencies": {
     "@stratix/framework": "file:../"
   },
   "devDependencies": {
-    "prettier": "3.8.1",
-    "typescript": "5.9.3",
-    "@types/node": "25.0.3",
     "@eslint/js": "9.39.2",
-    "typescript-eslint": "8.53.0",
+    "@types/node": "25.0.3",
     "eslint": "9.39.2",
     "eslint-config-prettier": "10.1.8",
-    "eslint-plugin-prettier": "5.5.5"
+    "eslint-plugin-prettier": "5.5.5",
+    "prettier": "3.8.1",
+    "tsx": "^4.21.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.53.0"
   }
 }

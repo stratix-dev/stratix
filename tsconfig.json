@@ -2,7 +2,8 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
-    "incremental": true
+    "incremental": true,
+    "inlineSources": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "**/node_modules", "dist", "**/dist"]

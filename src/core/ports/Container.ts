@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DependencyLifetime } from '../types/DependencyLifetime.js';
 import { ConstructorParamsType } from '../types/UtilityTypes.js';
 
@@ -20,4 +21,5 @@ export interface Container {
   resolve<T>(token: string | symbol): T;
   dispose(): Promise<void>;
   createScope(): Container;
+  registrationMap(): Map<string, RegistrationOptions>;
 }

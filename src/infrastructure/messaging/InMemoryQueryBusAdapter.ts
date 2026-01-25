@@ -1,25 +1,21 @@
 import { Container } from '../../core/ports/Container.js';
 import { Query, QueryBus, QueryHandler } from '../../core/ports/QueryBus.js';
-import { MetadataRegistry } from '../../metadata/MetadataRegistry.js';
+import { toCamelCase } from '../../functions/strings.js';
 
 export class InMemoryQueryBus implements QueryBus {
   private readonly container: Container;
-  private readonly registry: MetadataRegistry;
 
-  constructor({ container, registry }: { container: Container; registry: MetadataRegistry }) {
+  constructor({ container }: { container: Container }) {
     this.container = container;
-    this.registry = registry;
   }
 
-  async execute<TResult = void>(query: Query): Promise<TResult> {
-    const queryClass = query.constructor as new (...args: unknown[]) => Query;
-    const handlerClass = this.registry.queryToHandler.get(queryClass);
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  async execute<T extends Query>(query: T): Promise<any> {
+    const queryName = query.constructor.name;
+    const handlerName = `${queryName}Handler`;
+    const handlerId = toCamelCase(handlerName);
 
-    if (!handlerClass) {
-      throw new Error(`No handler registered for query: ${queryClass.name}`);
-    }
-
-    const handler = this.container.resolve<QueryHandler<Query, TResult>>(handlerClass.name);
+    const handler = this.container.resolve<QueryHandler<Query, unknown>>(handlerId);
 
     return handler.handle(query);
   }
