@@ -15,12 +15,14 @@ export const DEFAULT_CONTEXT_PATTERNS = [
   `**/application/**/*Event.${EXT}`,
   `**/application/**/*EventHandler.${EXT}`,
   `**/application/**/*UseCase.${EXT}`,
+
   // infrastructure
   `**/infrastructure/**/*Service.${EXT}`,
   `**/infrastructure/**/*Repository.${EXT}`,
   `**/infrastructure/**/*Provider.${EXT}`,
   `**/infrastructure/**/*Client.${EXT}`,
   `**/infrastructure/**/*Adapter.${EXT}`,
+  `**/*.factory.${EXT}`,
 
   // domain
   `**/domain/**/*DomainService.${EXT}`,
@@ -29,5 +31,8 @@ export const DEFAULT_CONTEXT_PATTERNS = [
   `**/domain/**/*Factory.${EXT}`,
   `**/domain/**/*Entity.${EXT}`,
   `**/domain/**/*ValueObject.${EXT}`,
-  `**/domain/**/*Aggregate.${EXT}`
+  `**/domain/**/*Aggregate.${EXT}`,
+
+  // config
+  `**/*.config.${EXT}`
 ];

@@ -7,6 +7,7 @@ import { GlobContextScanner } from '../infrastructure/scanner/GlobContextScanner
 import { DEFAULT_CONTEXT_PATTERNS } from '../config/ContextPatterns.js';
 import { toCamelCase } from '../functions/strings.js';
 import { DependencyLifetime } from '../core/types/DependencyLifetime.js';
+import { InjectableAnalyzer, InjectableType } from '../infrastructure/scanner/InjectableAnalyzer.js';
 
 export interface StratixApplicationOptions {
   appClass: ClassConstructorType;
@@ -19,6 +20,7 @@ export interface StratixApplicationOptions {
 export class StratixApplication {
   private readonly container: Container;
   private readonly contextScanner: GlobContextScanner;
+  private readonly injectableAnalyzer: InjectableAnalyzer;
 
   constructor(options: StratixApplicationOptions) {
     const factory = options.containerFactory ?? new AwilixContainerFactory();
@@ -35,6 +37,8 @@ export class StratixApplication {
         '**/*.test.*'
       ]
     });
+
+    this.injectableAnalyzer = new InjectableAnalyzer();
   }
 
   /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -46,16 +50,52 @@ export class StratixApplication {
       const contextModule = await import(contextPath);
 
       for (const exportKey in contextModule) {
-        const ContextClass = contextModule[exportKey];
-        if (typeof ContextClass === 'function') {
-          const className: string = ContextClass.name;
-          const registrationId: string = toCamelCase(className);
-          this.container.registerClass(registrationId, ContextClass, {
-            lifetime: DependencyLifetime.SINGLETON
-          });
+        const exportedItem = contextModule[exportKey];
+        const analysis = this.injectableAnalyzer.analyze(exportedItem, exportKey, contextPath);
+
+        switch (analysis.type) {
+          case InjectableType.CLASS:
+            this.registerClass(exportedItem, exportKey, analysis.lifetime);
+            break;
+
+          case InjectableType.FUNCTION:
+            this.registerFunction(exportedItem, exportKey, analysis.lifetime);
+            break;
+
+          case InjectableType.VALUE:
+            this.registerValue(exportedItem, exportKey);
+            break;
+
+          case InjectableType.NONE:
+            console.debug(`[DI] Skipped: ${exportKey} - ${analysis.reason}`);
+            break;
         }
       }
     }
+  }
+
+  private registerClass(ClassConstructor: Function, _exportKey: string, lifetime?: DependencyLifetime): void {
+    const className = ClassConstructor.name;
+    const registrationId = toCamelCase(className);
+
+    this.container.registerClass(registrationId, ClassConstructor as ClassConstructorType, {
+      lifetime: lifetime ?? DependencyLifetime.SINGLETON
+    });
+
+    console.info(`[DI] Class: ${className} → ${registrationId}`);
+  }
+
+  private registerFunction(func: Function, exportKey: string, lifetime?: DependencyLifetime): void {
+    this.container.registerFunction(exportKey, func as () => unknown, {
+      lifetime: lifetime ?? DependencyLifetime.SINGLETON
+    });
+
+    console.info(`[DI] Function: ${exportKey}`);
+  }
+
+  private registerValue(value: unknown, exportKey: string): void {
+    this.container.registerValue(exportKey, value);
+    console.info(`[DI] Value: ${exportKey}`);
   }
 
   scanContexts(): void {}
