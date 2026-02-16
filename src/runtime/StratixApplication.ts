@@ -4,10 +4,13 @@ import { AwilixContainerFactory } from '../infrastructure/di/AwilixContainerFact
 import { exit } from 'process';
 import { ClassConstructorType } from '../core/types/UtilityTypes.js';
 import { GlobContextScanner } from '../infrastructure/scanner/GlobContextScanner.js';
-import { DEFAULT_CONTEXT_PATTERNS } from '../config/ContextPatterns.js';
+import { DEFAULT_CONTEXT_INJECTABLE_PATTERNS, DEFAULT_STRATIX_CONFIG } from '../config/DefaultContext.js';
 import { toCamelCase } from '../functions/strings.js';
 import { DependencyLifetime } from '../core/types/DependencyLifetime.js';
-import { InjectableAnalyzer, InjectableType } from '../infrastructure/scanner/InjectableAnalyzer.js';
+import {
+  InjectableAnalyzer,
+  InjectableType
+} from '../infrastructure/scanner/InjectableAnalyzer.js';
 
 export interface StratixApplicationOptions {
   appClass: ClassConstructorType;
@@ -24,18 +27,12 @@ export class StratixApplication {
 
   constructor(options: StratixApplicationOptions) {
     const factory = options.containerFactory ?? new AwilixContainerFactory();
-    this.container = factory.create({ injectionMode: options.diMode ?? 'proxy', strict: true });
+    this.container = factory.create({ injectionMode: options.diMode ?? DEFAULT_STRATIX_CONFIG.diMode, strict: true });
 
     this.contextScanner = new GlobContextScanner({
-      scanDirs: options.scanDirs ?? ['src/'],
-      patterns: DEFAULT_CONTEXT_PATTERNS,
-      ignore: options.ignoreFiles ?? [
-        'node_modules/**',
-        'dist/**',
-        'build/**',
-        '**/*.spec.*',
-        '**/*.test.*'
-      ]
+      scanDirs: options.scanDirs ?? DEFAULT_STRATIX_CONFIG.scanDirs,
+      patterns: DEFAULT_CONTEXT_INJECTABLE_PATTERNS,
+      ignore: options.ignoreFiles ?? DEFAULT_STRATIX_CONFIG.ignoreFiles
     });
 
     this.injectableAnalyzer = new InjectableAnalyzer();
@@ -74,7 +71,11 @@ export class StratixApplication {
     }
   }
 
-  private registerClass(ClassConstructor: Function, _exportKey: string, lifetime?: DependencyLifetime): void {
+  private registerClass(
+    ClassConstructor: Function,
+    _exportKey: string,
+    lifetime?: DependencyLifetime
+  ): void {
     const className = ClassConstructor.name;
     const registrationId = toCamelCase(className);
 

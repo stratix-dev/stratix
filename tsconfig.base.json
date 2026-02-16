@@ -3,7 +3,7 @@
     "target": "ES2024",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "lib": ["ESNext", "Decorators"],
+    "lib": ["ESNext"],
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
@@ -24,5 +24,5 @@
     "emitDecoratorMetadata": false
   },
   "exclude": ["node_modules", "dist"],
-  "include": ["src", "playground/src"]
+  "include": ["src"]
 }

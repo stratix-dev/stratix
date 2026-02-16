@@ -1,12 +1,18 @@
 const EXT = process.env.NODE_ENV === 'production' ? 'js' : 'ts';
 
-export const DEFAULT_CONTEXT_PATTERNS = [
-  // app
-  `**/*Controller.${EXT}`,
-  `**/*Middleware.${EXT}`,
-  `**/*Listener.${EXT}`,
-  `**/*Scheduler.${EXT}`,
+export const DEFAULT_STRATIX_CONFIG = {
+  scanDirs: ['src/'],
+  ignoreFiles: [
+    'node_modules/**',
+    'dist/**',
+    'build/**',
+    '**/*.spec.*',
+    '**/*.test.*'
+  ],
+  diMode: 'proxy' as const
+};
 
+export const DEFAULT_CONTEXT_INJECTABLE_PATTERNS = [
   // application
   `**/application/**/*Command.${EXT}`,
   `**/application/**/*CommandHandler.${EXT}`,
@@ -15,24 +21,12 @@ export const DEFAULT_CONTEXT_PATTERNS = [
   `**/application/**/*Event.${EXT}`,
   `**/application/**/*EventHandler.${EXT}`,
   `**/application/**/*UseCase.${EXT}`,
-
   // infrastructure
-  `**/infrastructure/**/*Service.${EXT}`,
   `**/infrastructure/**/*Repository.${EXT}`,
   `**/infrastructure/**/*Provider.${EXT}`,
   `**/infrastructure/**/*Client.${EXT}`,
   `**/infrastructure/**/*Adapter.${EXT}`,
   `**/*.factory.${EXT}`,
-
   // domain
-  `**/domain/**/*DomainService.${EXT}`,
-  `**/domain/**/*Repository.${EXT}`,
-  `**/domain/**/*Specification.${EXT}`,
-  `**/domain/**/*Factory.${EXT}`,
-  `**/domain/**/*Entity.${EXT}`,
-  `**/domain/**/*ValueObject.${EXT}`,
-  `**/domain/**/*Aggregate.${EXT}`,
-
-  // config
-  `**/*.config.${EXT}`
+  `**/domain/**/*DomainService.${EXT}`
 ];
